@@ -54,44 +54,44 @@ void print_help_msg()
 }
 
 
-std::ifstream open_input_file(std::string inputfile)
-{
-	// open the input file:
-	std::ifstream input(inputfile, std::ios::in);
-	if (!input.good())
-	{
-		std::cerr << "Error: could not open the input file " << inputfile << std::endl;
-	}
-
-	// read some dummy variables to see if the format is correct:
-	std::string input_line;
-	int dummy_Natoms;
-	std::string dummy_commentline;
-	std::string dummy_atomsymbol;
-	double dummy_x, dummy_y, dummy_z;
-
-	int line_number = 0;
-	while (std::getline(input, input_line))
-	{
-		line_number++;
-		std::istringstream input_stream(input_line);
-
-		if (line_number == 1)	// this should be the number of atoms
-		{
-			if (!(input_stream >> dummy_Natoms && input_stream.eof()))
-				std::cerr << "There was an error reading the number of atoms from input file " << inputfile << std::endl;
-		}
-		else if (line_number == 2)	// this should be the comment line
-		{
-			if (!(input_stream >> dummy_commentline && input_stream.eof()))
-				std::cerr << "There was an error reading the comment line from input file " << inputfile << std::endl;
-		}
-		else
-		{
-			if (!(input_stream >> dummy_atomsymbol >> dummy_x >> dummy_y >> dummy_z && input_stream.eof()))
-				std::cerr << "There was an error reading the atomic coordinates from line " << line_number
-				          << " of input file " << inputfile << std::endl;
-		}
-	}
-
-}
+//std::ifstream open_input_file(std::string inputfile)
+//{
+//	// open the input file:
+//	std::ifstream input(inputfile, std::ios::in);
+//	if (!input.good())
+//	{
+//		std::cerr << "Error: could not open the input file " << inputfile << std::endl;
+//	}
+//
+//	// read some dummy variables to see if the format is correct:
+//	std::string input_line;
+//	int dummy_Natoms;
+//	std::string dummy_commentline;
+//	std::string dummy_atomsymbol;
+//	double dummy_x, dummy_y, dummy_z;
+//
+//	int line_number = 0;
+//	while (std::getline(input, input_line))
+//	{
+//		line_number++;
+//		std::istringstream input_stream(input_line);
+//
+//		if (line_number == 1)	// this should be the number of atoms
+//		{
+//			if (!(input_stream >> dummy_Natoms && input_stream.eof()))
+//				std::cerr << "There was an error reading the number of atoms from input file " << inputfile << std::endl;
+//		}
+//		else if (line_number == 2)	// this should be the comment line
+//		{
+//			if (!(input_stream >> dummy_commentline && input_stream.eof()))
+//				std::cerr << "There was an error reading the comment line from input file " << inputfile << std::endl;
+//		}
+//		else
+//		{
+//			if (!(input_stream >> dummy_atomsymbol >> dummy_x >> dummy_y >> dummy_z && input_stream.eof()))
+//				std::cerr << "There was an error reading the atomic coordinates from line " << line_number
+//				          << " of input file " << inputfile << std::endl;
+//		}
+//	}
+//
+//}

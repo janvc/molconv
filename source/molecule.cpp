@@ -19,8 +19,10 @@
  */
 
 
+#include<iostream>
 #include<fstream>
 #include"molecule.h"
+#include"configuration.h"
 
 
 atom::atom()
@@ -65,12 +67,18 @@ molecule::molecule(int number_of_atoms)
 {
 }
 
-molecule::molecule(char *input_file)
+molecule::molecule(std::ifstream input_file)
 {
-	std::ifstream input(input_file);
+    try
+    {
+        input_file >> this->number_of_atoms;
+        input_file >> this->comment_line;
+    }
 
-	input >> this->number_of_atoms;
-	input >> this->comment_line;
+    catch (...)
+    {
+        std::cerr << "There was a problem reading the input file " << std::endl;
+    }
 }
 
 

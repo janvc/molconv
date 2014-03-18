@@ -20,8 +20,10 @@
 
 
 #include<iostream>
+#include<fstream>
 #include"utilities.h"
 #include"configuration.h"
+#include"molecule.h"
 
 
 int main(int argc, char *argv[])
@@ -38,7 +40,16 @@ int main(int argc, char *argv[])
 
 
 	if (input_paras.input_exists())
-		std::cout << "The input file is: " << input_paras.get_inputfile() << std::endl;
+	{
+	    std::cout << "The input file is: " << input_paras.get_inputfile() << std::endl;
+	    std::ifstream input;
+	    std::string input_string;
+	    const char *input_cstring;
+	    input_string = input_paras.get_inputfile();
+	    input_cstring = input_string.c_str();
+	    input.open(input_cstring, std::ios::in);
+	    molecule testmolecule(input);
+	}
 
 	return 0;
 }
