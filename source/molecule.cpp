@@ -63,16 +63,23 @@ void atom::shift_z(double dz)
 }
 
 
-molecule::molecule(int number_of_atoms)
-{
-}
 
-molecule::molecule(std::ifstream input_file)
+molecule::molecule(const char *input_file)
 {
     try
     {
-        input_file >> this->number_of_atoms;
-        input_file >> this->comment_line;
+        std::ifstream input(input_file);
+
+        input >> this->number_of_atoms;
+        getline(input, this->comment_line);
+
+        std::string atomsymbol_dummy;
+        double dummy_x, dummy_y, dummy_z;
+
+        while (input >> atomsymbol_dummy >> dummy_x >> dummy_y >> dummy_z)
+        {
+        	this->theatoms.push_back(atom(1, dummy_x, dummy_y, dummy_z));
+        }
     }
 
     catch (...)

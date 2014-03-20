@@ -49,7 +49,7 @@ class molecule
 {
 public:
 	molecule(int number_of_atoms);
-	molecule(std::ifstream input_file);					// read a molecular structure from an xyz file
+	molecule(const char *input_file);					// read a molecular structure from an xyz file
 	void shift_x(double dx);							// move the molecule in x-direction
 	void shift_y(double dy);							// move the molecule in y-direction
 	void shift_z(double dz);							// move the molecule in z-direction

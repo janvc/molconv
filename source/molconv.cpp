@@ -42,13 +42,8 @@ int main(int argc, char *argv[])
 	if (input_paras.input_exists())
 	{
 	    std::cout << "The input file is: " << input_paras.get_inputfile() << std::endl;
-	    std::ifstream input;
-	    std::string input_string;
-	    const char *input_cstring;
-	    input_string = input_paras.get_inputfile();
-	    input_cstring = input_string.c_str();
-	    input.open(input_cstring, std::ios::in);
-	    molecule testmolecule(input);
+
+	    molecule testmolecule(input_paras.get_inputfile().c_str());
 	}
 
 	return 0;
