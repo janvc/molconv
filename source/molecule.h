@@ -35,7 +35,10 @@ public:
 	void shift_x(double dx);							// move the atom in x-direction
 	void shift_y(double dy);							// move the atom in y-direction
 	void shift_z(double dz);							// move the atom in z-direction
-
+	int get_atomicnumber();								// return the atomic number
+	double get_x();										// return the x-position
+	double get_y();										// return the y-position
+	double get_z();										// return the z-position
 private:
 	int atomicnumber;
 
@@ -53,6 +56,8 @@ public:
 	void shift_x(double dx);							// move the molecule in x-direction
 	void shift_y(double dy);							// move the molecule in y-direction
 	void shift_z(double dz);							// move the molecule in z-direction
+	void print_stdout();								// print the structur to std out
+	std::string get_commentline();
 
 private:
 	std::string comment_line;		// the comment line between the atom number and the coordinates
