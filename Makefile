@@ -35,10 +35,11 @@ VPATH = $(SRC_DIR): \
 MOLCONV = $(addprefix $(BIN_DIR)/,molconv)
 
 MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
-                 molecule.o      \
-                 utilities.o     \
-                 configuration.o \
-                 molconv.o       \
+                 atom_properties.o \
+                 molecule.o        \
+                 utilities.o       \
+                 configuration.o   \
+                 molconv.o         \
                  )
 
 
@@ -65,6 +66,10 @@ $(OBJ_DIR)/utilities.o: $(addprefix $(SRC_DIR)/,\
 $(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\
                               configuration.h   \
                               )
+
+$(OBJ_DIR)/atom_properties.o: $(addprefix $(SRC_DIR)/,\
+                                atom_properties.h \
+                                )
 
 $(OBJ_DIR)/%.o: %.cpp
 	$(CC) -c $(CFLAGS) $< -o $@
