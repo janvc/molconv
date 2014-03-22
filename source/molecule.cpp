@@ -24,99 +24,65 @@
 #include<sstream>
 #include<string>
 #include"molecule.h"
-#include"configuration.h"
+#include"atom_properties.h"
+#include"utilities.h"
 
 
-atom::atom()
+atom::atom(int at_num, Eigen::Vector3d pos)
 {
-	atomicnumber = 0;
+	this->atomicnumber = at_num;
 
-	x_pos = 0.0;
-	y_pos = 0.0;
-	z_pos = 0.0;
+	this->position = pos;
+
+	this->mass = atomprops[at_num-1].mass;
+	this->atomicsymbol = atomprops[at_num-1].symbol;
 }
 
 
-atom::atom(int at_num, double x, double y, double z)
+void atom::shift(Eigen::Vector3d shift_vector)
 {
-	atomicnumber = at_num;
-
-	x_pos = x;
-	y_pos = y;
-	z_pos = z;
+	this->position += shift_vector;
 }
 
-
-void atom::shift_x(double dx)
-{
-	this->x_pos += dx;
-}
-
-
-void atom::shift_y(double dy)
-{
-	this->y_pos += dy;
-}
-
-
-void atom::shift_z(double dz)
-{
-	this->z_pos += dz;
-}
 
 int atom::get_atomicnumber()
 {
 	return this->atomicnumber;
 }
 
+
+std::string atom::get_atomicsymbol()
+{
+	return this->atomicsymbol;
+}
+
+
 double atom::get_x()
 {
-	return this->x_pos;
+	return this->position(0);
 }
+
 
 double atom::get_y()
 {
-	return this->y_pos;
+	return this->position(1);
 }
+
 
 double atom::get_z()
 {
-	return this->z_pos;
+	return this->position(2);
 }
 
 
 molecule::molecule(const char *input_file)
 {
-//    try
-//    {
-//        std::ifstream input(input_file);
-//
-//        input >> this->number_of_atoms;
-//        std::cout << this->number_of_atoms << std::endl;
-//        getline(input, this->comment_line);
-//        std::cout << this->comment_line << std::endl;
-//
-//        std::string atomsymbol_dummy;
-//        double dummy_x, dummy_y, dummy_z;
-//
-//        while (input >> atomsymbol_dummy >> dummy_x >> dummy_y >> dummy_z)
-//        {
-//        	std::cout << atomsymbol_dummy << "  " << dummy_x << "  " << dummy_y << "  " << dummy_z << std::endl;
-//        	this->theatoms.push_back(atom(1, dummy_x, dummy_y, dummy_z));
-//        }
-//    }
-//
-//    catch (...)
-//    {
-//        std::cerr << "There was a problem reading the input file " << std::endl;
-//    }
 	std::ifstream input(input_file);
 	std::string line;
 	int lines_read = 0;
 	while (getline(input, line))
 	{
 		lines_read++;
-		std::cout << line << std::endl;
 		std::istringstream iss(line);
 		std::string atomsymbol_dummy;
 		double dummy_x, dummy_y, dummy_z;
@@ -132,48 +98,37 @@ molecule::molecule(const char *input_file)
 			iss >> atomsymbol_dummy >> dummy_x >> dummy_y >> dummy_z;
 			std::cout << "line number: " << lines_read << " " << atomsymbol_dummy
 					  << " " << dummy_x << " " << dummy_y << " " << dummy_z << std::endl;
+
+			int atomicnumber_dummy = symbol2number(atomsymbol_dummy);
+			Eigen::Vector3d position_dummy(dummy_x, dummy_y, dummy_z);
+
+			this->theatoms.push_back(atom(atomicnumber_dummy, position_dummy));
 			break;
 		}
 	}
 }
 
 
-void molecule::shift_x(double dx)
+void molecule::shift(Eigen::Vector3d shift_vector)
 {
-	for (int i = 0; i < this->number_of_atoms; i++)
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		this->theatoms.at(i).shift_x(dx);
+		atiter->shift(shift_vector);
 	}
 }
 
-
-void molecule::shift_y(double dy)
-{
-	for (int i = 0; i < this->number_of_atoms; i++)
-	{
-		this->theatoms.at(i).shift_y(dy);
-	}
-}
-
-
-void molecule::shift_z(double dz)
-{
-	for (int i = 0; i < this->number_of_atoms; i++)
-	{
-		this->theatoms.at(i).shift_z(dz);
-	}
-}
 
 void molecule::print_stdout()
 {
-	std::cout << this->number_of_atoms << std::endl;
-	//std::cout <<  "# this is a test-strucure" << std::endl;
+	std::cout << "The number of atoms is: " << this->number_of_atoms << std::endl;
 	std::cout << this->comment_line << std::endl;
-	for (int i = 1; i < this->number_of_atoms; i++)
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		std::cout << this->theatoms.at(i+1).get_x() << this->theatoms.at(i+1).get_y() << this->theatoms.at(i+1).get_z() << std::endl;
+		std::cout << atiter->get_atomicsymbol() << "  "
+				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
 	}
 }
+
 
 std::string molecule::get_commentline()
 {

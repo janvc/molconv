@@ -44,6 +44,8 @@ int main(int argc, char *argv[])
 	    std::cout << "The input file is: " << input_paras.get_inputfile() << std::endl;
 
 	    molecule testmolecule(input_paras.get_inputfile().c_str());
+
+	    testmolecule.print_stdout();
 	}
 
 	return 0;

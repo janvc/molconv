@@ -24,6 +24,7 @@
 
 void print_header();
 void print_help_msg();
-std::ifstream open_input_file(std::string inputfile);
+int symbol2number(std::string atomicsymbol);
+
 
 #endif /* UTILITIES_H_ */

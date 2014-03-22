@@ -55,11 +55,14 @@ $(OBJ_DIR)/molconv.o: $(addprefix $(OBJ_DIR)/,\
                         )
 
 $(OBJ_DIR)/molecule.o: $(addprefix $(SRC_DIR)/,\
-                         molecule.h   \
+                         molecule.h        \
+                         atom_properties.h \
+                         utilities.h       \
                          )
 
 $(OBJ_DIR)/utilities.o: $(addprefix $(SRC_DIR)/,\
-                          utilities.h   \
+                          utilities.h       \
+                          atom_properties.h \
                           )
 
 $(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\

@@ -25,44 +25,41 @@
 
 #include<vector>
 #include<string>
+#include<eigen3/Eigen/Dense>
 
 
 class atom
 {
 public:
-	atom();                                      		// standard constructor (everything set to zero)
-	atom(int at_num, double x, double y, double z);		// specify type and position of atom
-	void shift_x(double dx);							// move the atom in x-direction
-	void shift_y(double dy);							// move the atom in y-direction
-	void shift_z(double dz);							// move the atom in z-direction
-	int get_atomicnumber();								// return the atomic number
-	double get_x();										// return the x-position
-	double get_y();										// return the y-position
-	double get_z();										// return the z-position
+	atom(int at_num, Eigen::Vector3d pos);		// specify type and position of atom
+	void shift(Eigen::Vector3d shift_vector);	// move the atom
+	int get_atomicnumber();						// return the atomic number
+	std::string get_atomicsymbol();				// return the atomic symbol
+	double get_x();								// return the x-position
+	double get_y();								// return the y-position
+	double get_z();								// return the z-position
 private:
 	int atomicnumber;
+	std::string atomicsymbol;
+	double mass;
 
-	double x_pos;
-	double y_pos;
-	double z_pos;
+	Eigen::Vector3d position;	// the position in the internal molecular coordinate system
 };
 
 
 class molecule
 {
 public:
-	molecule(int number_of_atoms);
-	molecule(const char *input_file);					// read a molecular structure from an xyz file
-	void shift_x(double dx);							// move the molecule in x-direction
-	void shift_y(double dy);							// move the molecule in y-direction
-	void shift_z(double dz);							// move the molecule in z-direction
-	void print_stdout();								// print the structur to std out
+	molecule(const char *input_file);			// read a molecular structure from an xyz file
+	void shift(Eigen::Vector3d shift_vector);	// move the molecule
+	void print_stdout();						// print the structur to std out
 	std::string get_commentline();
 
 private:
-	std::string comment_line;		// the comment line between the atom number and the coordinates
-	int number_of_atoms;			// the number of atoms in the molecule
-	std::vector<atom> theatoms;		// the atoms
+	int number_of_atoms;				// the number of atoms in the molecule
+	std::string comment_line;			// the comment line between the atom number and the coordinates
+	Eigen::Vector3d internal_origin;	// origin of the internal coordinate system in terms of the absolute coordinates
+	std::vector<atom> theatoms;			// the atoms
 };
 
 

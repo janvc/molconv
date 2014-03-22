@@ -31,6 +31,7 @@ struct atom_data
 	double mass;
 };
 
+const int number_of_elements = 83;
 
 const struct atom_data atomprops[] =
 {
