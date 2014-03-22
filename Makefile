@@ -67,10 +67,6 @@ $(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\
                               configuration.h   \
                               )
 
-$(OBJ_DIR)/atom_properties.o: $(addprefix $(SRC_DIR)/,\
-                                atom_properties.h \
-                                )
-
 $(OBJ_DIR)/%.o: %.cpp
 	$(CC) -c $(CFLAGS) $< -o $@
 
