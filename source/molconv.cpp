@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
 	    molecule testmolecule(input_paras.get_inputfile().c_str());
 
-	    testmolecule.print_stdout();
+	    //testmolecule.print_stdout();
 	}
 
 	return 0;

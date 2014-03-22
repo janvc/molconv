@@ -57,6 +57,18 @@ std::string atom::get_atomicsymbol()
 }
 
 
+double atom::get_atomicmass()
+{
+	return this->mass;
+}
+
+
+Eigen::Vector3d atom::get_position()
+{
+	return this->position;
+}
+
+
 double atom::get_x()
 {
 	return this->position(0);
@@ -79,6 +91,9 @@ molecule::molecule(const char *input_file)
 {
 	std::ifstream input(input_file);
 	std::string line;
+
+
+	// read the molecule from the input file:
 	int lines_read = 0;
 	while (getline(input, line))
 	{
@@ -96,8 +111,8 @@ molecule::molecule(const char *input_file)
 			break;
 		default:
 			iss >> atomsymbol_dummy >> dummy_x >> dummy_y >> dummy_z;
-			std::cout << "line number: " << lines_read << " " << atomsymbol_dummy
-					  << " " << dummy_x << " " << dummy_y << " " << dummy_z << std::endl;
+//			std::cout << "line number: " << lines_read << " " << atomsymbol_dummy
+//					  << " " << dummy_x << " " << dummy_y << " " << dummy_z << std::endl;
 
 			int atomicnumber_dummy = symbol2number(atomsymbol_dummy);
 			Eigen::Vector3d position_dummy(dummy_x, dummy_y, dummy_z);
@@ -106,6 +121,15 @@ molecule::molecule(const char *input_file)
 			break;
 		}
 	}
+	std::cout << "Successfully read input file: " << input_file << std::endl;
+
+
+	// calculate the molecular properties:
+	this->calc_mass();
+	this->calc_com();
+
+	// display the molecular properties:
+	this->show_info();
 }
 
 
@@ -133,4 +157,36 @@ void molecule::print_stdout()
 std::string molecule::get_commentline()
 {
 	return this->comment_line;
+}
+
+
+void molecule::show_info()
+{
+	std::cout << "Molecular mass: " << this->mass << " u" << std::endl;
+	std::cout << std::endl;
+	std::cout << "Center of mass: " << this->center_of_mass << std::endl;
+}
+
+
+void molecule::calc_mass()
+{
+	this->mass = 0.0;
+
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		this->mass += atiter->get_atomicmass();
+	}
+}
+
+
+void molecule::calc_com()
+{
+	this->center_of_mass << 0.0, 0.0, 0.0;
+
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		this->center_of_mass += atiter->get_position() * atiter->get_atomicmass();
+	}
+
+	this->center_of_mass /= this->mass;
 }
