@@ -111,8 +111,6 @@ molecule::molecule(const char *input_file)
 			break;
 		default:
 			iss >> atomsymbol_dummy >> dummy_x >> dummy_y >> dummy_z;
-//			std::cout << "line number: " << lines_read << " " << atomsymbol_dummy
-//					  << " " << dummy_x << " " << dummy_y << " " << dummy_z << std::endl;
 
 			int atomicnumber_dummy = symbol2number(atomsymbol_dummy);
 			Eigen::Vector3d position_dummy(dummy_x, dummy_y, dummy_z);
