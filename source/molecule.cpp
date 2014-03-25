@@ -125,9 +125,11 @@ molecule::molecule(const char *input_file)
 	// calculate the molecular properties:
 	this->calc_mass();
 	this->calc_com();
+	this->calc_inertia();
 
 	// display the molecular properties:
 	this->show_info();
+	this->diag_inertia();
 }
 
 
@@ -160,9 +162,11 @@ std::string molecule::get_commentline()
 
 void molecule::show_info()
 {
-	std::cout << "Molecular mass: " << this->mass << " u" << std::endl;
+	std::cout << "Molecular mass: " << std::endl << this->mass << " u" << std::endl;
 	std::cout << std::endl;
-	std::cout << "Center of mass: " << this->center_of_mass << std::endl;
+	std::cout << "Center of mass: " << std::endl << this->center_of_mass << std::endl;
+	std::cout << std::endl;
+	std::cout << "Inertia Tensor: " << std::endl << this->inertia_tensor << std::endl;
 }
 
 
@@ -188,3 +192,45 @@ void molecule::calc_com()
 
 	this->center_of_mass /= this->mass;
 }
+
+
+void molecule::calc_inertia()
+{
+	for (int alpha = 0; alpha < 3; alpha++)
+	{
+		for (int beta = 0; beta < 3; beta++)
+		{
+			this->inertia_tensor(alpha,beta) = 0.0;
+
+			for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+			{
+				double factor = 0.0;
+				if (alpha == beta)
+					factor = atiter->get_position().dot(atiter->get_position());
+
+				factor -= atiter->get_position()(alpha) * atiter->get_position()(beta);
+				this->inertia_tensor(alpha,beta) += atiter->get_atomicmass() * factor;
+			}
+		}
+	}
+}
+
+
+void molecule::diag_inertia()
+{
+	Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(this->inertia_tensor);
+
+	if (solver.info() != Eigen::Success)
+	{
+		std::cout << "The inertia tensor could not be diagonalized" << std::endl;
+	}
+	else
+	{
+		std::cout << "The eigenvalues of the inertia tensor are:" << std::endl
+				  << solver.eigenvalues() << std::endl;
+
+		std::cout << "The eigenvectors of the inertia tensor are:" << std::endl
+				  << solver.eigenvectors() << std::endl;
+	}
+}
+

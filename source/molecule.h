@@ -68,10 +68,13 @@ private:
 	Eigen::Vector3d internal_origin;	// origin of the internal coordinate system in terms of the absolute coordinates
 	Eigen::Vector3d center_of_mass;		// position of the center of mass
 	Eigen::Vector3d center_of_geometry;	// like the center of mass, but without the mass weighting
+	Eigen::Matrix3d inertia_tensor;		// tensor of the moments of inertia
 
 	void calc_mass();					// calculate the total mass of the molecule
 	void calc_com();					// calculate the center of mass
 	void calc_cog();					// calculate the center of geometry
+	void calc_inertia();				// calculate the tensor of moments of inertia
+	void diag_inertia();				// diagonalize the tensor of inertia
 };
 
 
