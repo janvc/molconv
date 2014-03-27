@@ -122,13 +122,31 @@ molecule::molecule(const char *input_file)
 	std::cout << "Successfully read input file: " << input_file << std::endl;
 
 
+	std::cout << "Atomic positions before shifting:" << std::endl;
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		std::cout << atiter->get_atomicsymbol() << "  "
+				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+	}
 	// calculate the molecular properties:
 	this->calc_mass();
+	std::cout << "Molecular mass: " << this->mass << std::endl;
 	this->calc_com();
-	this->calc_inertia();
+	std::cout << "Location of the center of mass: " << std::endl << this->center_of_mass << std::endl;
 
-	// display the molecular properties:
-	this->show_info();
+	this->internal_origin = this->center_of_mass;
+
+	this->shift(- this->internal_origin);
+
+	std::cout << "Atomic positions after shifting (internal positions):" << std::endl;
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		std::cout << atiter->get_atomicsymbol() << "  "
+				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+	}
+
+	this->calc_inertia();
+	std::cout << "inertia tensor:" << std::endl << this->inertia_tensor << std::endl;
 	this->diag_inertia();
 }
 
@@ -226,11 +244,27 @@ void molecule::diag_inertia()
 	}
 	else
 	{
-		std::cout << "The eigenvalues of the inertia tensor are:" << std::endl
-				  << solver.eigenvalues() << std::endl;
-
-		std::cout << "The eigenvectors of the inertia tensor are:" << std::endl
-				  << solver.eigenvectors() << std::endl;
+		this->inertia_moments = solver.eigenvalues();
+		this->internal_basis = solver.eigenvectors();
+		std::cout << "The moments of inertia are:" << std::endl
+						  << this->inertia_moments << std::endl;
+		std::cout << "Eigenvectors of inertia tensor:" << std::endl
+				  << this->internal_basis << std::endl;
+//		this->internal_basis.col(0).normalize();
+//		std::cout << this->internal_basis.col(0) << std::endl;
+		std::cout << this->internal_basis.col(0).norm() << std::endl;
 	}
 }
 
+
+void molecule::clean_up()
+{
+	// shift the molecule to the center of mass
+	this->shift(-this->center_of_mass);
+}
+
+
+bool molecule::write_to_file(std::string outputfile)
+{
+	return false;
+}

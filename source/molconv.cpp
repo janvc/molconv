@@ -41,14 +41,9 @@ int main(int argc, char *argv[])
 
 	if (input_paras.input_exists())
 	{
-	    std::cout << "The input file is: " << input_paras.get_inputfile() << std::endl;
-
 	    molecule testmolecule(input_paras.get_inputfile().c_str());
-
-	    //testmolecule.print_stdout();
 	}
 
 	return 0;
 }
 
-// This comment is added as a test.
