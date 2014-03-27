@@ -31,12 +31,18 @@ class configuration
 public:
 	configuration(int argc, char *argv[]);
 	bool help_wanted();
+	bool cleanup_wanted();
 	bool input_exists();
+	bool output_exists();
 	std::string get_inputfile();
+	std::string get_outputfile();
 private:
 	bool help_flag;
 	bool input_flag;
+	bool output_flag;
+	bool clean_flag;
 	std::string input_file;
+	std::string output_file;
 };
 
 
