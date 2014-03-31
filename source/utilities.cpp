@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel
+ * Copyright 2014 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -30,7 +30,7 @@
 void print_header()
 {
 	std::cout << std::string(72,'-') << std::endl
-			  << "    molconv development version     Copyright 2014 by Jan von Cosel" << std::endl
+			  << "    molconv development version     Copyright 2014 by Jan von Cosel & Sebastian Lenz" << std::endl
 			  << std::endl
 			  << "    molconv is free software." << std::endl
 			  << "    You can redistribute and/or modify it under the terms" << std::endl
