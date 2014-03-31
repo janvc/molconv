@@ -1,4 +1,5 @@
 # Compiled Object files
+objects/
 *.slo
 *.lo
 *.o
@@ -11,3 +12,6 @@
 *.lai
 *.la
 *.a
+
+# Compiled binary
+bin/
