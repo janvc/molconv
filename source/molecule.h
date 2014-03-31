@@ -58,7 +58,7 @@ public:
 	std::string get_commentline();
 	void show_info();							// print info about the molecule to stdout
 	void clean_up();							// clean up the structure
-	bool write_to_file(const *char outputfile);	// write the structure to an xyz-file
+	bool write_to_file(const char *outputfile);	// write the structure to an xyz-file
 
 private:
 	int number_of_atoms;				// the number of atoms in the molecule
