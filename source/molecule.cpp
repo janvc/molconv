@@ -278,5 +278,16 @@ bool molecule::write_to_file(const char *outputfile)
 {
     std::ofstream output(outputfile);
 
-	return false;
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		output.precision(5);
+		output  << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+	            << std::setw(16) << std::fixed << atiter->get_x()
+				<< std::setw(15) << std::fixed << atiter->get_y()
+				<< std::setw(15) << std::fixed << atiter->get_z() << std::endl;
+	}
+
+    output.close();
+
+	return true;
 }
