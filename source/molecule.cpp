@@ -274,7 +274,9 @@ void molecule::clean_up()
 }
 
 
-bool molecule::write_to_file(std::string outputfile)
+bool molecule::write_to_file(const *char outputfile)
 {
+    std::ofstream output(outputfile);
+
 	return false;
 }
