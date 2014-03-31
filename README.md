@@ -1,4 +1,4 @@
 molconv
 =======
 
-convert and edit molecular structure files
+convert and edit molecular structure files.
