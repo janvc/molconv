@@ -173,8 +173,11 @@ void molecule::print_stdout()
 	std::cout << this->comment_line << std::endl;
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		std::cout << atiter->get_atomicsymbol() << "  "
-				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+		std::cout.precision(5);
+		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+				  << std::setw(16) << std::fixed << atiter->get_x()
+				  << std::setw(15) << std::fixed << atiter->get_y()
+				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
 	}
 }
 
