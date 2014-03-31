@@ -276,13 +276,16 @@ void molecule::clean_up()
 
 bool molecule::write_to_file(const char *outputfile)
 {
-    std::ofstream output(outputfile);
+	std::ofstream output(outputfile);
+
+	output	<< this->number_of_atoms << std::endl
+			<< "# File generated with molconv" << std::endl;
 
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
 		output.precision(5);
-		output  << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-	            << std::setw(16) << std::fixed << atiter->get_x()
+		output	<< std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+				<< std::setw(16) << std::fixed << atiter->get_x()
 				<< std::setw(15) << std::fixed << atiter->get_y()
 				<< std::setw(15) << std::fixed << atiter->get_z() << std::endl;
 	}
