@@ -15,3 +15,8 @@ objects/
 
 # Compiled binary
 bin/
+
+# vim Files
+*.swp
+*.swo
+*~
