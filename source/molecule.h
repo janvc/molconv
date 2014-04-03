@@ -40,6 +40,7 @@ public:
 	double get_x();								// return the x-position
 	double get_y();								// return the y-position
 	double get_z();								// return the z-position
+	void transform(Eigen::Matrix3d tmatrix);	// transform the position
 private:
 	int atomicnumber;
 	std::string atomicsymbol;

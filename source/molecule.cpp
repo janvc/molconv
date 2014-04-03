@@ -148,6 +148,17 @@ molecule::molecule(const char *input_file)
 	this->calc_inertia();
 	std::cout << "inertia tensor:" << std::endl << this->inertia_tensor << std::endl;
 	this->diag_inertia();
+
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		atiter->transform(this->internal_basis.transpose());
+	}
+	std::cout << "Atomic positions after transforming:" << std::endl;
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		std::cout << atiter->get_atomicsymbol() << "  "
+				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+	}
 }
 
 
@@ -250,9 +261,6 @@ void molecule::diag_inertia()
 						  << this->inertia_moments << std::endl;
 		std::cout << "Eigenvectors of inertia tensor:" << std::endl
 				  << this->internal_basis << std::endl;
-//		this->internal_basis.col(0).normalize();
-//		std::cout << this->internal_basis.col(0) << std::endl;
-		std::cout << this->internal_basis.col(0).norm() << std::endl;
 	}
 }
 
@@ -267,4 +275,10 @@ void molecule::clean_up()
 bool molecule::write_to_file(std::string outputfile)
 {
 	return false;
+}
+
+
+void atom::transform(Eigen::Matrix3d tmatrix)
+{
+	this->position = tmatrix * this->position;
 }
