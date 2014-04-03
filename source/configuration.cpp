@@ -21,7 +21,11 @@
 
 #include<iostream>
 #include<unistd.h>
+#include<boost/program_options.hpp>
 #include"configuration.h"
+
+// Set namespace po for easier use of program_options
+namespace po = boost::program_options;
 
 
 configuration::configuration(int argc, char *argv[])
