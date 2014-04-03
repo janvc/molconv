@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel
+ * Copyright 2014 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -20,6 +20,7 @@
 
 
 #include<iostream>
+#include<iomanip>
 #include<fstream>
 #include<sstream>
 #include<string>
@@ -125,8 +126,11 @@ molecule::molecule(const char *input_file)
 	std::cout << "Atomic positions before shifting:" << std::endl;
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		std::cout << atiter->get_atomicsymbol() << "  "
-				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+		std::cout.precision(5);
+		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+				  << std::setw(16) << std::fixed << atiter->get_x()
+				  << std::setw(15) << std::fixed << atiter->get_y()
+				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
 	}
 	// calculate the molecular properties:
 	this->calc_mass();
@@ -141,8 +145,11 @@ molecule::molecule(const char *input_file)
 	std::cout << "Atomic positions after shifting (internal positions):" << std::endl;
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		std::cout << atiter->get_atomicsymbol() << "  "
-				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+		std::cout.precision(5);
+		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+				  << std::setw(16) << std::fixed << atiter->get_x()
+				  << std::setw(15) << std::fixed << atiter->get_y()
+				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
 	}
 
 	this->calc_inertia();
@@ -177,8 +184,11 @@ void molecule::print_stdout()
 	std::cout << this->comment_line << std::endl;
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		std::cout << atiter->get_atomicsymbol() << "  "
-				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+		std::cout.precision(5);
+		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+				  << std::setw(16) << std::fixed << atiter->get_x()
+				  << std::setw(15) << std::fixed << atiter->get_y()
+				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
 	}
 }
 
