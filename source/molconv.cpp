@@ -21,31 +21,93 @@
 
 #include<iostream>
 #include<fstream>
+#include<boost/program_options.hpp>
+#include<boost/filesystem.hpp>
 #include"utilities.h"
 #include"configuration.h"
 #include"molecule.h"
 
+// Set namespace po for easier use of program_options
+namespace po = boost::program_options;
+
+namespace
+{
+  const size_t ERROR_IN_COMMAND_LINE = 1;
+  const size_t SUCCESS = 0;
+  const size_t ERROR_UNHANDLED_EXCEPTION = 2;
+
+} // namespace
 
 int main(int argc, char *argv[])
 {
-	configuration input_paras(argc, argv);
 
-	if (input_paras.help_wanted())
+	std::string inputfile = "";
+	std::string appName = boost::filesystem::basename(argv[0]);
+
+	// Declare the supported options.
+	po::options_description desc("Allowed options");
+
+	desc.add_options()
+		("help,h", "Display help message")
+		("inputfile",po::value<std::string>(&inputfile)->required(), "input file")
+	;
+
+	po::positional_options_description positionalOptions;
+	positionalOptions.add("inputfile", 1);
+
+	po::variables_map vm;
+
+	try
 	{
-		print_help_msg();
-		return 0;
+		po::store(po::command_line_parser(argc, argv).options(desc)
+					.positional(positionalOptions).run(),
+				  vm); // throws on error
+
+		if( vm.count("help") )
+		{
+			std::cout << "    Command options for molconv:" << std::endl
+					  << std::endl
+					  << "        -h             print this help text" << std::endl
+					  << "        -i [filename]  name of the input file" << std::endl
+					  << "        -o [filename]  name of the output file" << std::endl
+					  << std::endl << desc;
+			return SUCCESS;
+		}
+
+		po::notify(vm);
 	}
-	else
-		print_header();
-
-
-	if (input_paras.input_exists())
+	catch(boost::program_options::required_option& e)
 	{
-	    molecule testmolecule(input_paras.get_inputfile().c_str());
-
-	    if (input_paras.output_exists())
-	    	testmolecule.write_to_file(input_paras.get_outputfile().c_str());
+		std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
+		return ERROR_IN_COMMAND_LINE;
 	}
+	catch(boost::program_options::error& e)
+	{
+		std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
+		return ERROR_IN_COMMAND_LINE;
+	}
+
+
+
+
+	//    configuration input_paras(argc, argv);
+
+	//    if (input_paras.help_wanted())
+	//    {
+	//    	print_help_msg();
+	//    	return 0;
+	//    }
+	//    else
+	//    	print_header();
+
+
+	//    if (input_paras.input_exists())
+	//    {
+	//        molecule testmolecule(input_paras.get_inputfile().c_str());
+
+	//        if (input_paras.output_exists())
+	//        	testmolecule.write_to_file(input_paras.get_outputfile().c_str());
+	//    }
 
 	return 0;
 }

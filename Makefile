@@ -46,8 +46,7 @@ MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
 all: $(DIRS) $(MOLCONV)
 
 $(MOLCONV): $(MOLCONV_OBJS)
-	$(CC) -o $@ $^
-
+	$(CC) -o $@ $^ -lboost_system -lboost_filesystem -lboost_program_options
 $(OBJ_DIR)/molconv.o: $(addprefix $(OBJ_DIR)/,\
                         molecule.o      \
                         utilities.o     \
