@@ -45,21 +45,30 @@ int main(int argc, char *argv[])
 	std::string appName = boost::filesystem::basename(argv[0]);
 
 	// Declare the supported options.
-	po::options_description desc("Allowed options");
-
-	desc.add_options()
+	po::options_description opts;
+	opts.add_options()
 		("help,h", "Display help message")
-		("inputfile",po::value<std::string>(&inputfile)->required(), "input file")
 	;
 
+    po::options_description hidden("Hidden options");
+    hidden.add_options()
+		("inputfile",po::value< std::vector<std::string> >()->required(), "input file")
+    ;
+
 	po::positional_options_description positionalOptions;
-	positionalOptions.add("inputfile", 1);
+	positionalOptions.add("inputfile", -1);
+
+    po::options_description cmdline_opts;
+    cmdline_opts.add(opts).add(hidden);
+
+    po::options_description visible("Options");
+    visible.add(opts);
 
 	po::variables_map vm;
 
 	try
 	{
-		po::store(po::command_line_parser(argc, argv).options(desc)
+		po::store(po::command_line_parser(argc, argv).options(cmdline_opts)
 					.positional(positionalOptions).run(),
 				  vm); // throws on error
 
@@ -70,7 +79,7 @@ int main(int argc, char *argv[])
 					  << "        -h             print this help text" << std::endl
 					  << "        -i [filename]  name of the input file" << std::endl
 					  << "        -o [filename]  name of the output file" << std::endl
-					  << std::endl << desc;
+					  << std::endl << visible;
 			return SUCCESS;
 		}
 
