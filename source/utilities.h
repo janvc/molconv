@@ -23,7 +23,7 @@
 
 
 void print_header();
-void print_help_msg();
+void print_help_msg(const std::string& appName);
 int symbol2number(std::string atomicsymbol);
 
 
