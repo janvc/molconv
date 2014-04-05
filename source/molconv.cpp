@@ -23,6 +23,7 @@
 #include<fstream>
 #include<boost/program_options.hpp>
 #include<boost/filesystem.hpp>
+#include"exceptions.h"
 #include"utilities.h"
 #include"configuration.h"
 #include"molecule.h"
