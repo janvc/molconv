@@ -110,8 +110,9 @@ int main(int argc, char *argv[])
 
 		fs::path pinputfile (inputfiles[0]);
 
-		if( fs::exists(pinputfile) )
+		if( !fs::exists(pinputfile) )
 		{
+			throw(molconv::Err::FileNotExist(inputfiles[0]));
 		}
 
 
@@ -126,6 +127,14 @@ int main(int argc, char *argv[])
         //            testmolecule.clean_up();
 		//    }
 
+	}
+	catch(molconv::Err::FileNotExist& e)
+	{
+			print_err_header();
+			std::cerr << "    Inputfile " << e.get_filename() << " couldn't be opened!" <<std::endl;
+			print_err_footer();
+
+			return ERROR_IN_COMMAND_LINE;
 	}
 	catch(std::exception& e)
 	{
