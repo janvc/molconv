@@ -115,12 +115,8 @@ int main(int argc, char *argv[])
 			throw(molconv::Err::FileNotExist(inputfiles[0]));
 		}
 
-
-
-		//    if (input_paras.input_exists())
-		//    {
-		//        molconv::molecule testmolecule(input_paras.get_inputfile().c_str());
-
+		molconv::molecule testmolecule(inputfiles[0].c_str());
+		
 		//        if (input_paras.output_exists())
 		//        	testmolecule.write_to_file(input_paras.get_outputfile().c_str());
         //        if (input_paras.cleanup_wanted())
