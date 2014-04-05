@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
 		po::options_description opts;
 		opts.add_options()
 			("help,h", "Display help message")
+			("output,o",po::value<std::string>, "File, output Molecule(s) are written to")
 		;
 
 		po::options_description hidden("Hidden options");
