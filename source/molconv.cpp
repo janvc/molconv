@@ -109,19 +109,6 @@ int main(int argc, char *argv[])
 		}
 
 
-
-
-		//    configuration input_paras(argc, argv);
-
-		//    if (input_paras.help_wanted())
-		//    {
-		//    	print_help_msg();
-		//    	return 0;
-		//    }
-		//    else
-		//    	print_header();
-
-
 		//    if (input_paras.input_exists())
 		//    {
 		//        molecule testmolecule(input_paras.get_inputfile().c_str());
