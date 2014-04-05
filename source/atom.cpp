@@ -23,66 +23,70 @@
 #include"atom_properties.h"
 
 
-atom::atom(int at_num, Eigen::Vector3d pos)
+namespace molconv
 {
-	this->atomicnumber = at_num;
+	atom::atom(int at_num, Eigen::Vector3d pos)
+	{
+		this->atomicnumber = at_num;
 
-	this->position = pos;
+		this->position = pos;
 
-	this->mass = atomprops[at_num-1].mass;
-	this->atomicsymbol = atomprops[at_num-1].symbol;
-}
-
-
-void atom::shift(Eigen::Vector3d shift_vector)
-{
-	this->position += shift_vector;
-}
+		this->mass = atomprops[at_num-1].mass;
+		this->atomicsymbol = atomprops[at_num-1].symbol;
+	}
 
 
-int atom::get_atomicnumber()
-{
-	return this->atomicnumber;
-}
+	void atom::shift(Eigen::Vector3d shift_vector)
+	{
+		this->position += shift_vector;
+	}
 
 
-std::string atom::get_atomicsymbol()
-{
-	return this->atomicsymbol;
-}
+	int atom::get_atomicnumber()
+	{
+		return this->atomicnumber;
+	}
 
 
-double atom::get_atomicmass()
-{
-	return this->mass;
-}
+	std::string atom::get_atomicsymbol()
+	{
+		return this->atomicsymbol;
+	}
 
 
-Eigen::Vector3d atom::get_int_position()
-{
-	return this->position;
-}
+	double atom::get_atomicmass()
+	{
+		return this->mass;
+	}
 
 
-double atom::get_int_x()
-{
-	return this->position(0);
-}
+	Eigen::Vector3d atom::get_int_position()
+	{
+		return this->position;
+	}
 
 
-double atom::get_int_y()
-{
-	return this->position(1);
-}
+	double atom::get_int_x()
+	{
+		return this->position(0);
+	}
 
 
-double atom::get_int_z()
-{
-	return this->position(2);
-}
+	double atom::get_int_y()
+	{
+		return this->position(1);
+	}
 
 
-void atom::transform(Eigen::Matrix3d tmatrix)
-{
-	this->position = tmatrix * this->position;
+	double atom::get_int_z()
+	{
+		return this->position(2);
+	}
+
+
+	void atom::transform(Eigen::Matrix3d tmatrix)
+	{
+		this->position = tmatrix * this->position;
+	}
+
 }

@@ -26,26 +26,28 @@
 #include<Eigen/Core>
 
 
-class atom
+namespace molconv
 {
-public:
-	atom(int at_num, Eigen::Vector3d pos);		// specify type and position of atom
-	void shift(Eigen::Vector3d shift_vector);	// move the atom
-	int get_atomicnumber();						// return the atomic number
-	std::string get_atomicsymbol();				// return the atomic symbol
-	double get_atomicmass();					// return the mass
-	Eigen::Vector3d get_int_position();			// return the (internal) position as a vector
-	double get_int_x();							// return the internal x coordinate
-	double get_int_y();							// return the internal y coordinate
-	double get_int_z();							// return the internal z coordinate
-	void transform(Eigen::Matrix3d tmatrix);	// transform the position
-private:
-	int atomicnumber;
-	std::string atomicsymbol;
-	double mass;
+	class atom
+	{
+	public:
+		atom(int at_num, Eigen::Vector3d pos);		// specify type and position of atom
+		void shift(Eigen::Vector3d shift_vector);	// move the atom
+		int get_atomicnumber();						// return the atomic number
+		std::string get_atomicsymbol();				// return the atomic symbol
+		double get_atomicmass();					// return the mass
+		Eigen::Vector3d get_int_position();			// return the (internal) position as a vector
+		double get_int_x();							// return the internal x coordinate
+		double get_int_y();							// return the internal y coordinate
+		double get_int_z();							// return the internal z coordinate
+		void transform(Eigen::Matrix3d tmatrix);	// transform the position
+	private:
+		int atomicnumber;
+		std::string atomicsymbol;
+		double mass;
 
-	Eigen::Vector3d position;	// the position in the internal molecular coordinate system
-};
-
+		Eigen::Vector3d position;	// the position in the internal molecular coordinate system
+	};
+}
 
 #endif /* ATOM_H_ */
