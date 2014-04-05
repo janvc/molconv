@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
 
     try
 	{
-		std::string appName = fs::basename(argv[0]);
 		std::vector<std::string> inputfiles;
 
 		// Declare the supported options.
@@ -79,7 +78,7 @@ int main(int argc, char *argv[])
 			if( vm.count("help") )
 			{
 				print_header();
-				print_help_msg(appName);
+				print_help_msg();
 				return SUCCESS;
 			}
 

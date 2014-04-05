@@ -43,12 +43,9 @@ void print_header()
 }
 
 
-void print_help_msg(const std::string& appName)
+void print_help_msg()
 {
-	//print_header();
-
-
-	std::cout << "USAGE: " << appName << " [OPTIONS] inputfile [file ..]" << std::endl
+	std::cout << "USAGE: molconv [OPTIONS] inputfile [file ..]" << std::endl
 			  << std::endl
 			  << "Options:" << std::endl
 			  << std::endl
