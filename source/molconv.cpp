@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
 			throw(molconv::Err::FileNotExist(inputfiles[0]));
 		}
 
+		print_header();
+
 		molconv::molecule testmolecule(inputfiles[0].c_str());
 
 		if( vm.count("output") )
