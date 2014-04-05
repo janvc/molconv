@@ -86,9 +86,7 @@ int main(int argc, char *argv[])
 		}
 		catch(boost::program_options::required_option& e)
 		{
-			print_header();
-			std::cout << std::string(45,'-') << std::endl
-			          << "    ############### ERROR ###############" << std::endl;
+			print_err_header();
 
 			if( e.get_option_name() == "--inputfiles" )
 			{
@@ -99,13 +97,14 @@ int main(int argc, char *argv[])
 			{
 				std::cerr << " " << e.what() << std::endl << std::endl;
 			}
-			std::cout << std::string(45,'-') << std::endl << std::endl;
-			print_help_msg(appName);
+			print_err_footer();
+
 			return ERROR_IN_COMMAND_LINE;
 		}
 		catch(boost::program_options::error& e)
 		{
 			std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
+
 			return ERROR_IN_COMMAND_LINE;
 		}
 

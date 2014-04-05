@@ -55,6 +55,19 @@ void print_help_msg()
 			  << std::endl;
 }
 
+void print_err_header()
+{
+	print_header();
+	std::cout << std::string(45,'-') << std::endl
+	          << "    ############### ERROR ###############" << std::endl;
+}
+
+void print_err_footer()
+{
+	std::cerr << std::string(45,'-') << std::endl << std::endl;
+	print_help_msg();
+}
+
 
 int symbol2number(std::string atomicsymbol)
 {
