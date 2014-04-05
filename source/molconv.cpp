@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 
 			if( vm.count("help") )
 			{
+				print_header();
 				print_help_msg(appName);
 				return SUCCESS;
 			}
