@@ -28,7 +28,7 @@ BIN_DIR = bin
 DIRS = $(OBJ_DIR) $(BIN_DIR)
 
 CFLAGS = -Wall -Wextra -g --pedantic-errors -O0 -std=c++0x
-LINKFLAGS = 
+LINKFLAGS = -lboost_system -lboost_filesystem -lboost_program_options
 INCLUDES = -I/usr/include/eigen3
 
 VPATH = $(SRC_DIR): \

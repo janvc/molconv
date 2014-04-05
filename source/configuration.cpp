@@ -33,7 +33,6 @@ configuration::configuration(int argc, char *argv[])
 	this->clean_flag = false;
 	this->input_file = "";
 	this->output_file = "";
-
 	int option;
 	opterr = 0;
 

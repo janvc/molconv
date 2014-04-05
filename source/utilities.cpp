@@ -30,8 +30,8 @@
 void print_header()
 {
 	std::cout << std::string(72,'-') << std::endl
-			  << "    molconv development version     Copyright 2014 by Jan von Cosel" << std::endl
-              << "                                                    & Sebastian Lenz" << std::endl
+			  << "    molconv development version       Copyright 2014 by Jan von Cosel" << std::endl
+              << "                                                      & Sebastian Lenz" << std::endl
 			  << std::endl
 			  << "    molconv is free software." << std::endl
 			  << "    You can redistribute and/or modify it under the terms" << std::endl
@@ -45,14 +45,27 @@ void print_header()
 
 void print_help_msg()
 {
-	print_header();
-
-	std::cout << "    Command options for molconv:" << std::endl
+	std::cout << "USAGE: molconv [OPTIONS] inputfile [file ..]" << std::endl
 			  << std::endl
-			  << "        -h             print this help text" << std::endl
-			  << "        -i [filename]  name of the input file" << std::endl
-			  << "        -o [filename]  name of the output file" << std::endl
+			  << "Options:" << std::endl
+			  << std::endl
+			  << "   -h             display help text" << std::endl
+			  << "   -o <filename>  output file" << std::endl
+
 			  << std::endl;
+}
+
+void print_err_header()
+{
+	print_header();
+	std::cout << std::string(45,'-') << std::endl
+	          << "    ############### ERROR ###############" << std::endl;
+}
+
+void print_err_footer()
+{
+	std::cerr << std::string(45,'-') << std::endl << std::endl;
+	print_help_msg();
 }
 
 
