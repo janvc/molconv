@@ -28,6 +28,7 @@ BIN_DIR = bin
 DIRS = $(OBJ_DIR) $(BIN_DIR)
 
 CFLAGS = -Wall -Wextra -g --pedantic-errors -O0 -std=c++0x
+LINKFLAGS = 
 INCLUDES = -I/usr/include/eigen3
 
 VPATH = $(SRC_DIR): \
@@ -48,7 +49,7 @@ MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
 all: $(DIRS) $(MOLCONV)
 
 $(MOLCONV): $(MOLCONV_OBJS)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(LINKFLAGS)
 
 $(OBJ_DIR)/molconv.o: $(addprefix $(OBJ_DIR)/,\
                         molecule.o      \
