@@ -45,7 +45,7 @@ void print_header()
 
 void print_help_msg(const std::string& appName)
 {
-	print_header();
+	//print_header();
 
 
 	std::cout << "USAGE: " << appName << " [OPTIONS] inputfile [file ..]" << std::endl
