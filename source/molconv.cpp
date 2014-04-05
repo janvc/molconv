@@ -74,12 +74,7 @@ int main(int argc, char *argv[])
 
 		if( vm.count("help") )
 		{
-			std::cout << "    Command options for molconv:" << std::endl
-					  << std::endl
-					  << "        -h             print this help text" << std::endl
-					  << "        -i [filename]  name of the input file" << std::endl
-					  << "        -o [filename]  name of the output file" << std::endl
-					  << std::endl << visible;
+            print_help_msg(appName);
 			return SUCCESS;
 		}
 
