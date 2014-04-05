@@ -29,6 +29,7 @@
 
 // Set namespace po for easier use of program_options
 namespace po = boost::program_options;
+namespace fs = boost::filesystem;
 
 namespace
 {
@@ -43,8 +44,8 @@ int main(int argc, char *argv[])
 
     try
 	{
-		std::string inputfile = "";
-		std::string appName = boost::filesystem::basename(argv[0]);
+		std::string appName = fs::basename(argv[0]);
+		std::vector<std::string> inputfiles;
 
 		// Declare the supported options.
 		po::options_description opts;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
 
 		po::options_description hidden("Hidden options");
 		hidden.add_options()
-			("inputfiles",po::value< std::vector<std::string> >()->required(), "inputfiles")
+			("inputfiles",po::value< std::vector<std::string> >(&inputfiles)->required(), "inputfiles")
 		;
 
 		po::positional_options_description positionalOptions;
@@ -107,6 +108,13 @@ int main(int argc, char *argv[])
 			std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
 			return ERROR_IN_COMMAND_LINE;
 		}
+
+		fs::path pinputfile (inputfiles[0]);
+
+		if( fs::exists(pinputfile) )
+		{
+		}
+
 
 
 		//    if (input_paras.input_exists())
