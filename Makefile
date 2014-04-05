@@ -41,7 +41,6 @@ MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
                  atom.o            \
                  molecule.o        \
                  utilities.o       \
-                 configuration.o   \
                  molconv.o         \
                  )
 
@@ -55,7 +54,6 @@ $(MOLCONV): $(MOLCONV_OBJS)
 $(OBJ_DIR)/molconv.o: $(addprefix $(OBJ_DIR)/,\
                         molecule.o      \
                         utilities.o     \
-                        configuration.o \
                         )
 
 $(OBJ_DIR)/exceptions.o: $(addprefix $(SRC_DIR)/,\
@@ -77,10 +75,6 @@ $(OBJ_DIR)/utilities.o: $(addprefix $(SRC_DIR)/,\
                           utilities.h       \
                           atom_properties.h \
                           )
-
-$(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\
-                              configuration.h   \
-                              )
 
 $(OBJ_DIR)/%.o: %.cpp
 	$(CXX) -c $(CFLAGS) $(INCLUDES) $< -o $@

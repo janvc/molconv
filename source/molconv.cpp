@@ -25,7 +25,6 @@
 #include<boost/filesystem.hpp>
 #include"exceptions.h"
 #include"utilities.h"
-#include"configuration.h"
 #include"molecule.h"
 
 // Set namespace po for easier use of program_options
