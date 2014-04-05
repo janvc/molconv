@@ -34,10 +34,10 @@ public:
 	int get_atomicnumber();						// return the atomic number
 	std::string get_atomicsymbol();				// return the atomic symbol
 	double get_atomicmass();					// return the mass
-	Eigen::Vector3d get_position();				// return the position as a vector
-	double get_x();								// return the x-position
-	double get_y();								// return the y-position
-	double get_z();								// return the z-position
+	Eigen::Vector3d get_int_position();			// return the (internal) position as a vector
+	double get_int_x();							// return the internal x coordinate
+	double get_int_y();							// return the internal y coordinate
+	double get_int_z();							// return the internal z coordinate
 	void transform(Eigen::Matrix3d tmatrix);	// transform the position
 private:
 	int atomicnumber;

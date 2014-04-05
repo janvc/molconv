@@ -58,25 +58,31 @@ double atom::get_atomicmass()
 }
 
 
-Eigen::Vector3d atom::get_position()
+Eigen::Vector3d atom::get_int_position()
 {
 	return this->position;
 }
 
 
-double atom::get_x()
+double atom::get_int_x()
 {
 	return this->position(0);
 }
 
 
-double atom::get_y()
+double atom::get_int_y()
 {
 	return this->position(1);
 }
 
 
-double atom::get_z()
+double atom::get_int_z()
 {
 	return this->position(2);
+}
+
+
+void atom::transform(Eigen::Matrix3d tmatrix)
+{
+	this->position = tmatrix * this->position;
 }

@@ -43,6 +43,9 @@ int main(int argc, char *argv[])
 	{
 	    molecule testmolecule(input_paras.get_inputfile().c_str());
 
+	    if (input_paras.cleanup_wanted())
+	    	testmolecule.clean_up();
+
 	    if (input_paras.output_exists())
 	    	testmolecule.write_to_file(input_paras.get_outputfile().c_str());
 	}

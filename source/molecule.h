@@ -34,12 +34,11 @@ class molecule
 public:
 	molecule(const char *input_file);			// read a molecular structure from an xyz file
 	void shift(Eigen::Vector3d shift_vector);	// move the molecule
-	void print_stdout();						// print the structur to std out
+	void print_stdout();						// print the structure to std out
 	std::string get_commentline();
 	void show_info();							// print info about the molecule to stdout
-	void clean_up();							// clean up the structure
+	void clean_up();							// shift the internal origin to the com and make set the internal basis to unity
 	bool write_to_file(const char *outputfile);	// write the structure to an xyz-file
-
 private:
 	int number_of_atoms;				// the number of atoms in the molecule
 	std::string comment_line;			// the comment line between the atom number and the coordinates

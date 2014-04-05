@@ -70,53 +70,62 @@ molecule::molecule(const char *input_file)
 	{
 		std::cout.precision(5);
 		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-				  << std::setw(16) << std::fixed << atiter->get_x()
-				  << std::setw(15) << std::fixed << atiter->get_y()
-				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
+				  << std::setw(16) << std::fixed << atiter->get_int_x()
+				  << std::setw(15) << std::fixed << atiter->get_int_y()
+				  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
 	}
+
 	// calculate the molecular properties:
 	this->calc_mass();
-	std::cout << "Molecular mass: " << this->mass << std::endl;
 	this->calc_com();
-	std::cout << "Location of the center of mass: " << std::endl << this->center_of_mass << std::endl;
 
 	this->internal_origin = this->center_of_mass;
 
-	this->shift(- this->internal_origin);
+	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+	{
+		atiter->shift(-(this->center_of_mass));
+	}
 
 	std::cout << "Atomic positions after shifting (internal positions):" << std::endl;
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
 		std::cout.precision(5);
 		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-				  << std::setw(16) << std::fixed << atiter->get_x()
-				  << std::setw(15) << std::fixed << atiter->get_y()
-				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
+				  << std::setw(16) << std::fixed << atiter->get_int_x()
+				  << std::setw(15) << std::fixed << atiter->get_int_y()
+				  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
 	}
 
+	// calculate and diagonalize the inertia tensor:
 	this->calc_inertia();
-	std::cout << "inertia tensor:" << std::endl << this->inertia_tensor << std::endl;
 	this->diag_inertia();
 
+	// transform the atomic coordinates into the internal basis:
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
 		atiter->transform(this->internal_basis.transpose());
 	}
-	std::cout << "Atomic positions after transforming:" << std::endl;
+
+	std::cout << "Atomic positions in the internal basis after transforming:" << std::endl;
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		std::cout << atiter->get_atomicsymbol() << "  "
-				  << atiter->get_x() << "  " << atiter->get_y() << "  " << atiter->get_z() << std::endl;
+		std::cout.precision(5);
+		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+				  << std::setw(16) << std::fixed << atiter->get_int_x()
+				  << std::setw(15) << std::fixed << atiter->get_int_y()
+				  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
 	}
+
+	std::cout << "Origin of the internal basis:" << std::endl << this->internal_origin << std::endl;
+	std::cout << "Absolute positons:" << std::endl;
+	this->print_stdout();
+	this->show_info();
 }
 
 
 void molecule::shift(Eigen::Vector3d shift_vector)
 {
-	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
-	{
-		atiter->shift(shift_vector);
-	}
+	this->internal_origin += shift_vector;
 }
 
 
@@ -124,13 +133,16 @@ void molecule::print_stdout()
 {
 	std::cout << "The number of atoms is: " << this->number_of_atoms << std::endl;
 	std::cout << this->comment_line << std::endl;
+
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
+		Eigen::Vector3d abs_pos = this->internal_origin + this->internal_basis * atiter->get_int_position();
+
 		std::cout.precision(5);
 		std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-				  << std::setw(16) << std::fixed << atiter->get_x()
-				  << std::setw(15) << std::fixed << atiter->get_y()
-				  << std::setw(15) << std::fixed << atiter->get_z() << std::endl;
+				  << std::setw(16) << std::fixed << abs_pos(0)
+				  << std::setw(15) << std::fixed << abs_pos(1)
+				  << std::setw(15) << std::fixed << abs_pos(2) << std::endl;
 	}
 }
 
@@ -168,7 +180,7 @@ void molecule::calc_com()
 
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
-		this->center_of_mass += atiter->get_position() * atiter->get_atomicmass();
+		this->center_of_mass += atiter->get_int_position() * atiter->get_atomicmass();
 	}
 
 	this->center_of_mass /= this->mass;
@@ -187,9 +199,9 @@ void molecule::calc_inertia()
 			{
 				double factor = 0.0;
 				if (alpha == beta)
-					factor = atiter->get_position().dot(atiter->get_position());
+					factor = atiter->get_int_position().dot(atiter->get_int_position());
 
-				factor -= atiter->get_position()(alpha) * atiter->get_position()(beta);
+				factor -= atiter->get_int_position()(alpha) * atiter->get_int_position()(beta);
 				this->inertia_tensor(alpha,beta) += atiter->get_atomicmass() * factor;
 			}
 		}
@@ -209,18 +221,7 @@ void molecule::diag_inertia()
 	{
 		this->inertia_moments = solver.eigenvalues();
 		this->internal_basis = solver.eigenvectors();
-		std::cout << "The moments of inertia are:" << std::endl
-						  << this->inertia_moments << std::endl;
-		std::cout << "Eigenvectors of inertia tensor:" << std::endl
-				  << this->internal_basis << std::endl;
 	}
-}
-
-
-void molecule::clean_up()
-{
-	// shift the molecule to the center of mass
-	this->shift(-this->center_of_mass);
 }
 
 
@@ -233,11 +234,13 @@ bool molecule::write_to_file(const char *outputfile)
 
 	for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 	{
+		Eigen::Vector3d abs_pos = this->internal_origin + this->internal_basis * atiter->get_int_position();
+
 		output.precision(5);
 		output	<< std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-				<< std::setw(16) << std::fixed << atiter->get_x()
-				<< std::setw(15) << std::fixed << atiter->get_y()
-				<< std::setw(15) << std::fixed << atiter->get_z() << std::endl;
+				<< std::setw(16) << std::fixed << abs_pos(0)
+				<< std::setw(15) << std::fixed << abs_pos(1)
+				<< std::setw(15) << std::fixed << abs_pos(2) << std::endl;
 	}
 
     output.close();
@@ -246,7 +249,11 @@ bool molecule::write_to_file(const char *outputfile)
 }
 
 
-void atom::transform(Eigen::Matrix3d tmatrix)
+void molecule::clean_up()
 {
-	this->position = tmatrix * this->position;
+	this->internal_origin << 0,0,0;
+	this->internal_basis << 1,0,0,
+			                0,1,0,
+			                0,0,1;
 }
+
