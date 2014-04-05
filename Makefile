@@ -19,7 +19,7 @@
 #
 
 # variable definitions:
-CC = g++
+CXX = g++
 MKDIR_P = mkdir -p
 
 SRC_DIR = source
@@ -27,7 +27,9 @@ OBJ_DIR = objects
 BIN_DIR = bin
 DIRS = $(OBJ_DIR) $(BIN_DIR)
 
-CFLAGS = -Wall -Wextra -g --pedantic-errors -O0
+CFLAGS = -Wall -Wextra -g --pedantic-errors -O0 -std=c++0x
+LINKFLAGS = 
+INCLUDES = -I/usr/include/eigen3
 
 VPATH = $(SRC_DIR): \
         $(OBJ_DIR)
@@ -35,6 +37,7 @@ VPATH = $(SRC_DIR): \
 MOLCONV = $(addprefix $(BIN_DIR)/,molconv)
 
 MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
+                 atom.o            \
                  molecule.o        \
                  utilities.o       \
                  configuration.o   \
@@ -46,7 +49,8 @@ MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
 all: $(DIRS) $(MOLCONV)
 
 $(MOLCONV): $(MOLCONV_OBJS)
-	$(CC) -o $@ $^ -lboost_system -lboost_filesystem -lboost_program_options
+	$(CXX) -o $@ $^ $(LINKFLAGS)
+
 $(OBJ_DIR)/molconv.o: $(addprefix $(OBJ_DIR)/,\
                         molecule.o      \
                         utilities.o     \
@@ -59,6 +63,10 @@ $(OBJ_DIR)/molecule.o: $(addprefix $(SRC_DIR)/,\
                          utilities.h       \
                          )
 
+$(OBJ_DIR)/atom.o: $(addprefix $(SRC_DIR)/,\
+                     atom.h \
+                     )
+
 $(OBJ_DIR)/utilities.o: $(addprefix $(SRC_DIR)/,\
                           utilities.h       \
                           atom_properties.h \
@@ -69,7 +77,7 @@ $(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\
                               )
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CXX) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 
 $(OBJ_DIR):

@@ -3,7 +3,7 @@
  *
  * This file is part of molconv.
  *
- * molconv if free software: you can redistribute it and/or modify
+ * molconv is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -111,16 +111,17 @@ int main(int argc, char *argv[])
 
 		//    if (input_paras.input_exists())
 		//    {
-		//        molecule testmolecule(input_paras.get_inputfile().c_str());
+		//        molconv::molecule testmolecule(input_paras.get_inputfile().c_str());
 
 		//        if (input_paras.output_exists())
 		//        	testmolecule.write_to_file(input_paras.get_outputfile().c_str());
+        //        if (input_paras.cleanup_wanted())
+        //            testmolecule.clean_up();
 		//    }
 
 	}
 	catch(std::exception& e)
 	{
-
 		std::cerr << "Unhandled Exception reached the top of main: "
 				  << e.what() << ", application will now exit" << std::endl;
 		return ERROR_UNHANDLED_EXCEPTION;

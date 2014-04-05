@@ -3,7 +3,7 @@
  *
  * This file is part of molconv.
  *
- * molconv if free software: you can redistribute it and/or modify
+ * molconv is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
@@ -25,63 +25,43 @@
 
 #include<vector>
 #include<string>
-#include<eigen3/Eigen/Dense>
+#include<Eigen/Core>
+#include"atom.h"
 
 
-class atom
+namespace molconv
 {
-public:
-	atom(int at_num, Eigen::Vector3d pos);		// specify type and position of atom
-	void shift(Eigen::Vector3d shift_vector);	// move the atom
-	int get_atomicnumber();						// return the atomic number
-	std::string get_atomicsymbol();				// return the atomic symbol
-	double get_atomicmass();					// return the mass
-	Eigen::Vector3d get_position();				// return the position as a vector
-	double get_x();								// return the x-position
-	double get_y();								// return the y-position
-	double get_z();								// return the z-position
-	void transform(Eigen::Matrix3d tmatrix);	// transform the position
-private:
-	int atomicnumber;
-	std::string atomicsymbol;
-	double mass;
+	class molecule
+	{
+	public:
+		molecule(const char *input_file);			// read a molecular structure from an xyz file
+		void shift(Eigen::Vector3d shift_vector);	// move the molecule
+		void print_stdout();						// print the structure to std out
+		std::string get_commentline();
+		void show_info();							// print info about the molecule to stdout
+		void clean_up();							// shift the internal origin to the com and make set the internal basis to unity
+		bool write_to_file(const char *outputfile);	// write the structure to an xyz-file
+	private:
+		int number_of_atoms;				// the number of atoms in the molecule
+		std::string comment_line;			// the comment line between the atom number and the coordinates
 
-	Eigen::Vector3d position;	// the position in the internal molecular coordinate system
-};
+		std::vector<atom> theatoms;			// the atoms
 
+		double mass;						// the total mass of the molecule
+		Eigen::Vector3d internal_origin;	// origin of the internal coordinate system in terms of the absolute coordinates
+		Eigen::Vector3d center_of_mass;		// position of the center of mass
+		Eigen::Vector3d center_of_geometry;	// like the center of mass, but without the mass weighting
+		Eigen::Vector3d inertia_moments;	// the moments of inertia along the principal axes
+		Eigen::Matrix3d inertia_tensor;		// tensor of the moments of inertia
+		Eigen::Matrix3d internal_basis;		// basis of the internal coordinates
 
-class molecule
-{
-public:
-	molecule(const char *input_file);			// read a molecular structure from an xyz file
-	void shift(Eigen::Vector3d shift_vector);	// move the molecule
-	void print_stdout();						// print the structur to std out
-	std::string get_commentline();
-	void show_info();							// print info about the molecule to stdout
-	void clean_up();							// clean up the structure
-	bool write_to_file(const char *outputfile);	// write the structure to an xyz-file
-
-private:
-	int number_of_atoms;				// the number of atoms in the molecule
-	std::string comment_line;			// the comment line between the atom number and the coordinates
-
-	std::vector<atom> theatoms;			// the atoms
-
-	double mass;						// the total mass of the molecule
-	Eigen::Vector3d internal_origin;	// origin of the internal coordinate system in terms of the absolute coordinates
-	Eigen::Vector3d center_of_mass;		// position of the center of mass
-	Eigen::Vector3d center_of_geometry;	// like the center of mass, but without the mass weighting
-	Eigen::Vector3d inertia_moments;	// the moments of inertia along the principal axes
-	Eigen::Matrix3d inertia_tensor;		// tensor of the moments of inertia
-	Eigen::Matrix3d internal_basis;		// basis of the internal coordinates
-
-	void calc_mass();					// calculate the total mass of the molecule
-	void calc_com();					// calculate the center of mass
-	void calc_cog();					// calculate the center of geometry
-	void calc_inertia();				// calculate the tensor of moments of inertia
-	void diag_inertia();				// diagonalize the tensor of inertia
-};
-
+		void calc_mass();					// calculate the total mass of the molecule
+		void calc_com();					// calculate the center of mass
+		void calc_cog();					// calculate the center of geometry
+		void calc_inertia();				// calculate the tensor of moments of inertia
+		void diag_inertia();				// diagonalize the tensor of inertia
+	};
+}
 
 
 #endif /* MOLECULE_H_ */
