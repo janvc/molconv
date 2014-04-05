@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 		;
 
 		po::positional_options_description positionalOptions;
-		positionalOptions.add("inputfiles", -1);
+		positionalOptions.add("inputfiles", 1); // -1 for all following files
 
 		po::options_description cmdline_opts;
 		cmdline_opts.add(opts).add(hidden);
