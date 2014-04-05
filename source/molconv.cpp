@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
 
     po::options_description hidden("Hidden options");
     hidden.add_options()
-		("inputfile",po::value< std::vector<std::string> >()->required(), "input file")
+		("inputfiles",po::value< std::vector<std::string> >()->required(), "inputfiles")
     ;
 
 	po::positional_options_description positionalOptions;
-	positionalOptions.add("inputfile", -1);
+	positionalOptions.add("inputfiles", -1);
 
     po::options_description cmdline_opts;
     cmdline_opts.add(opts).add(hidden);
