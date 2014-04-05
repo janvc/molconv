@@ -22,70 +22,12 @@
 #include<iostream>
 #include<iomanip>
 #include<fstream>
-#include<sstream>
 #include<string>
+#include<eigen3/Eigen/Eigenvalues>
 #include"molecule.h"
-#include"atom_properties.h"
 #include"utilities.h"
 
 
-atom::atom(int at_num, Eigen::Vector3d pos)
-{
-	this->atomicnumber = at_num;
-
-	this->position = pos;
-
-	this->mass = atomprops[at_num-1].mass;
-	this->atomicsymbol = atomprops[at_num-1].symbol;
-}
-
-
-void atom::shift(Eigen::Vector3d shift_vector)
-{
-	this->position += shift_vector;
-}
-
-
-int atom::get_atomicnumber()
-{
-	return this->atomicnumber;
-}
-
-
-std::string atom::get_atomicsymbol()
-{
-	return this->atomicsymbol;
-}
-
-
-double atom::get_atomicmass()
-{
-	return this->mass;
-}
-
-
-Eigen::Vector3d atom::get_position()
-{
-	return this->position;
-}
-
-
-double atom::get_x()
-{
-	return this->position(0);
-}
-
-
-double atom::get_y()
-{
-	return this->position(1);
-}
-
-
-double atom::get_z()
-{
-	return this->position(2);
-}
 
 
 molecule::molecule(const char *input_file)

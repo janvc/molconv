@@ -25,29 +25,8 @@
 
 #include<vector>
 #include<string>
-#include<eigen3/Eigen/Dense>
-
-
-class atom
-{
-public:
-	atom(int at_num, Eigen::Vector3d pos);		// specify type and position of atom
-	void shift(Eigen::Vector3d shift_vector);	// move the atom
-	int get_atomicnumber();						// return the atomic number
-	std::string get_atomicsymbol();				// return the atomic symbol
-	double get_atomicmass();					// return the mass
-	Eigen::Vector3d get_position();				// return the position as a vector
-	double get_x();								// return the x-position
-	double get_y();								// return the y-position
-	double get_z();								// return the z-position
-	void transform(Eigen::Matrix3d tmatrix);	// transform the position
-private:
-	int atomicnumber;
-	std::string atomicsymbol;
-	double mass;
-
-	Eigen::Vector3d position;	// the position in the internal molecular coordinate system
-};
+#include<eigen3/Eigen/Core>
+#include"atom.h"
 
 
 class molecule
