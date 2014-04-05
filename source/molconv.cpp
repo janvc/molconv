@@ -85,7 +85,21 @@ int main(int argc, char *argv[])
 		}
 		catch(boost::program_options::required_option& e)
 		{
-			std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
+			print_header();
+			std::cout << std::string(45,'-') << std::endl
+			          << "    ############### ERROR ###############" << std::endl;
+
+			if( e.get_option_name() == "--inputfiles" )
+			{
+				std::cerr << "    There is no inputfile!" << std::endl
+						  << "    Inputfile must be specified!" <<std::endl;
+			}
+			else
+			{
+				std::cerr << " " << e.what() << std::endl << std::endl;
+			}
+			std::cout << std::string(45,'-') << std::endl << std::endl;
+			print_help_msg(appName);
 			return ERROR_IN_COMMAND_LINE;
 		}
 		catch(boost::program_options::error& e)
