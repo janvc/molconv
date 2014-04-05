@@ -27,7 +27,8 @@ OBJ_DIR = objects
 BIN_DIR = bin
 DIRS = $(OBJ_DIR) $(BIN_DIR)
 
-CFLAGS = -Wall -Wextra -g --pedantic-errors -O0
+CFLAGS = -Wall -Wextra -g --pedantic-errors -O0 -std=c++0x
+INCLUDES = -I/usr/include/eigen3
 
 VPATH = $(SRC_DIR): \
         $(OBJ_DIR)
@@ -75,7 +76,7 @@ $(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\
                               )
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 
 $(OBJ_DIR):

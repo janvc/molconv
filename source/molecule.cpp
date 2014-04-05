@@ -23,7 +23,7 @@
 #include<iomanip>
 #include<fstream>
 #include<string>
-#include<eigen3/Eigen/Eigenvalues>
+#include<Eigen/Eigenvalues>
 #include"molecule.h"
 #include"utilities.h"
 
