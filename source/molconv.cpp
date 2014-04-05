@@ -46,12 +46,13 @@ int main(int argc, char *argv[])
     try
 	{
 		std::vector<std::string> inputfiles;
+		std::string outputfile;
 
 		// Declare the supported options.
 		po::options_description opts;
 		opts.add_options()
 			("help,h", "Display help message")
-			("output,o",po::value<std::string>, "File, output Molecule(s) are written to")
+			("output,o",po::value<std::string>(&outputfile), "File, output Molecule(s) are written to")
 		;
 
 		po::options_description hidden("Hidden options");
@@ -117,9 +118,14 @@ int main(int argc, char *argv[])
 		}
 
 		molconv::molecule testmolecule(inputfiles[0].c_str());
-		
+
+		if( vm.count("output") )
+		{
+			testmolecule.write_to_file(outputfile.c_str());
+
+		}
+
 		//        if (input_paras.output_exists())
-		//        	testmolecule.write_to_file(input_paras.get_outputfile().c_str());
         //        if (input_paras.cleanup_wanted())
         //            testmolecule.clean_up();
 		//    }
