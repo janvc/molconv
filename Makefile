@@ -19,7 +19,7 @@
 #
 
 # variable definitions:
-CC = g++
+CXX = g++
 MKDIR_P = mkdir -p
 
 SRC_DIR = source
@@ -49,7 +49,7 @@ MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
 all: $(DIRS) $(MOLCONV)
 
 $(MOLCONV): $(MOLCONV_OBJS)
-	$(CC) -o $@ $^ $(LINKFLAGS)
+	$(CXX) -o $@ $^ $(LINKFLAGS)
 
 $(OBJ_DIR)/molconv.o: $(addprefix $(OBJ_DIR)/,\
                         molecule.o      \
@@ -77,7 +77,7 @@ $(OBJ_DIR)/configuration.o: $(addprefix $(SRC_DIR)/,\
                               )
 
 $(OBJ_DIR)/%.o: %.cpp
-	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
+	$(CXX) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 
 $(OBJ_DIR):
