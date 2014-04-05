@@ -47,12 +47,14 @@ void print_help_msg(const std::string& appName)
 {
 	print_header();
 
-	std::cout << "USAGE: " << appName << " [OPTIONS] INPUTFILE [FILE2 ...]" << std::endl
-	          << std::endl
+
+	std::cout << "USAGE: " << appName << " [OPTIONS] inputfile [file ..]" << std::endl
+			  << std::endl
 			  << "Options:" << std::endl
 			  << std::endl
 			  << "   -h             display help text" << std::endl
-			  << "   -o [filename]  output file" << std::endl
+			  << "   -o <filename>  output file" << std::endl
+
 			  << std::endl;
 }
 
