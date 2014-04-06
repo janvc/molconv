@@ -31,6 +31,8 @@
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
 
+namespace Err = molconv::Err;
+
 namespace
 {
   const size_t ERROR_IN_COMMAND_LINE = 1;
@@ -113,7 +115,7 @@ int main(int argc, char *argv[])
 
 		if( !fs::exists(pinputfile) )
 		{
-			throw(molconv::Err::FileNotExist(inputfiles[0]));
+			throw(Err::FileNotExist(inputfiles[0]));
 		}
 
 		print_header();
@@ -126,13 +128,12 @@ int main(int argc, char *argv[])
 
 		}
 
-		//        if (input_paras.output_exists())
         //        if (input_paras.cleanup_wanted())
         //            testmolecule.clean_up();
 		//    }
 
 	}
-	catch(molconv::Err::FileNotExist& e)
+	catch(Err::FileNotExist& e)
 	{
 			print_err_header();
 			std::cerr << "    Inputfile " << e.get_filename() << " couldn't be opened!" <<std::endl;
