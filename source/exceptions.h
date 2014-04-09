@@ -34,6 +34,7 @@ namespace molconv
 		{
 		public:
 			FileNotExist(std::string filename);
+            virtual ~FileNotExist() throw();
 			std::string get_filename();						// returns filename which can't be open
 		protected:
 			std::string filename;

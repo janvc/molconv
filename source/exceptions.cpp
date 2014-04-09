@@ -31,6 +31,8 @@ namespace molconv
 		{
 			this->filename = filename;
 		}
+
+        FileNotExist::~FileNotExist() throw() {}
 		
 		std::string FileNotExist::get_filename()
 		{
