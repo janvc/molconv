@@ -54,12 +54,17 @@ namespace molconv
 		Eigen::Vector3d inertia_moments;	// the moments of inertia along the principal axes
 		Eigen::Matrix3d inertia_tensor;		// tensor of the moments of inertia
 		Eigen::Matrix3d internal_basis;		// basis of the internal coordinates
+		Eigen::Matrix3d covar_mat;			// the covariance matrix of the molecule
+		Eigen::Vector3d covar_eigval;		// eigenvalues of the covariance matrix
+		Eigen::Matrix3d covar_eigvec;		// eigenvectors of the covariance matrix
 
 		void calc_mass();					// calculate the total mass of the molecule
 		void calc_com();					// calculate the center of mass
 		void calc_cog();					// calculate the center of geometry
 		void calc_inertia();				// calculate the tensor of moments of inertia
 		void diag_inertia();				// diagonalize the tensor of inertia
+		void calc_covar_mat();				// calculate the covariance matrix of the molecule
+		void diag_covar_mat();				// diagonalize the covariance matrix
 	};
 }
 
