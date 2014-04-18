@@ -322,4 +322,22 @@ namespace molconv
 		}
 
 	}
+
+
+	void molecule::euler2trans()
+	{
+		this->internal_basis(0,0) =  cos(this->euler_psi) * cos(this->euler_phi)
+									 - cos(this->euler_theta) * cos(this->euler_phi) * cos(this->euler_psi);
+		this->internal_basis(0,1) =  cos(this->euler_psi) * sin(this->euler_phi)
+									 + cos(this->euler_theta) * cos(this->euler_phi) * sin(this->euler_psi);
+		this->internal_basis(0,2) =  sin(this->euler_psi) * sin(this->euler_theta);
+		this->internal_basis(1,0) = -sin(this->euler_psi) * cos(this->euler_phi)
+									 - cos(this->euler_theta) * sin(this->euler_phi) * cos(this->euler_psi);
+		this->internal_basis(1,1) = -sin(this->euler_psi) * sin(this->euler_phi)
+									 + cos(this->euler_theta) * cos(this->euler_phi) * cos(this->euler_psi);
+		this->internal_basis(1,2) =  cos(this->euler_psi) * sin(this->euler_theta);
+		this->internal_basis(2,0) =  sin(this->euler_theta) * sin(this->euler_phi);
+		this->internal_basis(2,1) = -sin(this->euler_theta) * cos(this->euler_phi);
+		this->internal_basis(2,2) =  cos(this->euler_theta);
+	}
 }

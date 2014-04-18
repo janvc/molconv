@@ -48,6 +48,10 @@ namespace molconv
 		std::vector<atom> theatoms;			// the atoms
 
 		double mass;						// the total mass of the molecule
+
+		double euler_phi;					//
+		double euler_theta;					//  | the eulerian angles specifying the orientation of the molecule
+		double euler_psi;					// /
 		Eigen::Vector3d internal_origin;	// origin of the internal coordinate system in terms of the absolute coordinates
 		Eigen::Vector3d center_of_mass;		// position of the center of mass
 		Eigen::Vector3d center_of_geometry;	// like the center of mass, but without the mass weighting
@@ -65,6 +69,7 @@ namespace molconv
 		void diag_inertia();				// diagonalize the tensor of inertia
 		void calc_covar_mat();				// calculate the covariance matrix of the molecule
 		void diag_covar_mat();				// diagonalize the covariance matrix
+		void euler2trans();					// calculate the transformation matrix from the eulerian angles
 	};
 }
 
