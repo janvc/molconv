@@ -70,6 +70,7 @@ namespace molconv
 		void calc_covar_mat();				// calculate the covariance matrix of the molecule
 		void diag_covar_mat();				// diagonalize the covariance matrix
 		void euler2trans();					// calculate the transformation matrix from the eulerian angles
+		void trans2euler();					// calculate the eulerian angles from the transformation matrix
 	};
 }
 

@@ -23,6 +23,7 @@
 #include<iomanip>
 #include<fstream>
 #include<string>
+#include<cmath>
 #include<Eigen/Eigenvalues>
 #include"molecule.h"
 #include"utilities.h"
@@ -136,6 +137,11 @@ namespace molconv
 		std::cout << "Eigenvectors of the Covariance Matrix:" << std::endl << this->covar_eigvec << std::endl;
 		std::cout << "Eigenvectors of the Covariance Matrix in the internal basis:" << std::endl
 				  << this->internal_basis.transpose() * this->covar_eigvec << std::endl;
+
+		this->trans2euler();
+		std::cout << "Eulerian angles:" << std::endl << " Phi:    " << this->euler_phi << std::endl
+													 << " Psi:    " << this->euler_psi << std::endl
+													 << " Theta:  " << this->euler_theta << std::endl;
 
 	}
 
@@ -419,5 +425,15 @@ namespace molconv
 		this->internal_basis(2,0) =  sin(this->euler_theta) * sin(this->euler_phi);
 		this->internal_basis(2,1) = -sin(this->euler_theta) * cos(this->euler_phi);
 		this->internal_basis(2,2) =  cos(this->euler_theta);
+	}
+
+
+	void molecule::trans2euler()
+	{
+		double abs_l = sqrt(pow(this->internal_basis(2,0), 2) + pow(this->internal_basis(2,1), 2));
+
+		this->euler_theta = acos(this->internal_basis(2,2));
+		this->euler_phi = acos(-this->internal_basis(2,1)/abs_l);
+		this->euler_psi = acos((this->internal_basis(0,1)*this->internal_basis(2,0)-this->internal_basis(0,0)*this->internal_basis(2,1))/abs_l);
 	}
 }
