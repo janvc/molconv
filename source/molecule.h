@@ -27,6 +27,7 @@
 #include<string>
 #include<Eigen/Core>
 #include"atom.h"
+#include"configuration.h"
 
 
 namespace molconv
@@ -34,7 +35,7 @@ namespace molconv
 	class molecule
 	{
 	public:
-		molecule(const char *input_file);			// read a molecular structure from an xyz file
+		molecule(const char *input_file, configuration *config);			// read a molecular structure from an xyz file
 		void shift(Eigen::Vector3d shift_vector);	// move the molecule
 		void print_stdout();						// print the structure to std out
 		std::string get_commentline();

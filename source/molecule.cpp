@@ -36,7 +36,7 @@ namespace molconv
 	 * and sets up the internal coordinate representation of the molecular structure. It calculates and
 	 * diagonalizes the inertia tensor and performs a prinicpal axis transformation.
 	 */
-	molecule::molecule(const char *input_file)
+	molecule::molecule(const char *input_file, configuration *config)
 	{
 		std::ifstream input(input_file);
 		std::string line;

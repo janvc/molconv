@@ -39,6 +39,7 @@ MOLCONV = $(addprefix $(BIN_DIR)/,molconv)
 MOLCONV_OBJS = $(addprefix $(OBJ_DIR)/,\
                  exceptions.o      \
                  atom.o            \
+                 configuration.o   \
                  molecule.o        \
                  utilities.o       \
                  molconv.o         \

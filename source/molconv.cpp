@@ -19,170 +19,35 @@
  */
 
 
-#include<iostream>
-#include<fstream>
-#include<boost/program_options.hpp>
-#include<boost/filesystem.hpp>
-#include"exceptions.h"
+//#include"exceptions.h"
 #include"utilities.h"
 #include"molecule.h"
+#include"configuration.h"
 
-// Set namespace po for easier use of program_options
-namespace prog_opts = boost::program_options;
-namespace fs = boost::filesystem;
-
-namespace Err = molconv::Err;
-
-namespace
-{
-  const size_t ERROR_IN_COMMAND_LINE = 1;
-  const size_t SUCCESS = 0;
-  const size_t ERROR_UNHANDLED_EXCEPTION = 2;
-
-} // namespace
 
 int main(int argc, char *argv[])
 {
-	std::vector<std::string> inputfiles;
-	std::string outputfile;
+	print_header();
 
-	prog_opts::options_description opt_desc("Program options:");
-	opt_desc.add_options()
-			("help,h", "print this help text")
-			("input,i", prog_opts::value< std::vector<std::string> >(&inputfiles), "input file(s) to be read")
-			("output,o", prog_opts::value<std::string>(&outputfile), "output, where the structure will be written to")
-			("cleanup,c", "clean up the structure")
-	;
+	molconv::configuration config(argc, argv);
 
-	prog_opts::variables_map var_map;
-	prog_opts::store(prog_opts::parse_command_line(argc, argv, opt_desc), var_map);
-	prog_opts::notify(var_map);
-
-	if (var_map.count("help"))
+	if (config.help_wanted())
 	{
-		std::cout << opt_desc << std::endl;
+		config.print_help();
 		return 0;
 	}
 
-	if (var_map.count("input"))
+	if (config.input_exists())
 	{
-		print_header();
+		molconv::molecule testmolecule(config.get_input(0).c_str(), &config);
 
-		molconv::molecule testmolecule(inputfiles.at(0).c_str());
-
-		if (var_map.count("cleanup"))
+		if (config.cleanup_wanted())
 			testmolecule.clean_up();
 
-		if (var_map.count("output"))
-			testmolecule.write_to_file(outputfile.c_str());
+		if (config.output_exists())
+			testmolecule.write_to_file(config.get_output().c_str());
 
 		return 0;
 	}
-
-//    try
-//	{
-//		std::vector<std::string> inputfiles;
-//		std::string outputfile;
-//
-//		// Declare the supported options.
-//		po::options_description opts;
-//		opts.add_options()
-//			("help,h", "Display help message")
-//			("output,o",po::value<std::string>(&outputfile), "File, output Molecule(s) are written to")
-//		;
-//
-//		po::options_description hidden("Hidden options");
-//		hidden.add_options()
-//			("inputfiles",po::value< std::vector<std::string> >(&inputfiles)->required(), "inputfiles")
-//		;
-//
-//		po::positional_options_description positionalOptions;
-//		positionalOptions.add("inputfiles", 1); // -1 for all following files
-//
-//		po::options_description cmdline_opts;
-//		cmdline_opts.add(opts).add(hidden);
-//
-//		po::options_description visible("Options");
-//		visible.add(opts);
-//
-//		po::variables_map vm;
-//
-//		try
-//		{
-//			po::store(po::command_line_parser(argc, argv).options(cmdline_opts)
-//						.positional(positionalOptions).run(),
-//					  vm); // throws on error
-//
-//			if( vm.count("help") )
-//			{
-//				print_header();
-//				print_help_msg();
-//				return SUCCESS;
-//			}
-//
-//			po::notify(vm);
-//		}
-//		catch(boost::program_options::required_option& e)
-//		{
-//			print_err_header();
-//
-//			if( e.get_option_name() == "--inputfiles" )
-//			{
-//				std::cerr << "    There is no inputfile!" << std::endl
-//						  << "    Inputfile must be specified!" <<std::endl;
-//			}
-//			else
-//			{
-//				std::cerr << " " << e.what() << std::endl << std::endl;
-//			}
-//			print_err_footer();
-//
-//			return ERROR_IN_COMMAND_LINE;
-//		}
-//		catch(boost::program_options::error& e)
-//		{
-//			std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
-//
-//			return ERROR_IN_COMMAND_LINE;
-//		}
-//
-//		fs::path pinputfile (inputfiles[0]);
-//
-//		if( !fs::exists(pinputfile) )
-//		{
-//			throw(Err::FileNotExist(inputfiles[0]));
-//		}
-//
-//		print_header();
-//
-//		molconv::molecule testmolecule(inputfiles[0].c_str());
-//
-//		if( vm.count("output") )
-//		{
-//			testmolecule.write_to_file(outputfile.c_str());
-//
-//		}
-//
-//        //        if (input_paras.cleanup_wanted())
-//        //            testmolecule.clean_up();
-//		//    }
-//
-//	}
-//	catch(Err::FileNotExist& e)
-//	{
-//			print_err_header();
-//			std::cerr << "    Inputfile " << e.get_filename() << " couldn't be opened!" <<std::endl;
-//			print_err_footer();
-//
-//			return ERROR_IN_COMMAND_LINE;
-//	}
-//	catch(std::exception& e)
-//	{
-//		std::cerr << "Unhandled Exception reached the top of main: "
-//				  << e.what() << ", application will now exit" << std::endl;
-//		return ERROR_UNHANDLED_EXCEPTION;
-//	}
-//
-//	return SUCCESS;
 }
 
