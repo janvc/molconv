@@ -37,6 +37,32 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
+	if (config.origin_exists())
+	{
+		switch (config.get_orig_type())
+		{
+			case 1:
+			{
+				std::cout << "Using the center of mass as the origin." << std::endl;
+				break;
+			}
+			case 2:
+			{
+				std::cout << "Using the center of geometry as the origin." << std::endl;
+				break;
+			}
+			case 3:
+			{
+				std::cout << "Using atoms "
+						  << config.get_orig_atoms().at(0) << "  "
+						  << config.get_orig_atoms().at(1) << "  "
+						  << config.get_orig_atoms().at(2) << "  "
+						  << " as the origin." << std::endl;
+				break;
+			}
+		}
+
+	}
 	if (config.input_exists())
 	{
 		molconv::molecule testmolecule(config.get_input(0).c_str(), &config);

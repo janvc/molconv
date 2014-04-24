@@ -34,13 +34,19 @@ namespace molconv
 		bool cleanup_wanted();
 		bool input_exists();
 		bool output_exists();
+		bool origin_exists();
 		int get_Nofinputs();
+		int get_orig_type();
+		std::vector<int> get_orig_atoms();
 		std::string get_input(int index);
 		std::string get_output();
 		void print_help();
 	private:
+		int internal_origin_type;					// type of internal coordinate system: 1 - com, 2 - cog, 3 - atoms
+		std::vector<int> origin_atoms;				// atoms to be used for the coordinate system
 		std::vector<std::string> inputfiles;		// the input files
 		std::string outputfile;						// the output file
+		std::vector<std::string> origin_string;
 		boost::program_options::options_description opt_desc;
 		boost::program_options::variables_map var_map;
 
@@ -48,6 +54,7 @@ namespace molconv
 		bool cleanup_flag;
 		bool input_flag;
 		bool output_flag;
+		bool origin_flag;
 	};
 } /* namespace molconv */
 #endif /* CONFIGURATION_H_ */

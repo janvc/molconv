@@ -71,23 +71,23 @@ namespace molconv
 		std::cout << "Successfully read input file: " << input_file << std::endl;
 
 
-		std::cout << "Atomic positions before shifting:" << std::endl;
-		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
-		{
-			std::cout.precision(5);
-			std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-					  << std::setw(16) << std::fixed << atiter->get_int_x()
-					  << std::setw(15) << std::fixed << atiter->get_int_y()
-					  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
-		}
+//		std::cout << "Atomic positions before shifting:" << std::endl;
+//		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+//		{
+//			std::cout.precision(5);
+//			std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+//					  << std::setw(16) << std::fixed << atiter->get_int_x()
+//					  << std::setw(15) << std::fixed << atiter->get_int_y()
+//					  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
+//		}
 
 		// calculate the molecular properties:
 		this->calc_mass();
 		this->calc_com();
 		this->calc_cog();
 
-		std::cout << " position of the center of mass:" << std::endl << this->center_of_mass << std::endl;
-		std::cout << " position of the center of geometry:" << std::endl << this->center_of_geometry << std::endl;
+//		std::cout << " position of the center of mass:" << std::endl << this->center_of_mass << std::endl;
+//		std::cout << " position of the center of geometry:" << std::endl << this->center_of_geometry << std::endl;
 
 		this->internal_origin = this->center_of_mass;
 
@@ -96,22 +96,22 @@ namespace molconv
 			atiter->shift(-(this->center_of_mass));
 		}
 
-		std::cout << "Atomic positions after shifting (internal positions):" << std::endl;
-		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
-		{
-			std::cout.precision(5);
-			std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-					  << std::setw(16) << std::fixed << atiter->get_int_x()
-					  << std::setw(15) << std::fixed << atiter->get_int_y()
-					  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
-		}
+//		std::cout << "Atomic positions after shifting (internal positions):" << std::endl;
+//		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+//		{
+//			std::cout.precision(5);
+//			std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+//					  << std::setw(16) << std::fixed << atiter->get_int_x()
+//					  << std::setw(15) << std::fixed << atiter->get_int_y()
+//					  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
+//		}
 
 		// calculate and diagonalize the inertia tensor:
 		this->calc_inertia();
 		this->diag_inertia();
-		std::cout << "Inertia Tensor: " << std::endl << this->inertia_tensor << std::endl;
-		std::cout << "Eigenvalues of the inertia Tensor:" << std::endl << this->inertia_moments << std::endl;
-		std::cout << "Eigenvectors of the inertia Tensor:" << std::endl << this->internal_basis << std::endl;
+//		std::cout << "Inertia Tensor: " << std::endl << this->inertia_tensor << std::endl;
+//		std::cout << "Eigenvalues of the inertia Tensor:" << std::endl << this->inertia_moments << std::endl;
+//		std::cout << "Eigenvectors of the inertia Tensor:" << std::endl << this->internal_basis << std::endl;
 
 		// transform the atomic coordinates into the internal basis:
 		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
@@ -119,29 +119,29 @@ namespace molconv
 			atiter->transform(this->internal_basis.transpose());
 		}
 
-		std::cout << "Atomic positions in the internal basis after transforming:" << std::endl;
-		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
-		{
-			std::cout.precision(5);
-			std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
-					  << std::setw(16) << std::fixed << atiter->get_int_x()
-					  << std::setw(15) << std::fixed << atiter->get_int_y()
-					  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
-		}
+//		std::cout << "Atomic positions in the internal basis after transforming:" << std::endl;
+//		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
+//		{
+//			std::cout.precision(5);
+//			std::cout << std::left << std::setw(3) << atiter->get_atomicsymbol() << std::right
+//					  << std::setw(16) << std::fixed << atiter->get_int_x()
+//					  << std::setw(15) << std::fixed << atiter->get_int_y()
+//					  << std::setw(15) << std::fixed << atiter->get_int_z() << std::endl;
+//		}
 
 		// calculate and diagonalize the covariance matrix:
 		this->calc_covar_mat();
 		this->diag_covar_mat();
-		std::cout << "Covariance Matrix:" << std::endl << this->covar_mat << std::endl;
-		std::cout << "Eigenvalues of the Covariance Matrix:" << std::endl << this->covar_eigval << std::endl;
-		std::cout << "Eigenvectors of the Covariance Matrix:" << std::endl << this->covar_eigvec << std::endl;
-		std::cout << "Eigenvectors of the Covariance Matrix in the internal basis:" << std::endl
-				  << this->internal_basis.transpose() * this->covar_eigvec << std::endl;
+//		std::cout << "Covariance Matrix:" << std::endl << this->covar_mat << std::endl;
+//		std::cout << "Eigenvalues of the Covariance Matrix:" << std::endl << this->covar_eigval << std::endl;
+//		std::cout << "Eigenvectors of the Covariance Matrix:" << std::endl << this->covar_eigvec << std::endl;
+//		std::cout << "Eigenvectors of the Covariance Matrix in the internal basis:" << std::endl
+//				  << this->internal_basis.transpose() * this->covar_eigvec << std::endl;
 
 		this->trans2euler();
-		std::cout << "Eulerian angles:" << std::endl << " Phi:    " << this->euler_phi << std::endl
-													 << " Psi:    " << this->euler_psi << std::endl
-													 << " Theta:  " << this->euler_theta << std::endl;
+//		std::cout << "Eulerian angles:" << std::endl << " Phi:    " << this->euler_phi << std::endl
+//													 << " Psi:    " << this->euler_psi << std::endl
+//													 << " Theta:  " << this->euler_theta << std::endl;
 
 	}
 
