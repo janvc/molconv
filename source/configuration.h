@@ -35,18 +35,24 @@ namespace molconv
 		bool input_exists();
 		bool output_exists();
 		bool origin_exists();
+		bool axes_exist();
 		int get_Nofinputs();
 		int get_orig_type();
-		std::vector<int> get_orig_atoms();
+		int get_orig_atom();
+		int get_axes_type();
+		std::vector<int> get_axes_atoms();
 		std::string get_input(int index);
 		std::string get_output();
 		void print_help();
 	private:
-		int internal_origin_type;					// type of internal coordinate system: 1 - com, 2 - cog, 3 - atoms
-		std::vector<int> origin_atoms;				// atoms to be used for the coordinate system
+		int internal_origin_type;					// location of internal origin: 1 - com, 2 - cog, 3 - atom
+		int internal_coords_type;					// type of internal coodinate axes: 1 - inert, 2 - covar, 3 - atoms
+		int origin_atom;							// atom to be used as the internal origin
+		std::vector<int> axes_atoms;				// atoms used to define the internal coordinate system
 		std::vector<std::string> inputfiles;		// the input files
 		std::string outputfile;						// the output file
 		std::vector<std::string> origin_string;
+		std::vector<std::string> axes_string;
 		boost::program_options::options_description opt_desc;
 		boost::program_options::variables_map var_map;
 
@@ -55,6 +61,7 @@ namespace molconv
 		bool input_flag;
 		bool output_flag;
 		bool origin_flag;
+		bool axes_flag;
 	};
 } /* namespace molconv */
 #endif /* CONFIGURATION_H_ */

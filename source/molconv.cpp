@@ -53,16 +53,36 @@ int main(int argc, char *argv[])
 			}
 			case 3:
 			{
-				std::cout << "Using atoms "
-						  << config.get_orig_atoms().at(0) << "  "
-						  << config.get_orig_atoms().at(1) << "  "
-						  << config.get_orig_atoms().at(2) << "  "
-						  << " as the origin." << std::endl;
+				std::cout << "Using atom " << config.get_orig_atom() << " as the origin." << std::endl;
 				break;
 			}
 		}
 
 	}
+
+	if (config.axes_exist())
+	{
+		switch (config.get_axes_type())
+		{
+			case 1:
+			{
+				std::cout << "Using the eigenvectors of the inertia tensor as the coordinate axes." << std::endl;
+				break;
+			}
+			case 2:
+			{
+				std::cout << "Using the eigenvectors of the covariance matrix as the coordinate axes." << std::endl;
+				break;
+			}
+			case 3:
+			{
+				std::cout << "Using atoms " << config.get_axes_atoms().at(0) << "  "
+											<< config.get_axes_atoms().at(1) << "  "
+											<< config.get_axes_atoms().at(2) << " to define the axes." << std::endl;
+			}
+		}
+	}
+
 	if (config.input_exists())
 	{
 		molconv::molecule testmolecule(config.get_input(0).c_str(), &config);

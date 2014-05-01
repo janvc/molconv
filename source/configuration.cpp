@@ -24,7 +24,9 @@ namespace molconv
 			("output,o", boost::program_options::value<std::string>(&this->outputfile), "output, where the structure will be written to")
 			("cleanup,c", "clean up the structure")
 			("origin", boost::program_options::value< std::vector<std::string> >(&this->origin_string)->multitoken(),
-					"specify the internal coordinate system: com, cog, atoms X Y Z")
+					"specify the origin of the internal coordinate system: com, cog, atom X")
+			("axes", boost::program_options::value< std::vector<std::string> >(&this->axes_string)->multitoken(),
+					"specify the internal coordinate axes: inert, covar, atoms X Y Z")
 		;
 
 		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, opt_desc), var_map);
@@ -56,25 +58,54 @@ namespace molconv
 				else
 					std::cerr << "ERROR: Invalid value of option 'origin'" << std::endl;
 			}
-			else if (this->origin_string.size() == 4)	// four value: 'atoms' + the numbers of the atoms
+			else if (this->origin_string.size() == 2)	// two values: 'atom' + the number of the atom
 			{
-				if (this->origin_string.at(0) == "atoms")
+				if (this->origin_string.at(0) == "atom")
 				{
 					this->internal_origin_type = 3;
 
-					for (std::vector<std::string>::const_iterator iter = this->origin_string.begin()+1; iter != this->origin_string.end(); iter++)
-					{
-						std::istringstream iss(*iter);
-						int atomnumber;
-						iss >> atomnumber;
-						this->origin_atoms.push_back(atomnumber);
-					}
+					std::istringstream iss(this->origin_string.at(1));
+					iss >> this->origin_atom;
 				}
 				else
 					std::cerr << "ERROR: Invalid value of option 'origin'" << std::endl;
 			}
 			else
 				std::cerr << "ERROR: Wrong number of values of option 'origin'" << std::endl;
+		}
+
+		if (this->var_map.count("axes"))
+		{
+			this->axes_flag = true;
+
+			if (this->axes_string.size() == 1)	// only one value: either inert or covar
+			{
+				if (this->axes_string.at(0) == "inert")
+					this->internal_coords_type = 1;
+				else if (this->axes_string.at(0) == "covar")
+					this->internal_coords_type = 2;
+				else
+					std::cerr << "ERROR: Invalid value of option 'axes'" << std::endl;
+			}
+			else if (this->axes_string.size() == 4)	// two values: 'atoms' + the number of the atom
+			{
+				if (this->axes_string.at(0) == "atoms")
+				{
+					this->internal_coords_type = 3;
+
+					for (std::vector<std::string>::const_iterator iter = this->axes_string.begin()+1; iter != this->axes_string.end(); iter++)
+					{
+						std::istringstream iss(*iter);
+						int atomnumber;
+						iss >> atomnumber;
+						this->axes_atoms.push_back(atomnumber);
+					}
+				}
+				else
+					std::cerr << "ERROR: Invalid value of option 'axes'" << std::endl;
+			}
+			else
+				std::cerr << "ERROR: Wrong number of values of option 'axes'" << std::endl;
 		}
 	}
 
@@ -108,16 +139,29 @@ namespace molconv
 		return this->origin_flag;
 	}
 
+	bool configuration::axes_exist()
+	{
+		return this->axes_flag;
+	}
 
 	int configuration::get_orig_type()
 	{
 		return this->internal_origin_type;
 	}
 
-
-	std::vector<int> configuration::get_orig_atoms()
+	int configuration::get_axes_type()
 	{
-		return this->origin_atoms;
+		return this->internal_coords_type;
+	}
+
+	int configuration::get_orig_atom()
+	{
+		return this->origin_atom;
+	}
+
+	std::vector<int> configuration::get_axes_atoms()
+	{
+		return this->axes_atoms;
 	}
 
 	int configuration::get_Nofinputs()
