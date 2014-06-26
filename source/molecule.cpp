@@ -37,6 +37,11 @@ namespace molconv
 	 * diagonalizes the inertia tensor and performs a prinicpal axis transformation.
 	 */
 	molecule::molecule(const char *input_file, configuration *config)
+		:number_of_atoms(0),
+		 comment_line(""),
+		 mass(0.0),
+		 internal_origin(Eigen::Vector3d::Zero()),
+		 internal_basis(Eigen::Matrix3d::Identity())
 	{
 		std::ifstream input(input_file);
 		std::string line;
@@ -85,15 +90,43 @@ namespace molconv
 		this->calc_mass();
 		this->calc_com();
 		this->calc_cog();
+		this->calc_inertia();
+		this->calc_covar_mat();
 
-//		std::cout << " position of the center of mass:" << std::endl << this->center_of_mass << std::endl;
-//		std::cout << " position of the center of geometry:" << std::endl << this->center_of_geometry << std::endl;
+		this->diag_inertia();
+		this->diag_covar_mat();
 
-		this->internal_origin = this->center_of_mass;
+		std::cout << " position of the center of mass:" << std::endl << this->center_of_mass << std::endl;
+		std::cout << " position of the center of geometry:" << std::endl << this->center_of_geometry << std::endl;
+
+		// set the internal origin according to the given configuration:
+		switch (config->get_orig_type())
+		{
+		case 1:
+			this->internal_origin = this->center_of_mass;
+			break;
+		case 2:
+			this->internal_origin = this->center_of_geometry;
+			break;
+		case 3:
+			this->internal_origin = this->theatoms.at(config->get_orig_atom()).get_int_position();
+			break;
+		}
 
 		for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 		{
-			atiter->shift(-(this->center_of_mass));
+			atiter->shift(-(this->internal_origin));
+		}
+
+		// set the internal basis according to the command options:
+		switch (config->get_axes_type())
+		{
+		case 1:
+			this->internal_basis = this->inertia_eigvecs;
+			break;
+		case 2:
+			this->internal_basis = this->covar_eigvec;
+			break;
 		}
 
 //		std::cout << "Atomic positions after shifting (internal positions):" << std::endl;
@@ -109,7 +142,7 @@ namespace molconv
 		// calculate and diagonalize the inertia tensor:
 		this->calc_inertia();
 		this->diag_inertia();
-//		std::cout << "Inertia Tensor: " << std::endl << this->inertia_tensor << std::endl;
+		std::cout << "Inertia Tensor: " << std::endl << this->inertia_tensor << std::endl;
 //		std::cout << "Eigenvalues of the inertia Tensor:" << std::endl << this->inertia_moments << std::endl;
 //		std::cout << "Eigenvectors of the inertia Tensor:" << std::endl << this->internal_basis << std::endl;
 
@@ -196,7 +229,7 @@ namespace molconv
 		std::cout << "Center of mass: " << std::endl << this->center_of_mass << std::endl;
 		std::cout << std::endl;
 		std::cout << "Inertia Tensor: " << std::endl << this->inertia_tensor << std::endl;
-		std::cout << "Eigenvalues of the inertia Tensor:" << std::endl << this->inertia_moments << std::endl;
+		std::cout << "Eigenvalues of the inertia Tensor:" << std::endl << this->inertia_eigvals << std::endl;
 		std::cout << "Eigenvectors of the inertia Tensor:" << std::endl << this->internal_basis << std::endl;
 		std::cout << "Covariance Matrix:" << std::endl << this->covar_mat << std::endl;
 		std::cout << "Eigenvalues of the Covariance Matrix:" << std::endl << this->covar_eigval << std::endl;
@@ -273,11 +306,13 @@ namespace molconv
 
 				for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 				{
+					Eigen::Vector3d abs_pos = this->internal_origin + this->internal_basis * atiter->get_int_position();
+
 					double factor = 0.0;
 					if (alpha == beta)
-						factor = atiter->get_int_position().dot(atiter->get_int_position());
+						factor = (abs_pos - this->center_of_mass).dot(abs_pos - this->center_of_mass);
 
-					factor -= atiter->get_int_position()(alpha) * atiter->get_int_position()(beta);
+					factor -= (abs_pos - this->center_of_mass)(alpha) * (abs_pos - this->center_of_mass)(beta);
 					this->inertia_tensor(alpha,beta) += atiter->get_atomicmass() * factor;
 				}
 			}
@@ -301,8 +336,8 @@ namespace molconv
 		}
 		else
 		{
-			this->inertia_moments = solver.eigenvalues();
-			this->internal_basis = solver.eigenvectors();
+			this->inertia_eigvals = solver.eigenvalues();
+			this->inertia_eigvecs = solver.eigenvectors();
 		}
 	}
 
@@ -373,6 +408,7 @@ namespace molconv
 				for (std::vector<atom>::iterator atiter = this->theatoms.begin(); atiter != this->theatoms.end(); atiter++)
 				{
 					Eigen::Vector3d abs_pos = this->internal_origin + this->internal_basis * atiter->get_int_position();
+
 					this->covar_mat(i,j) += ( (abs_pos(i) - this->center_of_geometry(i))
 							                * (abs_pos(j) - this->center_of_geometry(j)) );
 				}

@@ -56,7 +56,8 @@ namespace molconv
 		Eigen::Vector3d internal_origin;	// origin of the internal coordinate system in terms of the absolute coordinates
 		Eigen::Vector3d center_of_mass;		// position of the center of mass
 		Eigen::Vector3d center_of_geometry;	// like the center of mass, but without the mass weighting
-		Eigen::Vector3d inertia_moments;	// the moments of inertia along the principal axes
+		Eigen::Vector3d inertia_eigvals;	// the moments of inertia along the principal axes
+		Eigen::Matrix3d inertia_eigvecs;	// the eigenvectors of the inertia tensor (the principal axes)
 		Eigen::Matrix3d inertia_tensor;		// tensor of the moments of inertia
 		Eigen::Matrix3d internal_basis;		// basis of the internal coordinates
 		Eigen::Matrix3d covar_mat;			// the covariance matrix of the molecule
