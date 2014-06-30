@@ -33,9 +33,26 @@ namespace molconv
 {
 	Molecule::Molecule(const chemkit::Molecule &base_molecule)
 		: chemkit::Molecule(base_molecule)
+		, number_of_atoms(this->size())
+		, total_mass(this->mass())
+		, center_of_mass(this->centerOfMass())
+		, center_of_geometry(this->center())
 	{
 	}
 
+
+	/*
+	 * This function calculates the inertia tensor of the molecule. The elements of the inertia tensor
+	 * are given by:
+	 * 					J_ij = sum_k=1^N  m_k * ((r_k)^2 * delta_ij) - x_i * x_j
+	 *
+	 * This results in:
+	 * 						 / y^2 + z^2    - x * y     - x * z  \
+	 * 					J = |   - x * y    x^2 + z^2    - y * z   |
+	 * 					     \  - x * z     - y * z    x^2 + y^2 /
+	 *
+	 * where the sum is implicitly included in the matrix elements.
+	 */
 	void Molecule::calc_inertia()
 	{
 		for (size_t alpha = 0; alpha < 3; alpha++)
@@ -44,16 +61,16 @@ namespace molconv
 			{
 				this->inertia_tensor(alpha,beta) = 0.0;
 
-				for (size_t atiter = 0; atiter < this->size(); atiter++)
+				for (size_t atiter = 0; atiter < this->number_of_atoms; atiter++)
 				{
 					double factor = 0.0;
 
 					if (alpha == beta)
-						factor = (this->atom(atiter)->position() - this->centerOfMass())
-						         .dot(this->atom(atiter)->position() - this->centerOfMass());
+						factor = (this->atom(atiter)->position() - this->center_of_mass)
+						         .dot(this->atom(atiter)->position() - this->center_of_mass);
 
-					factor -= (this->atom(atiter)->position() - this->centerOfMass())(alpha)
-							* (this->atom(atiter)->position() - this->centerOfMass())(beta);
+					factor -= (this->atom(atiter)->position() - this->center_of_mass)(alpha)
+							* (this->atom(atiter)->position() - this->center_of_mass)(beta);
 
 					this->inertia_tensor(alpha,beta) += this->atom(atiter)->mass() * factor;
 				}
@@ -61,8 +78,26 @@ namespace molconv
 		}
 	}
 
+
+	/*
+	 * This function diagonalizes the inertia tensor using a routine from the EIGEN library.
+	 * The eigenvectors of the inertia tensor are the principal axes of the molecule and these are
+	 * used as the coordinate axes for the molecule fixed coordinate system. The eigenvalues of
+	 * the inertia tensor are the moments of inertia along those axes.
+	 */
 	void Molecule::diag_inertia()
 	{
+		Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(this->inertia_tensor);
+
+		if (solver.info() != Eigen::Success)
+		{
+			std::cerr << "The inertia tensor could not be diagonalized" << std::endl;
+		}
+		else
+		{
+			this->inertia_eigvals = solver.eigenvalues();
+			this->inertia_eigvecs = solver.eigenvectors();
+		}
 	}
 
 	void Molecule::calc_covar_mat()

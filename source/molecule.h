@@ -33,6 +33,10 @@ namespace molconv
 	public:
 		Molecule(const chemkit::Molecule &base_molecule);
 	private:
+		size_t number_of_atoms				// the number of atoms in the molecule
+		double total_mass;					// total mass of the molecule
+		Eigen::Vector3d center_of_mass;		// the center of mass of the molecule
+		Eigen::Vector3d center_of_geometry;	// the center of geometry of the molecule
 		Eigen::Matrix3d inertia_tensor;		// tensor of the moments of inertia
 		Eigen::Vector3d inertia_eigvals;	// the eigenvalues of the inertia tensor
 		Eigen::Matrix3d inertia_eigvecs;	// the eigenvectors of the inertia tensor (the principal axes)
