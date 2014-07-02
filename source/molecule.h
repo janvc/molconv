@@ -35,7 +35,7 @@ namespace molconv
 		void show_inertia();
 		void show_covar();
 	private:
-		size_t number_of_atoms				// the number of atoms in the molecule
+		size_t number_of_atoms;				// the number of atoms in the molecule
 		double total_mass;					// total mass of the molecule
 		Eigen::Vector3d center_of_mass;		// the center of mass of the molecule
 		Eigen::Vector3d center_of_geometry;	// the center of geometry of the molecule

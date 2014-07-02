@@ -1,7 +1,7 @@
-find_package(Chemkit REQUIRED)
+find_package(Chemkit COMPONENTS io REQUIRED)
 include_directories(${CHEMKIT_INCLUDE_DIRS})
 
-find_package(Boost COMPONENTS system filesystem program_options REQUIRED)
+find_package(Boost COMPONENTS system filesystem iostreams program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(Eigen3 REQUIRED)
@@ -28,4 +28,4 @@ set(SOURCES
 )
 
 add_executable(molconv ${SOURCES})
-target_link_libraries(molconv ${CHEMIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(molconv ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
