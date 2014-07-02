@@ -32,6 +32,8 @@ namespace molconv
 	{
 	public:
 		Molecule(const chemkit::Molecule &base_molecule);
+		void show_inertia();
+		void show_covar();
 	private:
 		size_t number_of_atoms				// the number of atoms in the molecule
 		double total_mass;					// total mass of the molecule
@@ -41,8 +43,8 @@ namespace molconv
 		Eigen::Vector3d inertia_eigvals;	// the eigenvalues of the inertia tensor
 		Eigen::Matrix3d inertia_eigvecs;	// the eigenvectors of the inertia tensor (the principal axes)
 		Eigen::Matrix3d covar_mat;			// the covariance matrix of the molecule
-		Eigen::Vector3d covar_eigval;		// eigenvalues of the covariance matrix
-		Eigen::Matrix3d covar_eigvec;		// eigenvectors of the covariance matrix
+		Eigen::Vector3d covar_eigvals;		// eigenvalues of the covariance matrix
+		Eigen::Matrix3d covar_eigvecs;		// eigenvectors of the covariance matrix
 
 		void calc_inertia();				// calculate the tensor of moments of inertia
 		void diag_inertia();				// diagonalize the inertia tensor

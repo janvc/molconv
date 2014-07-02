@@ -38,6 +38,45 @@ namespace molconv
 		, center_of_mass(this->centerOfMass())
 		, center_of_geometry(this->center())
 	{
+		this->calc_inertia();
+		this->calc_covar_mat();
+
+		this->diag_inertia();
+		this->diag_covar_mat();
+	}
+
+
+	/*
+	 * This function prints the inertia tensor as well as its eigenvalues and eigenvectors
+	 * to the standard output
+	 */
+	void Molecule::show_inertia()
+	{
+		std::cout << "The inertia tensor:" << std::endl
+				  << this->inertia_tensor << std::endl;
+
+		std::cout << "The eigenvalues of the inertia tensor:" << std::endl
+				  << this->inertia_eigvals << std::endl;
+
+		std::cout << "The eigenvectors of the inertia tensor:" << std::endl
+				  << this->inertia_eigvecs << std::endl;
+	}
+
+
+	/*
+	 * This function prints the covariance matrix as well as its eigenvalues and eigenvectors
+	 * to the standard output
+	 */
+	void Molecule::show_covar()
+	{
+		std::cout << "The covariance_matrix:" << std::endl
+				  << this->covar_mat << std::endl;
+
+		std::cout << "The eigenvalues of the covariance matrix:" << std::endl
+				  << this->covar_eigvals << std::endl;
+
+		std::cout << "The eigenvectors of the covariance matrix:" << std::endl
+				  << this->covar_eigvecs << std::endl;
 	}
 
 
@@ -100,12 +139,59 @@ namespace molconv
 		}
 	}
 
+
+	/*
+	 * This function calculates the covariance matrix of the molecule. The variance is a measure of the
+	 * spread of the atoms in the respective direction. The covariance matrix is calculated as:
+	 *
+	 * 				C_ij = 1/N * sum_k=1^N  (x_i - u_i) * (x_j - u_j)
+	 *
+	 * or in matrix form:
+	 * 							/     (x - u_x)^2      (x - u_x)*(y - u_y)  (x - u_x)*(y - u_y) \
+	 * 				C = 1/N *  |  (x - u_x)*(y - u_y)      (y - u_y)^2      (y - u_y)*(z - u_z)  |
+	 * 							\ (x - u_x)*(y - u_y)  (y - u_y)*(z - u_z)      (z - u_z)^2     /
+	 *
+	 * where u_x, u_y, u_z are the positions of the GEOMETRIC center of the molecule (i.e. the center
+	 * of geometry, see respective function above).
+	 */
 	void Molecule::calc_covar_mat()
 	{
+		for (size_t i = 0; i < 3; i++)
+		{
+			for (size_t j = 0; j < 3; j++)
+			{
+				this->covar_mat(i,j) = 0.0;
+
+				for (size_t atiter = 0; atiter < this->number_of_atoms; atiter++)
+				{
+					this->covar_mat(i,j) += ((this->atom(atiter)->position()(i) - this->center_of_geometry(i))
+									       * (this->atom(atiter)->position()(j) - this->center_of_geometry(j)));
+				}
+				this->covar_mat(i,j) /= this->number_of_atoms;
+			}
+		}
 	}
 
+
+	/*
+	 * This function diagonalizes the covariance matrix. The eigenvectors of the covariance matrix are
+	 * the directions with the minimum and maximum variance, respectively, while the corresponding
+	 * eigenvalues are the variances along these directions. For example, the eigenvector corresponding
+	 * to the lowest variance stands perpendicular to the least squares plane of the molecule.
+	 */
 	void Molecule::diag_covar_mat()
 	{
+		Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(this->covar_mat);
+
+		if (solver.info() != Eigen::Success)
+		{
+			std::cerr << "The covariance matrix could not be diagonalized" << std::endl;
+		}
+		else
+		{
+			this->covar_eigvals = solver.eigenvalues();
+			this->covar_eigvecs = solver.eigenvectors();
+		}
 	}
 }
 
