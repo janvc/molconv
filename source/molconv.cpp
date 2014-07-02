@@ -58,6 +58,8 @@ int main(int argc, char *argv[])
 		my_molecule.show_inertia();
 		my_molecule.show_covar();
 
+		my_molecule.clean_up(config);
+
 		if (config.output_exists())
 		{
 			chemkit::MoleculeFile outputfile(config.get_output().c_str());

@@ -25,6 +25,7 @@
 #include<chemkit/molecule.h>
 #include<chemkit/atom.h>
 #include<Eigen/Core>
+#include"configuration.h"
 
 namespace molconv
 {
@@ -34,6 +35,8 @@ namespace molconv
 		Molecule(const chemkit::Molecule &base_molecule);
 		void show_inertia();
 		void show_covar();
+		void rotate(Eigen::Matrix3d rot_mat);
+		void clean_up(molconv::configuration &config);
 	private:
 		size_t number_of_atoms;				// the number of atoms in the molecule
 		double total_mass;					// total mass of the molecule

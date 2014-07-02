@@ -81,6 +81,32 @@ namespace molconv
 
 
 	/*
+	 * This function will rotate the molecule using a rotation matrix
+	 */
+	void Molecule::rotate(Eigen::Matrix3d rot_mat)
+	{
+		for (size_t atiter = 0; atiter < this->number_of_atoms; atiter++)
+		{
+			Eigen::Vector3d new_pos = rot_mat * this->atom(atiter)->position();
+			this->atom(atiter)->setPosition(new_pos);
+		}
+	}
+
+
+	/*
+	 * This function will clean up the structure of the molecule
+	 */
+	void Molecule::clean_up(configuration &config)
+	{
+		if (! config.cleanup_wanted())
+			return;
+
+		this->setCenter(this->center_of_geometry - this->center_of_mass);
+
+		this->rotate(this->inertia_eigvecs.transpose());
+	}
+
+	/*
 	 * This function calculates the inertia tensor of the molecule. The elements of the inertia tensor
 	 * are given by:
 	 * 					J_ij = sum_k=1^N  m_k * ((r_k)^2 * delta_ij) - x_i * x_j
