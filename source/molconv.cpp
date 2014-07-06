@@ -21,7 +21,10 @@
 
 //#include"exceptions.h"
 #include<chemkit/moleculefile.h>
+#include<chemkit/graphicsview.h>
+#include<chemkit/graphicsmoleculeitem.h>
 #include<boost/make_shared.hpp>
+#include<QtGui>
 #include"utilities.h"
 #include"molecule.h"
 #include"configuration.h"
@@ -35,36 +38,52 @@ int main(int argc, char *argv[])
 
 	if (config.input_exists())
 	{
-		chemkit::MoleculeFile molfile(config.get_input(0).c_str());
+		std::vector<boost::shared_ptr<chemkit::Molecule> > the_molecules;
+		std::vector<molconv::Molecule> my_molecules;
 
-		bool ok = molfile.read();
-		if (! ok)
+		for (int i = 0; i < config.get_Nofinputs(); i++)
 		{
-			std::cerr << "Could not read molecule file " << config.get_input(0) << std::endl;
-			return -1;
+			chemkit::MoleculeFile temp_file(config.get_input(i).c_str());
+
+		    bool ok = temp_file.read();
+		    if (! ok)
+		    {
+		    	std::cerr << "Could not read molecule file " << config.get_input(i) << std::endl;
+		    	return -1;
+		    }
+
+		    the_molecules.push_back(temp_file.molecule());
+
+		    my_molecules.push_back(*(the_molecules.at(i).get()));
+
+		    std::cout << "Molecular Formula: " << my_molecules.at(i).formula() << std::endl;
+
+		    my_molecules.at(i).show_inertia();
+		    my_molecules.at(i).show_covar();
+
+		    my_molecules.at(i).clean_up(config);
 		}
 
-		boost::shared_ptr<chemkit::Molecule> the_molecule = molfile.molecule();
-		if (! the_molecule)
+		QApplication app(argc, argv);
+		chemkit::GraphicsView the_view;
+
+		for (int i = 0; i < my_molecules.size(); i++)
 		{
-			std::cerr << "The file " << config.get_input(0) << " is empty." << std::endl;
-			return -1;
+			chemkit::GraphicsMoleculeItem *the_item = new chemkit::GraphicsMoleculeItem(&(my_molecules.at(i)));
+			the_view.addItem(the_item);
 		}
 
-		molconv::Molecule my_molecule(*(the_molecule.get()));
-
-		std::cout << "Molecular Formula: " << my_molecule.formula() << std::endl;
-
-		my_molecule.show_inertia();
-		my_molecule.show_covar();
-
-		my_molecule.clean_up(config);
+		the_view.show();
+		app.exec();
 
 		if (config.output_exists())
 		{
 			chemkit::MoleculeFile outputfile(config.get_output().c_str());
 
-			outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(my_molecule));
+			for (int i = 0; i < my_molecules.size(); i++)
+			{
+				outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(my_molecules.at(i)));
+			}
 
 			bool ok = outputfile.write();
 			if (! ok)

@@ -20,7 +20,7 @@ namespace molconv
 		// here are the options:
 		this->opt_desc.add_options()
 			("help,h", "print this help text")
-			("input,i", boost::program_options::value< std::vector<std::string> >(&this->inputfiles), "input file(s) to be read")
+			("input,i", boost::program_options::value< std::vector<std::string> >(&this->inputfiles)->multitoken(), "input file(s) to be read")
 			("output,o", boost::program_options::value<std::string>(&this->outputfile), "output, where the structure will be written to")
 			("cleanup,c", "clean up the structure")
 			("origin", boost::program_options::value< std::vector<std::string> >(&this->origin_string)->multitoken(),
