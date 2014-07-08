@@ -8,7 +8,7 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 find_package(Qt4 4.6 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
-set(GT_USE_QTGUI TRUE)
+set(QT_USE_QTGUI TRUE)
 include(${QT_USE_FILE})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -27,11 +27,23 @@ set(SOURCES
     atom.cpp
     configuration.cpp
     exceptions.cpp
+    molconv_window.cpp
     molconv.cpp
     utilities.cpp
 )
 
+set(MOC_HEADERS
+	molconv_window.h
+)
+
+set(UI_FORMS
+	molconv_window.ui
+)
+
+qt4_wrap_ui(UI_SOURCES ${UI_FORMS})
+qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
-add_executable(molconv ${SOURCES})
+add_executable(molconv ${SOURCES} ${MOC_SOURCES} ${UI_SOURCES})
 target_link_libraries(molconv ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${QT_LIBRARIES})

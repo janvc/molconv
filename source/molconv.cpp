@@ -20,82 +20,95 @@
 
 
 //#include"exceptions.h"
-#include<chemkit/moleculefile.h>
-#include<chemkit/graphicsview.h>
-#include<chemkit/graphicsmoleculeitem.h>
-#include<boost/make_shared.hpp>
-#include<QtGui>
-#include"utilities.h"
-#include"molecule.h"
-#include"configuration.h"
+//#include<chemkit/moleculefile.h>
+//#include<chemkit/graphicsview.h>
+//#include<chemkit/graphicsmoleculeitem.h>
+//#include<boost/make_shared.hpp>
+//#include<QtGui>
+//#include"utilities.h"
+//#include"molecule.h"
+//#include"configuration.h"
+
+
+#include"molconv_window.h"
 
 
 int main(int argc, char *argv[])
 {
-	print_header();
+	QApplication app(argc, argv);
 
-	molconv::configuration config(argc, argv);
+	molconv_window thewindow;
+	thewindow.show();
 
-	if (config.input_exists())
-	{
-		std::vector<boost::shared_ptr<chemkit::Molecule> > the_molecules;
-		std::vector<molconv::Molecule> my_molecules;
-
-		for (int i = 0; i < config.get_Nofinputs(); i++)
-		{
-			chemkit::MoleculeFile temp_file(config.get_input(i).c_str());
-
-		    bool ok = temp_file.read();
-		    if (! ok)
-		    {
-		    	std::cerr << "Could not read molecule file " << config.get_input(i) << std::endl;
-		    	return -1;
-		    }
-
-		    the_molecules.push_back(temp_file.molecule());
-
-		    my_molecules.push_back(*(the_molecules.at(i).get()));
-
-		    std::cout << "Molecular Formula: " << my_molecules.at(i).formula() << std::endl;
-
-		    my_molecules.at(i).show_inertia();
-		    my_molecules.at(i).show_covar();
-
-		    my_molecules.at(i).clean_up(config);
-		}
-
-		QApplication app(argc, argv);
-		chemkit::GraphicsView the_view;
-
-		for (int i = 0; i < my_molecules.size(); i++)
-		{
-			chemkit::GraphicsMoleculeItem *the_item = new chemkit::GraphicsMoleculeItem(&(my_molecules.at(i)));
-			the_view.addItem(the_item);
-		}
-
-		the_view.show();
-		app.exec();
-
-		if (config.output_exists())
-		{
-			chemkit::MoleculeFile outputfile(config.get_output().c_str());
-
-			for (int i = 0; i < my_molecules.size(); i++)
-			{
-				outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(my_molecules.at(i)));
-			}
-
-			bool ok = outputfile.write();
-			if (! ok)
-			{
-				std::cerr << "Could not write to file" << config.get_output() << std::endl;
-				return -1;
-			}
-		}
-	}
-
-	return 0;
+	return app.exec();
 }
+
+//int main(int argc, char *argv[])
+//{
+//	print_header();
+//
+//	molconv::configuration config(argc, argv);
+//
+//	if (config.input_exists())
+//	{
+//		std::vector<boost::shared_ptr<chemkit::Molecule> > the_molecules;
+//		std::vector<molconv::Molecule> my_molecules;
+//
+//		for (int i = 0; i < config.get_Nofinputs(); i++)
+//		{
+//			chemkit::MoleculeFile temp_file(config.get_input(i).c_str());
+//
+//		    bool ok = temp_file.read();
+//		    if (! ok)
+//		    {
+//		    	std::cerr << "Could not read molecule file " << config.get_input(i) << std::endl;
+//		    	return -1;
+//		    }
+//
+//		    the_molecules.push_back(temp_file.molecule());
+//
+//		    my_molecules.push_back(*(the_molecules.at(i).get()));
+//
+//		    std::cout << "Molecular Formula: " << my_molecules.at(i).formula() << std::endl;
+//
+//		    my_molecules.at(i).show_inertia();
+//		    my_molecules.at(i).show_covar();
+//
+//		    my_molecules.at(i).clean_up(config);
+//		}
+//
+//		QApplication app(argc, argv);
+//		chemkit::GraphicsView the_view;
+//
+//		for (int i = 0; i < my_molecules.size(); i++)
+//		{
+//			chemkit::GraphicsMoleculeItem *the_item = new chemkit::GraphicsMoleculeItem(&(my_molecules.at(i)));
+//			the_view.addItem(the_item);
+//		}
+//
+//		the_view.show();
+//		app.exec();
+//
+//		if (config.output_exists())
+//		{
+//			chemkit::MoleculeFile outputfile(config.get_output().c_str());
+//
+//			for (int i = 0; i < my_molecules.size(); i++)
+//			{
+//				outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(my_molecules.at(i)));
+//			}
+//
+//			bool ok = outputfile.write();
+//			if (! ok)
+//			{
+//				std::cerr << "Could not write to file" << config.get_output() << std::endl;
+//				return -1;
+//			}
+//		}
+//	}
+//
+//	return 0;
+//}
 
 
 //int main(int argc, char *argv[])
