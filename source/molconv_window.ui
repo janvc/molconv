@@ -6,20 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>711</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>molconv</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="chemkit::GraphicsView" name="molconv_graphicsview" native="true"/>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>640</width>
+     <width>711</width>
      <height>25</height>
     </rect>
    </property>
@@ -31,13 +37,19 @@
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>chemkit::GraphicsView</class>
+   <extends>QWidget</extends>
+   <header location="global">chemkit/graphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

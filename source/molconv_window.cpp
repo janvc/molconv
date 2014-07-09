@@ -18,6 +18,9 @@
  *
  */
 
+#include<chemkit/moleculefile.h>
+#include<chemkit/graphicsmoleculeitem.h>
+#include<boost/make_shared.hpp>
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
 
@@ -27,9 +30,49 @@ molconv_window::molconv_window(QMainWindow *parent)
 	, ui(new Ui::molconv_window)
 {
 	ui->setupUi(this);
+	connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
 }
 
 molconv_window::~molconv_window()
 {
 	delete this->ui;
+}
+
+void molconv_window::openFile(const QString &filename)
+{
+	chemkit::MoleculeFile *the_file = new chemkit::MoleculeFile(filename.toStdString());
+	if (! the_file->read())
+	{
+		QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(the_file->errorString().c_str()));
+		delete the_file;
+		return;
+	}
+
+	if (the_file->moleculeCount() > 0)
+	{
+		molconv::Molecule my_molecule(*(the_file->molecule().get()));
+		boost::shared_ptr<molconv::Molecule> mol_point = boost::make_shared<molconv::Molecule>(my_molecule);
+		this->add_molecule(mol_point);
+	}
+}
+
+void molconv_window::openFile()
+{
+	std::vector<std::string> formats = chemkit::MoleculeFile::formats();
+	std::sort(formats.begin(), formats.end());
+
+	QString formatsString;
+	foreach(const std::string &format, formats)
+		formatsString += QString("*.%1 ").arg(format.c_str());
+
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), 0, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
+
+	if (! filename.isEmpty())
+		this->openFile(filename);
+}
+
+void molconv_window::add_molecule(boost::shared_ptr<molconv::Molecule> &molecule)
+{
+	chemkit::GraphicsMoleculeItem *graphitem = new chemkit::GraphicsMoleculeItem(molecule.get());
+	this->ui->molconv_graphicsview->addItem(graphitem);
 }

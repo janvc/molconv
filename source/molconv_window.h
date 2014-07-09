@@ -22,6 +22,7 @@
 #define MOLCONV_WINDOW_H_
 
 #include<QtGui>
+#include"molecule.h"
 
 
 namespace Ui
@@ -36,6 +37,12 @@ class molconv_window : public QMainWindow
 public:
 	molconv_window(QMainWindow *parent = 0);
 	~molconv_window();
+	void add_molecule(boost::shared_ptr<molconv::Molecule> &molecule);
+
+public slots:
+	void openFile(const QString &filename);
+	void openFile();
+
 private:
 	Ui::molconv_window *ui;
 };
