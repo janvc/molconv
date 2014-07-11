@@ -18,9 +18,11 @@
  *
  */
 
-#include<chemkit/moleculefile.h>
-#include<chemkit/graphicsmoleculeitem.h>
-#include<boost/make_shared.hpp>
+#ifndef Q_MOC_RUN
+    #include<chemkit/moleculefile.h>
+    #include<chemkit/graphicsmoleculeitem.h>
+    #include<boost/make_shared.hpp>
+#endif
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
 

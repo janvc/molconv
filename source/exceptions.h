@@ -23,7 +23,9 @@
 #define EXCEPTIONS_H_
 
 
-#include<string>
+#ifndef Q_MOC_RUN
+	#include<string>
+#endif
 #include<exception>
 
 namespace molconv

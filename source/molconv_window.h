@@ -21,8 +21,8 @@
 #ifndef MOLCONV_WINDOW_H_
 #define MOLCONV_WINDOW_H_
 
-#include<QtGui>
 #include"molecule.h"
+#include<QtGui>
 
 
 namespace Ui

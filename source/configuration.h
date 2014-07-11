@@ -22,7 +22,9 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
-#include<boost/program_options.hpp>
+#ifndef Q_MOC_RUN
+	#include<boost/program_options.hpp>
+#endif
 
 namespace molconv
 {
