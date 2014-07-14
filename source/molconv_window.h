@@ -22,6 +22,8 @@
 #define MOLCONV_WINDOW_H_
 
 #include<QtGui>
+#include<chemkit/moleculefile.h>
+#include<chemkit/graphicsmoleculeitem.h>
 #include"molecule.h"
 
 
@@ -37,14 +39,20 @@ class molconv_window : public QMainWindow
 public:
 	molconv_window(QMainWindow *parent = 0);
 	~molconv_window();
-	void add_molecule(boost::shared_ptr<molconv::Molecule> &molecule);
+	void add_molecule(const boost::shared_ptr<molconv::Molecule> &molecule);
 
 public slots:
 	void openFile(const QString &filename);
 	void openFile();
+	void closeFile();
+	void quit();
 
 private:
 	Ui::molconv_window *ui;
+	chemkit::MoleculeFile *the_molfile;
+	//std::vector<boost::shared_ptr<molconv::Molecule> > the_molecules;
+	std::vector<molconv::Molecule> the_molecules;
+	std::vector<chemkit::GraphicsMoleculeItem *> the_graph_mol_items;
 };
 
 #endif /* MOLCONV_WINDOW_H_ */

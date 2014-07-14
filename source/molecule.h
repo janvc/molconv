@@ -33,6 +33,7 @@ namespace molconv
 	{
 	public:
 		Molecule(const chemkit::Molecule &base_molecule);
+		Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr);
 		void show_inertia();
 		void show_covar();
 		void rotate(Eigen::Matrix3d rot_mat);

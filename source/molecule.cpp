@@ -38,6 +38,7 @@ namespace molconv
 		, center_of_mass(this->centerOfMass())
 		, center_of_geometry(this->center())
 	{
+		std::cout << "This is the first constructor of molconv::Molecule." << std::endl;
 		this->calc_inertia();
 		this->calc_covar_mat();
 
@@ -45,6 +46,21 @@ namespace molconv
 		this->diag_covar_mat();
 	}
 
+
+	Molecule::Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr)
+		: chemkit::Molecule(*(base_mol_ptr.get()))
+		, number_of_atoms(this->size())
+		, total_mass(this->mass())
+		, center_of_mass(this->centerOfMass())
+		, center_of_geometry(this->center())
+	{
+		std::cout << "This is the second constructor of molconv::Molecule." << std::endl;
+		this->calc_inertia();
+		this->calc_covar_mat();
+
+		this->diag_inertia();
+		this->diag_covar_mat();
+	}
 
 	/*
 	 * This function prints the inertia tensor as well as its eigenvalues and eigenvectors
