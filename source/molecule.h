@@ -22,8 +22,10 @@
 #ifndef MOLECULE_H_
 #define MOLECULE_H_
 
-#include<chemkit/molecule.h>
-#include<chemkit/atom.h>
+#ifndef Q_MOC_RUN
+	#include<chemkit/molecule.h>
+	#include<chemkit/atom.h>
+#endif
 #include<Eigen/Core>
 #include"configuration.h"
 

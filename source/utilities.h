@@ -21,7 +21,9 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
 
-#include<string>
+#ifndef Q_MOC_RUN
+	#include<string>
+#endif
 
 void print_header();
 void print_help_msg();

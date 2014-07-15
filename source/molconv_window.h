@@ -21,10 +21,12 @@
 #ifndef MOLCONV_WINDOW_H_
 #define MOLCONV_WINDOW_H_
 
+
 #include<QtGui>
 #include<chemkit/moleculefile.h>
 #include<chemkit/graphicsmoleculeitem.h>
 #include"molecule.h"
+
 
 
 namespace Ui
