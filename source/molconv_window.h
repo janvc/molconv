@@ -23,8 +23,10 @@
 
 
 #include<QtGui>
-#include<chemkit/moleculefile.h>
-#include<chemkit/graphicsmoleculeitem.h>
+#ifndef Q_MOC_RUN
+	#include<chemkit/moleculefile.h>
+	#include<chemkit/graphicsmoleculeitem.h>
+#endif
 #include"molecule.h"
 
 
