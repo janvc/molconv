@@ -66,7 +66,7 @@ void molconv_window::openFile(const QString &filename)
 		//boost::shared_ptr<molconv::Molecule> mol_point = boost::make_shared<molconv::Molecule>(my_molecule);
 		//this->add_molecule(boost::dynamic_pointer_cast<molconv::Molecule>(this->the_molfile->molecule()));
 		this->the_molecules.push_back(*(this->the_molfile->molecule().get()));
-		this->add_molecule(boost::make_shared<molconv::Molecule>(this->the_molecules.at(0)));
+        this->add_molecule(boost::make_shared<molconv::Molecule>(this->the_molecules.back()));
 	}
 }
 
