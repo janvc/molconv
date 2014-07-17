@@ -31,6 +31,12 @@
 
 namespace molconv
 {
+    Molecule::Molecule()
+        : chemkit::Molecule()
+    {
+    }
+
+
 	Molecule::Molecule(const chemkit::Molecule &base_molecule)
 		: chemkit::Molecule(base_molecule)
 		, number_of_atoms(this->size())

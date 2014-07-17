@@ -34,6 +34,7 @@ namespace molconv
 	class Molecule : public chemkit::Molecule
 	{
 	public:
+		Molecule();
 		Molecule(const chemkit::Molecule &base_molecule);
 		Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr);
 		void show_inertia();
