@@ -14,6 +14,7 @@ namespace molconv
 		// set the default values:
 		this->help_flag = false;
 		this->cleanup_flag = false;
+		this->gui_flag = false;
 		this->input_flag = false;
 		this->output_flag = false;
 
@@ -43,7 +44,7 @@ namespace molconv
 		if (this->var_map.count("cleanup"))
 			this->cleanup_flag = true;
 
-		if (this->var_map.count("gui"))
+		if ((this->var_map.count("gui")) || (argc == 1))
 			this->gui_flag = true;
 
 		if (this->var_map.count("output"))
