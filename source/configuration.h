@@ -34,6 +34,7 @@ namespace molconv
 		configuration(int argc, char *argv[]);		// the constructor that will parse the command line
 		bool help_wanted();
 		bool cleanup_wanted();
+		bool gui_wanted();
 		bool input_exists();
 		bool output_exists();
 		bool origin_exists();
@@ -60,6 +61,7 @@ namespace molconv
 
 		bool help_flag;
 		bool cleanup_flag;
+		bool gui_flag;
 		bool input_flag;
 		bool output_flag;
 		bool origin_flag;
