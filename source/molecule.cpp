@@ -118,7 +118,7 @@ namespace molconv
 	/*
 	 * This function will clean up the structure of the molecule
 	 */
-	void Molecule::clean_up(configuration &config)
+	void Molecule::clean_up(molconv::configuration &config)
 	{
 		if (! config.cleanup_wanted())
 			return;
