@@ -30,7 +30,6 @@
 #include"molecule.h"
 
 
-
 namespace Ui
 {
 	class molconv_window;
@@ -43,7 +42,7 @@ class molconv_window : public QMainWindow
 public:
 	molconv_window(QMainWindow *parent = 0);
 	~molconv_window();
-	void add_molecule(const boost::shared_ptr<molconv::Molecule> &molecule);
+	void add_molecule();
 
 public slots:
 	void openFile(const QString &filename);
@@ -54,9 +53,9 @@ public slots:
 private:
 	Ui::molconv_window *ui;
 	chemkit::MoleculeFile *the_molfile;
-	//std::vector<boost::shared_ptr<molconv::Molecule> > the_molecules;
-	std::vector<molconv::Molecule> the_molecules;
-	std::vector<chemkit::GraphicsMoleculeItem *> the_graph_mol_items;
+	std::vector<molconv::Molecule> the_molecule_objects;
+	std::vector<boost::shared_ptr<molconv::Molecule> > the_molecule_pointers;
+	chemkit::GraphicsMoleculeItem *the_graph_item;
 };
 
 #endif /* MOLCONV_WINDOW_H_ */

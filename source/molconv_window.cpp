@@ -18,9 +18,7 @@
  *
  */
 
-//#include<chemkit/moleculefile.h>
-//#include<chemkit/graphicsmoleculeitem.h>
-//#include<boost/make_shared.hpp>
+
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
@@ -61,12 +59,7 @@ void molconv_window::openFile(const QString &filename)
 
 	if (this->the_molfile->moleculeCount() > 0)
 	{
-		//molconv::Molecule my_molecule(*(the_file->molecule().get()));
-		//boost::shared_ptr<molconv::Molecule> mol_point = boost::dynamic_pointer_cast<molconv::Molecule>(the_file->molecule());
-		//boost::shared_ptr<molconv::Molecule> mol_point = boost::make_shared<molconv::Molecule>(my_molecule);
-		//this->add_molecule(boost::dynamic_pointer_cast<molconv::Molecule>(this->the_molfile->molecule()));
-		this->the_molecules.push_back(*(this->the_molfile->molecule().get()));
-        this->add_molecule(boost::make_shared<molconv::Molecule>(this->the_molecules.back()));
+		this->add_molecule();
 	}
 }
 
@@ -85,16 +78,14 @@ void molconv_window::openFile()
 		this->openFile(filename);
 }
 
-void molconv_window::add_molecule(const boost::shared_ptr<molconv::Molecule> &molecule)
+void molconv_window::add_molecule()
 {
 	std::cout << "Adding molecule" << std::endl;
-	boost::shared_ptr<molconv::Molecule> temp_molecule = molecule;
-	//this->the_molecules.push_back(temp_molecule);
-	//molecule.get()->show_inertia();
-	//molecule.get()->show_covar();
-	//chemkit::GraphicsMoleculeItem *graphitem = new chemkit::GraphicsMoleculeItem(molecule.get());
-	this->the_graph_mol_items.push_back(new chemkit::GraphicsMoleculeItem(temp_molecule.get()));
-	this->ui->molconv_graphicsview->addItem(this->the_graph_mol_items.at(this->the_graph_mol_items.size()-1));
+	chemkit::Molecule temp_mol = *this->the_molfile->molecule();
+	this->the_molecule_objects.push_back(temp_mol);
+	this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
+	this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
+	this->ui->molconv_graphicsview->addItem(this->the_graph_item);
 }
 
 void molconv_window::quit()
