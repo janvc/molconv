@@ -38,11 +38,10 @@ int main(int argc, char *argv[])
 	print_header();
 
 	molconv::configuration config(argc, argv);
+	QApplication app(argc, argv);
 
 	if (config.gui_wanted())
 	{
-		QApplication app(argc, argv);
-
 		molconv_window thewindow;
 		thewindow.show();
 
