@@ -28,16 +28,19 @@ set(SOURCES
     configuration.cpp
     exceptions.cpp
     molconv_window.cpp
+    molecule_list.cpp
     molconv.cpp
     utilities.cpp
 )
 
 set(MOC_HEADERS
 	molconv_window.h
+	molecule_list.h
 )
 
 set(UI_FORMS
 	molconv_window.ui
+	molecule_list.ui
 )
 
 qt4_wrap_ui(UI_SOURCES ${UI_FORMS})

@@ -26,6 +26,7 @@
 #endif
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
+#include"molecule_list.h"
 
 
 molconv_window::molconv_window(QMainWindow *parent)
@@ -37,6 +38,11 @@ molconv_window::molconv_window(QMainWindow *parent)
 	ui->setupUi(this);
 	connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
 	connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
+
+	QDockWidget *the_dockwidget;
+
+	the_dockwidget = new molecule_list(this);
+	addDockWidget(Qt::BottomDockWidgetArea, the_dockwidget);
 }
 
 molconv_window::~molconv_window()
