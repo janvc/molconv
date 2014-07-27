@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
 
 	molconv::configuration config(argc, argv);
 	QApplication app(argc, argv);
-<<<<<<< HEAD
 	molconv_window the_window;
 
 	if (config.input_exists())
@@ -82,18 +81,11 @@ int main(int argc, char *argv[])
 		//	}
 		}
 	}
-=======
->>>>>>> refs/remotes/origin/cmake_chemkit
 
 	if (config.gui_wanted())
 	{
-<<<<<<< HEAD
 		std::cout << "GUI wanted." << std::endl;
 		the_window.show();
-=======
-		molconv_window thewindow;
-		thewindow.show();
->>>>>>> refs/remotes/origin/cmake_chemkit
 
 		return app.exec();
 	}
