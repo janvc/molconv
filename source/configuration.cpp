@@ -121,7 +121,7 @@ namespace molconv
 	}
 
 
-	bool configuration::cleanup_wanted()
+	bool configuration::cleanup_wanted() const
 	{
 		return this->cleanup_flag;
 	}

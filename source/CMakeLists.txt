@@ -23,9 +23,9 @@ set(HEADERS
 )
 
 set(SOURCES
+	configuration.cpp
     molecule.cpp
     atom.cpp
-    configuration.cpp
     exceptions.cpp
     molconv_window.cpp
     molecule_list.cpp

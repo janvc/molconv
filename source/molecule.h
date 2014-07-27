@@ -40,7 +40,7 @@ namespace molconv
 		void show_inertia();
 		void show_covar();
 		void rotate(Eigen::Matrix3d rot_mat);
-		void clean_up(molconv::configuration &config);
+		void clean_up(const molconv::configuration &config);
 	private:
 		size_t number_of_atoms;				// the number of atoms in the molecule
 		double total_mass;					// total mass of the molecule

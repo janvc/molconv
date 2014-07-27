@@ -43,10 +43,13 @@ public:
 	molconv_window(QMainWindow *parent = 0);
 	~molconv_window();
 	void add_molecule();
+	void clean_up(const int mol_nr, const molconv::configuration &config);
 
 public slots:
 	void openFile(const QString &filename);
 	void openFile();
+	void saveFile(const QString &filename);
+	void saveFile();
 	void closeFile();
 	void quit();
 

@@ -33,7 +33,7 @@ namespace molconv
 	public:
 		configuration(int argc, char *argv[]);		// the constructor that will parse the command line
 		bool help_wanted();
-		bool cleanup_wanted();
+		bool cleanup_wanted() const;
 		bool gui_wanted();
 		bool input_exists();
 		bool output_exists();

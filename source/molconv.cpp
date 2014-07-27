@@ -28,8 +28,6 @@
 #include"utilities.h"
 #include"molecule.h"
 #include"configuration.h"
-
-
 #include"molconv_window.h"
 
 
@@ -38,58 +36,60 @@ int main(int argc, char *argv[])
 	print_header();
 
 	molconv::configuration config(argc, argv);
+	QApplication app(argc, argv);
+	molconv_window the_window;
+
+	if (config.input_exists())
+	{
+		//std::vector<molconv::Molecule> the_molecules;
+
+		for (int i = 0; i < config.get_Nofinputs(); i++)
+		{
+			//chemkit::MoleculeFile temp_file(config.get_input(i));
+
+			//bool ok = temp_file.read();
+			//if (! ok)
+			//{
+			//	std::cerr << "Could not read molecule file " << config.get_input(i) << std::endl;
+			//	return -1;
+			//}
+
+			//the_molecules.push_back(*temp_file.molecule());
+            //
+			//the_molecules.back().clean_up(config);
+            //
+			//the_molecules.at(i).show_inertia();
+			//the_molecules.at(i).show_covar();
+
+			the_window.openFile(QString::fromStdString(config.get_input(i)));
+			the_window.clean_up(i, config);
+		}
+
+		if (config.output_exists())
+		{
+			the_window.saveFile(QString::fromStdString(config.get_output()));
+		//	chemkit::MoleculeFile outputfile(config.get_output());
+        //
+		//	//chemkit::Molecule temp_mol = the_molecules.front();
+		//	outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(the_molecules.front()));
+        //
+		//	bool ok = outputfile.write();
+		//	if (! ok)
+		//	{
+		//		std::cerr << "Could not write to file" << config.get_output() << std::endl;
+		//		return -1;
+		//	}
+		}
+	}
 
 	if (config.gui_wanted())
 	{
-		QApplication app(argc, argv);
-
-		molconv_window thewindow;
-		thewindow.show();
+		std::cout << "GUI wanted." << std::endl;
+		the_window.show();
 
 		return app.exec();
 	}
-	else
-	{
-		if (config.input_exists())
-		{
-			std::vector<molconv::Molecule> the_molecules;
-
-			for (int i = 0; i < config.get_Nofinputs(); i++)
-			{
-				chemkit::MoleculeFile temp_file(config.get_input(i));
-
-				bool ok = temp_file.read();
-				if (! ok)
-				{
-					std::cerr << "Could not read molecule file " << config.get_input(i) << std::endl;
-					return -1;
-				}
-
-				the_molecules.push_back(*temp_file.molecule());
-
-				the_molecules.back().clean_up(config);
-
-				the_molecules.at(i).show_inertia();
-				the_molecules.at(i).show_covar();
-			}
-
-			if (config.output_exists())
-			{
-				chemkit::MoleculeFile outputfile(config.get_output());
-
-				//chemkit::Molecule temp_mol = the_molecules.front();
-				outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(the_molecules.front()));
-
-				bool ok = outputfile.write();
-				if (! ok)
-				{
-					std::cerr << "Could not write to file" << config.get_output() << std::endl;
-					return -1;
-				}
-			}
-		}
-		return 0;
-	}
+	return 0;
 }
 
 //int main(int argc, char *argv[])

@@ -118,11 +118,12 @@ namespace molconv
 	/*
 	 * This function will clean up the structure of the molecule
 	 */
-	void Molecule::clean_up(molconv::configuration &config)
+	void Molecule::clean_up(const molconv::configuration &config)
 	{
 		if (! config.cleanup_wanted())
 			return;
 
+		std::cout << "Cleaning up the molecule" << std::endl;
 		this->setCenter(this->center_of_geometry - this->center_of_mass);
 
 		this->rotate(this->inertia_eigvecs.transpose());

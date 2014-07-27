@@ -24,6 +24,7 @@
     #include<chemkit/graphicsmoleculeitem.h>
     #include<boost/make_shared.hpp>
 #endif
+
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
 #include"molecule_list.h"
@@ -58,6 +59,7 @@ void molconv_window::openFile(const QString &filename)
 	this->the_molfile = new chemkit::MoleculeFile(filename.toStdString());
 	if (! this->the_molfile->read())
 	{
+		std::cerr << "Could not read molecule file " << filename.toStdString() << std::endl;
 		QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(this->the_molfile->errorString().c_str()));
 		delete this->the_molfile;
 		return;
@@ -101,4 +103,32 @@ void molconv_window::quit()
 
 void molconv_window::closeFile()
 {
+}
+
+void molconv_window::clean_up(const int mol_nr, const molconv::configuration &config)
+{
+	this->the_molecule_objects.at(mol_nr).clean_up(config);
+}
+
+void molconv_window::saveFile()
+{
+}
+
+void molconv_window::saveFile(const QString &filename)
+{
+	std::cout << "Saving file " << filename.toStdString() << std::endl;
+
+	if (this->the_molfile)
+		delete this->the_molfile;
+
+	this->the_molfile = new chemkit::MoleculeFile(filename.toStdString());
+	this->the_molfile->addMolecule(this->the_molecule_pointers.front());
+
+	if (! this->the_molfile->write())
+	{
+		std::cerr << "Could not write molecule file " << filename.toStdString() << std::endl;
+		QMessageBox::critical(this, "Error", QString("Error writing to file: %1").arg(this->the_molfile->errorString().c_str()));
+		delete this->the_molfile;
+		return;
+	}
 }
