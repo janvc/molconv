@@ -124,7 +124,13 @@ namespace molconv
 			return;
 
 		std::cout << "Cleaning up the molecule" << std::endl;
+		std::cout << "shift vector:" << std::endl << this->center_of_geometry - this->center_of_mass << std::endl;
+
 		this->setCenter(this->center_of_geometry - this->center_of_mass);
+
+		this->center_of_mass = this->centerOfMass();
+
+		std::cout << "new com:" << std::endl << this->center_of_mass << std::endl;
 
 		this->rotate(this->inertia_eigvecs.transpose());
 	}
