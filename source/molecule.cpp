@@ -110,7 +110,9 @@ namespace molconv
 
 
 	/*
-	 * This function will clean up the structure of the molecule
+     * This function will clean up the structure of the molecule, i.e. shift it
+     * so that the center of mass equals the origin, and rotate it so that the
+     * coordiante axes match the principal axes of inertia
 	 */
 	void Molecule::clean_up(configuration &config)
 	{

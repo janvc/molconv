@@ -43,6 +43,10 @@ molconv_window::molconv_window(QMainWindow *parent)
 
 molconv_window::~molconv_window()
 {
+    for (int i = 0; i < this->the_graph_mol_items.size(); i++)
+    {
+        delete this->the_graph_mol_items.at(i);
+    }
 	delete ui->molconv_graphicsview;
 	delete ui;
 }
@@ -93,8 +97,8 @@ void molconv_window::add_molecule(const boost::shared_ptr<molconv::Molecule> &mo
 	//molecule.get()->show_inertia();
 	//molecule.get()->show_covar();
 	//chemkit::GraphicsMoleculeItem *graphitem = new chemkit::GraphicsMoleculeItem(molecule.get());
-	this->the_graph_mol_items.push_back(new chemkit::GraphicsMoleculeItem(temp_molecule.get()));
-	this->ui->molconv_graphicsview->addItem(this->the_graph_mol_items.at(this->the_graph_mol_items.size()-1));
+    this->the_graph_mol_items.push_back(new chemkit::GraphicsMoleculeItem(temp_molecule.get()));
+    this->ui->molconv_graphicsview->addItem(this->the_graph_mol_items.back());
 }
 
 void molconv_window::quit()

@@ -56,7 +56,7 @@ private:
 	chemkit::MoleculeFile *the_molfile;
 	//std::vector<boost::shared_ptr<molconv::Molecule> > the_molecules;
 	std::vector<molconv::Molecule> the_molecules;
-	std::vector<chemkit::GraphicsMoleculeItem *> the_graph_mol_items;
+    std::vector<chemkit::GraphicsMoleculeItem*> the_graph_mol_items;
 };
 
 #endif /* MOLCONV_WINDOW_H_ */
