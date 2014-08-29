@@ -48,10 +48,6 @@ molconv_window::molconv_window(QMainWindow *parent)
 
 molconv_window::~molconv_window()
 {
-    for (int i = 0; i < this->the_graph_mol_items.size(); i++)
-    {
-        delete this->the_graph_mol_items.at(i);
-    }
 	delete ui->molconv_graphicsview;
 	delete ui;
 }

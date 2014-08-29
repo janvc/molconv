@@ -53,6 +53,15 @@ namespace molconv
 		Eigen::Vector3d covar_eigvals;		// eigenvalues of the covariance matrix
 		Eigen::Matrix3d covar_eigvecs;		// eigenvectors of the covariance matrix
 
+        double euler_phi;                   //
+        double euler_theta;                 // | the eulerian angles specifying the orientation of the molecule
+        double euler_psi;                   // /
+        Eigen::Vector3d internal_origin;    // origin of the internal coordinate system
+        Eigen::Matrix3d internal_basis;     // the basis vectors of the internal coordinate system in terms
+                                            // of the global coordinates
+        void trans2euler();                 // calculate the eulerian angles from the transformation matrix
+        void euler2trans();                 // calculate the transformation matrix from the eulerian angles
+
 		void calc_inertia();				// calculate the tensor of moments of inertia
 		void diag_inertia();				// diagonalize the inertia tensor
 		void calc_covar_mat();				// calculate the covariance matrix of the molecule

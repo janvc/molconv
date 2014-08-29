@@ -20,3 +20,4 @@ bin/
 *.swp
 *.swo
 *~
+CMakeLists.txt.user
