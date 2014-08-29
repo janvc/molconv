@@ -14,6 +14,7 @@ namespace molconv
 		// set the default values:
 		this->help_flag = false;
 		this->cleanup_flag = false;
+		this->gui_flag = false;
 		this->input_flag = false;
 		this->output_flag = false;
 
@@ -23,6 +24,7 @@ namespace molconv
 			("input,i", boost::program_options::value< std::vector<std::string> >(&this->inputfiles)->multitoken(), "input file(s) to be read")
 			("output,o", boost::program_options::value<std::string>(&this->outputfile), "output, where the structure will be written to")
 			("cleanup,c", "clean up the structure")
+			("gui,g", "start the GUI")
 			("origin", boost::program_options::value< std::vector<std::string> >(&this->origin_string)->multitoken(),
 					"specify the origin of the internal coordinate system: com, cog, atom X")
 			("axes", boost::program_options::value< std::vector<std::string> >(&this->axes_string)->multitoken(),
@@ -41,6 +43,9 @@ namespace molconv
 
 		if (this->var_map.count("cleanup"))
 			this->cleanup_flag = true;
+
+		if ((this->var_map.count("gui")) || (argc == 1))
+			this->gui_flag = true;
 
 		if (this->var_map.count("output"))
 			this->output_flag = true;
@@ -116,11 +121,16 @@ namespace molconv
 	}
 
 
-	bool configuration::cleanup_wanted()
+	bool configuration::cleanup_wanted() const
 	{
 		return this->cleanup_flag;
 	}
 
+
+	bool configuration::gui_wanted()
+	{
+		return this->gui_flag;
+	}
 
 	bool configuration::input_exists()
 	{

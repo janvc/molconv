@@ -31,6 +31,12 @@
 
 namespace molconv
 {
+    Molecule::Molecule()
+        : chemkit::Molecule()
+    {
+    }
+
+
 	Molecule::Molecule(const chemkit::Molecule &base_molecule)
 		: chemkit::Molecule(base_molecule)
 		, number_of_atoms(this->size())
@@ -114,12 +120,19 @@ namespace molconv
      * so that the center of mass equals the origin, and rotate it so that the
      * coordiante axes match the principal axes of inertia
 	 */
-	void Molecule::clean_up(configuration &config)
+	void Molecule::clean_up(const molconv::configuration &config)
 	{
 		if (! config.cleanup_wanted())
 			return;
 
+		std::cout << "Cleaning up the molecule" << std::endl;
+		std::cout << "shift vector:" << std::endl << this->center_of_geometry - this->center_of_mass << std::endl;
+
 		this->setCenter(this->center_of_geometry - this->center_of_mass);
+
+		this->center_of_mass = this->centerOfMass();
+
+		std::cout << "new com:" << std::endl << this->center_of_mass << std::endl;
 
 		this->rotate(this->inertia_eigvecs.transpose());
 	}

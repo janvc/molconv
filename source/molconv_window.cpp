@@ -18,16 +18,16 @@
  *
  */
 
-//#include<chemkit/moleculefile.h>
-//#include<chemkit/graphicsmoleculeitem.h>
-//#include<boost/make_shared.hpp>
+
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
     #include<boost/make_shared.hpp>
 #endif
+
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
+#include"molecule_list.h"
 
 
 molconv_window::molconv_window(QMainWindow *parent)
@@ -39,6 +39,11 @@ molconv_window::molconv_window(QMainWindow *parent)
 	ui->setupUi(this);
 	connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
 	connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
+
+	QDockWidget *the_dockwidget;
+
+	the_dockwidget = new molecule_list(this);
+	addDockWidget(Qt::BottomDockWidgetArea, the_dockwidget);
 }
 
 molconv_window::~molconv_window()
@@ -58,6 +63,7 @@ void molconv_window::openFile(const QString &filename)
 	this->the_molfile = new chemkit::MoleculeFile(filename.toStdString());
 	if (! this->the_molfile->read())
 	{
+		std::cerr << "Could not read molecule file " << filename.toStdString() << std::endl;
 		QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(this->the_molfile->errorString().c_str()));
 		delete this->the_molfile;
 		return;
@@ -65,12 +71,10 @@ void molconv_window::openFile(const QString &filename)
 
 	if (this->the_molfile->moleculeCount() > 0)
 	{
-		//molconv::Molecule my_molecule(*(the_file->molecule().get()));
-		//boost::shared_ptr<molconv::Molecule> mol_point = boost::dynamic_pointer_cast<molconv::Molecule>(the_file->molecule());
-		//boost::shared_ptr<molconv::Molecule> mol_point = boost::make_shared<molconv::Molecule>(my_molecule);
-		//this->add_molecule(boost::dynamic_pointer_cast<molconv::Molecule>(this->the_molfile->molecule()));
-		this->the_molecules.push_back(*(this->the_molfile->molecule().get()));
-        this->add_molecule(boost::make_shared<molconv::Molecule>(this->the_molecules.back()));
+		//this->add_molecule();
+		chemkit::Molecule temp_mol = *this->the_molfile->molecule();
+		this->the_molecule_objects.push_back(temp_mol);
+		//this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
 	}
 }
 
@@ -86,19 +90,22 @@ void molconv_window::openFile()
 	QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), 0, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
 
 	if (! filename.isEmpty())
+	{
 		this->openFile(filename);
+		this->add_molecule();
+	}
 }
 
-void molconv_window::add_molecule(const boost::shared_ptr<molconv::Molecule> &molecule)
+void molconv_window::add_molecule()
 {
-	std::cout << "Adding molecule" << std::endl;
-	boost::shared_ptr<molconv::Molecule> temp_molecule = molecule;
-	//this->the_molecules.push_back(temp_molecule);
-	//molecule.get()->show_inertia();
-	//molecule.get()->show_covar();
-	//chemkit::GraphicsMoleculeItem *graphitem = new chemkit::GraphicsMoleculeItem(molecule.get());
-    this->the_graph_mol_items.push_back(new chemkit::GraphicsMoleculeItem(temp_molecule.get()));
-    this->ui->molconv_graphicsview->addItem(this->the_graph_mol_items.back());
+	//std::cout << "Adding molecule" << std::endl;
+	//chemkit::Molecule temp_mol = *this->the_molfile->molecule();
+	//this->the_molecule_objects.push_back(temp_mol);
+	//this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
+	//boost::shared_ptr<molconv::Molecule> temp_pointer(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
+	this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
+	this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
+	this->ui->molconv_graphicsview->addItem(this->the_graph_item);
 }
 
 void molconv_window::quit()
@@ -108,4 +115,33 @@ void molconv_window::quit()
 
 void molconv_window::closeFile()
 {
+}
+
+void molconv_window::clean_up(const int mol_nr, const molconv::configuration &config)
+{
+	this->the_molecule_objects.at(mol_nr).clean_up(config);
+}
+
+void molconv_window::saveFile()
+{
+}
+
+void molconv_window::saveFile(const QString &filename)
+{
+	std::cout << "Saving file " << filename.toStdString() << std::endl;
+
+	if (this->the_molfile)
+		delete this->the_molfile;
+
+	this->the_molfile = new chemkit::MoleculeFile(filename.toStdString());
+	//this->the_molfile->addMolecule(boost::make_shared<chemkit::Molecule>(this->the_molecule_objects.front()));
+	this->the_molfile->addMolecule(this->the_molecule_pointers.front());
+
+	if (! this->the_molfile->write())
+	{
+		std::cerr << "Could not write molecule file " << filename.toStdString() << std::endl;
+		QMessageBox::critical(this, "Error", QString("Error writing to file: %1").arg(this->the_molfile->errorString().c_str()));
+		delete this->the_molfile;
+		return;
+	}
 }

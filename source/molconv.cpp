@@ -23,24 +23,74 @@
 //#include<chemkit/moleculefile.h>
 //#include<chemkit/graphicsview.h>
 //#include<chemkit/graphicsmoleculeitem.h>
-//#include<boost/make_shared.hpp>
+#include<boost/make_shared.hpp>
 //#include<QtGui>
-//#include"utilities.h"
-//#include"molecule.h"
-//#include"configuration.h"
-
-
+#include"utilities.h"
+#include"molecule.h"
+#include"configuration.h"
 #include"molconv_window.h"
 
 
 int main(int argc, char *argv[])
 {
+	print_header();
+
+	molconv::configuration config(argc, argv);
 	QApplication app(argc, argv);
+	molconv_window the_window;
 
-	molconv_window thewindow;
-	thewindow.show();
+	if (config.input_exists())
+	{
+		//std::vector<molconv::Molecule> the_molecules;
 
-	return app.exec();
+		for (int i = 0; i < config.get_Nofinputs(); i++)
+		{
+			//chemkit::MoleculeFile temp_file(config.get_input(i));
+
+			//bool ok = temp_file.read();
+			//if (! ok)
+			//{
+			//	std::cerr << "Could not read molecule file " << config.get_input(i) << std::endl;
+			//	return -1;
+			//}
+
+			//the_molecules.push_back(*temp_file.molecule());
+            //
+			//the_molecules.back().clean_up(config);
+            //
+			//the_molecules.at(i).show_inertia();
+			//the_molecules.at(i).show_covar();
+
+			the_window.openFile(QString::fromStdString(config.get_input(i)));
+			the_window.clean_up(i, config);
+			the_window.add_molecule();
+		}
+
+		if (config.output_exists())
+		{
+			the_window.saveFile(QString::fromStdString(config.get_output()));
+		//	chemkit::MoleculeFile outputfile(config.get_output());
+        //
+		//	//chemkit::Molecule temp_mol = the_molecules.front();
+		//	outputfile.addMolecule(boost::make_shared<chemkit::Molecule>(the_molecules.front()));
+        //
+		//	bool ok = outputfile.write();
+		//	if (! ok)
+		//	{
+		//		std::cerr << "Could not write to file" << config.get_output() << std::endl;
+		//		return -1;
+		//	}
+		}
+	}
+
+	if (config.gui_wanted())
+	{
+		std::cout << "GUI wanted." << std::endl;
+		the_window.show();
+
+		return app.exec();
+	}
+	return 0;
 }
 
 //int main(int argc, char *argv[])
@@ -89,6 +139,7 @@ int main(int argc, char *argv[])
 //		the_view.show();
 //		app.exec();
 //
+
 //		if (config.output_exists())
 //		{
 //			chemkit::MoleculeFile outputfile(config.get_output().c_str());
