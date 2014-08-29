@@ -440,8 +440,8 @@ void Molecule::trans2euler()
 //
 //        this->trans2euler();
 //        std::cout << "Eulerian angles:" << std::endl << " Phi:    " << this->euler_phi << std::endl
-//                                        			 << " Psi:    " << this->euler_psi << std::endl
-//                                        			 << " Theta:  " << this->euler_theta << std::endl;
+//                                                     << " Psi:    " << this->euler_psi << std::endl
+//                                                     << " Theta:  " << this->euler_theta << std::endl;
 //
 //    }
 //

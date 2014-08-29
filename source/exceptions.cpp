@@ -24,20 +24,20 @@
 
 namespace molconv
 {
-	namespace Err
-	{
+    namespace Err
+    {
 
-		FileNotExist::FileNotExist(std::string filename)
-		{
-			this->filename = filename;
-		}
+        FileNotExist::FileNotExist(std::string filename)
+        {
+            this->filename = filename;
+        }
 
         FileNotExist::~FileNotExist() throw() {}
-		
-		std::string FileNotExist::get_filename()
-		{
-			return this->filename;
-		}
+        
+        std::string FileNotExist::get_filename()
+        {
+            return this->filename;
+        }
 
-	}
+    }
 }

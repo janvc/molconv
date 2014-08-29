@@ -24,7 +24,7 @@
 
 
 #ifndef Q_MOC_RUN
-	#include<string>
+    #include<string>
 #endif
 #include<exception>
 
@@ -32,16 +32,16 @@ namespace molconv
 {
     namespace Err
     {
-		class FileNotExist : public std::exception
-		{
-		public:
-			FileNotExist(std::string filename);
+        class FileNotExist : public std::exception
+        {
+        public:
+            FileNotExist(std::string filename);
             virtual ~FileNotExist() throw();
-			std::string get_filename();						// returns filename which can't be open
-		protected:
-			std::string filename;
-		};
-	}
+            std::string get_filename();                        // returns filename which can't be open
+        protected:
+            std::string filename;
+        };
+    }
 }
 
 

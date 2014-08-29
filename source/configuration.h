@@ -23,49 +23,49 @@
 #define CONFIGURATION_H_
 
 #ifndef Q_MOC_RUN
-	#include<boost/program_options.hpp>
+    #include<boost/program_options.hpp>
 #endif
 
 namespace molconv
 {
-	class configuration
-	{
-	public:
-		configuration(int argc, char *argv[]);		// the constructor that will parse the command line
-		bool help_wanted();
-		bool cleanup_wanted() const;
-		bool gui_wanted();
-		bool input_exists();
-		bool output_exists();
-		bool origin_exists();
-		bool axes_exist();
-		int get_Nofinputs();
-		int get_orig_type();
-		int get_orig_atom();
-		int get_axes_type();
-		std::vector<int> get_axes_atoms();
-		std::string get_input(int index);
-		std::string get_output();
-		void print_help();
-	private:
-		int internal_origin_type;					// location of internal origin: 1 - com, 2 - cog, 3 - atom
-		int internal_coords_type;					// type of internal coodinate axes: 1 - inert, 2 - covar, 3 - atoms
-		int origin_atom;							// atom to be used as the internal origin
-		std::vector<int> axes_atoms;				// atoms used to define the internal coordinate system
-		std::vector<std::string> inputfiles;		// the input files
-		std::string outputfile;						// the output file
-		std::vector<std::string> origin_string;
-		std::vector<std::string> axes_string;
-		boost::program_options::options_description opt_desc;
-		boost::program_options::variables_map var_map;
+    class configuration
+    {
+    public:
+        configuration(int argc, char *argv[]);        // the constructor that will parse the command line
+        bool help_wanted();
+        bool cleanup_wanted() const;
+        bool gui_wanted();
+        bool input_exists();
+        bool output_exists();
+        bool origin_exists();
+        bool axes_exist();
+        int get_Nofinputs();
+        int get_orig_type();
+        int get_orig_atom();
+        int get_axes_type();
+        std::vector<int> get_axes_atoms();
+        std::string get_input(int index);
+        std::string get_output();
+        void print_help();
+    private:
+        int internal_origin_type;                    // location of internal origin: 1 - com, 2 - cog, 3 - atom
+        int internal_coords_type;                    // type of internal coodinate axes: 1 - inert, 2 - covar, 3 - atoms
+        int origin_atom;                            // atom to be used as the internal origin
+        std::vector<int> axes_atoms;                // atoms used to define the internal coordinate system
+        std::vector<std::string> inputfiles;        // the input files
+        std::string outputfile;                        // the output file
+        std::vector<std::string> origin_string;
+        std::vector<std::string> axes_string;
+        boost::program_options::options_description opt_desc;
+        boost::program_options::variables_map var_map;
 
-		bool help_flag;
-		bool cleanup_flag;
-		bool gui_flag;
-		bool input_flag;
-		bool output_flag;
-		bool origin_flag;
-		bool axes_flag;
-	};
+        bool help_flag;
+        bool cleanup_flag;
+        bool gui_flag;
+        bool input_flag;
+        bool output_flag;
+        bool origin_flag;
+        bool axes_flag;
+    };
 } /* namespace molconv */
 #endif /* CONFIGURATION_H_ */

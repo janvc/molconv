@@ -22,7 +22,7 @@
 #define UTILITIES_H_
 
 #ifndef Q_MOC_RUN
-	#include<string>
+    #include<string>
 #endif
 
 void print_header();

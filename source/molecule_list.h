@@ -25,22 +25,22 @@
 
 namespace Ui
 {
-	class molecule_list;
+    class molecule_list;
 }
 
 class molconv_window;
 
 class molecule_list : public QDockWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	molecule_list(molconv_window *window);
-	~molecule_list();
+    molecule_list(molconv_window *window);
+    ~molecule_list();
 
 private:
-	Ui::molecule_list *ui;
-	molconv_window *m_window;
+    Ui::molecule_list *ui;
+    molconv_window *m_window;
 };
 
 

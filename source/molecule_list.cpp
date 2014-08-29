@@ -27,15 +27,15 @@
 
 
 molecule_list::molecule_list(molconv_window *window)
-	: QDockWidget(window)
-	, ui(new Ui::molecule_list)
+    : QDockWidget(window)
+    , ui(new Ui::molecule_list)
 {
-	m_window = window;
+    m_window = window;
 
-	ui->setupUi(this);
+    ui->setupUi(this);
 }
 
 molecule_list::~molecule_list()
 {
-	delete ui;
+    delete ui;
 }
