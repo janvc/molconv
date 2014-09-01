@@ -36,6 +36,13 @@ int main(int argc, char *argv[])
     print_header();
 
     molconv::configuration config(argc, argv);
+
+    if (config.help_wanted())
+    {
+        config.print_help();
+        return 0;
+    }
+
     QApplication app(argc, argv);
     molconv_window the_window;
 
