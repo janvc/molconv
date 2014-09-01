@@ -25,6 +25,7 @@
 #include<string>
 #include<cmath>
 #include<Eigen/Eigenvalues>
+#include<chemkit/bondpredictor.h>
 #include"molecule.h"
 #include"utilities.h"
 
@@ -52,6 +53,9 @@ namespace molconv
         , center_of_geometry(this->center())
     {
         std::cout << "This is the first constructor of molconv::Molecule." << std::endl;
+
+        chemkit::BondPredictor::predictBonds(this);
+
         this->calc_inertia();
         this->calc_covar_mat();
 
