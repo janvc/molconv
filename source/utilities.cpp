@@ -24,7 +24,6 @@
 #include<sstream>
 #include<string>
 #include"utilities.h"
-#include"atom_properties.h"
 
 
 void print_header()
@@ -67,22 +66,3 @@ void print_err_footer()
     std::cerr << std::string(45,'-') << std::endl << std::endl;
     print_help_msg();
 }
-
-
-int symbol2number(std::string atomicsymbol)
-{
-    for (int i = 0; i < number_of_elements; i++)
-    {
-        if (atomicsymbol == atomprops[i].symbol)
-            return i+1;
-    }
-    return 0;
-}
-
-
-
-
-
-
-
-

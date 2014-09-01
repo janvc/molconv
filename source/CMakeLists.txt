@@ -14,8 +14,6 @@ include(${QT_USE_FILE})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(HEADERS
-    atom_properties.h
-    atom.h
     configuration.h
     exceptions.h
     molecule.h
@@ -23,9 +21,8 @@ set(HEADERS
 )
 
 set(SOURCES
-	configuration.cpp
+    configuration.cpp
     molecule.cpp
-    atom.cpp
     exceptions.cpp
     molconv_window.cpp
     molecule_list.cpp
@@ -34,13 +31,13 @@ set(SOURCES
 )
 
 set(MOC_HEADERS
-	molconv_window.h
-	molecule_list.h
+    molconv_window.h
+    molecule_list.h
 )
 
 set(UI_FORMS
-	molconv_window.ui
-	molecule_list.ui
+    molconv_window.ui
+    molecule_list.ui
 )
 
 qt4_wrap_ui(UI_SOURCES ${UI_FORMS})
