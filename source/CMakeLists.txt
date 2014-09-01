@@ -24,6 +24,7 @@ set(SOURCES
     configuration.cpp
     molecule.cpp
     exceptions.cpp
+    open_molecule_dialog.cpp
     molconv_window.cpp
     molecule_list.cpp
     molconv.cpp
@@ -31,6 +32,7 @@ set(SOURCES
 )
 
 set(MOC_HEADERS
+    open_molecule_dialog.h
     molconv_window.h
     molecule_list.h
 )
