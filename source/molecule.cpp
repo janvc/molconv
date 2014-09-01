@@ -31,12 +31,19 @@
 
 namespace molconv
 {
+    /*
+     * This is just the default constructor that creates an empty molecule.
+     */
     Molecule::Molecule()
         : chemkit::Molecule()
     {
     }
 
 
+    /*
+     * This constructor takes a chemkit::Molecule as argument and calculates the additional
+     * stuff of the molconv::Molecule class / sets it to default values.
+     */
     Molecule::Molecule(const chemkit::Molecule &base_molecule)
         : chemkit::Molecule(base_molecule)
         , number_of_atoms(this->size())
@@ -53,6 +60,9 @@ namespace molconv
     }
 
 
+    /*
+     * Same as above, but with a pointer.
+     */
     Molecule::Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr)
         : chemkit::Molecule(*(base_mol_ptr.get()))
         , number_of_atoms(this->size())

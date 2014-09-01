@@ -34,24 +34,25 @@ namespace molconv
     class Molecule : public chemkit::Molecule
     {
     public:
-        Molecule();
-        Molecule(const chemkit::Molecule &base_molecule);
-        Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr);
-        void show_inertia();
-        void show_covar();
-        void rotate(Eigen::Matrix3d rot_mat);
-        void clean_up(const molconv::configuration &config);
+        Molecule();                                                         // the default constructor
+        Molecule(const chemkit::Molecule &base_molecule);                   // take a base molecule
+        Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr); // same as above, but with pointer
+
+        void show_inertia();                                    // show the inertia tensor
+        void show_covar();                                      // show the covariance matrix
+        void rotate(Eigen::Matrix3d rot_mat);                   // rotate the molecule about the origin with a rotation matrix
+        void clean_up(const molconv::configuration &config);    // clean up the coordinates of the molecule
     private:
-        size_t number_of_atoms;                // the number of atoms in the molecule
-        double total_mass;                    // total mass of the molecule
-        Eigen::Vector3d center_of_mass;        // the center of mass of the molecule
-        Eigen::Vector3d center_of_geometry;    // the center of geometry of the molecule
-        Eigen::Matrix3d inertia_tensor;        // tensor of the moments of inertia
+        size_t number_of_atoms;             // the number of atoms in the molecule
+        double total_mass;                  // total mass of the molecule
+        Eigen::Vector3d center_of_mass;     // the center of mass of the molecule
+        Eigen::Vector3d center_of_geometry; // the center of geometry of the molecule
+        Eigen::Matrix3d inertia_tensor;     // tensor of the moments of inertia
         Eigen::Vector3d inertia_eigvals;    // the eigenvalues of the inertia tensor
         Eigen::Matrix3d inertia_eigvecs;    // the eigenvectors of the inertia tensor (the principal axes)
-        Eigen::Matrix3d covar_mat;            // the covariance matrix of the molecule
-        Eigen::Vector3d covar_eigvals;        // eigenvalues of the covariance matrix
-        Eigen::Matrix3d covar_eigvecs;        // eigenvectors of the covariance matrix
+        Eigen::Matrix3d covar_mat;          // the covariance matrix of the molecule
+        Eigen::Vector3d covar_eigvals;      // eigenvalues of the covariance matrix
+        Eigen::Matrix3d covar_eigvecs;      // eigenvectors of the covariance matrix
 
         double euler_phi;                   //
         double euler_theta;                 // | the eulerian angles specifying the orientation of the molecule
@@ -62,10 +63,10 @@ namespace molconv
         void trans2euler();                 // calculate the eulerian angles from the transformation matrix
         void euler2trans();                 // calculate the transformation matrix from the eulerian angles
 
-        void calc_inertia();                // calculate the tensor of moments of inertia
-        void diag_inertia();                // diagonalize the inertia tensor
-        void calc_covar_mat();                // calculate the covariance matrix of the molecule
-        void diag_covar_mat();                // diagonalize the covariance matrix
+        void calc_inertia();    // calculate the tensor of moments of inertia
+        void diag_inertia();    // diagonalize the inertia tensor
+        void calc_covar_mat();  // calculate the covariance matrix of the molecule
+        void diag_covar_mat();  // diagonalize the covariance matrix
     };
 }
 
