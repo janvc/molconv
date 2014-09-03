@@ -115,7 +115,7 @@ namespace molconv
     }
 
 
-    bool configuration::help_wanted()
+    bool configuration::help_wanted() const
     {
         return this->help_flag;
     }
@@ -127,72 +127,72 @@ namespace molconv
     }
 
 
-    bool configuration::gui_wanted()
+    bool configuration::gui_wanted() const
     {
         return this->gui_flag;
     }
 
-    bool configuration::input_exists()
+    bool configuration::input_exists() const
     {
         return this->input_flag;
     }
 
 
-    bool configuration::output_exists()
+    bool configuration::output_exists() const
     {
         return this->output_flag;
     }
 
 
-    bool configuration::origin_exists()
+    bool configuration::origin_exists() const
     {
         return this->origin_flag;
     }
 
-    bool configuration::axes_exist()
+    bool configuration::axes_exist() const
     {
         return this->axes_flag;
     }
 
-    int configuration::get_orig_type()
+    int configuration::get_orig_type() const
     {
         return this->internal_origin_type;
     }
 
-    int configuration::get_axes_type()
+    int configuration::get_axes_type() const
     {
         return this->internal_coords_type;
     }
 
-    int configuration::get_orig_atom()
+    int configuration::get_orig_atom() const
     {
         return this->origin_atom;
     }
 
-    std::vector<int> configuration::get_axes_atoms()
+    std::vector<int> configuration::get_axes_atoms() const
     {
         return this->axes_atoms;
     }
 
-    int configuration::get_Nofinputs()
+    int configuration::get_Nofinputs() const
     {
         return this->inputfiles.size();
     }
 
 
-    std::string configuration::get_input(int index)
+    std::string configuration::get_input(int index) const
     {
         return this->inputfiles.at(index);
     }
 
 
-    std::string configuration::get_output()
+    std::string configuration::get_output() const
     {
         return this->outputfile;
     }
 
 
-    void configuration::print_help()
+    void configuration::print_help() const
     {
         std::cout << "Usage:" << std::endl;
         std::cout << this->opt_desc << std::endl;

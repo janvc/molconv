@@ -31,29 +31,29 @@ namespace molconv
     class configuration
     {
     public:
-        configuration(int argc, char *argv[]);        // the constructor that will parse the command line
-        bool help_wanted();
+        configuration(int argc, char *argv[]);  // the constructor that will parse the command line
+        bool help_wanted() const;
         bool cleanup_wanted() const;
-        bool gui_wanted();
-        bool input_exists();
-        bool output_exists();
-        bool origin_exists();
-        bool axes_exist();
-        int get_Nofinputs();
-        int get_orig_type();
-        int get_orig_atom();
-        int get_axes_type();
-        std::vector<int> get_axes_atoms();
-        std::string get_input(int index);
-        std::string get_output();
-        void print_help();
+        bool gui_wanted() const;
+        bool input_exists() const;
+        bool output_exists() const;
+        bool origin_exists() const;
+        bool axes_exist() const;
+        int get_Nofinputs() const;
+        int get_orig_type() const;
+        int get_orig_atom() const;
+        int get_axes_type() const;
+        std::vector<int> get_axes_atoms() const;
+        std::string get_input(int index) const;
+        std::string get_output() const;
+        void print_help() const;
     private:
-        int internal_origin_type;                    // location of internal origin: 1 - com, 2 - cog, 3 - atom
-        int internal_coords_type;                    // type of internal coodinate axes: 1 - inert, 2 - covar, 3 - atoms
-        int origin_atom;                            // atom to be used as the internal origin
-        std::vector<int> axes_atoms;                // atoms used to define the internal coordinate system
-        std::vector<std::string> inputfiles;        // the input files
-        std::string outputfile;                        // the output file
+        int internal_origin_type;               // location of internal origin: 1 - com, 2 - cog, 3 - atom
+        int internal_coords_type;               // type of internal coodinate axes: 1 - inert, 2 - covar, 3 - atoms
+        int origin_atom;                        // atom to be used as the internal origin
+        std::vector<int> axes_atoms;            // atoms used to define the internal coordinate system
+        std::vector<std::string> inputfiles;    // the input files
+        std::string outputfile;                 // the output file
         std::vector<std::string> origin_string;
         std::vector<std::string> axes_string;
         boost::program_options::options_description opt_desc;
