@@ -26,4 +26,11 @@ open_molecule_dialog::open_molecule_dialog(QDialog *parent)
     : QDialog(parent)
     , ui(new Ui::open_molecule_dialog)
 {
+    ui->setupUi(this);
+}
+
+
+open_molecule_dialog::~open_molecule_dialog()
+{
+    delete ui;
 }
