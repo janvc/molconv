@@ -75,3 +75,5 @@ namespace molconv
         void update_geomprops();// update the geometrical properties (i.e. after an atomic coordinate change)
     };
 }
+
+#endif /* MOLECULE_H_ */

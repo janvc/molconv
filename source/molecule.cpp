@@ -228,16 +228,16 @@ namespace molconv
                 }
             }
         }
-        else    // default: use COM as origin and inertia tensor as basis vectors
+        else    // default: use zero as origin and identity matrix as basis vectors
         {
-            this->int_orig_type = 1;
+            this->int_orig_type = 0;
             this->int_orig_atom = 0;
-            this->internal_origin = this->center_of_mass;
-            this->int_basis_type = 1;
+            this->internal_origin = Eigen::Vector3d::Zero();
+            this->int_basis_type = 0;
             this->int_basis_atoms.push_back(0);
             this->int_basis_atoms.push_back(0);
             this->int_basis_atoms.push_back(0);
-            this->internal_basis = this->inertia_eigvecs;
+            this->internal_basis = Eigen::Matrix3d::Identity();
         }
 
         std::cout << "internal origin:\n" << this->internal_origin << "\ninternal basis:\n" << this->internal_basis << std::endl;
