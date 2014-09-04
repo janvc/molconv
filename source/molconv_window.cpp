@@ -118,6 +118,11 @@ void molconv_window::clean_up(const int mol_nr, const molconv::configuration &co
     this->the_molecule_objects.at(mol_nr).clean_up(config);
 }
 
+void molconv_window::set_intbasis(const int mol_nr, const molconv::configuration &config)
+{
+    this->the_molecule_objects.at(mol_nr).set_intbasis(config);
+}
+
 void molconv_window::saveFile()
 {
 }

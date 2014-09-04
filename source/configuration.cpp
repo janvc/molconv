@@ -17,6 +17,8 @@ namespace molconv
         this->gui_flag = false;
         this->input_flag = false;
         this->output_flag = false;
+        this->internal_origin_type = 0;
+        this->internal_coords_type = 0;
 
         // here are the options:
         this->opt_desc.add_options()
@@ -71,6 +73,7 @@ namespace molconv
 
                     std::istringstream iss(this->origin_string.at(1));
                     iss >> this->origin_atom;
+                    this->origin_atom--;    // reduce the read-in number by one because C++ begins counting at 0, not 1
                 }
                 else
                     std::cerr << "ERROR: Invalid value of option 'origin'" << std::endl;
@@ -92,7 +95,7 @@ namespace molconv
                 else
                     std::cerr << "ERROR: Invalid value of option 'axes'" << std::endl;
             }
-            else if (this->axes_string.size() == 4)    // two values: 'atoms' + the number of the atom
+            else if (this->axes_string.size() == 4)    // four values: 'atoms' + the numbers of the atoms
             {
                 if (this->axes_string.at(0) == "atoms")
                 {
@@ -104,6 +107,7 @@ namespace molconv
                         int atomnumber;
                         iss >> atomnumber;
                         this->axes_atoms.push_back(atomnumber);
+                        this->axes_atoms.back()--;  // reduce the read-in number by one because C++ begins counting at 0, not 1
                     }
                 }
                 else

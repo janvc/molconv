@@ -42,6 +42,7 @@ namespace molconv
         void show_covar();                                      // show the covariance matrix
         void rotate(Eigen::Matrix3d rot_mat);                   // rotate the molecule about the origin with a rotation matrix
         void clean_up(const molconv::configuration &config);    // clean up the coordinates of the molecule
+        void set_intbasis(const molconv::configuration &config);
     private:
         size_t number_of_atoms;             // the number of atoms in the molecule
         double total_mass;                  // total mass of the molecule
@@ -59,6 +60,10 @@ namespace molconv
         double euler_psi;                   // /
         Eigen::Vector3d internal_origin;    // origin of the internal coordinate system
         Eigen::Matrix3d internal_basis;     // the basis vectors of the internal coordinate system in terms
+        size_t int_orig_type;               // internal origin: 1=com, 2=cog, 3=atom
+        size_t int_orig_atom;               // atom that defines the internal origin (if set)
+        size_t int_basis_type;              // internal basis: 1=inert, 2=covar, 3=atoms
+        std::vector<size_t> int_basis_atoms;// atoms that define the internal basis (if set)
                                             // of the global coordinates
         void trans2euler();                 // calculate the eulerian angles from the transformation matrix
         void euler2trans();                 // calculate the transformation matrix from the eulerian angles
@@ -67,6 +72,7 @@ namespace molconv
         void diag_inertia();    // diagonalize the inertia tensor
         void calc_covar_mat();  // calculate the covariance matrix of the molecule
         void diag_covar_mat();  // diagonalize the covariance matrix
+        void update_geomprops();// update the geometrical properties (i.e. after an atomic coordinate change)
     };
 }
 

@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
             //the_molecules.at(i).show_covar();
 
             the_window.openFile(QString::fromStdString(config.get_input(i)));
+            the_window.set_intbasis(i, config);
             the_window.clean_up(i, config);
             the_window.add_molecule();
         }

@@ -51,6 +51,8 @@ namespace molconv
         , total_mass(this->mass())
         , center_of_mass(this->centerOfMass())
         , center_of_geometry(this->center())
+        , internal_origin(Eigen::Vector3d::Zero())
+        , internal_basis(Eigen::Matrix3d::Identity())
     {
         std::cout << "This is the first constructor of molconv::Molecule." << std::endl;
 
@@ -121,6 +123,9 @@ namespace molconv
      */
     void Molecule::rotate(Eigen::Matrix3d rot_mat)
     {
+
+        std::cout << "using the matrix\n" << rot_mat << "\nto rotate the molecule.\n";
+
         for (size_t atiter = 0; atiter < this->number_of_atoms; atiter++)
         {
             Eigen::Vector3d new_pos = rot_mat * this->atom(atiter)->position();
@@ -131,24 +136,131 @@ namespace molconv
 
     /*
      * This function will clean up the structure of the molecule, i.e. shift it
-     * so that the center of mass equals the origin, and rotate it so that the
-     * coordiante axes match the principal axes of inertia
+     * so that the origin of the internal basis equals the origin, and rotate
+     * it so that the coordiante axes match the internal basis
      */
     void Molecule::clean_up(const molconv::configuration &config)
     {
-        if (! config.cleanup_wanted())
-            return;
+        if (config.cleanup_wanted())
+        {
+            std::cout << "Cleaning up the molecule" << std::endl;
+            std::cout << "shift vector:" << std::endl << this->center_of_geometry - this->internal_origin << std::endl;
 
-        std::cout << "Cleaning up the molecule" << std::endl;
-        std::cout << "shift vector:" << std::endl << this->center_of_geometry - this->center_of_mass << std::endl;
+            this->setCenter(this->center_of_geometry - this->internal_origin);
 
-        this->setCenter(this->center_of_geometry - this->center_of_mass);
+            //this->center_of_mass = this->centerOfMass();
+            //this->center_of_geometry = this->center();
 
+            //std::cout << "new com:" << std::endl << this->center_of_mass << std::endl;
+
+            this->rotate(this->internal_basis.transpose());
+        }
+    }
+
+    /*
+     * This function sets the internal basis of the molecule based on the information given
+     * in the configuration
+     */
+    void Molecule::set_intbasis(const configuration &config)
+    {
+        if (config.origin_exists() || config.axes_exist())  // settings are given
+        {
+            if (config.origin_exists())
+            {
+                switch (config.get_orig_type())
+                {
+                    case 1:
+                        this->int_orig_type = 1;
+                        this->int_orig_atom = 0;
+                        this->internal_origin = this->center_of_mass;
+                        break;
+                    case 2:
+                        this->int_orig_type = 2;
+                        this->int_orig_atom = 0;
+                        this->internal_origin = this->center_of_geometry;
+                        break;
+                    case 3:
+                        this->int_orig_type = 3;
+                        this->int_orig_atom = config.get_orig_atom();
+                        this->internal_origin = this->atom(config.get_orig_atom())->position();
+                        break;
+                    default:
+                        std::cerr << "Serious ERROR in Molecule::set_intbasis while setting the internal origin" << std::endl;
+                        break;
+                }
+            }
+
+            if (config.axes_exist())
+            {
+                switch (config.get_axes_type())
+                {
+                    case 1:
+                        this->int_basis_type = 1;
+                        this->int_basis_atoms.push_back(0);
+                        this->int_basis_atoms.push_back(0);
+                        this->int_basis_atoms.push_back(0);
+                        this->internal_basis = this->inertia_eigvecs;
+                        break;
+                    case 2:
+                        this->int_basis_type = 2;
+                        this->int_basis_atoms.push_back(0);
+                        this->int_basis_atoms.push_back(0);
+                        this->int_basis_atoms.push_back(0);
+                        this->internal_basis = this->covar_eigvecs;
+                        break;
+                    case 3:
+                    {
+                        Eigen::Vector3d column1 = this->atom(config.get_axes_atoms().at(1))->position()
+                                                - this->atom(config.get_axes_atoms().at(0))->position();
+                        column1 /= column1.norm();
+                        Eigen::Vector3d column2 = this->atom(config.get_axes_atoms().at(2))->position()
+                                                - this->atom(config.get_axes_atoms().at(0))->position();
+                        column2 -= (column1.dot(column2) * column1);
+                        column2 /= column2.norm();
+                        Eigen::Vector3d column3 = column1.cross(column2);
+                        column3 /= column3.norm();
+
+                        this->internal_basis.col(0) = column1;
+                        this->internal_basis.col(1) = column2;
+                        this->internal_basis.col(2) = column3;
+                        break;
+                    }
+                    default:
+                        std::cerr << "Serious ERROR in Molecule::set_intbasis while setting the internal origin" << std::endl;
+                        break;
+                }
+            }
+        }
+        else    // default: use COM as origin and inertia tensor as basis vectors
+        {
+            this->int_orig_type = 1;
+            this->int_orig_atom = 0;
+            this->internal_origin = this->center_of_mass;
+            this->int_basis_type = 1;
+            this->int_basis_atoms.push_back(0);
+            this->int_basis_atoms.push_back(0);
+            this->int_basis_atoms.push_back(0);
+            this->internal_basis = this->inertia_eigvecs;
+        }
+
+        std::cout << "internal origin:\n" << this->internal_origin << "\ninternal basis:\n" << this->internal_basis << std::endl;
+        std::cout << "product of internal basis with itself:\n" << this->internal_basis.transpose() * this->internal_basis << std::endl;
+    }
+
+    /*
+     * This function (re)calculates the geometric properties of the molecule.
+     * It should be called e.g. after the coordinates have been changed.
+     */
+    void Molecule::update_geomprops()
+    {
         this->center_of_mass = this->centerOfMass();
+        this->center_of_geometry = this->center();
 
-        std::cout << "new com:" << std::endl << this->center_of_mass << std::endl;
+        this->calc_inertia();
+        this->calc_covar_mat();
 
-        this->rotate(this->inertia_eigvecs.transpose());
+        this->diag_inertia();
+        this->diag_covar_mat();
     }
 
     /*

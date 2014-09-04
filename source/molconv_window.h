@@ -44,6 +44,7 @@ public:
     ~molconv_window();
     void add_molecule();
     void clean_up(const int mol_nr, const molconv::configuration &config);
+    void set_intbasis(const int mol_nr, const molconv::configuration &config);
 
 public slots:
     void openFile(const QString &filename);
