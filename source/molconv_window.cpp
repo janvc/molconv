@@ -67,10 +67,8 @@ void molconv_window::openFile(const QString &filename)
 
     if (this->the_molfile->moleculeCount() > 0)
     {
-        //this->add_molecule();
         chemkit::Molecule temp_mol = *this->the_molfile->molecule();
         this->the_molecule_objects.push_back(temp_mol);
-        //this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     }
 }
 
@@ -94,11 +92,6 @@ void molconv_window::openFile()
 
 void molconv_window::add_molecule()
 {
-    //std::cout << "Adding molecule" << std::endl;
-    //chemkit::Molecule temp_mol = *this->the_molfile->molecule();
-    //this->the_molecule_objects.push_back(temp_mol);
-    //this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
-    //boost::shared_ptr<molconv::Molecule> temp_pointer(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
     this->ui->molconv_graphicsview->addItem(this->the_graph_item);
@@ -135,7 +128,6 @@ void molconv_window::saveFile(const QString &filename)
         delete this->the_molfile;
 
     this->the_molfile = new chemkit::MoleculeFile(filename.toStdString());
-    //this->the_molfile->addMolecule(boost::make_shared<chemkit::Molecule>(this->the_molecule_objects.front()));
     this->the_molfile->addMolecule(this->the_molecule_pointers.front());
 
     if (! this->the_molfile->write())
