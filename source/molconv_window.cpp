@@ -28,6 +28,7 @@
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
 #include"molecule_list.h"
+#include"open_molecule_dialog.h"
 
 
 molconv_window::molconv_window(QMainWindow *parent)
@@ -37,7 +38,7 @@ molconv_window::molconv_window(QMainWindow *parent)
     this->the_molfile = 0;
 
     ui->setupUi(this);
-    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
+    //connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
 
     QDockWidget *the_dockwidget;
@@ -95,6 +96,7 @@ void molconv_window::add_molecule()
     this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
     this->ui->molconv_graphicsview->addItem(this->the_graph_item);
+    the_graph_item->update();
 }
 
 void molconv_window::quit()
@@ -137,4 +139,11 @@ void molconv_window::saveFile(const QString &filename)
         delete this->the_molfile;
         return;
     }
+}
+
+void molconv_window::on_actionOpen_triggered()
+{
+    open_molecule_dialog open_dialog;
+    open_dialog.setModal(true);
+    open_dialog.exec();
 }

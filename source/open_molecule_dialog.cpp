@@ -18,7 +18,10 @@
  *
  */
 
-
+#ifndef Q_MOC_RUN
+    #include<chemkit/moleculefile.h>
+    #include<boost/make_shared.hpp>
+#endif
 #include"open_molecule_dialog.h"
 #include"ui_open_molecule_dialog.h"
 
@@ -27,10 +30,65 @@ open_molecule_dialog::open_molecule_dialog(QDialog *parent)
     , ui(new Ui::open_molecule_dialog)
 {
     ui->setupUi(this);
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 
 open_molecule_dialog::~open_molecule_dialog()
 {
     delete ui;
+}
+
+void open_molecule_dialog::openFile(const QString &filename)
+{
+    chemkit::MoleculeFile *the_molfile;
+    std::cout << "Opening file " << filename.toStdString() << std::endl;
+
+    the_molfile = new chemkit::MoleculeFile(filename.toStdString());
+    if (! the_molfile->read())
+    {
+        std::cerr << "Could not read molecule file " << filename.toStdString() << std::endl;
+        QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(the_molfile->errorString().c_str()));
+        delete the_molfile;
+        return;
+        ui->settings->setEnabled(false);
+    }
+
+    if (the_molfile->moleculeCount() > 0)
+    {
+        chemkit::Molecule temp_mol = *the_molfile->molecule();
+        ui->an->setMaximum(temp_mol.atomCount());
+        ui->an->setMinimum(1);
+        ui->center->setEnabled(true);
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    }
+}
+
+void open_molecule_dialog::on_filedialog_clicked()
+{
+    std::vector<std::string> formats = chemkit::MoleculeFile::formats();
+    std::sort(formats.begin(), formats.end());
+
+    QString formatsString;
+    foreach(const std::string &format, formats)
+        formatsString += QString("*.%1 ").arg(format.c_str());
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), 0, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
+
+    ui->filename->setText(filename);
+    openFile(filename);
+}
+
+void open_molecule_dialog::on_coa_toggled(bool checked)
+{
+   if(checked)
+       ui->an->setEnabled(true);
+   else
+       ui->an->setEnabled(false);
+}
+
+void open_molecule_dialog::on_buttonBox_accepted()
+{
+    //temp molecule and molfile into class
+    //declare choosen center or atom with opened file and return this to molconv_window
 }
