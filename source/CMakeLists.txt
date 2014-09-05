@@ -38,9 +38,9 @@ set(MOC_HEADERS
 )
 
 set(UI_FORMS
+    open_molecule_dialog.ui
     molconv_window.ui
     molecule_list.ui
-    open_molecule_dialog.ui
 )
 
 qt4_wrap_ui(UI_SOURCES ${UI_FORMS})

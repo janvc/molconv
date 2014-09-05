@@ -54,6 +54,9 @@ public slots:
     void closeFile();
     void quit();
 
+private slots:
+    void on_actionOpen_triggered();
+
 private:
     Ui::molconv_window *ui;
     chemkit::MoleculeFile *the_molfile;

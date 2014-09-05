@@ -22,7 +22,12 @@
 #ifndef OPEN_MOLECULE_DIALOG_H
 #define OPEN_MOLECULE_DIALOG_H
 
+#ifndef Q_MOC_RUN
+    #include<chemkit/moleculefile.h>
+#endif
 #include<QDialog>
+#include<QtGui>
+#include"molecule.h"
 
 namespace Ui
 {
@@ -36,6 +41,12 @@ class open_molecule_dialog : public QDialog
 public:
     open_molecule_dialog(QDialog *parent = 0);
     ~open_molecule_dialog();
+    void openFile(const QString &filename);
+
+private slots:
+    void on_filedialog_clicked();
+
+    void on_coa_toggled(bool checked);
 
 private:
     Ui::open_molecule_dialog *ui;
