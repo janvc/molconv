@@ -28,6 +28,7 @@
     #include<chemkit/graphicsmoleculeitem.h>
 #endif
 #include"molecule.h"
+#include"open_molecule_dialog.h"
 
 
 namespace Ui
@@ -43,19 +44,20 @@ public:
     molconv_window(QMainWindow *parent = 0);
     ~molconv_window();
     void add_molecule();
+    void add_molecule(chemkit::Molecule temp_mol);
     void clean_up(const int mol_nr, const molconv::configuration &config);
     void set_intbasis(const int mol_nr, const molconv::configuration &config);
 
 public slots:
     void openFile(const QString &filename);
-    void openFile();
     void saveFile(const QString &filename);
     void saveFile();
     void closeFile();
     void quit();
+    void get_molecule_Dialog();
+    void openDialog();
 
 private slots:
-    void on_actionOpen_triggered();
 
 private:
     Ui::molconv_window *ui;
@@ -63,6 +65,7 @@ private:
     std::vector<molconv::Molecule> the_molecule_objects;
     std::vector<boost::shared_ptr<molconv::Molecule> > the_molecule_pointers;
     chemkit::GraphicsMoleculeItem *the_graph_item;
+    open_molecule_dialog *open_dialog;
 };
 
 #endif /* MOLCONV_WINDOW_H_ */

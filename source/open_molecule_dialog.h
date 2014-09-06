@@ -39,9 +39,10 @@ class open_molecule_dialog : public QDialog
     Q_OBJECT
 
 public:
-    open_molecule_dialog(QDialog *parent = 0);
+    open_molecule_dialog(QWidget *parent = 0);
     ~open_molecule_dialog();
     void openFile(const QString &filename);
+    chemkit::Molecule getMol();
 
 private slots:
     void on_filedialog_clicked();
@@ -50,6 +51,7 @@ private slots:
 
 private:
     Ui::open_molecule_dialog *ui;
+    chemkit::Molecule the_molecule;
 };
 
 #endif // OPEN_MOLECULE_DIALOG_H
