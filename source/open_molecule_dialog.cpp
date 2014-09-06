@@ -25,7 +25,7 @@
 #include"open_molecule_dialog.h"
 #include"ui_open_molecule_dialog.h"
 
-open_molecule_dialog::open_molecule_dialog(QDialog *parent)
+open_molecule_dialog::open_molecule_dialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::open_molecule_dialog)
 {
@@ -59,8 +59,9 @@ void open_molecule_dialog::openFile(const QString &filename)
         chemkit::Molecule temp_mol = *the_molfile->molecule();
         ui->an->setMaximum(temp_mol.atomCount());
         ui->an->setMinimum(1);
-        ui->center->setEnabled(true);
+        ui->origin->setEnabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+        this->the_molecule = temp_mol;
     }
 }
 
@@ -87,8 +88,7 @@ void open_molecule_dialog::on_coa_toggled(bool checked)
        ui->an->setEnabled(false);
 }
 
-void open_molecule_dialog::on_buttonBox_accepted()
+chemkit::Molecule open_molecule_dialog::getMol()
 {
-    //temp molecule and molfile into class
-    //declare choosen center or atom with opened file and return this to molconv_window
+    return this->the_molecule;
 }
