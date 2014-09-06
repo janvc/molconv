@@ -11,6 +11,8 @@ find_package(Qt4 4.6 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 set(QT_USE_QTGUI TRUE)
 include(${QT_USE_FILE})
 
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(HEADERS
@@ -38,9 +40,9 @@ set(MOC_HEADERS
 )
 
 set(UI_FORMS
+    open_molecule_dialog.ui
     molconv_window.ui
     molecule_list.ui
-    open_molecule_dialog.ui
 )
 
 qt4_wrap_ui(UI_SOURCES ${UI_FORMS})
