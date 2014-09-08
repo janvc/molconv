@@ -21,3 +21,7 @@ bin/
 *.swo
 *~
 CMakeLists.txt.user
+
+# Build directories
+Debug/
+Release/
