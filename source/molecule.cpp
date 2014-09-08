@@ -156,6 +156,90 @@ namespace molconv
      * This function sets the internal basis of the molecule based on the information given
      * in the configuration
      */
+    void Molecule::set_intbasis(const origin orig, const basis axes, const int orig_atom, const int basis_atom1, const int basis_atom2, const int basis_atom3)
+    {
+        switch (orig)
+        {
+            case COM:
+                this->int_orig_type = 1;
+                this->int_orig_atom = 0;
+                this->internal_origin = this->center_of_mass;
+                break;
+            case COG:
+                this->int_orig_type = 2;
+                this->int_orig_atom = 0;
+                this->internal_origin = this->center_of_geometry;
+                break;
+            case ATOM:
+                this->int_orig_type = 3;
+                this->int_orig_atom = orig_atom;
+                this->internal_origin = this->atom(orig_atom)->position();
+                break;
+            default:
+                std::cerr << "Serious ERROR in Molecule::set_intbasis while setting the internal origin" << std::endl;
+                break;
+        }
+
+        switch (axes)
+        {
+            case INERT:
+                this->int_basis_type = 1;
+                this->int_basis_atoms.push_back(0);
+                this->int_basis_atoms.push_back(0);
+                this->int_basis_atoms.push_back(0);
+                this->internal_basis = this->inertia_eigvecs;
+                break;
+            case COVAR:
+                this->int_basis_type = 2;
+                this->int_basis_atoms.push_back(0);
+                this->int_basis_atoms.push_back(0);
+                this->int_basis_atoms.push_back(0);
+                this->internal_basis = this->covar_eigvecs;
+                break;
+            case ATOMS:
+            {
+                Eigen::Vector3d column1 = this->atom(basis_atom2)->position()
+                                        - this->atom(basis_atom1)->position();
+                column1 /= column1.norm();
+
+                Eigen::Vector3d column2 = this->atom(basis_atom3)->position()
+                                        - this->atom(basis_atom1)->position();
+
+                column2 -= (column1.dot(column2) * column1);
+                column2 /= column2.norm();
+
+                Eigen::Vector3d column3 = column1.cross(column2);
+                column3 /= column3.norm();
+
+                this->internal_basis.col(0) = column1;
+                this->internal_basis.col(1) = column2;
+                this->internal_basis.col(2) = column3;
+                break;
+            }
+            default:
+                std::cerr << "Serious ERROR in Molecule::set_intbasis while setting the internal origin" << std::endl;
+                break;
+        }
+        //else    // default: use zero as origin and identity matrix as basis vectors
+        //{
+        //    this->int_orig_type = 0;
+        //    this->int_orig_atom = 0;
+        //    this->internal_origin = Eigen::Vector3d::Zero();
+        //    this->int_basis_type = 0;
+        //    this->int_basis_atoms.push_back(0);
+        //    this->int_basis_atoms.push_back(0);
+        //    this->int_basis_atoms.push_back(0);
+        //    this->internal_basis = Eigen::Matrix3d::Identity();
+        //}
+
+        std::cout << "internal origin:\n" << this->internal_origin << "\ninternal basis:\n" << this->internal_basis << std::endl;
+        std::cout << "product of internal basis with itself:\n" << this->internal_basis.transpose() * this->internal_basis << std::endl;
+    }
+
+    /*
+     * This function sets the internal basis of the molecule based on the information given
+     * in the configuration
+     */
     void Molecule::set_intbasis(const configuration &config)
     {
         if (config.origin_exists() || config.axes_exist())  // settings are given
