@@ -146,6 +146,6 @@ void molconv_window::openDialog()
 void molconv_window::get_molecule_Dialog()
 {
     add_molecule(this->open_dialog->getMol());
-    // Get options from Dialog
-    // Set origin and basis to the ones from the dialog
+    //disfun!
+    //this->the_molecule_objects.end()->set_intbasis(this->open_dialog->getOrigin(),this->open_dialog->getBasis());
 }
