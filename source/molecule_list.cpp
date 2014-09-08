@@ -33,9 +33,24 @@ molecule_list::molecule_list(molconv_window *window)
     m_window = window;
 
     ui->setupUi(this);
+    connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(show_item(molconv::Molecule*)));
 }
 
 molecule_list::~molecule_list()
 {
     delete ui;
+}
+
+void molecule_list::show_item(molconv::Molecule *molecule)
+{
+    ui->molecule_table->clearContents();
+
+    ui->molecule_table->setRowCount(1);
+
+    //QTableWidgetItem *item = new QTableWidgetItem(molecule->formula().c_str());
+    QTableWidgetItem *item = new QTableWidgetItem(QString::fromStdString(molecule->formula()));
+
+    ui->molecule_table->setItem(0, 0, item);
+
+    ui->molecule_table->setCurrentCell(0, 0);
 }

@@ -11,18 +11,27 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Molecules</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
-    <widget class="QDockWidget" name="molecule_list">
+    <widget class="QDockWidget" name="mollist">
      <widget class="QWidget" name="dockWidgetContents">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QTableWidget" name="tableWidget"/>
+        <widget class="QTableWidget" name="molecule_table"/>
        </item>
       </layout>
      </widget>
