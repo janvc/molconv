@@ -43,14 +43,8 @@ molecule_list::~molecule_list()
 
 void molecule_list::show_item(molconv::Molecule *molecule)
 {
-    ui->molecule_table->clearContents();
+    // clear list:
+    //ui->mol_list->clear();
 
-    ui->molecule_table->setRowCount(1);
-
-    //QTableWidgetItem *item = new QTableWidgetItem(molecule->formula().c_str());
-    QTableWidgetItem *item = new QTableWidgetItem(QString::fromStdString(molecule->formula()));
-
-    ui->molecule_table->setItem(0, 0, item);
-
-    ui->molecule_table->setCurrentCell(0, 0);
+    ui->mol_list->addItem(QString::fromStdString(molecule->formula()));
 }

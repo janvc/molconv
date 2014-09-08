@@ -18,7 +18,7 @@
  *
  */
 
-
+#include<iostream>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
@@ -43,7 +43,7 @@ molconv_window::molconv_window(QMainWindow *parent)
     QDockWidget *the_dockwidget;
 
     the_dockwidget = new molecule_list(this);
-    addDockWidget(Qt::BottomDockWidgetArea, the_dockwidget);
+    addDockWidget(Qt::LeftDockWidgetArea, the_dockwidget);
 }
 
 molconv_window::~molconv_window()
