@@ -43,11 +43,15 @@ public:
     ~open_molecule_dialog();
     void openFile(const QString &filename);
     chemkit::Molecule getMol();
+    molconv::origin getOrigin();
+    molconv::basis getBasis();
 
 private slots:
     void on_filedialog_clicked();
 
     void on_coa_toggled(bool checked);
+
+    void on_atoms_toggled(bool checked);
 
 private:
     Ui::open_molecule_dialog *ui;

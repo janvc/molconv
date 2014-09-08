@@ -58,8 +58,11 @@ void open_molecule_dialog::openFile(const QString &filename)
     {
         chemkit::Molecule temp_mol = *the_molfile->molecule();
         ui->an->setMaximum(temp_mol.atomCount());
-        ui->an->setMinimum(1);
+        ui->atom1->setMaximum(temp_mol.atomCount());
+        ui->atom2->setMaximum(temp_mol.atomCount());
+        ui->atom3->setMaximum(temp_mol.atomCount());
         ui->origin->setEnabled(true);
+        ui->basis->setEnabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
         this->the_molecule = temp_mol;
     }
@@ -91,4 +94,39 @@ void open_molecule_dialog::on_coa_toggled(bool checked)
 chemkit::Molecule open_molecule_dialog::getMol()
 {
     return this->the_molecule;
+}
+
+molconv::origin open_molecule_dialog::getOrigin()
+{
+    if(ui->com->isChecked())
+        return molconv::COM;
+    else if(ui->cog->isChecked())
+        return molconv::COG;
+    else if(ui->coa->isChecked())
+        return molconv::ATOM;
+}
+
+molconv::basis open_molecule_dialog::getBasis()
+{
+    if(ui->covar->isChecked())
+        return molconv::COVAR;
+    else if(ui->inert->isChecked())
+        return molconv::INERT;
+    else if(ui->atoms->isChecked())
+        return molconv::ATOMS;
+}
+
+void open_molecule_dialog::on_atoms_toggled(bool checked)
+{
+   if(checked)
+   {
+       ui->atom1->setEnabled(true);
+       ui->atom2->setEnabled(true);
+       ui->atom3->setEnabled(true);
+   } else
+   {
+       ui->atom1->setEnabled(false);
+       ui->atom2->setEnabled(false);
+       ui->atom3->setEnabled(false);
+   }
 }
