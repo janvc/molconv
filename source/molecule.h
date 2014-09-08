@@ -31,6 +31,17 @@
 
 namespace molconv
 {
+
+    /*
+     * Center of a molecule
+     */
+    enum origin { COM, COG, ATOM };
+
+    /*
+     * Which vectors to use for new internal basis
+     */
+    enum basis { COVAR, INERT, ATOMS };
+
     class Molecule : public chemkit::Molecule
     {
     public:
@@ -43,6 +54,7 @@ namespace molconv
         void rotate(Eigen::Matrix3d rot_mat);                   // rotate the molecule about the origin with a rotation matrix
         void clean_up(const molconv::configuration &config);    // clean up the coordinates of the molecule
         void set_intbasis(const molconv::configuration &config);
+        void set_intbasis(const origin orig, const basis axes, const int orig_atom=0, const int basis_atom1=0, const int basis_atom2=0, const int basis_atom3=0);
     private:
         size_t number_of_atoms;             // the number of atoms in the molecule
         double total_mass;                  // total mass of the molecule
