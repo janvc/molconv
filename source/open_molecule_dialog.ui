@@ -90,6 +90,9 @@
              <property name="enabled">
               <bool>false</bool>
              </property>
+             <property name="minimum">
+              <number>1</number>
+             </property>
             </widget>
            </item>
           </layout>
@@ -108,6 +111,9 @@
             <widget class="QRadioButton" name="covar">
              <property name="text">
               <string>covariance matrix</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -128,13 +134,34 @@
            <item>
             <layout class="QHBoxLayout" name="atom_numbers">
              <item>
-              <widget class="QSpinBox" name="atom3"/>
+              <widget class="QSpinBox" name="atom3">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="atom2"/>
+              <widget class="QSpinBox" name="atom2">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="atom1"/>
+              <widget class="QSpinBox" name="atom1">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
