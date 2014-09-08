@@ -11,6 +11,8 @@ find_package(Qt4 4.6 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
 set(QT_USE_QTGUI TRUE)
 include(${QT_USE_FILE})
 
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(HEADERS
