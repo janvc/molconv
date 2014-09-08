@@ -18,6 +18,7 @@
  *
  */
 
+#include<iostream>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<boost/make_shared.hpp>
@@ -129,4 +130,24 @@ void open_molecule_dialog::on_atoms_toggled(bool checked)
        ui->atom2->setEnabled(false);
        ui->atom3->setEnabled(false);
    }
+}
+
+void open_molecule_dialog::done(int r)
+{
+    if(QDialog::Accepted == r && ui->atoms->isChecked())
+    {
+        if(ui->atom1->value() == ui->atom2->value() || ui->atom2->value() == ui->atom3->value() || ui->atom1->value() == ui->atom3->value())
+        {
+            QMessageBox::critical(this,"Incorrect Data","You have to choose three different atoms for the new basis.");
+            return;
+        } else
+        {
+            QDialog::done(r);
+            return;
+        }
+    } else
+    {
+        QDialog::done(r);
+        return;
+    }
 }

@@ -19,6 +19,7 @@
  */
 
 
+#include<iostream>
 #include<boost/make_shared.hpp>
 #include"utilities.h"
 #include"molecule.h"

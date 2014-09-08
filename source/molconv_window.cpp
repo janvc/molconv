@@ -19,6 +19,7 @@
  */
 
 
+#include<iostream>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>

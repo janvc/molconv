@@ -56,6 +56,7 @@ private slots:
 private:
     Ui::open_molecule_dialog *ui;
     chemkit::Molecule the_molecule;
+    void done(int r);
 };
 
 #endif // OPEN_MOLECULE_DIALOG_H
