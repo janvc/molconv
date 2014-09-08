@@ -59,6 +59,9 @@ public slots:
 
 private slots:
 
+signals:
+    void new_molecule(molconv::Molecule *molecule);
+
 private:
     Ui::molconv_window *ui;
     chemkit::MoleculeFile *the_molfile;

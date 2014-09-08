@@ -89,6 +89,7 @@ void molconv_window::add_molecule(chemkit::Molecule temp_mol)
     this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
     this->ui->molconv_graphicsview->addItem(this->the_graph_item);
     ui->molconv_graphicsview->update();
+    emit new_molecule(this->the_molecule_pointers.back().get());
 }
 
 void molconv_window::quit()

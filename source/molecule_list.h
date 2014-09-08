@@ -22,6 +22,7 @@
 #define MOLECULE_LIST_H_
 
 #include<QtGui>
+#include"molecule.h"
 
 namespace Ui
 {
@@ -38,9 +39,13 @@ public:
     molecule_list(molconv_window *window);
     ~molecule_list();
 
+private slots:
+    void show_item(molconv::Molecule *molecule);
+
 private:
     Ui::molecule_list *ui;
     molconv_window *m_window;
+    QTableWidgetItem *the_item;
 };
 
 
