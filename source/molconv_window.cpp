@@ -95,6 +95,7 @@ void molconv_window::add_molecule()
     this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
     this->ui->molconv_graphicsview->addItem(this->the_graph_item);
+    emit new_molecule(this->the_molecule_pointers.back().get());
 }
 
 void molconv_window::quit()
