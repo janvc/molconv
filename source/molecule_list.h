@@ -45,7 +45,7 @@ private slots:
 private:
     Ui::molecule_list *ui;
     molconv_window *m_window;
-    QTableWidgetItem *the_item;
+    QListWidgetItem *the_item;
 };
 
 
