@@ -99,7 +99,9 @@ chemkit::Molecule open_molecule_dialog::getMol()
 
 molconv::origin open_molecule_dialog::getOrigin()
 {
-    if(ui->com->isChecked())
+    if(ui->zero->isChecked())
+        return molconv::ZERO;
+    else if(ui->com->isChecked())
         return molconv::COM;
     else if(ui->cog->isChecked())
         return molconv::COG;
@@ -109,7 +111,9 @@ molconv::origin open_molecule_dialog::getOrigin()
 
 molconv::basis open_molecule_dialog::getBasis()
 {
-    if(ui->covar->isChecked())
+    if(ui->identity->isChecked())
+        return molconv::IDENTITY;
+    else if(ui->covar->isChecked())
         return molconv::COVAR;
     else if(ui->inert->isChecked())
         return molconv::INERT;
