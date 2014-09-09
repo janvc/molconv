@@ -175,6 +175,11 @@ namespace molconv
     {
         switch (orig)
         {
+            case ZERO:
+                int_orig_type = 0;
+                this->int_orig_atom = 0;
+                this->internal_origin = Eigen::Vector3d::Zero();
+                break;
             case COM:
                 this->int_orig_type = 1;
                 this->int_orig_atom = 0;
@@ -197,6 +202,13 @@ namespace molconv
 
         switch (axes)
         {
+            case IDENTITY:
+                this->int_basis_type = 0;
+                this->int_basis_atoms.push_back(0);
+                this->int_basis_atoms.push_back(0);
+                this->int_basis_atoms.push_back(0);
+                this->internal_basis = Eigen::Matrix3d::Identity();
+                break;
             case INERT:
                 this->int_basis_type = 1;
                 this->int_basis_atoms.push_back(0);
@@ -235,17 +247,6 @@ namespace molconv
                 std::cerr << "Serious ERROR in Molecule::set_intbasis while setting the internal origin" << std::endl;
                 break;
         }
-        //else    // default: use zero as origin and identity matrix as basis vectors
-        //{
-        //    this->int_orig_type = 0;
-        //    this->int_orig_atom = 0;
-        //    this->internal_origin = Eigen::Vector3d::Zero();
-        //    this->int_basis_type = 0;
-        //    this->int_basis_atoms.push_back(0);
-        //    this->int_basis_atoms.push_back(0);
-        //    this->int_basis_atoms.push_back(0);
-        //    this->internal_basis = Eigen::Matrix3d::Identity();
-        //}
 
         std::cout << "internal origin:\n" << this->internal_origin << "\ninternal basis:\n" << this->internal_basis << std::endl;
         std::cout << "product of internal basis with itself:\n" << this->internal_basis.transpose() * this->internal_basis << std::endl;
