@@ -53,6 +53,7 @@ namespace molconv
         void show_covar();                                      // show the covariance matrix
         void rotate(Eigen::Matrix3d rot_mat);                   // rotate the molecule about the origin with a rotation matrix
         void clean_up(const molconv::configuration &config);    // clean up the coordinates of the molecule
+        void clean_up();  									    // clean up the coordinates of the molecule
         void set_intbasis(const molconv::configuration &config);
         void set_intbasis(const origin orig, const basis axes, const int orig_atom=0, const int basis_atom1=0, const int basis_atom2=0, const int basis_atom3=0);
     private:

@@ -153,6 +153,21 @@ namespace molconv
     }
 
     /*
+     * This function will clean up the structure of the molecule, i.e. shift it
+     * so that the origin of the internal basis equals the origin, and rotate
+     * it so that the coordiante axes match the internal basis
+     */
+    void Molecule::clean_up()
+    {
+        std::cout << "Cleaning up the molecule" << std::endl;
+        std::cout << "shift vector:" << std::endl << this->center_of_geometry - this->internal_origin << std::endl;
+
+        this->setCenter(this->center_of_geometry - this->internal_origin);
+
+        this->rotate(this->internal_basis.transpose());
+    }
+
+    /*
      * This function sets the internal basis of the molecule based on the information given
      * in the configuration
      */
