@@ -42,7 +42,7 @@ public:
     open_molecule_dialog(QWidget *parent = 0);
     ~open_molecule_dialog();
     void openFile(const QString &filename);
-    chemkit::Molecule getMol();
+    molconv::Molecule getMol();
     molconv::origin getOrigin();
     molconv::basis getBasis();
 
@@ -55,7 +55,7 @@ private slots:
 
 private:
     Ui::open_molecule_dialog *ui;
-    chemkit::Molecule the_molecule;
+    molconv::Molecule the_molecule;
     void done(int r);
 };
 

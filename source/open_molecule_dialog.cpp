@@ -65,7 +65,7 @@ void open_molecule_dialog::openFile(const QString &filename)
         ui->origin->setEnabled(true);
         ui->basis->setEnabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-        this->the_molecule = temp_mol;
+        this->the_molecule = molconv::Molecule(temp_mol);
     }
 }
 
@@ -92,8 +92,15 @@ void open_molecule_dialog::on_coa_toggled(bool checked)
        ui->an->setEnabled(false);
 }
 
-chemkit::Molecule open_molecule_dialog::getMol()
+molconv::Molecule open_molecule_dialog::getMol()
 {
+    if(ui->atoms->isChecked() && !ui->coa->isChecked())
+        this->the_molecule.set_intbasis(getOrigin(),getBasis(),0,ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
+    else if(ui->atoms->isChecked() && ui->coa->isChecked())
+        this->the_molecule.set_intbasis(getOrigin(),getBasis(),ui->an->value(),ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
+    else if(!ui->atoms->isChecked() && !ui->coa->isChecked())
+        this->the_molecule.set_intbasis(getOrigin(),getBasis());
+
     return this->the_molecule;
 }
 
