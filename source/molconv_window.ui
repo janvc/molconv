@@ -52,6 +52,8 @@
     <string>Quit</string>
    </property>
   </action>
+  <widget class="QStatusBar" name="statusbar">
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
