@@ -26,7 +26,6 @@
 #endif
 
 void print_header();
-void print_help_msg();
 void print_err_header();
 void print_err_footer();
 

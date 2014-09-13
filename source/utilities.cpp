@@ -26,8 +26,7 @@
 #include"utilities.h"
 
 
-void print_header()
-{
+void print_header() {
     std::cout << std::string(72,'-') << std::endl
               << "    molconv development version       Copyright 2014 by Jan von Cosel" << std::endl
               << "                                                      & Sebastian Lenz" << std::endl
@@ -41,28 +40,12 @@ void print_header()
               << std::endl;
 }
 
-
-void print_help_msg()
-{
-    std::cout << "USAGE: molconv [OPTIONS] inputfile [file ..]" << std::endl
-              << std::endl
-              << "Options:" << std::endl
-              << std::endl
-              << "   -h             display help text" << std::endl
-              << "   -o <filename>  output file" << std::endl
-
-              << std::endl;
-}
-
-void print_err_header()
-{
+void print_err_header() {
     print_header();
     std::cout << std::string(45,'-') << std::endl
               << "    ############### ERROR ###############" << std::endl;
 }
 
-void print_err_footer()
-{
+void print_err_footer() {
     std::cerr << std::string(45,'-') << std::endl << std::endl;
-    print_help_msg();
 }

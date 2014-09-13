@@ -22,6 +22,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
+#include"types.h"
 #ifndef Q_MOC_RUN
     #include<boost/program_options.hpp>
 #endif
@@ -39,14 +40,14 @@ namespace molconv {
         bool origin_exists() const;
         bool axes_exist() const;
 
-        int get_Nofinputs() const;
+        int get_NumberOfInputs() const;
         origin origin_type() const;
         int origin_atom() const;
         basis axes_type() const;
         std::vector<int> axes_atoms() const;
         std::string inputfile(int index) const;
         std::string outputfile() const;
-        void help_message() const;
+        void print_help() const;
     private:
         bool help_flag_;
         bool cleanup_flag_;

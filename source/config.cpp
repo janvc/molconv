@@ -18,12 +18,12 @@
  *
  */
 
+#include<iostream>
 #include"config.h"
 #include"types.h"
 
 namespace molconv {
-    Config::Config(int argc, char *argv[])
-    {
+    Config::Config(int argc, char *argv[]) {
         // set the default values:
         this->help_flag_ = false;
         this->cleanup_flag_ = false;
@@ -36,7 +36,7 @@ namespace molconv {
         std::vector<std::string> axes_string;
 
         // here are the options:
-        this->opt_desc.add_options()
+        this->opt_desc_.add_options()
             ("help,h", "print this help text")
             ("input,i", boost::program_options::value< std::vector<std::string> >(&this->inputfiles_)->multitoken(), "input file(s) to be read")
             ("output,o", boost::program_options::value<std::string>(&this->outputfile_), "output, where the structure will be written to")
@@ -67,24 +67,20 @@ namespace molconv {
         if (this->var_map_.count("output"))
             this->output_flag_ = true;
 
-        if (this->var_map_.count("origin"))
-        {
+        if (this->var_map_.count("origin")) {
             this->origin_flag_ = true;
 
-            if (this->origin_string.size() == 1)    // only one value: either com or cog
-            {
-                if (this->origin_string.at(0) == "com")
+            if (origin_string.size() == 1) {    // only one value: either com or cog
+                if (origin_string.at(0) == "com")
                     this->origin_type_ = kCenterOfMass;
-                else if (this->origin_string.at(0) == "cog")
+                else if (origin_string.at(0) == "cog")
                     this->origin_type_ = kCenterOfGeometry;
                 else
                     std::cerr << "ERROR: Invalid value of option 'origin'" << std::endl;
             }
-            else if (this->origin_string.size() == 2)    // two values: 'atom' + the number of the atom
-            {
-                if (this->origin_string.at(0) == "atom")
-                {
-                    this->origin_type = kCenterOnAtom;
+            else if (origin_string.size() == 2) {  // two values: 'atom' + the number of the atom
+                if (origin_string.at(0) == "atom") {
+                    this->origin_type_ = kCenterOnAtom;
 
                     std::istringstream iss(origin_string.at(1));
                     iss >> this->origin_atom_;
@@ -97,27 +93,22 @@ namespace molconv {
                 std::cerr << "ERROR: Wrong number of values of option 'origin'" << std::endl;
         }
 
-        if (this->var_map_.count("axes"))
-        {
+        if (this->var_map_.count("axes")) {
             this->axes_flag_ = true;
 
-            if (axes_string.size() == 1)    // only one value: either inert or covar
-            {
+            if (axes_string.size() == 1) {  // only one value: either inert or covar
                 if (axes_string.at(0) == "inert")
                     this->axes_type_ = kInertiaVectors;
-                else if (this->axes_string.at(0) == "covar")
+                else if (axes_string.at(0) == "covar")
                     this->axes_type_ = kCovarianceVectors;
                 else
                     std::cerr << "ERROR: Invalid value of option 'axes'" << std::endl;
             }
-            else if (axes_string.size() == 4)    // four values: 'atoms' + the numbers of the atoms
-            {
-                if (axes_string.at(0) == "atoms")
-                {
+            else if (axes_string.size() == 4) {  // four values: 'atoms' + the numbers of the atoms
+                if (axes_string.at(0) == "atoms") {
                     this->axes_type_ = kVectorsFromAtoms;
 
-                    for (std::vector<std::string>::const_iterator iter = axes_string.begin()+1; iter != axes_string.end(); iter++)
-                    {
+                    for (std::vector<std::string>::const_iterator iter = axes_string.begin()+1; iter != axes_string.end(); iter++) {
                         std::istringstream iss(*iter);
                         int atomnumber;
                         iss >> atomnumber;
@@ -133,86 +124,63 @@ namespace molconv {
         }
     }
 
-
-    bool Config::help_wanted() const
-    {
+    bool Config::help_wanted() const {
         return this->help_flag_;
     }
 
-
-    bool Config::cleanup_wanted() const
-    {
+    bool Config::cleanup_wanted() const {
         return this->cleanup_flag_;
     }
 
-
-    bool Config::gui_wanted() const
-    {
+    bool Config::gui_wanted() const {
         return this->gui_flag_;
     }
 
-    bool Config::input_exists() const
-    {
+    bool Config::input_exists() const {
         return this->input_flag_;
     }
 
-
-    bool Config::output_exists() const
-    {
+    bool Config::output_exists() const {
         return this->output_flag_;
     }
 
-
-    bool Config::origin_exists() const
-    {
+    bool Config::origin_exists() const {
         return this->origin_flag_;
     }
 
-    bool Config::axes_exist() const
-    {
+    bool Config::axes_exist() const {
         return this->axes_flag_;
     }
 
-    int Config::origin_type() const
-    {
+    origin Config::origin_type() const {
         return this->origin_type_;
     }
 
-    int Config::axes_type() const
-    {
+    basis Config::axes_type() const {
         return this->axes_type_;
     }
 
-    int Config::origin_atom() const
-    {
+    int Config::origin_atom() const {
         return this->origin_atom_;
     }
 
-    std::vector<int> Config::axes_atoms() const
-    {
+    std::vector<int> Config::axes_atoms() const {
         return this->axes_atoms_;
     }
 
-    int Config::get_NumberOfInputs() const
-    {
+    int Config::get_NumberOfInputs() const {
         return this->inputfiles_.size();
     }
 
-
-    std::string Config::get_input(int index) const
-    {
+    std::string Config::inputfile(int index) const {
         return this->inputfiles_.at(index);
     }
 
-
-    std::string Config::get_output() const
-    {
+    std::string Config::outputfile() const {
         return this->outputfile_;
     }
 
-
-    void Config::print_help() const
-    {
+    void Config::print_help() const {
         std::cout << "Usage:" << std::endl;
         std::cout << this->opt_desc_ << std::endl;
     }
