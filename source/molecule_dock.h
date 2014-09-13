@@ -31,21 +31,20 @@ namespace Ui
 
 class molconv_window;
 
-class ListOfMolecules : public QDockWidget
-{
+class ListOfMolecules : public QDockWidget {
     Q_OBJECT
 
-public:
-    ListOfMolecules(molconv_window *window);
-    ~ListOfMolecules();
+    public:
+        ListOfMolecules(molconv_window *window);
+        ~ListOfMolecules();
 
-private slots:
-    void show_item(molconv::Molecule *molecule);
+    private slots:
+        void show_item(molconv::Molecule *molecule);
 
-private:
-    Ui::ListOfMolecules *ui;
-    molconv_window *m_window;
-    QListWidgetItem *the_item;
+    private:
+        Ui::ListOfMolecules *ui;
+        molconv_window *main_window;
+        QListWidgetItem *list_item;
 };
 
 

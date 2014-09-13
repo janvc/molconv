@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel & Sebastian Lenz
+ * Copyright 2014 Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -28,23 +28,18 @@
 
 ListOfMolecules::ListOfMolecules(molconv_window *window)
     : QDockWidget(window)
-    , ui(new Ui::ListOfMolecules)
-{
-    m_window = window;
+    , ui(new Ui::ListOfMolecules) {
+
+    main_window = window;
 
     ui->setupUi(this);
     connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(show_item(molconv::Molecule*)));
 }
 
-ListOfMolecules::~ListOfMolecules()
-{
+ListOfMolecules::~ListOfMolecules() {
     delete ui;
 }
 
-void ListOfMolecules::show_item(molconv::Molecule *molecule)
-{
-    // clear list:
-    //ui->mol_list->clear();
-
+void ListOfMolecules::show_item(molconv::Molecule *molecule) {
     ui->molecule_list->addItem(QString::fromStdString(molecule->formula()));
 }
