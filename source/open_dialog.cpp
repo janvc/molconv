@@ -23,24 +23,24 @@
     #include<chemkit/moleculefile.h>
     #include<boost/make_shared.hpp>
 #endif
-#include"open_molecule_dialog.h"
-#include"ui_open_molecule_dialog.h"
+#include"open_dialog.h"
+#include"ui_open_dialog.h"
 
-open_molecule_dialog::open_molecule_dialog(QWidget *parent)
+OpenDialog::OpenDialog(QWidget *parent)
     : QDialog(parent)
-    , ui(new Ui::open_molecule_dialog)
+    , ui(new Ui::OpenDialog)
 {
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 
-open_molecule_dialog::~open_molecule_dialog()
+OpenDialog::~OpenDialog()
 {
     delete ui;
 }
 
-void open_molecule_dialog::openFile(const QString &filename)
+void OpenDialog::openFile(const QString &filename)
 {
     chemkit::MoleculeFile *the_molfile;
     std::cout << "Opening file " << filename.toStdString() << std::endl;
@@ -69,7 +69,7 @@ void open_molecule_dialog::openFile(const QString &filename)
     }
 }
 
-void open_molecule_dialog::on_filedialog_clicked()
+void OpenDialog::on_filedialog_clicked()
 {
     std::vector<std::string> formats = chemkit::MoleculeFile::formats();
     std::sort(formats.begin(), formats.end());
@@ -84,7 +84,7 @@ void open_molecule_dialog::on_filedialog_clicked()
     openFile(filename);
 }
 
-void open_molecule_dialog::on_coa_toggled(bool checked)
+void OpenDialog::on_coa_toggled(bool checked)
 {
    if(checked)
        ui->an->setEnabled(true);
@@ -92,7 +92,7 @@ void open_molecule_dialog::on_coa_toggled(bool checked)
        ui->an->setEnabled(false);
 }
 
-molconv::Molecule open_molecule_dialog::getMol()
+molconv::Molecule OpenDialog::getMol()
 {
     if(ui->atoms->isChecked() && !ui->coa->isChecked())
         this->the_molecule.set_intbasis(getOrigin(),getBasis(),0,ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
@@ -104,7 +104,7 @@ molconv::Molecule open_molecule_dialog::getMol()
     return this->the_molecule;
 }
 
-molconv::origin open_molecule_dialog::getOrigin()
+molconv::origin OpenDialog::getOrigin()
 {
     if(ui->zero->isChecked())
         return molconv::ZERO;
@@ -116,7 +116,7 @@ molconv::origin open_molecule_dialog::getOrigin()
         return molconv::ATOM;
 }
 
-molconv::basis open_molecule_dialog::getBasis()
+molconv::basis OpenDialog::getBasis()
 {
     if(ui->identity->isChecked())
         return molconv::IDENTITY;
@@ -128,7 +128,7 @@ molconv::basis open_molecule_dialog::getBasis()
         return molconv::ATOMS;
 }
 
-void open_molecule_dialog::on_atoms_toggled(bool checked)
+void OpenDialog::on_atoms_toggled(bool checked)
 {
    if(checked)
    {
@@ -143,7 +143,7 @@ void open_molecule_dialog::on_atoms_toggled(bool checked)
    }
 }
 
-void open_molecule_dialog::done(int r)
+void OpenDialog::done(int r)
 {
     if(QDialog::Accepted == r && ui->atoms->isChecked())
     {

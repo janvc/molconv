@@ -19,8 +19,8 @@
  */
 
 
-#ifndef OPEN_MOLECULE_DIALOG_H
-#define OPEN_MOLECULE_DIALOG_H
+#ifndef OPEN_DIALOG_H
+#define OPEN_DIALOG_H
 
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
@@ -34,13 +34,13 @@ namespace Ui
     class open_molecule_dialog;
 }
 
-class open_molecule_dialog : public QDialog
+class OpenDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    open_molecule_dialog(QWidget *parent = 0);
-    ~open_molecule_dialog();
+    OpenDialog(QWidget *parent = 0);
+    ~OpenDialog();
     void openFile(const QString &filename);
     molconv::Molecule getMol();
     molconv::origin getOrigin();
