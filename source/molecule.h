@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel
+ * Copyright 2014 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -27,55 +27,52 @@
     #include<chemkit/atom.h>
 #endif
 #include<Eigen/Core>
-#include"configuration.h"
+#include"types.h"
 
-namespace molconv
-{
-    class Molecule : public chemkit::Molecule
-    {
-    public:
-        Molecule();                                                         // the default constructor
-        Molecule(const chemkit::Molecule &base_molecule);                   // take a base molecule
-        Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr); // same as above, but with pointer
+namespace molconv {
+    class Molecule : public chemkit::Molecule {
+     public:
+         Molecule();                                                          // the default constructor
+         Molecule(const chemkit::Molecule &base_molecule);                    // take a base molecule
+         Molecule(const boost::shared_ptr<chemkit::Molecule> &base_mol_ptr);  // same as above, but with pointer
 
-        void show_inertia();                                    // show the inertia tensor
-        void show_covar();                                      // show the covariance matrix
-        void rotate(Eigen::Matrix3d rot_mat);                   // rotate the molecule about the origin with a rotation matrix
-        void clean_up(const molconv::configuration &config);    // clean up the coordinates of the molecule
-        void clean_up();  									    // clean up the coordinates of the molecule
-        void set_intbasis(const molconv::configuration &config);
-        void set_intbasis(const origin orig, const basis axes, const int orig_atom=0, const int basis_atom1=0, const int basis_atom2=0, const int basis_atom3=0);
-    private:
-        size_t number_of_atoms;             // the number of atoms in the molecule
-        double total_mass;                  // total mass of the molecule
-        Eigen::Vector3d center_of_mass;     // the center of mass of the molecule
-        Eigen::Vector3d center_of_geometry; // the center of geometry of the molecule
-        Eigen::Matrix3d inertia_tensor;     // tensor of the moments of inertia
-        Eigen::Vector3d inertia_eigvals;    // the eigenvalues of the inertia tensor
-        Eigen::Matrix3d inertia_eigvecs;    // the eigenvectors of the inertia tensor (the principal axes)
-        Eigen::Matrix3d covar_mat;          // the covariance matrix of the molecule
-        Eigen::Vector3d covar_eigvals;      // eigenvalues of the covariance matrix
-        Eigen::Matrix3d covar_eigvecs;      // eigenvectors of the covariance matrix
+         void show_inertia();                                                 // show the inertia tensor
+         void show_covariance();                                              // show the covariance matrix
+         void rotate(Eigen::Matrix3d rotation_matrix);                        // rotate the molecule about the origin with a rotation matrix
+         void clean_up();                                                     // clean up the coordinates of the molecule
+         void set_basis(const origin origin, const basis axes, const int origin_atom=0, const int basis_atom1=0, const int basis_atom2=0, const int basis_atom3=0);
+     private:
+         void trans2euler();       // calculate the eulerian angles from the transformation matrix
+         void euler2trans();       // calculate the transformation matrix from the eulerian angles
 
-        double euler_phi;                   //
-        double euler_theta;                 // | the eulerian angles specifying the orientation of the molecule
-        double euler_psi;                   // /
-        Eigen::Vector3d internal_origin;    // origin of the internal coordinate system
-        Eigen::Matrix3d internal_basis;     // the basis vectors of the internal coordinate system in terms
-        size_t int_orig_type;               // internal origin: 1=com, 2=cog, 3=atom
-        size_t int_orig_atom;               // atom that defines the internal origin (if set)
-        size_t int_basis_type;              // internal basis: 1=inert, 2=covar, 3=atoms
-        std::vector<size_t> int_basis_atoms;// atoms that define the internal basis (if set)
-                                            // of the global coordinates
-        void trans2euler();                 // calculate the eulerian angles from the transformation matrix
-        void euler2trans();                 // calculate the transformation matrix from the eulerian angles
+         void calc_inertia_tensor();           // calculate the tensor of moments of inertia
+         void diag_inertia_tensor();           // diagonalize the inertia tensor
+         void calc_covariance_matrix();        // calculate the covariance matrix of the molecule
+         void diag_covariance_matrix();        // diagonalize the covariance matrix
+         void update_geometrical_props();      // update the geometrical properties (i.e. after an atomic coordinate change)
 
-        void calc_inertia();    // calculate the tensor of moments of inertia
-        void diag_inertia();    // diagonalize the inertia tensor
-        void calc_covar_mat();  // calculate the covariance matrix of the molecule
-        void diag_covar_mat();  // diagonalize the covariance matrix
-        void update_geomprops();// update the geometrical properties (i.e. after an atomic coordinate change)
+         size_t number_of_atoms_;              // the number of atoms in the molecule
+         double total_mass_;                   // total mass of the molecule
+         Eigen::Vector3d center_of_mass_;      // the center of mass of the molecule
+         Eigen::Vector3d center_of_geometry_;  // the center of geometry of the molecule
+         Eigen::Matrix3d inertia_tensor_;      // tensor of the moments of inertia
+         Eigen::Vector3d inertia_eigvals_;     // the eigenvalues of the inertia tensor
+         Eigen::Matrix3d inertia_eigvecs_;     // the eigenvectors of the inertia tensor (the principal axes)
+         Eigen::Matrix3d covariance_matrix_;        // the covariance matrix of the molecule
+         Eigen::Vector3d covariance_eigvals_;       // eigenvalues of the covariance matrix
+         Eigen::Matrix3d covariance_eigvecs_;       // eigenvectors of the covariance matrix
+
+         double euler_phi_;                    // |
+         double euler_theta_;                  // | the eulerian angles specifying the orientation of the molecule
+         double euler_psi_;                    // |
+         Eigen::Vector3d origin_;              // origin of the internal coordinate system
+         Eigen::Matrix3d basis_;               // the basis vectors of the internal coordinate system in terms
+         size_t origin_type_;                  // internal origin
+         size_t origin_atom_;                  // atom that defines the internal origin (if set)
+         size_t basis_type_;                   // internal basis
+         std::vector<size_t> basis_atoms_;     // atoms that define the internal basis (if set)
+                                               // of the global coordinates
     };
-}
+} // namespace molconv
 
 #endif /* MOLECULE_H_ */

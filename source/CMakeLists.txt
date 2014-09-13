@@ -16,19 +16,20 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(HEADERS
-    configuration.h
+    config.h
     exceptions.h
     molecule.h
     utilities.h
+    types.h
 )
 
 set(SOURCES
-    configuration.cpp
+    config.cpp
     molecule.cpp
     exceptions.cpp
     open_molecule_dialog.cpp
     molconv_window.cpp
-    listofmolecules.cpp
+    molecules_dock.cpp
     main.cpp
     utilities.cpp
 )
@@ -36,13 +37,13 @@ set(SOURCES
 set(MOC_HEADERS
     open_molecule_dialog.h
     molconv_window.h
-    listofmolecules.h
+    molecules_dock.h
 )
 
 set(UI_FORMS
     open_molecule_dialog.ui
     molconv_window.ui
-    listofmolecules.ui
+    molecules_dock.ui
 )
 
 qt4_wrap_ui(UI_SOURCES ${UI_FORMS})

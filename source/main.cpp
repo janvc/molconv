@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 {
     print_header();
 
-    molconv::configuration config(argc, argv);
+    molconv::Config config(argc, argv);
 
     if (config.help_wanted())
     {
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     if (config.input_exists())
     {
 
-        for (int i = 0; i < config.get_Nofinputs(); i++)
+        for (int i = 0; i < config.get_NumberOfInputs(); i++)
         {
             the_window.openFile(QString::fromStdString(config.get_input(i)));
             the_window.set_intbasis(i, config);
