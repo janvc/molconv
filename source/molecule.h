@@ -31,17 +31,6 @@
 
 namespace molconv
 {
-
-    /*
-     * Center of a molecule
-     */
-    enum origin { ZERO, COM, COG, ATOM };
-
-    /*
-     * Which vectors to use for new internal basis
-     */
-    enum basis { IDENTITY, COVAR, INERT, ATOMS };
-
     class Molecule : public chemkit::Molecule
     {
     public:
