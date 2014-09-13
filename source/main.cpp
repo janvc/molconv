@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     }
 
     QApplication app(argc, argv);
-    molconv_window the_window;
+    MolconvWindow the_window;
 
     if (config.input_exists())
     {

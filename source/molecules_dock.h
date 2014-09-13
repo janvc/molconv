@@ -29,13 +29,13 @@ namespace Ui
     class ListOfMolecules;
 }
 
-class molconv_window;
+class MolconvWindow;
 
 class ListOfMolecules : public QDockWidget {
     Q_OBJECT
 
     public:
-        ListOfMolecules(molconv_window *window);
+        ListOfMolecules(MolconvWindow *window);
         ~ListOfMolecules();
 
     private slots:
@@ -43,7 +43,7 @@ class ListOfMolecules : public QDockWidget {
 
     private:
         Ui::ListOfMolecules *ui;
-        molconv_window *main_window;
+        MolconvWindow *main_window;
         QListWidgetItem *list_item;
 };
 

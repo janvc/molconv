@@ -26,7 +26,7 @@
 #include"molconv_window.h"
 
 
-ListOfMolecules::ListOfMolecules(molconv_window *window)
+ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::ListOfMolecules) {
 
