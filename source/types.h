@@ -24,8 +24,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-namespace molconv
-{
+namespace molconv {
     /*
      * Center of a molecule
      */
