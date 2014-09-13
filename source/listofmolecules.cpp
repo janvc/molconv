@@ -18,35 +18,33 @@
  *
  */
 
-#ifndef MOLECULE_LIST_H_
-#define MOLECULE_LIST_H_
 
-#include<QtGui>
-#include"molecule.h"
 
-namespace Ui
+#include"listofmolecules.h"
+#include"ui_listofmolecules.h"
+
+#include"molconv_window.h"
+
+
+ListOfMolecules::ListOfMolecules(molconv_window *window)
+    : QDockWidget(window)
+    , ui(new Ui::ListOfMolecules)
 {
-    class molecule_list;
+    m_window = window;
+
+    ui->setupUi(this);
+    connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(show_item(molconv::Molecule*)));
 }
 
-class molconv_window;
-
-class molecule_list : public QDockWidget
+ListOfMolecules::~ListOfMolecules()
 {
-    Q_OBJECT
+    delete ui;
+}
 
-public:
-    molecule_list(molconv_window *window);
-    ~molecule_list();
+void ListOfMolecules::show_item(molconv::Molecule *molecule)
+{
+    // clear list:
+    //ui->mol_list->clear();
 
-private slots:
-    void show_item(molconv::Molecule *molecule);
-
-private:
-    Ui::molecule_list *ui;
-    molconv_window *m_window;
-    QListWidgetItem *the_item;
-};
-
-
-#endif /* MOLECULE_LIST_H_ */
+    ui->molecule_list->addItem(QString::fromStdString(molecule->formula()));
+}

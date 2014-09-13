@@ -28,7 +28,7 @@ set(SOURCES
     exceptions.cpp
     open_molecule_dialog.cpp
     molconv_window.cpp
-    molecule_list.cpp
+    listofmolecules.cpp
     molconv.cpp
     utilities.cpp
 )
@@ -36,13 +36,13 @@ set(SOURCES
 set(MOC_HEADERS
     open_molecule_dialog.h
     molconv_window.h
-    molecule_list.h
+    listofmolecules.h
 )
 
 set(UI_FORMS
     open_molecule_dialog.ui
     molconv_window.ui
-    molecule_list.ui
+    listofmolecules.ui
 )
 
 qt4_wrap_ui(UI_SOURCES ${UI_FORMS})

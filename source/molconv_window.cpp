@@ -27,7 +27,7 @@
 
 #include"molconv_window.h"
 #include"ui_molconv_window.h"
-#include"molecule_list.h"
+#include"listofmolecules.h"
 #include"open_molecule_dialog.h"
 
 
@@ -45,7 +45,7 @@ molconv_window::molconv_window(QMainWindow *parent)
 
     QDockWidget *the_dockwidget;
 
-    the_dockwidget = new molecule_list(this);
+    the_dockwidget = new ListOfMolecules(this);
     addDockWidget(Qt::LeftDockWidgetArea, the_dockwidget);
 }
 
