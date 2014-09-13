@@ -45,8 +45,8 @@ public:
     ~MolconvWindow();
     void add_molecule();
     void add_molecule(chemkit::Molecule temp_mol);
-    void clean_up(const int mol_nr, const molconv::configuration &config);
-    void set_intbasis(const int mol_nr, const molconv::configuration &config);
+    void clean_up(const int mol_nr, const molconv::Config &config);
+    void set_intbasis(const int mol_nr, const molconv::Config &config);
 
 public slots:
     void openFile(const QString &filename);
