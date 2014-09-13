@@ -22,7 +22,7 @@
 #include<boost/make_shared.hpp>
 #include"utilities.h"
 #include"molecule.h"
-#include"configuration.h"
+#include"config.h"
 #include"molconv_window.h"
 
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 
         for (int i = 0; i < config.get_NumberOfInputs(); i++)
         {
-            the_window.openFile(QString::fromStdString(config.get_input(i)));
+            the_window.openFile(QString::fromStdString(config.inputfile(i)));
             the_window.set_intbasis(i, config);
             the_window.clean_up(i, config);
             the_window.add_molecule();
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
         if (config.output_exists())
         {
-            the_window.saveFile(QString::fromStdString(config.get_output()));
+            the_window.saveFile(QString::fromStdString(config.outputfile()));
         }
     }
 

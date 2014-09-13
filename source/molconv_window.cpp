@@ -25,10 +25,10 @@
     #include<boost/make_shared.hpp>
 #endif
 
-#include"MolconvWindow.h"
-#include"ui_MolconvWindow.h"
-#include"listofmolecules.h"
-#include"open_molecule_dialog.h"
+#include"molconv_window.h"
+#include"ui_molconv_window.h"
+#include"molecules_dock.h"
+#include"open_dialog.h"
 
 
 MolconvWindow::MolconvWindow(QMainWindow *parent)
@@ -38,7 +38,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     this->the_molfile = 0;
 
     ui->setupUi(this);
-    this->open_dialog = new open_molecule_dialog(this);
+    this->open_dialog = new OpenDialog(this);
     connect(this->open_dialog, SIGNAL(accepted()), this, SLOT(get_molecule_Dialog()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
@@ -82,7 +82,7 @@ void MolconvWindow::add_molecule()
     emit new_molecule(this->the_molecule_pointers.back().get());
 }
 
-void MolconvWindow::add_molecule(chemkit::Molecule temp_mol)
+void MolconvWindow::add_molecule(molconv::Molecule temp_mol)
 {
     this->the_molecule_objects.push_back(temp_mol);
     this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
@@ -101,14 +101,14 @@ void MolconvWindow::closeFile()
 {
 }
 
-void MolconvWindow::clean_up(const int mol_nr, const molconv::configuration &config)
+void MolconvWindow::clean_up(const int mol_nr, const molconv::Config &config)
 {
-    this->the_molecule_objects.at(mol_nr).clean_up(config);
+    //this->the_molecule_objects.at(mol_nr).clean_up(config);
 }
 
-void MolconvWindow::set_intbasis(const int mol_nr, const molconv::configuration &config)
+void MolconvWindow::set_intbasis(const int mol_nr, const molconv::Config &config)
 {
-    this->the_molecule_objects.at(mol_nr).set_intbasis(config);
+    //this->the_molecule_objects.at(mol_nr).set_basis(config);
 }
 
 void MolconvWindow::saveFile()
@@ -136,11 +136,6 @@ void MolconvWindow::saveFile(const QString &filename)
 
 void MolconvWindow::openDialog()
 {
-    //if(!this->open_dialog)
-    //{
-    //    this->open_dialog = new open_molecule_dialog(this);
-    //    connect(this->open_dialog, SIGNAL(accepted()), this, SLOT(get_molecule_Dialog()));
-    //}
     this->open_dialog->setModal(true);
     this->open_dialog->exec();
 }

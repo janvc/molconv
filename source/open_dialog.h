@@ -31,7 +31,7 @@
 
 namespace Ui
 {
-    class open_molecule_dialog;
+    class OpenDialog;
 }
 
 class OpenDialog : public QDialog
@@ -54,9 +54,9 @@ private slots:
     void on_atoms_toggled(bool checked);
 
 private:
-    Ui::open_molecule_dialog *ui;
+    Ui::OpenDialog *ui;
     molconv::Molecule the_molecule;
     void done(int r);
 };
 
-#endif // OPEN_MOLECULE_DIALOG_H
+#endif // OPEN_DIALOG_H

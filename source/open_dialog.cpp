@@ -95,11 +95,11 @@ void OpenDialog::on_coa_toggled(bool checked)
 molconv::Molecule OpenDialog::getMol()
 {
     if(ui->atoms->isChecked() && !ui->coa->isChecked())
-        this->the_molecule.set_intbasis(getOrigin(),getBasis(),0,ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
+        this->the_molecule.set_basis(getOrigin(),getBasis(),0,ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
     else if(ui->atoms->isChecked() && ui->coa->isChecked())
-        this->the_molecule.set_intbasis(getOrigin(),getBasis(),ui->an->value(),ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
+        this->the_molecule.set_basis(getOrigin(),getBasis(),ui->an->value(),ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
     else if(!ui->atoms->isChecked() && !ui->coa->isChecked())
-        this->the_molecule.set_intbasis(getOrigin(),getBasis());
+        this->the_molecule.set_basis(getOrigin(),getBasis());
 
     return this->the_molecule;
 }
@@ -107,25 +107,25 @@ molconv::Molecule OpenDialog::getMol()
 molconv::origin OpenDialog::getOrigin()
 {
     if(ui->zero->isChecked())
-        return molconv::ZERO;
+        return molconv::kCenterOnZero;
     else if(ui->com->isChecked())
-        return molconv::COM;
+        return molconv::kCenterOfMass;
     else if(ui->cog->isChecked())
-        return molconv::COG;
+        return molconv::kCenterOfGeometry;
     else if(ui->coa->isChecked())
-        return molconv::ATOM;
+        return molconv::kCenterOnAtom;
 }
 
 molconv::basis OpenDialog::getBasis()
 {
     if(ui->identity->isChecked())
-        return molconv::IDENTITY;
+        return molconv::kIdentityVectors;
     else if(ui->covar->isChecked())
-        return molconv::COVAR;
+        return molconv::kCovarianceVectors;
     else if(ui->inert->isChecked())
-        return molconv::INERT;
+        return molconv::kInertiaVectors;
     else if(ui->atoms->isChecked())
-        return molconv::ATOMS;
+        return molconv::kVectorsFromAtoms;
 }
 
 void OpenDialog::on_atoms_toggled(bool checked)
