@@ -29,7 +29,7 @@ set(SOURCES
     open_molecule_dialog.cpp
     molconv_window.cpp
     listofmolecules.cpp
-    molconv.cpp
+    main.cpp
     utilities.cpp
 )
 
