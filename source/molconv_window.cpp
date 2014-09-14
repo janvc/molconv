@@ -76,8 +76,8 @@ void MolconvWindow::openFile(const QString &filename)
 void MolconvWindow::add_molecule()
 {
     this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
-    this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
-    this->ui->molconv_graphicsview->addItem(this->the_graph_item);
+    this->the_graph_items.push_back(new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get()));
+    this->ui->molconv_graphicsview->addItem(this->the_graph_items.back());
     ui->molconv_graphicsview->update();
     emit new_molecule(this->the_molecule_pointers.back().get());
 }
@@ -86,10 +86,21 @@ void MolconvWindow::add_molecule(molconv::Molecule temp_mol)
 {
     this->the_molecule_objects.push_back(temp_mol);
     this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
-    this->the_graph_item = new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get());
-    this->ui->molconv_graphicsview->addItem(this->the_graph_item);
+    this->the_graph_items.push_back(new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get()));
+    this->ui->molconv_graphicsview->addItem(this->the_graph_items.back());
     ui->molconv_graphicsview->update();
     emit new_molecule(this->the_molecule_pointers.back().get());
+}
+
+void MolconvWindow::toggle_molecule(int position, bool state)
+{
+    if (state) {
+        this->the_graph_items.at(position)->show();
+        ui->molconv_graphicsview->update();
+    } else {
+        this->the_graph_items.at(position)->hide();
+        ui->molconv_graphicsview->update();
+    }
 }
 
 void MolconvWindow::quit()

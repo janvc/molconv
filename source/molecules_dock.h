@@ -39,12 +39,14 @@ class ListOfMolecules : public QDockWidget {
         ~ListOfMolecules();
 
     private slots:
-        void show_item(molconv::Molecule *molecule);
+        void list_new_molecule(molconv::Molecule *molecule);
+        void checkbox_toggled(int index);
 
     private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *main_window;
         QListWidgetItem *list_item;
+        QSignalMapper *checkboxMapper;
 };
 
 

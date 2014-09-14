@@ -57,6 +57,7 @@ public slots:
     void quit();
     void get_molecule_Dialog();
     void openDialog();
+    void toggle_molecule(int position, bool state);
 
 private slots:
 
@@ -68,7 +69,7 @@ private:
     chemkit::MoleculeFile *the_molfile;
     std::vector<molconv::Molecule> the_molecule_objects;
     std::vector<boost::shared_ptr<molconv::Molecule> > the_molecule_pointers;
-    chemkit::GraphicsMoleculeItem *the_graph_item;
+    std::vector<chemkit::GraphicsMoleculeItem *> the_graph_items;
     OpenDialog *open_dialog;
 };
 
