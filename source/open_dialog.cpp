@@ -32,6 +32,10 @@ OpenDialog::OpenDialog(QWidget *parent)
 {
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+
+    connect(ui->atom1,SIGNAL(valueChanged(int)),this,SLOT(on_atoms_changed(int)));
+    connect(ui->atom2,SIGNAL(valueChanged(int)),this,SLOT(on_atoms_changed(int)));
+    connect(ui->atom3,SIGNAL(valueChanged(int)),this,SLOT(on_atoms_changed(int)));
 }
 
 
@@ -130,35 +134,25 @@ molconv::basis OpenDialog::getBasis()
 
 void OpenDialog::on_atoms_toggled(bool checked)
 {
-   if(checked)
-   {
-       ui->atom1->setEnabled(true);
-       ui->atom2->setEnabled(true);
-       ui->atom3->setEnabled(true);
-   } else
-   {
-       ui->atom1->setEnabled(false);
-       ui->atom2->setEnabled(false);
-       ui->atom3->setEnabled(false);
-   }
-}
-
-void OpenDialog::done(int r)
-{
-    if(QDialog::Accepted == r && ui->atoms->isChecked())
+    if(checked)
     {
-        if(ui->atom1->value() == ui->atom2->value() || ui->atom2->value() == ui->atom3->value() || ui->atom1->value() == ui->atom3->value())
-        {
-            QMessageBox::critical(this,"Incorrect Data","You have to choose three different atoms for the new basis.");
-            return;
-        } else
-        {
-            QDialog::done(r);
-            return;
-        }
+        ui->atom1->setEnabled(true);
+        ui->atom2->setEnabled(true);
+        ui->atom3->setEnabled(true);
+        on_atoms_changed(0);
     } else
     {
-        QDialog::done(r);
-        return;
+        ui->atom1->setEnabled(false);
+        ui->atom2->setEnabled(false);
+        ui->atom3->setEnabled(false);
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     }
+}
+
+void OpenDialog::on_atoms_changed(int useless)
+{
+    if (ui->atom1->value() == ui->atom2->value() || ui->atom2->value() == ui->atom3->value() || ui->atom1->value() == ui->atom3->value())
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    else
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
 }

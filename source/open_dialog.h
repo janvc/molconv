@@ -48,15 +48,13 @@ public:
 
 private slots:
     void on_filedialog_clicked();
-
     void on_coa_toggled(bool checked);
-
     void on_atoms_toggled(bool checked);
+    void on_atoms_changed(int useless);
 
 private:
     Ui::OpenDialog *ui;
     molconv::Molecule the_molecule;
-    void done(int r);
 };
 
 #endif // OPEN_DIALOG_H
