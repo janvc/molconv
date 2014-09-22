@@ -33,9 +33,9 @@ OpenDialog::OpenDialog(QWidget *parent)
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
-    connect(ui->atom1,SIGNAL(valueChanged(int)),this,SLOT(on_atoms_changed(int)));
-    connect(ui->atom2,SIGNAL(valueChanged(int)),this,SLOT(on_atoms_changed(int)));
-    connect(ui->atom3,SIGNAL(valueChanged(int)),this,SLOT(on_atoms_changed(int)));
+    connect(ui->atom1,SIGNAL(valueChanged(int)),this,SLOT(atoms_changed(int)));
+    connect(ui->atom2,SIGNAL(valueChanged(int)),this,SLOT(atoms_changed(int)));
+    connect(ui->atom3,SIGNAL(valueChanged(int)),this,SLOT(atoms_changed(int)));
 }
 
 
@@ -139,7 +139,7 @@ void OpenDialog::on_atoms_toggled(bool checked)
         ui->atom1->setEnabled(true);
         ui->atom2->setEnabled(true);
         ui->atom3->setEnabled(true);
-        on_atoms_changed(0);
+        atoms_changed(0);
     } else
     {
         ui->atom1->setEnabled(false);
@@ -149,7 +149,7 @@ void OpenDialog::on_atoms_toggled(bool checked)
     }
 }
 
-void OpenDialog::on_atoms_changed(int useless)
+void OpenDialog::atoms_changed(int useless)
 {
     if (ui->atom1->value() == ui->atom2->value() || ui->atom2->value() == ui->atom3->value() || ui->atom1->value() == ui->atom3->value())
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
