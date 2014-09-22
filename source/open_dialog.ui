@@ -30,7 +30,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Datei:</string>
+           <string>File:</string>
           </property>
          </widget>
         </item>
@@ -44,7 +44,7 @@
         <item>
          <widget class="QPushButton" name="filedialog">
           <property name="text">
-           <string>Durchsuchen</string>
+           <string>Browse</string>
           </property>
          </widget>
         </item>
