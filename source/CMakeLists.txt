@@ -1,55 +1,48 @@
-find_package(Chemkit COMPONENTS io graphics REQUIRED)
-include_directories(${CHEMKIT_INCLUDE_DIRS})
-
-find_package(Boost COMPONENTS system filesystem iostreams program_options REQUIRED)
+# Boost libraries are required
+find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# Chemkit libraries are required
+find_package(Chemkit COMPONENTS io graphics REQUIRED)
+include_directories(${CHEMKIT_INCLUDE_DIRS})
+MESSAGE("ChemkitLibs: ${CHEMKIT_LIBRARIES}")
+
+# Eigen3 is required
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-find_package(Qt4 4.6 COMPONENTS QtCore QtGui QtOpenGL REQUIRED)
-set(QT_USE_QTGUI TRUE)
-include(${QT_USE_FILE})
+# We are using Qt5 for the GUI
+find_package(Qt5 COMPONENTS Widgets OpenGL REQUIRED)
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5OpenGL_INCLUDE_DIRS})
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+FIND_PACKAGE(Qt5LinguistTools)
+IF(UPDATE_TRANSLATIONS)
+    IF(NOT Qt5_LUPDATE_EXECUTABLE)
+        MESSAGE(WARNING "Qt's lupdate not found.")
+    ENDIF()
+ENDIF()
+IF(NOT Qt5_LRELEASE_EXECUTABLE)
+    MESSAGE(WARNING "Qt's lrelease not found.")
+ENDIF()
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+set(CMAKE_AUTOMOC ON)
+# AUTOUIC confusingly doesn't work
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(HEADERS
-    config.h
-    exceptions.h
-    molecule.h
-    utilities.h
-    types.h
-)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
-set(SOURCES
-    config.cpp
-    molecule.cpp
-    exceptions.cpp
-    open_dialog.cpp
-    molconv_window.cpp
-    molecules_dock.cpp
-    main.cpp
-    utilities.cpp
-)
+file(GLOB HEADERS *.h)
+file(GLOB SOURCES *.cpp)
+file(GLOB UI_FORMS *.ui)
+file(GLOB RESOURCES *.qrc)
 
-set(MOC_HEADERS
-    open_dialog.h
-    molconv_window.h
-    molecules_dock.h
-)
+qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
+qt5_add_resources(RCC_SOURCES ${RESOURCES})
 
-set(UI_FORMS
-    open_dialog.ui
-    molconv_window.ui
-    molecules_dock.ui
-)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-qt4_wrap_ui(UI_SOURCES ${UI_FORMS})
-qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-
-add_executable(molconv ${SOURCES} ${MOC_SOURCES} ${UI_SOURCES})
-target_link_libraries(molconv ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${QT_LIBRARIES})
+add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES})
+target_link_libraries(molconv Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
