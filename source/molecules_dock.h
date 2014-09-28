@@ -21,7 +21,7 @@
 #ifndef MOLECULE_LIST_H_
 #define MOLECULE_LIST_H_
 
-#include<QtGui>
+#include<QtWidgets>
 #include"molecule.h"
 
 namespace Ui

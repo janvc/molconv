@@ -26,7 +26,7 @@
     #include<chemkit/moleculefile.h>
 #endif
 #include<QDialog>
-#include<QtGui>
+#include<QtWidgets>
 #include"molecule.h"
 
 namespace Ui

@@ -22,7 +22,7 @@
 #define MOLCONV_WINDOW_H_
 
 
-#include<QtGui>
+#include<QtWidgets>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
