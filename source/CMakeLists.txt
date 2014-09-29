@@ -11,7 +11,7 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 # We are using Qt5 for the GUI
-find_package(Qt5 COMPONENTS Widgets OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
 
@@ -35,6 +35,16 @@ file(GLOB HEADERS *.h)
 file(GLOB SOURCES *.cpp)
 file(GLOB UI_FORMS *.ui)
 file(GLOB RESOURCES *.qrc)
+set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})
+
+if(TRANSLATIONS_FILES)
+  if (UPDATE_TRANSLATIONS)
+    qt5_create_translation(QM_FILES ${FILES_TO_TRANSLATE}
+  ${TRANSLATIONS_FILES})
+  else (UPDATE_TRANSLATIONS)
+    qt5_add_translation(QM_FILES ${TRANSLATIONS_FILES})
+  endif (UPDATE_TRANSLATIONS)
+endif(TRANSLATIONS_FILES)
 
 qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
 qt5_add_resources(RCC_SOURCES ${RESOURCES})
@@ -43,5 +53,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g ${Qt5Widgets_EXECUTABLE_CO
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES})
+add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
 target_link_libraries(molconv Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})

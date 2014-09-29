@@ -20,10 +20,10 @@
 
 
 
-#include"molecules_dock.h"
-#include"ui_molecules_dock.h"
+#include "molecules_dock.h"
+#include "ui_molecules_dock.h"
 
-#include"molconv_window.h"
+#include "molconv_window.h"
 
 
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)

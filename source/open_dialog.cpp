@@ -23,8 +23,8 @@
     #include<chemkit/moleculefile.h>
     #include<boost/make_shared.hpp>
 #endif
-#include"open_dialog.h"
-#include"ui_open_dialog.h"
+#include "open_dialog.h"
+#include "ui_open_dialog.h"
 
 OpenDialog::OpenDialog(QWidget *parent)
     : QDialog(parent)

@@ -25,10 +25,10 @@
     #include<boost/make_shared.hpp>
 #endif
 
-#include"molconv_window.h"
-#include"ui_molconv_window.h"
-#include"molecules_dock.h"
-#include"open_dialog.h"
+#include "molconv_window.h"
+#include "ui_molconv_window.h"
+#include "molecules_dock.h"
+#include "open_dialog.h"
 
 
 MolconvWindow::MolconvWindow(QMainWindow *parent)

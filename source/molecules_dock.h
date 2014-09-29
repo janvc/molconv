@@ -22,7 +22,7 @@
 #define MOLECULE_LIST_H_
 
 #include<QtWidgets>
-#include"molecule.h"
+#include "molecule.h"
 
 namespace Ui
 {

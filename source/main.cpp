@@ -20,10 +20,10 @@
 
 #include<iostream>
 #include<boost/make_shared.hpp>
-#include"utilities.h"
-#include"molecule.h"
-#include"config.h"
-#include"molconv_window.h"
+#include "utilities.h"
+#include "molecule.h"
+#include "config.h"
+#include "molconv_window.h"
 
 
 int main(int argc, char *argv[])

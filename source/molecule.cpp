@@ -26,8 +26,8 @@
 #include<cmath>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
-#include"molecule.h"
-#include"utilities.h"
+#include "molecule.h"
+#include "utilities.h"
 
 
 namespace molconv {

@@ -27,9 +27,9 @@
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
 #endif
-#include"molecule.h"
-#include"config.h"
-#include"open_dialog.h"
+#include "molecule.h"
+#include "config.h"
+#include "open_dialog.h"
 
 
 namespace Ui

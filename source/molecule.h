@@ -27,7 +27,7 @@
     #include<chemkit/atom.h>
 #endif
 #include<Eigen/Core>
-#include"types.h"
+#include "types.h"
 
 namespace molconv {
     class Molecule : public chemkit::Molecule {
