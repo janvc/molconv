@@ -5,7 +5,6 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Chemkit libraries are required
 find_package(Chemkit COMPONENTS io graphics REQUIRED)
 include_directories(${CHEMKIT_INCLUDE_DIRS})
-MESSAGE("ChemkitLibs: ${CHEMKIT_LIBRARIES}")
 
 # Eigen3 is required
 find_package(Eigen3 REQUIRED)
