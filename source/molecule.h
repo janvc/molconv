@@ -42,6 +42,8 @@ namespace molconv
         Molecule(const Molecule &originalMolecule);
 
         // molecular properties:
+        origin internalOrigin() const;
+        basis internalBasis() const;
         Eigen::Vector3d internalOrigin() const;
         Eigen::Matrix3d internalBasis() const;
 
@@ -53,7 +55,18 @@ namespace molconv
         void rotate(const Eigen::Matrix3d &rotationMatrix);
         void rotate(const Eigen::Vector3d &axis, const double &angle);
 
+        // changing the internal basis:
+        void setOrigin(const origin &newOrigin);
+        void setBasis(const basis &newBasis);
+
     private:
+        // private functions:
+        Eigen::Matrix3d calcInertiaTensor() const;
+        Eigen::Matrix3d calcCovarianceMatrix() const;
+        Eigen::Vector3d calcInertiaEigenvalues() const;
+        Eigen::Matrix3d calcInertiaEigenvectors() const;
+        Eigen::Vector3d calcCovarianceEigenvalues() const;
+        Eigen::Matrix3d calcCovarianceEigenvectors() const;
         MoleculePrivate *d;
     };
 

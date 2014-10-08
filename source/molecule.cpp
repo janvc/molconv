@@ -38,8 +38,9 @@ namespace molconv
         origin m_origin;
         basis m_basis;
 
-        std::array<int,2> originAtoms;
-        std::array<int,3> basisAtoms;
+        double m_originFactor;
+        std::array<int,2> m_originAtoms;
+        std::array<int,3> m_basisAtoms;
     };
 
     Molecule::Molecule()
@@ -48,12 +49,17 @@ namespace molconv
     {
         d->m_origin = kCenterOnZero;
         d->m_basis = kIdentityVectors;
+
+        d->m_originFactor = 0.0;
+        d->m_originAtoms.fill(0);
+        d->m_basisAtoms.fill(0);
     }
 
     Molecule::Molecule(const chemkit::Molecule &BaseMolecule)
         : chemkit::Molecule(BaseMolecule)
         , d(new MoleculePrivate)
     {
+        chemkit::BondPredictor::predictBonds(this);
     }
 
     Molecule::Molecule(const Molecule &originalMolecule)
