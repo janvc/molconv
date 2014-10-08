@@ -36,12 +36,22 @@ namespace molconv
     class Molecule : public chemkit::Molecule
     {
     public:
+        // constructors and destructor(s):
         Molecule();
         Molecule(const chemkit::Molecule &BaseMolecule);
         Molecule(const Molecule &originalMolecule);
 
-        void shift(const Eigen::Vector3d &shiftVector);
+        // molecular properties:
+        Eigen::Vector3d internalOrigin() const;
+        Eigen::Matrix3d internalBasis() const;
+
+        Eigen::Matrix3d inertiaTensor() const;
+        Eigen::Matrix3d covarianceMatrix() const;
+
+        // moving the molecule:
+        void translate(const Eigen::Vector3d &shiftVector);
         void rotate(const Eigen::Matrix3d &rotationMatrix);
+        void rotate(const Eigen::Vector3d &axis, const double &angle);
 
     private:
         MoleculePrivate *d;
