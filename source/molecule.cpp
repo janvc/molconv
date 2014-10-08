@@ -43,6 +43,11 @@ namespace molconv
         std::array<int,3> m_basisAtoms;
     };
 
+    ///
+    /// \brief Molecule::Molecule
+    ///
+    /// The default constructor that creates an empty molecule.
+    ///
     Molecule::Molecule()
         : chemkit::Molecule()
         , d(new MoleculePrivate)
@@ -55,6 +60,14 @@ namespace molconv
         d->m_basisAtoms.fill(0);
     }
 
+    ///
+    /// \brief Molecule::Molecule
+    /// \param BaseMolecule
+    ///
+    /// This constructor takes an object of the base type chemkit::Molecule
+    /// as argument and sets the molconv-specific properties to their
+    /// default values.
+    ///
     Molecule::Molecule(const chemkit::Molecule &BaseMolecule)
         : chemkit::Molecule(BaseMolecule)
         , d(new MoleculePrivate)
@@ -62,15 +75,189 @@ namespace molconv
         chemkit::BondPredictor::predictBonds(this);
     }
 
+    ///
+    /// \brief Molecule::Molecule
+    /// \param originalMolecule
+    ///
+    /// The Copy constructor.
+    ///
     Molecule::Molecule(const Molecule &originalMolecule)
     {
     }
 
+    ///
+    /// \brief Molecule::internalOrigin
+    /// \return
+    ///
+    /// returns the type of the molecule's internal origin.
+    ///
+    origin Molecule::internalOrigin() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::internalBasis
+    /// \return
+    ///
+    /// returns the type of the molecule's internal basis.
+    ///
+    basis Molecule::internalBasis() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::internalOrigin
+    /// \return
+    ///
+    /// returns the position of the molecule's internal origin.
+    ///
+    Eigen::Vector3d Molecule::internalOrigin() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::internalBasis
+    /// \return
+    ///
+    /// returns the basis vectors of the molecule's internal coordinate
+    /// system as columns of the matrix.
+    ///
+    Eigen::Matrix3d Molecule::internalBasis() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::inertiaTensor
+    /// \return
+    ///
+    /// returns the inertia tensor of the molecule.
+    ///
+    Eigen::Matrix3d Molecule::inertiaTensor() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::covarianceMatrix
+    /// \return
+    ///
+    /// returns the covariance matrix of the molecule.
+    ///
+    Eigen::Matrix3d Molecule::covarianceMatrix() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::translate
+    /// \param shiftVector
+    ///
+    /// Shifts the entire molecule by a given vector.
+    ///
     void Molecule::translate(const Eigen::Vector3d &shiftVector)
     {
     }
 
+    ///
+    /// \brief Molecule::rotate
+    /// \param rotationMatrix
+    ///
+    /// rotates the molecule about its internal origin using a
+    /// rotation matrix.
+    ///
     void Molecule::rotate(const Eigen::Matrix3d &rotationMatrix)
+    {
+    }
+
+    ///
+    /// \brief Molecule::rotate
+    /// \param axis
+    /// \param angle
+    ///
+    /// rotates the molecule about the specified axis about its internal
+    /// origin by the specified angle (in radians).
+    ///
+    void Molecule::rotate(const Eigen::Vector3d &axis, const double &angle)
+    {
+    }
+
+    ///
+    /// \brief Molecule::setOrigin
+    /// \param newOrigin
+    ///
+    /// set the molecule's internal origin to \p newOrigin.
+    ///
+    void Molecule::setOrigin(const origin &newOrigin)
+    {
+    }
+
+    ///
+    /// \brief Molecule::setBasis
+    /// \param newBasis
+    ///
+    /// set the molecule's internal coordinate system to \p newBasis.
+    ///
+    void Molecule::setBasis(const basis &newBasis)
+    {
+    }
+
+    ///
+    /// \brief Molecule::calcInertiaTensor
+    /// \return
+    ///
+    /// calculate the inertia tensor of the molecule.
+    ///
+    Eigen::Matrix3d Molecule::calcInertiaTensor() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::calcCovarianceMatrix
+    /// \return
+    ///
+    /// calculate the covariance matrix of the molecule
+    ///
+    Eigen::Matrix3d Molecule::calcCovarianceMatrix() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::calcInertiaEigenvalues
+    /// \return
+    ///
+    /// calculate the eigenvalues of the molecule's inertia tensor
+    ///
+    Eigen::Vector3d Molecule::calcInertiaEigenvalues() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::calcInertiaEigenvectors
+    /// \return
+    ///
+    /// calculate the eigenvectors of the molecule's inertia tensor
+    /// and return them as columns of the matrix.
+    ///
+    Eigen::Matrix3d Molecule::calcInertiaEigenvectors() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::calcCovarianceEigenvalues
+    /// \return
+    ///
+    /// calculate the eigenvalues of the molecule's covariance matrix.
+    ///
+    Eigen::Vector3d Molecule::calcCovarianceEigenvalues() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::calcCovarianceEigenvectors
+    /// \return
+    ///
+    /// calculate the eigenvectors of the molecule's covariance matrix
+    /// and return them as columns of the matrix.
+    ///
+    Eigen::Matrix3d Molecule::calcCovarianceEigenvectors() const
     {
     }
 
