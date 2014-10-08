@@ -23,6 +23,7 @@
 #include<iomanip>
 #include<fstream>
 #include<string>
+#include<array>
 #include<cmath>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
@@ -34,13 +35,24 @@ namespace molconv
 {
     class MoleculePrivate
     {
+        origin m_origin;
+        basis m_basis;
+
+        std::array<int,2> originAtoms;
+        std::array<int,3> basisAtoms;
     };
 
     Molecule::Molecule()
+        : chemkit::Molecule()
+        , d(new MoleculePrivate)
     {
+        d->m_origin = kCenterOnZero;
+        d->m_basis = kIdentityVectors;
     }
 
     Molecule::Molecule(const chemkit::Molecule &BaseMolecule)
+        : chemkit::Molecule(BaseMolecule)
+        , d(new MoleculePrivate)
     {
     }
 
@@ -48,7 +60,7 @@ namespace molconv
     {
     }
 
-    void Molecule::shift(const Eigen::Vector3d &shiftVector)
+    void Molecule::translate(const Eigen::Vector3d &shiftVector)
     {
     }
 
