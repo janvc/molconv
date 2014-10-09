@@ -1,5 +1,10 @@
 #include "moleculegroup.h"
 
-MoleculeGroup::MoleculeGroup()
+namespace molconv
 {
-}
+
+    MoleculeGroup::MoleculeGroup()
+    {
+    }
+
+} // namespace molconv

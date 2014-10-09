@@ -1,10 +1,15 @@
 #ifndef MOLECULESTACK_H
 #define MOLECULESTACK_H
 
-class MoleculeStack : public abstractMoleculeGroup
+namespace molconv
 {
-public:
-    MoleculeStack();
-};
+
+    class MoleculeStack : public abstractMoleculeGroup
+    {
+    public:
+        MoleculeStack();
+    };
+
+} // namespace molconv
 
 #endif // MOLECULESTACK_H

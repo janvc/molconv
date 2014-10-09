@@ -1,5 +1,10 @@
 #include "abstractmoleculegroup.h"
 
-abstractMoleculeGroup::abstractMoleculeGroup()
+namespace molconv
 {
-}
+
+    abstractMoleculeGroup::abstractMoleculeGroup()
+    {
+    }
+
+} // namespace molconv

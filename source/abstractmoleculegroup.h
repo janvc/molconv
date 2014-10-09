@@ -1,10 +1,15 @@
 #ifndef ABSTRACTMOLECULEGROUP_H
 #define ABSTRACTMOLECULEGROUP_H
 
-class abstractMoleculeGroup
+namespace molconv
 {
-public:
-    abstractMoleculeGroup();
-};
+
+    class abstractMoleculeGroup
+    {
+    public:
+        abstractMoleculeGroup();
+    };
+
+} // namespace molconv
 
 #endif // ABSTRACTMOLECULEGROUP_H
