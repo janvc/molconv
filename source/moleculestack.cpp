@@ -1,5 +1,10 @@
 #include "moleculestack.h"
 
-MoleculeStack::MoleculeStack()
+namespace molconv
 {
-}
+
+    MoleculeStack::MoleculeStack()
+    {
+    }
+
+} // namespace molconv
