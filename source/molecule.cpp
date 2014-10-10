@@ -126,7 +126,7 @@ namespace molconv
     ///
     /// returns the position of the molecule's internal origin.
     ///
-    Eigen::Vector3d Molecule::internalOrigin() const
+    Eigen::Vector3d Molecule::internalOriginPosition() const
     {
     }
 
@@ -137,7 +137,7 @@ namespace molconv
     /// returns the basis vectors of the molecule's internal coordinate
     /// system as columns of the matrix.
     ///
-    Eigen::Matrix3d Molecule::internalBasis() const
+    Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
     }
 

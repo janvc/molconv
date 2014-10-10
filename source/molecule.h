@@ -44,8 +44,8 @@ namespace molconv
         // molecular properties:
         origin internalOrigin() const;
         basis internalBasis() const;
-        Eigen::Vector3d internalOrigin() const;
-        Eigen::Matrix3d internalBasis() const;
+        Eigen::Vector3d internalOriginPosition() const;
+        Eigen::Matrix3d internalBasisVectors() const;
         std::array<int,2> internalOriginAtoms() const;
         std::array<int,3> internalBasisAtoms() const;
         double internalOriginFactor() const;
