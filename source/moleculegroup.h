@@ -1,6 +1,8 @@
 #ifndef MOLECULEGROUP_H
 #define MOLECULEGROUP_H
 
+#include"abstractmoleculegroup.h"
+
 namespace molconv
 {
 
