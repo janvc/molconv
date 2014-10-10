@@ -28,7 +28,7 @@ namespace molconv {
     /*
      * Center of a molecule
      */
-    enum origin { kCenterOnZero, kCenterOfMass, kCenterOfGeometry, kCenterOnAtom };
+    enum origin { kCenterOnZero, kCenterOfMass, kCenterOfGeometry, kCenterOnAtom, kCenterBetweenAtoms };
 
     /*
      * Which vectors to use for new internal basis
