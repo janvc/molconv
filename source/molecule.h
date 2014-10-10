@@ -46,6 +46,9 @@ namespace molconv
         basis internalBasis() const;
         Eigen::Vector3d internalOrigin() const;
         Eigen::Matrix3d internalBasis() const;
+        std::array<int,2> internalOriginAtoms() const;
+        std::array<int,3> internalBasisAtoms() const;
+        double internalOriginFactor() const;
 
         Eigen::Matrix3d inertiaTensor() const;
         Eigen::Matrix3d covarianceMatrix() const;
