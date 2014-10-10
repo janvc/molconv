@@ -19,22 +19,31 @@
  */
 
 
-#include<iostream>
-#include<iomanip>
-#include<fstream>
-#include<string>
+//#include<iostream>
+//#include<iomanip>
+//#include<fstream>
+//#include<string>
 #include<array>
-#include<cmath>
-#include<Eigen/Eigenvalues>
+//#include<cmath>
+//#include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
 #include "molecule.h"
-#include "utilities.h"
+//#include "utilities.h"
 
 
 namespace molconv
 {
     class MoleculePrivate
     {
+        void initializeDefault()
+        {
+            m_origin = kCenterOnZero;
+            m_basis = kIdentityVectors;
+            m_originFactor = 0.0;
+            m_originAtoms.fill(0);
+            m_basisAtoms.fill(0);
+        }
+
         origin m_origin;
         basis m_basis;
 
@@ -52,12 +61,7 @@ namespace molconv
         : chemkit::Molecule()
         , d(new MoleculePrivate)
     {
-        d->m_origin = kCenterOnZero;
-        d->m_basis = kIdentityVectors;
-
-        d->m_originFactor = 0.0;
-        d->m_originAtoms.fill(0);
-        d->m_basisAtoms.fill(0);
+        d->initializeDefault();
     }
 
     ///
@@ -73,6 +77,8 @@ namespace molconv
         , d(new MoleculePrivate)
     {
         chemkit::BondPredictor::predictBonds(this);
+
+        d->initializeDefault();
     }
 
     ///
@@ -82,7 +88,14 @@ namespace molconv
     /// The Copy constructor.
     ///
     Molecule::Molecule(const Molecule &originalMolecule)
+        : chemkit::Molecule(originalMolecule)
+        , d(new MoleculePrivate)
     {
+        d->m_origin = originalMolecule.internalOrigin();
+        d->m_basis = originalMolecule.internalBasis();
+        d->m_originFactor = originalMolecule.internalOriginFactor();
+        d->m_originAtoms = originalMolecule.internalOriginAtoms();
+        d->m_basisAtoms = originalMolecule.internalBasisAtoms();
     }
 
     ///
@@ -93,6 +106,7 @@ namespace molconv
     ///
     origin Molecule::internalOrigin() const
     {
+        return d->m_origin;
     }
 
     ///
@@ -103,6 +117,7 @@ namespace molconv
     ///
     basis Molecule::internalBasis() const
     {
+        return d->m_basis;
     }
 
     ///
@@ -123,6 +138,41 @@ namespace molconv
     /// system as columns of the matrix.
     ///
     Eigen::Matrix3d Molecule::internalBasis() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::internalOriginAtoms
+    /// \return
+    ///
+    /// return the numbers of the atoms that define the internal origin. If the origin is
+    /// not defined with atoms, the array will contain zeros.
+    ///
+    std::array<int,2> Molecule::internalOriginAtoms() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::internalBasisAtoms
+    /// \return
+    ///
+    /// return the numbers of the atoms that define the internal coordinate
+    /// system. If it is not defined with atoms, the array will contain zeros.
+    ///
+    std::array<int,3> Molecule::internalBasisAtoms() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::internalOriginFactor
+    /// \return
+    ///
+    /// return the scaling factor for when the internal origin is defined
+    /// on the connecting line of two atoms. The factor determines if the
+    /// origin is on the first atom (f=0), the second atom (f=1) or exactly
+    /// between the atoms (f=0.5).
+    ///
+    double Molecule::internalOriginFactor() const
     {
     }
 
