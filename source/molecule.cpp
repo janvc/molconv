@@ -128,6 +128,29 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::internalOriginPosition() const
     {
+        Eigen::Vector3d originPosition;
+
+        switch(internalOrigin())
+        {
+        case kCenterOnZero:
+            originPosition = Eigen::Vector3d::Zero();
+            break;
+        case kCenterOfMass:
+            originPosition = centerOfMass();
+            break;
+        case kCenterOfGeometry:
+            originPosition = center();
+            break;
+        case kCenterOnAtom:
+            originPosition = atom(d->m_originAtoms[0])->position();
+            break;
+        case kCenterBetweenAtoms:
+            originPosition = d->m_originFactor * atom(d->m_originAtoms[0])->position()
+                           + (1.0 - d->m_originFactor) * atom(d->m_originAtoms[1])->position();
+            break;
+        }
+
+        return originPosition;
     }
 
     ///
