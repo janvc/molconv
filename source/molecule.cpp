@@ -241,6 +241,46 @@ namespace molconv
     }
 
     ///
+    /// \brief Molecule::inertiaEigenvalues
+    /// \return
+    ///
+    /// returns the eigenvalues of the inertia tensor in a vector
+    ///
+    Eigen::Vector3d Molecule::inertiaEigenvalues() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::covarianceEigenvalues
+    /// \return
+    ///
+    /// returns the eigenvalues of the covariance matrix in a vector
+    ///
+    Eigen::Vector3d Molecule::covarianceEigenvalues() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::inertiaEigenvectors
+    /// \return
+    ///
+    /// returns the eigenvectors of the inertia tensor as the columns of the matrix
+    ///
+    Eigen::Matrix3d Molecule::inertiaEigenvectors() const
+    {
+    }
+
+    ///
+    /// \brief Molecule::covarianceEigenvectors
+    /// \return
+    ///
+    /// returns the eigenvectors of the covariance matrix as the columns of the matrix
+    ///
+    Eigen::Matrix3d Molecule::covarianceEigenvectors() const
+    {
+    }
+
+    ///
     /// \brief Molecule::translate
     /// \param shiftVector
     ///
