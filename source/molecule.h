@@ -52,6 +52,10 @@ namespace molconv
 
         Eigen::Matrix3d inertiaTensor() const;
         Eigen::Matrix3d covarianceMatrix() const;
+        Eigen::Vector3d inertiaEigenvalues() const;
+        Eigen::Vector3d covarianceEigenvalues() const;
+        Eigen::Matrix3d inertiaEigenvectors() const;
+        Eigen::Matrix3d covarianceEigenvectors() const;
 
         // moving the molecule:
         void translate(const Eigen::Vector3d &shiftVector);
