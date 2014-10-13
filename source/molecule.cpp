@@ -162,6 +162,27 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
+        Eigen::Matrix3d basisVectors;
+
+        switch(internalBasis())
+        {
+        case kIdentityVectors:
+            basisVectors = Eigen::Matrix3d::Identity();
+            break;
+        case kCovarianceVectors:
+            basisVectors = calcCovarianceEigenvectors();
+            break;
+        case kInertiaVectors:
+            basisVectors = calcInertiaEigenvectors();
+            break;
+        case kVectorsFromAtoms:
+            // first vector: atoms 0->1
+            // second:       orthog. to first, in atom plane
+            // third:        cross-product of first two
+            break;
+        }
+
+        return basisVectors;
     }
 
     ///
