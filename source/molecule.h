@@ -41,7 +41,7 @@ namespace molconv
         Molecule(const chemkit::Molecule &BaseMolecule);
         Molecule(const Molecule &originalMolecule);
 
-        // molecular properties:
+        // info about the molecular internal basis:
         origin internalOrigin() const;
         basis internalBasis() const;
         Eigen::Vector3d internalOriginPosition() const;
@@ -50,6 +50,7 @@ namespace molconv
         std::array<int,3> internalBasisAtoms() const;
         double internalOriginFactor() const;
 
+        // info about the inertia tensor and the covariance matrix:
         Eigen::Matrix3d inertiaTensor() const;
         Eigen::Matrix3d covarianceMatrix() const;
         Eigen::Vector3d inertiaEigenvalues() const;

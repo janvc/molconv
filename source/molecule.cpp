@@ -194,6 +194,7 @@ namespace molconv
     ///
     std::array<int,2> Molecule::internalOriginAtoms() const
     {
+        return d->m_originAtoms;
     }
 
     ///
@@ -205,6 +206,7 @@ namespace molconv
     ///
     std::array<int,3> Molecule::internalBasisAtoms() const
     {
+        return d->m_basisAtoms;
     }
 
     ///
@@ -218,6 +220,7 @@ namespace molconv
     ///
     double Molecule::internalOriginFactor() const
     {
+        return d->m_originFactor;
     }
 
     ///
@@ -228,6 +231,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::inertiaTensor() const
     {
+        return calcInertiaTensor();
     }
 
     ///
@@ -238,6 +242,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::covarianceMatrix() const
     {
+        return calcCovarianceMatrix();
     }
 
     ///
@@ -248,6 +253,7 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::inertiaEigenvalues() const
     {
+        return calcInertiaEigenvalues();
     }
 
     ///
@@ -258,6 +264,7 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::covarianceEigenvalues() const
     {
+        return calcCovarianceEigenvalues();
     }
 
     ///
@@ -268,6 +275,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::inertiaEigenvectors() const
     {
+        return calcInertiaEigenvectors();
     }
 
     ///
@@ -278,6 +286,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::covarianceEigenvectors() const
     {
+        return calcCovarianceEigenvectors();
     }
 
     ///
@@ -321,6 +330,7 @@ namespace molconv
     ///
     void Molecule::setOrigin(const origin &newOrigin)
     {
+        d->m_origin = newOrigin;
     }
 
     ///
@@ -331,6 +341,7 @@ namespace molconv
     ///
     void Molecule::setBasis(const basis &newBasis)
     {
+        d->m_basis = newBasis;
     }
 
     ///
@@ -341,6 +352,28 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcInertiaTensor() const
     {
+        Eigen::Matrix3d inertiaTensor;
+        Eigen::Vector3d com = centerOfMass();
+
+        for (size_t alpha = 0; alpha < 3; alpha++)
+        {
+            for (size_t beta = 0; beta < 3; beta++)
+            {
+                for (size_t atiter = 0; atiter < size(); atiter++)
+                {
+                    double factor = 0.0;
+
+                    if (alpha == beta)
+                        factor = (atom(atiter)->position() - com).squaredNorm();
+
+                    factor -= (atom(atiter)->position() - com)(alpha) * (atom(atiter)->position() - com)(beta);
+
+                    inertiaTensor(alpha, beta) += atom(atiter)->mass() * factor;
+                }
+            }
+        }
+
+        return inertiaTensor;
     }
 
     ///
