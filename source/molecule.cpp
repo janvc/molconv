@@ -35,7 +35,8 @@ namespace molconv
 {
     class MoleculePrivate
     {
-        void initializeDefault()
+    public:
+        MoleculePrivate()
         {
             m_origin = kCenterOnZero;
             m_basis = kIdentityVectors;
@@ -61,7 +62,6 @@ namespace molconv
         : chemkit::Molecule()
         , d(new MoleculePrivate)
     {
-        d->initializeDefault();
     }
 
     ///
@@ -77,8 +77,6 @@ namespace molconv
         , d(new MoleculePrivate)
     {
         chemkit::BondPredictor::predictBonds(this);
-
-        d->initializeDefault();
     }
 
     ///
