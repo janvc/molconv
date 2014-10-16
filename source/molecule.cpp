@@ -161,6 +161,7 @@ namespace molconv
     Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
         Eigen::Matrix3d basisVectors;
+        Eigen::Vector3d vector1, vector2, vector3;
 
         switch(internalBasis())
         {
@@ -174,9 +175,19 @@ namespace molconv
             basisVectors = calcInertiaEigenvectors();
             break;
         case kVectorsFromAtoms:
-            // first vector: atoms 0->1
-            // second:       orthog. to first, in atom plane
-            // third:        cross-product of first two
+            vector1 = atom(d->m_basisAtoms[1])->position() - atom(d->m_basisAtoms[0])->position();
+            vector1.normalize();
+
+            vector2 = atom(d->m_basisAtoms[2])->position() - atom(d->m_basisAtoms[0])->position();
+            vector2 -= vector1.dot(vector2);
+            vector2.normalize();
+
+            vector3 = vector1.cross(vector2);
+            vector3.normalize();
+
+            basisVectors.col(0) = vector1;
+            basisVectors.col(1) = vector2;
+            basisVectors.col(2) = vector3;
             break;
         }
 
@@ -382,6 +393,25 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcCovarianceMatrix() const
     {
+        Eigen::Matrix3d covarianceMatrix;
+        Eigen::Vector3d cog = center();
+
+        for (size_t alpha = 0; alpha < 3; alpha++)
+        {
+            for (size_t beta = 0; beta < 3; beta++)
+            {
+                covarianceMatrix(alpha, beta) = 0.0;
+
+                for (size_t atiter = 0; atiter < size(); atiter++)
+                {
+                    covarianceMatrix(alpha, beta) += (atom(atiter)->position()(alpha) - cog(alpha))
+                                                   * (atom(atiter)->position()(beta) - cog(beta));
+                }
+                covarianceMatrix(alpha, beta) /= size();
+            }
+        }
+
+        return covarianceMatrix;
     }
 
     ///
