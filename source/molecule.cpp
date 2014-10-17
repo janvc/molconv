@@ -19,7 +19,7 @@
  */
 
 
-//#include<iostream>
+#include<iostream>
 //#include<iomanip>
 //#include<fstream>
 //#include<string>
@@ -180,7 +180,7 @@ namespace molconv
             vector1.normalize();
 
             vector2 = atom(d->m_basisAtoms[2])->position() - atom(d->m_basisAtoms[0])->position();
-            vector2 -= vector1.dot(vector2);
+            vector2 -= vector1 * vector1.dot(vector2);
             vector2.normalize();
 
             vector3 = vector1.cross(vector2);
@@ -338,7 +338,7 @@ namespace molconv
     ///
     /// set the molecule's internal origin to \p newOrigin.
     ///
-    void Molecule::setOrigin(const origin &newOrigin, const int atom1 = 0, const int atom2 = 0, const double originFactor = 0.0)
+    void Molecule::setOrigin(const origin &newOrigin, const int atom1, const int atom2, const double originFactor)
     {
         switch (newOrigin)
         {
@@ -374,7 +374,7 @@ namespace molconv
     ///
     /// set the molecule's internal coordinate system to \p newBasis.
     ///
-    void Molecule::setBasis(const basis &newBasis, const int atom1 = 0, const int atom2 = 0, const int atom3 = 0)
+    void Molecule::setBasis(const basis &newBasis, const int atom1, const int atom2, const int atom3)
     {
         d->m_basis = newBasis;
     }
