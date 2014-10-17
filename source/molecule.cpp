@@ -25,7 +25,7 @@
 //#include<string>
 #include<array>
 //#include<cmath>
-//#include<Eigen/Eigenvalues>
+#include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
 #include "molecule.h"
 //#include "utilities.h"
@@ -422,6 +422,15 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::calcInertiaEigenvalues() const
     {
+        Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcInertiaTensor());
+
+        if (solver.info() != Eigen::Success)
+        {
+            // maybe throw an exception...
+            std::cerr << "The inertia tensor could not be diagonalized." << std::endl;
+        }
+        else
+            return solver.eigenvalues();
     }
 
     ///
@@ -433,6 +442,15 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcInertiaEigenvectors() const
     {
+        Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcInertiaTensor());
+
+        if (solver.info() != Eigen::Success)
+        {
+            // maybe throw an exception...
+            std::cerr << "The inertia tensor could not be diagonalized." << std::endl;
+        }
+        else
+            return solver.eigenvectors();
     }
 
     ///
@@ -443,6 +461,15 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::calcCovarianceEigenvalues() const
     {
+        Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
+
+        if (solver.info() != Eigen::Success)
+        {
+            // maybe throw an exception...
+            std::cerr << "The covariance matrix could not be diagonalized." << std::endl;
+        }
+        else
+            return solver.eigenvalues();
     }
 
     ///
@@ -454,6 +481,15 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcCovarianceEigenvectors() const
     {
+        Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
+
+        if (solver.info() != Eigen::Success)
+        {
+            // maybe throw an exception...
+            std::cerr << "The covariance matrix could not be diagonalized." << std::endl;
+        }
+        else
+            return solver.eigenvectors();
     }
 
 } // namespace molconv
