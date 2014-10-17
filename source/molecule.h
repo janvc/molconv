@@ -64,8 +64,8 @@ namespace molconv
         void rotate(const Eigen::Vector3d &axis, const double &angle);
 
         // changing the internal basis:
-        void setOrigin(const origin &newOrigin);
-        void setBasis(const basis &newBasis);
+        void setOrigin(const origin &newOrigin, const int atom1 = 0, const int atom2 = 0, const double originFactor = 0.0);
+        void setBasis(const basis &newBasis, const int atom1 = 0, const int atom2 = 0, const int atom3 = 0);
 
     private:
         // private functions:

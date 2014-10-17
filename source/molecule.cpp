@@ -24,6 +24,7 @@
 //#include<fstream>
 //#include<string>
 #include<array>
+#include<exception>
 //#include<cmath>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
@@ -337,9 +338,34 @@ namespace molconv
     ///
     /// set the molecule's internal origin to \p newOrigin.
     ///
-    void Molecule::setOrigin(const origin &newOrigin)
+    void Molecule::setOrigin(const origin &newOrigin, const int atom1 = 0, const int atom2 = 0, const double originFactor = 0.0)
     {
-        d->m_origin = newOrigin;
+        switch (newOrigin)
+        {
+        case kCenterOnZero:
+        case kCenterOfMass:
+        case kCenterOfGeometry:
+            d->m_origin = newOrigin;
+            d->m_originAtoms.fill(0);
+            break;
+        case kCenterOnAtom:
+            if (atom1 > 0)
+            {
+                d->m_origin = newOrigin;
+                d->m_originAtoms[0] = atom1;
+                d->m_originAtoms[1] = 0;
+            }
+            break;
+        case kCenterBetweenAtoms:
+            if (atom1 > 0 && atom2 > 0 && originFactor >= 0.0 && originFactor <= 1.0)
+            {
+                d->m_origin = newOrigin;
+                d->m_originAtoms[0] = atom1;
+                d->m_originAtoms[1] = atom2;
+                d->m_originFactor = originFactor;
+            }
+            break;
+        }
     }
 
     ///
@@ -348,7 +374,7 @@ namespace molconv
     ///
     /// set the molecule's internal coordinate system to \p newBasis.
     ///
-    void Molecule::setBasis(const basis &newBasis)
+    void Molecule::setBasis(const basis &newBasis, const int atom1 = 0, const int atom2 = 0, const int atom3 = 0)
     {
         d->m_basis = newBasis;
     }
