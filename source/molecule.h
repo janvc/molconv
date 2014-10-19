@@ -61,7 +61,7 @@ namespace molconv
         // moving the molecule:
         void translate(const Eigen::Vector3d &shiftVector);
         void rotate(const Eigen::Matrix3d &rotationMatrix);
-        void rotate(const Eigen::Vector3d &axis, const double &angle);
+        void rotate(const Eigen::Vector3d &axis, const double angle);
 
         // changing the internal basis:
         void setOrigin(const origin &newOrigin, const int atom1 = 0, const int atom2 = 0, const double originFactor = 0);

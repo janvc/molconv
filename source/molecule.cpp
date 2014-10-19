@@ -20,16 +20,12 @@
 
 
 #include<iostream>
-//#include<iomanip>
-//#include<fstream>
-//#include<string>
 #include<array>
-#include<exception>
-//#include<cmath>
+#include<stdexcept>
+#include<Eigen/Geometry>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
 #include "molecule.h"
-//#include "utilities.h"
 
 
 namespace molconv
@@ -120,7 +116,7 @@ namespace molconv
     }
 
     ///
-    /// \brief Molecule::internalOrigin
+    /// \brief Molecule::internalOriginPosition
     /// \return
     ///
     /// returns the position of the molecule's internal origin.
@@ -153,7 +149,7 @@ namespace molconv
     }
 
     ///
-    /// \brief Molecule::internalBasis
+    /// \brief Molecule::internalBasisVectors
     /// \return
     ///
     /// returns the basis vectors of the molecule's internal coordinate
@@ -307,6 +303,7 @@ namespace molconv
     ///
     void Molecule::translate(const Eigen::Vector3d &shiftVector)
     {
+        setCenter(center() + shiftVector);
     }
 
     ///
@@ -318,6 +315,12 @@ namespace molconv
     ///
     void Molecule::rotate(const Eigen::Matrix3d &rotationMatrix)
     {
+        Eigen::Vector3d intOrigPos = internalOriginPosition();
+
+        for (chemkit::Atom atiter : m_atoms)
+        {
+            atiter.setPosition(intOrigPos + rotationMatrix * (atiter.position() - intOrigPos));
+        }
     }
 
     ///
@@ -328,8 +331,13 @@ namespace molconv
     /// rotates the molecule about the specified axis about its internal
     /// origin by the specified angle (in radians).
     ///
-    void Molecule::rotate(const Eigen::Vector3d &axis, const double &angle)
+    void Molecule::rotate(const Eigen::Vector3d &axis, const double angle)
     {
+        Eigen::Matrix3d rotationMatrix;
+
+        rotationMatrix = Eigen::AngleAxisd(angle, axis.normalize());
+
+        rotate(rotationMatrix);
     }
 
     ///
@@ -349,7 +357,7 @@ namespace molconv
             d->m_originAtoms.fill(0);
             break;
         case kCenterOnAtom:
-            if (atom1 > 0)
+            if (atom1 > 0 && atom1 <= size())
             {
                 d->m_origin = newOrigin;
                 d->m_originAtoms[0] = atom1;
@@ -357,7 +365,8 @@ namespace molconv
             }
             break;
         case kCenterBetweenAtoms:
-            if (atom1 > 0 && atom2 > 0 && originFactor >= 0.0 && originFactor <= 1.0)
+            if (atom1 > 0 && atom1 <= size() && atom2 > 0 && atom2 <= size()
+                          && originFactor >= 0.0 && originFactor <= 1.0)
             {
                 d->m_origin = newOrigin;
                 d->m_originAtoms[0] = atom1;
@@ -376,7 +385,27 @@ namespace molconv
     ///
     void Molecule::setBasis(const basis &newBasis, const int atom1, const int atom2, const int atom3)
     {
-        d->m_basis = newBasis;
+        switch (newBasis)
+        {
+        case kIdentityVectors:
+        case kCovarianceVectors:
+        case kInertiaVectors:
+            d->m_basis = newBasis;
+            d->m_basisAtoms.fill(0);
+            break;
+        case kVectorsFromAtoms:
+            if (atom1 > 0 && atom1 <= size() && atom2 > 0 && atom2 <= size() && atom3 > 0 && atom3 <= size())
+            {
+                if (atom1 != atom2 && atom1 != atom3 && atom2 != atom3)
+                {
+                    d->m_basis = newBasis;
+                    d->m_basisAtoms[0] = atom1;
+                    d->m_basisAtoms[1] = atom2;
+                    d->m_basisAtoms[2] = atom3;
+                }
+            }
+            break;
+        }
     }
 
     ///
@@ -394,6 +423,8 @@ namespace molconv
         {
             for (size_t beta = 0; beta < 3; beta++)
             {
+                inertiaTensor(alpha, beta) = 0.0;
+
                 for (size_t atiter = 0; atiter < size(); atiter++)
                 {
                     double factor = 0.0;
@@ -431,7 +462,7 @@ namespace molconv
                 for (size_t atiter = 0; atiter < size(); atiter++)
                 {
                     covarianceMatrix(alpha, beta) += (atom(atiter)->position()(alpha) - cog(alpha))
-                                                   * (atom(atiter)->position()(beta) - cog(beta));
+                                                   * (atom(atiter)->position()(beta)  - cog(beta));
                 }
                 covarianceMatrix(alpha, beta) /= size();
             }
@@ -451,10 +482,7 @@ namespace molconv
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcInertiaTensor());
 
         if (solver.info() != Eigen::Success)
-        {
-            // maybe throw an exception...
-            std::cerr << "The inertia tensor could not be diagonalized." << std::endl;
-        }
+            throw std::runtime_error("The inertia tensor could not be diagonalized.\n");
         else
             return solver.eigenvalues();
     }
@@ -471,10 +499,7 @@ namespace molconv
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcInertiaTensor());
 
         if (solver.info() != Eigen::Success)
-        {
-            // maybe throw an exception...
-            std::cerr << "The inertia tensor could not be diagonalized." << std::endl;
-        }
+            throw std::runtime_error("The inertia tensor could not be diagonalized.\n");
         else
             return solver.eigenvectors();
     }
@@ -490,10 +515,7 @@ namespace molconv
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
 
         if (solver.info() != Eigen::Success)
-        {
-            // maybe throw an exception...
-            std::cerr << "The covariance matrix could not be diagonalized." << std::endl;
-        }
+            throw std::runtime_error("The covariance matrix could not be diagonalized.\n");
         else
             return solver.eigenvalues();
     }
@@ -510,10 +532,7 @@ namespace molconv
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
 
         if (solver.info() != Eigen::Success)
-        {
-            // maybe throw an exception...
-            std::cerr << "The covariance matrix could not be diagonalized." << std::endl;
-        }
+            throw std::runtime_error("The covariance matrix could not be diagonalized.\n");
         else
             return solver.eigenvectors();
     }
