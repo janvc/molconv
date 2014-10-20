@@ -27,12 +27,19 @@
 
 namespace molconv
 {
+    class SystemPrivate
+    {
+    public:
+        std::vector<Molecule> m_molecules;
+    };
+
     ///
     /// \brief System::System
     ///
     /// The default constructor of the System class
     ///
     System::System()
+        : d(new SystemPrivate)
     {
     }
 
@@ -44,7 +51,7 @@ namespace molconv
     ///
     size_t System::size() const
     {
-        return m_molecules.size();
+        return d->m_molecules.size();
     }
 
     ///
@@ -59,7 +66,7 @@ namespace molconv
         if (index > size() || index < 0)
             throw std::invalid_argument("index out of range.\n");
 
-        return boost::make_shared<Molecule>(m_molecules.at(index));
+        return boost::make_shared<Molecule>(d->m_molecules.at(index));
     }
 
     ///
@@ -72,10 +79,10 @@ namespace molconv
     {
         std::vector<Molecule>::iterator moliter;
 
-        moliter = std::find(m_molecules.begin(), m_molecules.end(), *oldMolecule);
+        moliter = std::find(d->m_molecules.begin(), d->m_molecules.end(), *oldMolecule);
 
-        if (moliter != m_molecules.end())
-            m_molecules.erase(moliter);
+        if (moliter != d->m_molecules.end())
+            d->m_molecules.erase(moliter);
         else
             throw std::invalid_argument("Molecule not found in System");
     }
@@ -91,7 +98,7 @@ namespace molconv
         if (index > size() || index < 0)
             throw std::invalid_argument("index out of range.\n");
 
-        m_molecules.erase(index);
+        d->m_molecules.erase(index);
     }
 
 } // namespace molconv
