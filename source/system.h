@@ -27,6 +27,7 @@
 
 namespace molconv
 {
+    class SystemPrivate;
 
     class System
     {
@@ -40,7 +41,7 @@ namespace molconv
         void removeMolecule(const size_t index);
 
     private:
-        std::vector<Molecule> m_molecules;
+        SystemPrivate *d;
     };
 
 } // namespace molconv
