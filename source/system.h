@@ -24,6 +24,7 @@
 
 #include<vector>
 #include<boost/shared_ptr.hpp>
+#include "molecule.h"
 
 namespace molconv
 {
@@ -34,10 +35,9 @@ namespace molconv
     public:
         System();
         size_t size() const;
-        boost::shared_ptr<Molecule> Molecule(const size_t index) const;
+        boost::shared_ptr<Molecule> getMolecule(const size_t index) const;
 
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule);
-        void removeMolecule(const boost::shared_ptr<Molecule> oldMolecule);
         void removeMolecule(const size_t index);
 
     private:

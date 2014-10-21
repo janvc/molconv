@@ -154,6 +154,5 @@ void MolconvWindow::openDialog()
 void MolconvWindow::get_molecule_Dialog()
 {
     molconv::Molecule temp_mol = this->open_dialog->getMol();
-    temp_mol.clean_up();
     add_molecule(temp_mol);
 }

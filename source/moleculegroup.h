@@ -5,11 +5,15 @@
 
 namespace molconv
 {
+    class MoleculeGroupPrivate;
 
     class MoleculeGroup : public abstractMoleculeGroup
     {
     public:
         MoleculeGroup();
+
+    private:
+        MoleculeGroupPrivate *d;
     };
 
 } // namespace molconv
