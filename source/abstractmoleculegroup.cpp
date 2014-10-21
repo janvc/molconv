@@ -60,7 +60,7 @@ namespace molconv
     ///
     /// return a boost pointer to the molecule at \p index
     ///
-    boost::shared_ptr<Molecule> abstractMoleculeGroup::Molecule(const size_t index)
+    boost::shared_ptr<Molecule> abstractMoleculeGroup::getMolecule(const size_t index)
     {
         return d->m_molecules.at(index);
     }
@@ -78,24 +78,6 @@ namespace molconv
 
     ///
     /// \brief abstractMoleculeGroup::removeMolecule
-    /// \param oldMolecule
-    ///
-    /// remove the molecule from the group
-    ///
-    void abstractMoleculeGroup::removeMolecule(const boost::shared_ptr<Molecule> oldMolecule)
-    {
-        std::vector<boost::shared_ptr<Molecule> >::iterator moliter;
-
-        moliter = std::find(d->m_molecules.begin(), d->m_molecules.end(), oldMolecule);
-
-        if (moliter != d->m_molecules.end())
-            d->m_molecules.erase(moliter);
-        else
-            throw std::invalid_argument("Molecule not found in group.\n");
-    }
-
-    ///
-    /// \brief abstractMoleculeGroup::removeMolecule
     /// \param index
     ///
     /// remove the molecule from the group by index
@@ -105,7 +87,7 @@ namespace molconv
         if (index < 0 || index > d->m_molecules.size())
             throw std::invalid_argument("Index out of range.\n");
 
-        d->m_molecules.erase(index);
+        d->m_molecules.erase(d->m_molecules.begin() + index);
     }
 
 } // namespace molconv

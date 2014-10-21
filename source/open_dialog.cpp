@@ -99,11 +99,20 @@ void OpenDialog::on_coa_toggled(bool checked)
 molconv::Molecule OpenDialog::getMol()
 {
     if(ui->atoms->isChecked() && !ui->coa->isChecked())
-        this->the_molecule.set_basis(getOrigin(),getBasis(),0,ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
+    {
+        this->the_molecule.setOrigin(getOrigin());
+        this->the_molecule.setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
+    }
     else if(ui->atoms->isChecked() && ui->coa->isChecked())
-        this->the_molecule.set_basis(getOrigin(),getBasis(),ui->an->value(),ui->atom1->value(),ui->atom2->value(),ui->atom3->value());
+    {
+        this->the_molecule.setOrigin(getOrigin(), ui->an->value());
+        this->the_molecule.setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
+    }
     else if(!ui->atoms->isChecked() && !ui->coa->isChecked())
-        this->the_molecule.set_basis(getOrigin(),getBasis());
+    {
+        this->the_molecule.setOrigin(getOrigin());
+        this->the_molecule.setBasis(getBasis());
+    }
 
     return this->the_molecule;
 }

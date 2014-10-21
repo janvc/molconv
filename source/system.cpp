@@ -61,30 +61,12 @@ namespace molconv
     ///
     /// returns a boost pointer to the molecule at \p index
     ///
-    boost::shared_ptr<Molecule> System::Molecule(const size_t index) const
+    boost::shared_ptr<Molecule> System::getMolecule(const size_t index) const
     {
         if (index > size() || index < 0)
             throw std::invalid_argument("index out of range.\n");
 
         return boost::make_shared<Molecule>(d->m_molecules.at(index));
-    }
-
-    ///
-    /// \brief System::removeMolecule
-    /// \param oldMolecule
-    ///
-    /// removes the molecule that \p oldMolecule points to
-    ///
-    void System::removeMolecule(const boost::shared_ptr<Molecule> oldMolecule)
-    {
-        std::vector<Molecule>::iterator moliter;
-
-        moliter = std::find(d->m_molecules.begin(), d->m_molecules.end(), *oldMolecule);
-
-        if (moliter != d->m_molecules.end())
-            d->m_molecules.erase(moliter);
-        else
-            throw std::invalid_argument("Molecule not found in System");
     }
 
     ///
@@ -98,7 +80,7 @@ namespace molconv
         if (index > size() || index < 0)
             throw std::invalid_argument("index out of range.\n");
 
-        d->m_molecules.erase(index);
+        d->m_molecules.erase(d->m_molecules.begin() + index);
     }
 
 } // namespace molconv

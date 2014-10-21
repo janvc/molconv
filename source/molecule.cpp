@@ -317,9 +317,9 @@ namespace molconv
     {
         Eigen::Vector3d intOrigPos = internalOriginPosition();
 
-        for (chemkit::Atom atiter : m_atoms)
+        for (size_t atiter = 0; atiter < size(); atiter++)
         {
-            atiter.setPosition(intOrigPos + rotationMatrix * (atiter.position() - intOrigPos));
+            atom(atiter)->setPosition(intOrigPos + rotationMatrix * (atom(atiter)->position() - intOrigPos));
         }
     }
 
@@ -334,8 +334,11 @@ namespace molconv
     void Molecule::rotate(const Eigen::Vector3d &axis, const double angle)
     {
         Eigen::Matrix3d rotationMatrix;
+        Eigen::Vector3d rotAxis = axis;
 
-        rotationMatrix = Eigen::AngleAxisd(angle, axis.normalize());
+        rotAxis.normalize();
+
+        rotationMatrix = Eigen::AngleAxisd(angle, rotAxis);
 
         rotate(rotationMatrix);
     }
