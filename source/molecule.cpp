@@ -412,6 +412,19 @@ namespace molconv
     }
 
     ///
+    /// \brief Molecule::cleanUp
+    ///
+    /// This method cleans up the structure of the molecule, i.e. shift it
+    /// so that the origin of the internal basis wquals the origin, rotate it
+    /// so that the coordinate axes match the internal basis
+    ///
+    void Molecule::cleanUp()
+    {
+        translate(-internalOriginPosition());
+        rotate(internalBasisVectors().transpose());
+    }
+
+    ///
     /// \brief Molecule::calcInertiaTensor
     /// \return
     ///
