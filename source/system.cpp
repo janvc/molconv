@@ -63,7 +63,7 @@ namespace molconv
     ///
     boost::shared_ptr<Molecule> System::getMolecule(const size_t index) const
     {
-        if (index > size() || index < 0)
+        if (index >= size())
             throw std::invalid_argument("index out of range.\n");
 
         return boost::make_shared<Molecule>(d->m_molecules.at(index));
@@ -77,7 +77,7 @@ namespace molconv
     ///
     void System::removeMolecule(const size_t index)
     {
-        if (index > size() || index < 0)
+        if (index >= size())
             throw std::invalid_argument("index out of range.\n");
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
