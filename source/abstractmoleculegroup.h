@@ -34,7 +34,7 @@ namespace molconv
     public:
         abstractMoleculeGroup();
         size_t size() const;
-        boost::shared_ptr<Molecule> getMolecule(const size_t index);
+        boost::shared_ptr<Molecule> getMolecule(const size_t index) const;
 
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule);
         void removeMolecule(const size_t index);

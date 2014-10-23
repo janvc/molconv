@@ -54,13 +54,13 @@ namespace molconv
     }
 
     ///
-    /// \brief abstractMoleculeGroup::Molecule
+    /// \brief abstractMoleculeGroup::getMolecule
     /// \param index
     /// \return
     ///
     /// return a boost pointer to the molecule at \p index
     ///
-    boost::shared_ptr<Molecule> abstractMoleculeGroup::getMolecule(const size_t index)
+    boost::shared_ptr<Molecule> abstractMoleculeGroup::getMolecule(const size_t index) const
     {
         return d->m_molecules.at(index);
     }
