@@ -84,7 +84,7 @@ namespace molconv
     ///
     void abstractMoleculeGroup::removeMolecule(const size_t index)
     {
-        if (index < 0 || index > d->m_molecules.size())
+        if (index > d->m_molecules.size())
             throw std::invalid_argument("Index out of range.\n");
 
         d->m_molecules.erase(d->m_molecules.begin() + index);

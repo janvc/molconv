@@ -349,7 +349,7 @@ namespace molconv
     ///
     /// set the molecule's internal origin to \p newOrigin.
     ///
-    void Molecule::setOrigin(const origin &newOrigin, const int atom1, const int atom2, const double originFactor)
+    void Molecule::setOrigin(const origin &newOrigin, const size_t atom1, const size_t atom2, const double originFactor)
     {
         switch (newOrigin)
         {
@@ -386,7 +386,7 @@ namespace molconv
     ///
     /// set the molecule's internal coordinate system to \p newBasis.
     ///
-    void Molecule::setBasis(const basis &newBasis, const int atom1, const int atom2, const int atom3)
+    void Molecule::setBasis(const basis &newBasis, const size_t atom1, const size_t atom2, const size_t atom3)
     {
         switch (newBasis)
         {
