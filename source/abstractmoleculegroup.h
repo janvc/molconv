@@ -33,7 +33,23 @@ namespace molconv
     {
     public:
         abstractMoleculeGroup();
+
         size_t size() const;
+
+        bool LineParallel(const size_t firstMolecule, const size_t secondMolecule) const;
+        bool PlaneParallel(const size_t firstMolecule, const size_t secondMolecule) const;
+
+        double Distance(const size_t firstMolecule, const size_t secondMolecule) const;
+        Eigen::Vector3d DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const;
+
+        double LineDistance(const size_t firstMolecule, const size_t secondMolecule) const;
+        Eigen::Vector3d LineDistanceVector(const size_t firstMolecule, const size_t secondMolecule) const;
+
+        double PlaneDistance(const size_t firstMolecule, const size_t secondMolecule) const;
+        Eigen::Vector3d PlaneDistanceVector(const size_t firstMolecule, const size_t secondMolecule) const;
+
+        void checkIndex(const size_t index) const;
+
         boost::shared_ptr<Molecule> getMolecule(const size_t index) const;
 
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule);
