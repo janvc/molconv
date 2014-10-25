@@ -6,17 +6,17 @@
     <message>
         <location filename="../source/molecules_dock.ui" line="14"/>
         <source>Molecules</source>
-        <translation type="unfinished"></translation>
+        <translation>Moleküle</translation>
     </message>
     <message>
         <location filename="../source/molecules_dock.ui" line="70"/>
         <source>Molecule</source>
-        <translation type="unfinished"></translation>
+        <translation>Molekül</translation>
     </message>
     <message>
         <location filename="../source/molecules_dock.ui" line="75"/>
         <source>Visible</source>
-        <translation type="unfinished"></translation>
+        <translation>Sichtbar</translation>
     </message>
 </context>
 <context>
@@ -29,17 +29,17 @@
     <message>
         <location filename="../source/molconv_window.ui" line="38"/>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei</translation>
     </message>
     <message>
         <location filename="../source/molconv_window.ui" line="48"/>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffnen</translation>
     </message>
     <message>
         <location filename="../source/molconv_window.ui" line="53"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>Beenden</translation>
     </message>
 </context>
 <context>
@@ -52,22 +52,22 @@
     <message>
         <location filename="../source/open_dialog.ui" line="33"/>
         <source>File:</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei:</translation>
     </message>
     <message>
         <location filename="../source/open_dialog.ui" line="47"/>
         <source>Browse</source>
-        <translation type="unfinished"></translation>
+        <translation>Durchsuchen</translation>
     </message>
     <message>
         <location filename="../source/open_dialog.ui" line="61"/>
         <source>Origin:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ursprung:</translation>
     </message>
     <message>
         <location filename="../source/open_dialog.ui" line="67"/>
         <source>zero</source>
-        <translation type="unfinished"></translation>
+        <translation>Null</translation>
     </message>
     <message>
         <location filename="../source/open_dialog.ui" line="77"/>
