@@ -35,6 +35,7 @@ namespace molconv
         }
 
         size_t referenceMolecule;
+        std::vector<parallelVector> vectors;
     };
 
     ///
@@ -67,7 +68,7 @@ namespace molconv
     ///
     void MoleculeStack::setReferenceMolecule(const size_t newRef)
     {
-        checkIndex(index);
+        checkIndex(newRef);
 
         d->referenceMolecule = newRef;
     }
@@ -83,7 +84,7 @@ namespace molconv
     {
         checkIndex(index);
 
-        Eigen::Vector3d distance = Distance(ReferenceMolecule(), index);
+        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
 
         Eigen::Vector3d zBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(2);
 
@@ -120,7 +121,7 @@ namespace molconv
     ///
     double MoleculeStack::LateralX(const size_t index) const
     {
-        Eigen::Vector3d distance = Distance(ReferenceMolecule(), index);
+        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
 
         Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
 
@@ -137,7 +138,7 @@ namespace molconv
     ///
     double MoleculeStack::LateralY(const size_t index) const
     {
-        Eigen::Vector3d distance = Distance(ReferenceMolecule(), index);
+        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
 
         Eigen::Vector3d yBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1);
 
@@ -212,5 +213,6 @@ namespace molconv
 
         getMolecule(index)->translate(shiftVector);
     }
+
 
 } // namespace molconv

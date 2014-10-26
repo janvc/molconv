@@ -23,6 +23,7 @@
 #define MOLECULESTACK_H
 
 #include"abstractmoleculegroup.h"
+#include"types.h"
 
 namespace molconv
 {
@@ -33,10 +34,16 @@ namespace molconv
     public:
         MoleculeStack();
 
+        void addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector);
+
         size_t ReferenceMolecule() const;
         void setReferenceMolecule(const size_t newRef);
 
+        parallelVector getParallelVector(const size_t index) const;
+        void setParallelVector(const size_t index, const parallelVector newVector);
+
         double PlaneDistance(const size_t index) const;
+        double LineDistance(const size_t index) const;
         double RotationAngle(const size_t index) const;
         double LateralX(const size_t index) const;
         double LateralY(const size_t index) const;
