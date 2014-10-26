@@ -34,6 +34,20 @@ namespace molconv {
      * Which vectors to use for new internal basis
      */
     enum basis { kIdentityVectors, kCovarianceVectors, kInertiaVectors, kVectorsFromAtoms };
+
+    /*
+     * Which molecule-specific vector is parallel in a stack
+     */
+    enum parallelVector
+    {
+        kInertA,
+        kInertB,
+        kInertC,
+        kCovarA,
+        kCovarB,
+        kCovarC,
+        kAtoms
+    };
 } // namespace molconv
 
 #endif // TYPES_H
