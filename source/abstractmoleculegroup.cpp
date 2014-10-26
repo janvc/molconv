@@ -54,6 +54,48 @@ namespace molconv
     }
 
     ///
+    /// \brief abstractMoleculeGroup::Distance
+    /// \param firstMolecule
+    /// \param secondMolecule
+    /// \return
+    ///
+    /// return the distance between the internal origins of the two molecules
+    ///
+    double abstractMoleculeGroup::Distance(const size_t firstMolecule, const size_t secondMolecule) const
+    {
+        return DistanceVector(firstMolecule, secondMolecule).norm();
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::DistanceVector
+    /// \param firstMolecule
+    /// \param secondMolecule
+    /// \return
+    ///
+    /// return the distance vector from the first molecule's internal origin to the second
+    /// molecule's internal origin
+    ///
+    Eigen::Vector3d abstractMoleculeGroup::DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const
+    {
+        checkIndex(firstMolecule);
+        checkIndex(secondMolecule);
+
+        return getMolecule(secondMolecule)->internalOriginPosition() - getMolecule(firstMolecule)->internalOriginPosition();
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::checkIndex
+    /// \param index
+    ///
+    /// this is a utility function to check if the index for a molecule is in range.
+    ///
+    void abstractMoleculeGroup::checkIndex(const size_t index) const
+    {
+        if (index > size())
+            throw std::invalid_argument("Index out of range in abstractMoleculeGroup.\n");
+    }
+
+    ///
     /// \brief abstractMoleculeGroup::getMolecule
     /// \param index
     /// \return
@@ -84,8 +126,7 @@ namespace molconv
     ///
     void abstractMoleculeGroup::removeMolecule(const size_t index)
     {
-        if (index > d->m_molecules.size())
-            throw std::invalid_argument("Index out of range.\n");
+        checkIndex(index);
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
     }

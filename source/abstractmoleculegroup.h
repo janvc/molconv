@@ -33,12 +33,18 @@ namespace molconv
     {
     public:
         abstractMoleculeGroup();
+
         size_t size() const;
+
+        double Distance(const size_t firstMolecule, const size_t secondMolecule) const;
+        Eigen::Vector3d DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const;
+
+        void checkIndex(const size_t index) const;
+
         boost::shared_ptr<Molecule> getMolecule(const size_t index) const;
 
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule);
         void removeMolecule(const size_t index);
-
 
     private:
         abstractMoleculeGroupPrivate *d;

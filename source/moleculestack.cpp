@@ -1,4 +1,28 @@
+/*
+ * Copyright 2014 Jan von Cosel & Sebastian Lenz
+ *
+ * This file is part of molconv.
+ *
+ * molconv is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * molconv is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have recieved a copy of the GNU General Public License
+ * along with molconv. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+
+#include<stdexcept>
+#include<cmath>
 #include "moleculestack.h"
+
 
 namespace molconv
 {
@@ -11,6 +35,7 @@ namespace molconv
         }
 
         size_t referenceMolecule;
+        std::vector<parallelVector> vectors;
     };
 
     ///
@@ -25,14 +50,45 @@ namespace molconv
     }
 
     ///
-    /// \brief MoleculeStack::Distance
+    /// \brief MoleculeStack::ReferenceMolecule
+    /// \return
+    ///
+    /// return the index of the reference molecule of the stack
+    ///
+    size_t MoleculeStack::ReferenceMolecule() const
+    {
+        return d->referenceMolecule;
+    }
+
+    ///
+    /// \brief MoleculeStack::setReferenceMolecule
+    /// \param newRef
+    ///
+    /// set the reference molecule to molecule  \p index
+    ///
+    void MoleculeStack::setReferenceMolecule(const size_t newRef)
+    {
+        checkIndex(newRef);
+
+        d->referenceMolecule = newRef;
+    }
+
+    ///
+    /// \brief MoleculeStack::PlaneDistance
     /// \return
     ///
     /// return the distance between the least-squares-plane of the molecule
     /// \p index and that of the reference molecule
     ///
-    double MoleculeStack::Distance(const size_t index) const
+    double MoleculeStack::PlaneDistance(const size_t index) const
     {
+        checkIndex(index);
+
+        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
+
+        Eigen::Vector3d zBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(2);
+
+        return distance.dot(zBasis);
     }
 
     ///
@@ -44,6 +100,15 @@ namespace molconv
     ///
     double MoleculeStack::RotationAngle(const size_t index) const
     {
+        Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
+        Eigen::Vector3d indexVector = getMolecule(index)->internalBasisVectors().col(0);
+
+        xBasis.normalize();
+        indexVector.normalize();
+
+        double scalarProduct = xBasis.dot(indexVector);
+
+        return acos(scalarProduct);
     }
 
     ///
@@ -56,6 +121,11 @@ namespace molconv
     ///
     double MoleculeStack::LateralX(const size_t index) const
     {
+        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
+
+        Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
+
+        return distance.dot(xBasis);
     }
 
     ///
@@ -68,18 +138,29 @@ namespace molconv
     ///
     double MoleculeStack::LateralY(const size_t index) const
     {
+        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
+
+        Eigen::Vector3d yBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1);
+
+        return distance.dot(yBasis);
     }
 
     ///
-    /// \brief MoleculeStack::setDistance
+    /// \brief MoleculeStack::setPlaneDistance
     /// \param index
     /// \param newDistance
     ///
     /// set the distance between the molecule \p index and the reference molecule
     /// to \p newDistance
     ///
-    void MoleculeStack::setDistance(const size_t index, const double newDistance)
+    void MoleculeStack::setPlaneDistance(const size_t index, const double newDistance)
     {
+        double currentDistance = PlaneDistance(index);
+
+        Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(2)
+                                    * (newDistance - currentDistance);
+
+        getMolecule(index)->translate(shiftVector);
     }
 
     ///
@@ -92,6 +173,11 @@ namespace molconv
     ///
     void MoleculeStack::setRotationAngle(const size_t index, const double newAngle)
     {
+        double shiftAngle = newAngle - RotationAngle(index);
+
+        Eigen::Vector3d rotationAxis = getMolecule(index)->internalBasisVectors().col(2);
+
+        getMolecule(index)->rotate(rotationAxis, shiftAngle);
     }
 
     ///
@@ -104,6 +190,11 @@ namespace molconv
     ///
     void MoleculeStack::setLateralX(const size_t index, const double newX)
     {
+        double shiftX = newX - LateralX(index);
+
+        Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0) * shiftX;
+
+        getMolecule(index)->translate(shiftVector);
     }
 
     ///
@@ -116,9 +207,12 @@ namespace molconv
     ///
     void MoleculeStack::setLateralY(const size_t index, const double newY)
     {
+        double shiftY = newY - LateralY(index);
+
+        Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1) * shiftY;
+
+        getMolecule(index)->translate(shiftVector);
     }
-
-
 
 
 } // namespace molconv
