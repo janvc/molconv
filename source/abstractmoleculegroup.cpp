@@ -54,50 +54,6 @@ namespace molconv
     }
 
     ///
-    /// \brief abstractMoleculeGroup::LineParallel
-    /// \param firstMolecule
-    /// \param secondMolecule
-    /// \return
-    ///
-    /// returns true if the covariance eigenvectors of the molecules \p firstMolecule and \p secondMolecule
-    /// corresponding to the largest variance are parallel.
-    ///
-    bool abstractMoleculeGroup::LineParallel(const size_t firstMolecule, const size_t secondMolecule) const
-    {
-        Eigen::Vector3d firstVector = getMolecule(firstMolecule)->covarianceEigenvectors().col(2);
-        Eigen::Vector3d secondVector = getMolecule(secondMolecule)->covarianceEigenvectors().col(2);
-
-        double scalarProduct = firstVector.dot(secondVector);
-
-        if (scalarProduct - 1.0 < 1.0e-8)
-            return true;
-        else
-            return false;
-    }
-
-    ///
-    /// \brief abstractMoleculeGroup::PlaneParallel
-    /// \param firstMolecule
-    /// \param secondMolecule
-    /// \return
-    ///
-    /// returns true if the least-squares planes of the molecules \p firstMolecule and \p secondMolecule
-    /// (or equivalently, the covariance eigenvectors corresponding to the smallest variance) are parallel.
-    ///
-    bool abstractMoleculeGroup::PlaneParallel(const size_t firstMolecule, const size_t secondMolecule) const
-    {
-        Eigen::Vector3d firstVector = getMolecule(firstMolecule)->covarianceEigenvectors().col(0);
-        Eigen::Vector3d secondVector = getMolecule(secondMolecule)->covarianceEigenvectors().col(0);
-
-        double scalarProduct = firstVector.dot(secondVector);
-
-        if (scalarProduct - 1.0 < 1.0e-8)
-            return true;
-        else
-            return false;
-    }
-
-    ///
     /// \brief abstractMoleculeGroup::Distance
     /// \param firstMolecule
     /// \param secondMolecule
@@ -125,18 +81,6 @@ namespace molconv
         checkIndex(secondMolecule);
 
         return getMolecule(secondMolecule)->internalOriginPosition() - getMolecule(firstMolecule)->internalOriginPosition();
-    }
-
-    ///
-    /// \brief abstractMoleculeGroup::LineDistance
-    /// \param firstMolecule
-    /// \param secondMolecule
-    /// \return
-    ///
-    /// return the orthogonal distance between the
-    double abstractMoleculeGroup::LineDistance(const size_t firstMolecule, const size_t secondMolecule) const
-    {
-        return LineDistanceVector(firstMolecule, secondMolecule).norm();
     }
 
     ///
