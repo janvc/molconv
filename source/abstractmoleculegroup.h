@@ -36,6 +36,10 @@ namespace molconv
 
         size_t size() const;
 
+        double EulerTheta(const size_t index) const;
+        double EulerPhi(const size_t index) const;
+        double EulerPsi(const size_t index) const;
+
         double Distance(const size_t firstMolecule, const size_t secondMolecule) const;
         Eigen::Vector3d DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const;
 
