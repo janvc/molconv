@@ -40,12 +40,12 @@ namespace molconv {
      */
     enum parallelVector
     {
-        kInertA,
-        kInertB,
-        kInertC,
-        kCovarA,
-        kCovarB,
-        kCovarC,
+        kInertVSmall,
+        kInertVMedium,
+        kInertVLarge,
+        kCovarVSmall,
+        kCovarVMedium,
+        kCovarVLarge,
         kAtoms
     };
 } // namespace molconv
