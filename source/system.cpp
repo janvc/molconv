@@ -70,6 +70,17 @@ namespace molconv
     }
 
     ///
+    /// \brief System::addMolecule
+    /// \param newMolecule
+    ///
+    /// adds a new molecule to the system
+    ///
+    void System::addMolecule(const boost::shared_ptr<Molecule> newMolecule)
+    {
+        d->m_molecules.push_back(*newMolecule);
+    }
+
+    ///
     /// \brief System::removeMolecule
     /// \param index
     ///
