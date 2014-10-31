@@ -23,6 +23,11 @@ foreach(LANGUAGE ${LANGUAGES})
     "${CMake_BINARY_DIR}${CMAKE_DATA_DIR}/i18n")
 endforeach(LANGUAGE ${LANGUAGES})
 
+# debugging output only for debug builds
+if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+    add_definitions(-DQT_NO_DEBUG_OUTPUT)
+endif()
+
 add_subdirectory(source)
 
 # prevent the generated files from being deleted during make clean
