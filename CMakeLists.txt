@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(molconv)
 
+# Do not allow in-source builds:
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "In-source builds are not allowed.")
+endif()
+
 set(CMAKE_MODULE_PATH ${molconv_SOURCE_DIR}/cmake)
 
 # Update/build translations
@@ -17,6 +22,11 @@ foreach(LANGUAGE ${LANGUAGES})
   set_source_files_properties(${TS_FILE} PROPERTIES OUTPUT_LOCATION
     "${CMake_BINARY_DIR}${CMAKE_DATA_DIR}/i18n")
 endforeach(LANGUAGE ${LANGUAGES})
+
+# debugging output only for debug builds
+if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
+    add_definitions(-DQT_NO_DEBUG_OUTPUT)
+endif()
 
 add_subdirectory(source)
 
