@@ -22,6 +22,7 @@
 #include<stdexcept>
 #include<algorithm>
 #include<boost/make_shared.hpp>
+#include<QDebug>
 #include "system.h"
 
 
@@ -41,6 +42,7 @@ namespace molconv
     System::System()
         : d(new SystemPrivate)
     {
+        qDebug() << "this is the first constructor of molconv::System";
     }
 
     ///
@@ -51,6 +53,7 @@ namespace molconv
     ///
     size_t System::size() const
     {
+        qDebug() << "entering System::size()";
         return d->m_molecules.size();
     }
 
@@ -63,10 +66,13 @@ namespace molconv
     ///
     boost::shared_ptr<Molecule> System::getMolecule(const size_t index) const
     {
+        qDebug() << "entering System::getMolecule()";
         if (index >= size())
             throw std::invalid_argument("index out of range.\n");
 
-        return boost::make_shared<Molecule>(d->m_molecules.at(index));
+        boost::shared_ptr<Molecule> molptr = boost::make_shared<Molecule>(d->m_molecules.at(index));
+        //return boost::make_shared<Molecule>(d->m_molecules.at(index));
+        return molptr;
     }
 
     ///
@@ -77,6 +83,7 @@ namespace molconv
     ///
     void System::addMolecule(const boost::shared_ptr<Molecule> newMolecule)
     {
+        qDebug() << "entering System::addMolecule()";
         d->m_molecules.push_back(*newMolecule);
     }
 
@@ -88,6 +95,7 @@ namespace molconv
     ///
     void System::removeMolecule(const size_t index)
     {
+        qDebug() << "entering System::removeMolecule()";
         if (index >= size())
             throw std::invalid_argument("index out of range.\n");
 

@@ -39,6 +39,7 @@ namespace molconv
         // constructors and destructor(s):
         Molecule();
         Molecule(const chemkit::Molecule &BaseMolecule);
+        Molecule(const boost::shared_ptr<chemkit::Molecule> &BaseMolPtr);
         Molecule(const Molecule &originalMolecule);
 
         // info about the molecular internal basis:

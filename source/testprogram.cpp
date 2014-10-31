@@ -21,12 +21,45 @@
 
 #include<iostream>
 #include<string>
+#include<chemkit/moleculefile.h>
+#include<boost/make_shared.hpp>
+#include<QDebug>
 #include"system.h"
+//#include"types.h"
 
 
 int main(int argc, char *argv[])
 {
-    std::string molFile = argv[1];
+#ifdef HERTHA_DEBUG
+    std::cout << "this is the main function.\n";
+#endif
+    std::string molFileName = argv[1];
+
+    chemkit::MoleculeFile molFile(molFileName);
+    molFile.read();
+
+    molconv::System theSystem;
+
+    molconv::Molecule theMolecule(*(molFile.molecule()));
+
+    //theSystem.addMolecule(molFile.molecule());
+    theSystem.addMolecule(boost::make_shared<molconv::Molecule>(theMolecule));
+    //theSystem.addMolecule(boost::dynamic_pointer_cast<molconv::Molecule>(molFile.molecule()));
+
+    std::cout << "the system contains " << theSystem.size() << " molecules.\n";
+
+    theSystem.getMolecule(0)->setOrigin(molconv::kCenterOfMass);
+    std::cout << std::endl << theSystem.getMolecule(0)->internalOriginPosition() << std::endl;
+
+    molconv::Molecule testmol = *theSystem.getMolecule(0);
+    testmol.setOrigin(molconv::kCenterOfMass);
+    std::cout << std::endl << testmol.internalOriginPosition() << std::endl;
+
+
+    theMolecule.setOrigin(molconv::kCenterOfMass);
+    std::cout << std::endl << theMolecule.internalOriginPosition() << std::endl;
+
+    qDebug() << "this is a qt debug message";
 
     return 0;
 }
