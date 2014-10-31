@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(molconv)
 
+# Do not allow in-source builds:
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+  message(FATAL_ERROR "In-source builds are not allowed.")
+endif()
+
 set(CMAKE_MODULE_PATH ${molconv_SOURCE_DIR}/cmake)
 
 # Update/build translations
