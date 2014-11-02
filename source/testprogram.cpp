@@ -30,36 +30,48 @@
 
 int main(int argc, char *argv[])
 {
-#ifdef HERTHA_DEBUG
-    std::cout << "this is the main function.\n";
-#endif
-    std::string molFileName = argv[1];
+    std::string firstFileName = argv[1];
+    std::string secondFileName = argv[2];
 
-    chemkit::MoleculeFile molFile(molFileName);
-    molFile.read();
+    chemkit::MoleculeFile firstMolFile(firstFileName);
+    firstMolFile.read();
+    chemkit::MoleculeFile secondMolFile(secondFileName);
+    secondMolFile.read();
 
     molconv::System theSystem;
 
-    molconv::Molecule theMolecule(*(molFile.molecule()));
+    //molconv::Molecule theMolecule(*(firstMolFile.molecule()));
 
-    //theSystem.addMolecule(molFile.molecule());
-    theSystem.addMolecule(boost::make_shared<molconv::Molecule>(theMolecule));
+    {
+        molconv::Molecule firstMol(*(firstMolFile.molecule()));
+        molconv::Molecule secondMol(*(secondMolFile.molecule()));
+
+        theSystem.addMolecule(&firstMol);
+        theSystem.addMolecule(&secondMol);
+    }
+
+    //theSystem.addMolecule(boost::dynamic_pointer_cast<molconv::Molecule>(firstMolFile.molecule()).get());
+    //theSystem.addMolecule(boost::dynamic_pointer_cast<molconv::Molecule>(secondMolFile.molecule()).get());
+    //theSystem.addMolecule(&theMolecule);
     //theSystem.addMolecule(boost::dynamic_pointer_cast<molconv::Molecule>(molFile.molecule()));
 
     std::cout << "the system contains " << theSystem.size() << " molecules.\n";
 
-    theSystem.getMolecule(0)->setOrigin(molconv::kCenterOfMass);
+    theSystem.getMolecule(0)->setOrigin(molconv::kCenterOfGeometry);
+    theSystem.getMolecule(1)->setOrigin(molconv::kCenterOfMass);
+
     std::cout << std::endl << theSystem.getMolecule(0)->internalOriginPosition() << std::endl;
+    std::cout << std::endl << theSystem.getMolecule(1)->internalOriginPosition() << std::endl;
 
-    molconv::Molecule testmol = *theSystem.getMolecule(0);
-    testmol.setOrigin(molconv::kCenterOfMass);
-    std::cout << std::endl << testmol.internalOriginPosition() << std::endl;
+    //molconv::Molecule testmol = *(theSystem.getMolecule(0));
+    //testmol.setOrigin(molconv::kCenterOfMass);
+    //std::cout << std::endl << testmol.internalOriginPosition() << std::endl;
 
 
-    theMolecule.setOrigin(molconv::kCenterOfMass);
-    std::cout << std::endl << theMolecule.internalOriginPosition() << std::endl;
+    //theMolecule.setOrigin(molconv::kCenterOfMass);
+    //std::cout << std::endl << theMolecule.internalOriginPosition() << std::endl;
 
-    qDebug() << "this is a qt debug message";
+    //qDebug() << "this is a qt debug message";
 
     return 0;
 }

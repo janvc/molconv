@@ -64,13 +64,13 @@ namespace molconv
     ///
     /// returns a boost pointer to the molecule at \p index
     ///
-    boost::shared_ptr<Molecule> System::getMolecule(const size_t index) const
+    Molecule *System::getMolecule(const size_t index) const
     {
         qDebug() << "entering System::getMolecule()";
         if (index >= size())
             throw std::invalid_argument("index out of range.\n");
 
-        boost::shared_ptr<Molecule> molptr = boost::make_shared<Molecule>(d->m_molecules.at(index));
+        Molecule *molptr = &(d->m_molecules.at(index));
         //return boost::make_shared<Molecule>(d->m_molecules.at(index));
         return molptr;
     }
@@ -81,7 +81,7 @@ namespace molconv
     ///
     /// adds a new molecule to the system
     ///
-    void System::addMolecule(const boost::shared_ptr<Molecule> newMolecule)
+    void System::addMolecule(Molecule *newMolecule)
     {
         qDebug() << "entering System::addMolecule()";
         d->m_molecules.push_back(*newMolecule);
