@@ -21,6 +21,13 @@ namespace molconv
     {
     }
 
+    ///
+    /// \brief MoleculeGroup::~MoleculeGroup
+    ///
+    /// this is the default destructor
+    ///
+    MoleculeGroup::~MoleculeGroup() {}
+
 
 
 } // namespace molconv

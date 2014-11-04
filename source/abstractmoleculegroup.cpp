@@ -43,6 +43,13 @@ namespace molconv
     }
 
     ///
+    /// \brief abstractMoleculeGroup::~abstractMoleculeGroup
+    ///
+    /// the default destructor
+    ///
+    abstractMoleculeGroup::~abstractMoleculeGroup() {}
+
+    ///
     /// \brief abstractMoleculeGroup::size
     /// \return
     ///

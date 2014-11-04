@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
         molconv::Molecule firstMol(*(firstMolFile.molecule()));
         molconv::Molecule secondMol(*(secondMolFile.molecule()));
 
-        theSystem.addMolecule(&firstMol);
-        theSystem.addMolecule(&secondMol);
+        theSystem.addMolecule(boost::make_shared<molconv::Molecule>(firstMol));
+        theSystem.addMolecule(boost::make_shared<molconv::Molecule>(secondMol));
     }
 
     //theSystem.addMolecule(boost::dynamic_pointer_cast<molconv::Molecule>(firstMolFile.molecule()).get());

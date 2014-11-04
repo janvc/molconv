@@ -50,6 +50,13 @@ namespace molconv
     }
 
     ///
+    /// \brief MoleculeStack::~MoleculeStack
+    ///
+    /// the default destructor of MoleculeStack
+    ///
+    MoleculeStack::~MoleculeStack() {}
+
+    ///
     /// \brief MoleculeStack::ReferenceMolecule
     /// \return
     ///

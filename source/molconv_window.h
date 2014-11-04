@@ -45,7 +45,7 @@ public:
     MolconvWindow(QMainWindow *parent = 0);
     ~MolconvWindow();
     void add_molecule();
-    void add_molecule(molconv::Molecule temp_mol);
+    void add_molecule(molconv::moleculePtr temp_mol);
     void clean_up(const int mol_nr, const molconv::Config &config);
     void set_intbasis(const int mol_nr, const molconv::Config &config);
 
@@ -67,8 +67,7 @@ signals:
 private:
     Ui::MolconvWindow *ui;
     chemkit::MoleculeFile *the_molfile;
-    std::vector<molconv::Molecule> the_molecule_objects;
-    std::vector<boost::shared_ptr<molconv::Molecule> > the_molecule_pointers;
+    std::vector<molconv::moleculePtr> the_molecule_pointers;
     std::vector<chemkit::GraphicsMoleculeItem *> the_graph_items;
     OpenDialog *open_dialog;
 };

@@ -24,6 +24,7 @@
 
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
+    #include<boost/shared_ptr.hpp>
 #endif
 #include<QDialog>
 #include<QtWidgets>
@@ -42,7 +43,7 @@ public:
     OpenDialog(QWidget *parent = 0);
     ~OpenDialog();
     void openFile(const QString &filename);
-    molconv::Molecule getMol();
+    molconv::moleculePtr getMol();
     molconv::origin getOrigin();
     molconv::basis getBasis();
 
@@ -54,7 +55,7 @@ private slots:
 
 private:
     Ui::OpenDialog *ui;
-    molconv::Molecule the_molecule;
+    molconv::moleculePtr the_molecule;
 };
 
 #endif // OPEN_DIALOG_H

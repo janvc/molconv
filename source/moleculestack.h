@@ -22,6 +22,7 @@
 #ifndef MOLECULESTACK_H
 #define MOLECULESTACK_H
 
+#include<boost/scoped_ptr.hpp>
 #include"abstractmoleculegroup.h"
 #include"types.h"
 
@@ -33,6 +34,7 @@ namespace molconv
     {
     public:
         MoleculeStack();
+        ~MoleculeStack();
 
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector);
 
@@ -54,7 +56,7 @@ namespace molconv
         void setLateralY(const size_t index, const double newY);
 
     private:
-        MoleculeStackPrivate *d;
+        boost::scoped_ptr<MoleculeStackPrivate> d;
     };
 
 } // namespace molconv

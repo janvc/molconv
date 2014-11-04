@@ -23,6 +23,7 @@
 #define ABSTRACTMOLECULEGROUP_H
 
 #include<boost/shared_ptr.hpp>
+#include<boost/scoped_ptr.hpp>
 #include"molecule.h"
 
 namespace molconv
@@ -33,6 +34,7 @@ namespace molconv
     {
     public:
         abstractMoleculeGroup();
+        ~abstractMoleculeGroup();
 
         size_t size() const;
 
@@ -51,7 +53,7 @@ namespace molconv
         void removeMolecule(const size_t index);
 
     private:
-        abstractMoleculeGroupPrivate *d;
+        boost::scoped_ptr<abstractMoleculeGroupPrivate> d;
     };
 
 } // namespace molconv

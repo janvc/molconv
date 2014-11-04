@@ -69,23 +69,22 @@ void MolconvWindow::openFile(const QString &filename)
     if (this->the_molfile->moleculeCount() > 0)
     {
         chemkit::Molecule temp_mol = *this->the_molfile->molecule();
-        this->the_molecule_objects.push_back(temp_mol);
+        //this->the_molecule_objects.push_back(temp_mol);
     }
 }
 
 void MolconvWindow::add_molecule()
 {
-    this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
+    //this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     this->the_graph_items.push_back(new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get()));
     this->ui->molconv_graphicsview->addItem(this->the_graph_items.back());
     ui->molconv_graphicsview->update();
     emit new_molecule(this->the_molecule_pointers.back().get());
 }
 
-void MolconvWindow::add_molecule(molconv::Molecule temp_mol)
+void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
-    this->the_molecule_objects.push_back(temp_mol);
-    this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
+    this->the_molecule_pointers.push_back(temp_mol);
     this->the_graph_items.push_back(new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get()));
     this->ui->molconv_graphicsview->addItem(this->the_graph_items.back());
     ui->molconv_graphicsview->update();
@@ -153,7 +152,7 @@ void MolconvWindow::openDialog()
 
 void MolconvWindow::get_molecule_Dialog()
 {
-    molconv::Molecule temp_mol = this->open_dialog->getMol();
-    temp_mol.cleanUp();
+    boost::shared_ptr<molconv::Molecule> temp_mol = this->open_dialog->getMol();
+    temp_mol->cleanUp();
     add_molecule(temp_mol);
 }

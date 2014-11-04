@@ -69,7 +69,7 @@ void OpenDialog::openFile(const QString &filename)
         ui->origin->setEnabled(true);
         ui->basis->setEnabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-        this->the_molecule = molconv::Molecule(temp_mol);
+        this->the_molecule.reset(new molconv::Molecule(temp_mol));
     }
 }
 
@@ -96,22 +96,22 @@ void OpenDialog::on_coa_toggled(bool checked)
        ui->an->setEnabled(false);
 }
 
-molconv::Molecule OpenDialog::getMol()
+molconv::moleculePtr OpenDialog::getMol()
 {
     if(ui->atoms->isChecked() && !ui->coa->isChecked())
     {
-        this->the_molecule.setOrigin(getOrigin());
-        this->the_molecule.setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
+        this->the_molecule->setOrigin(getOrigin());
+        this->the_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
     }
     else if(ui->atoms->isChecked() && ui->coa->isChecked())
     {
-        this->the_molecule.setOrigin(getOrigin(), ui->an->value());
-        this->the_molecule.setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
+        this->the_molecule->setOrigin(getOrigin(), ui->an->value());
+        this->the_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
     }
     else if(!ui->atoms->isChecked() && !ui->coa->isChecked())
     {
-        this->the_molecule.setOrigin(getOrigin());
-        this->the_molecule.setBasis(getBasis());
+        this->the_molecule->setOrigin(getOrigin());
+        this->the_molecule->setBasis(getBasis());
     }
 
     return this->the_molecule;
