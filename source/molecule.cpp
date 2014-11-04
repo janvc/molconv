@@ -107,6 +107,13 @@ namespace molconv
     }
 
     ///
+    /// \brief Molecule::~Molecule
+    ///
+    /// The default destructor
+    ///
+    Molecule::~Molecule() {}
+
+    ///
     /// \brief Molecule::internalOrigin
     /// \return
     ///

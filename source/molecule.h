@@ -25,6 +25,7 @@
 #ifndef Q_MOC_RUN
     #include<chemkit/molecule.h>
     #include<chemkit/atom.h>
+    #include<boost/scoped_ptr.hpp>
 #endif
 #include<Eigen/Core>
 #include "types.h"
@@ -41,6 +42,7 @@ namespace molconv
         Molecule(const chemkit::Molecule &BaseMolecule);
         Molecule(const boost::shared_ptr<chemkit::Molecule> &BaseMolPtr);
         Molecule(const Molecule &originalMolecule);
+        ~Molecule();
 
         // info about the molecular internal basis:
         origin internalOrigin() const;
@@ -79,7 +81,7 @@ namespace molconv
         Eigen::Matrix3d calcInertiaEigenvectors() const;
         Eigen::Vector3d calcCovarianceEigenvalues() const;
         Eigen::Matrix3d calcCovarianceEigenvectors() const;
-        MoleculePrivate *d;
+        boost::scoped_ptr<MoleculePrivate> d;
     };
 
 
