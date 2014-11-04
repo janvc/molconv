@@ -24,6 +24,7 @@
 
 #include<vector>
 #include<boost/shared_ptr.hpp>
+#include<boost/scoped_ptr.hpp>
 #include "molecule.h"
 
 namespace molconv
@@ -34,14 +35,15 @@ namespace molconv
     {
     public:
         System();
+        ~System();
         size_t size() const;
-        Molecule *getMolecule(const size_t index) const;
+        moleculePtr getMolecule(const size_t index) const;
 
-        void addMolecule(Molecule *newMolecule);
+        void addMolecule(moleculePtr newMolecule);
         void removeMolecule(const size_t index);
 
     private:
-        SystemPrivate *d;
+        boost::scoped_ptr<SystemPrivate> d;
     };
 
 } // namespace molconv

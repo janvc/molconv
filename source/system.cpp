@@ -31,7 +31,7 @@ namespace molconv
     class SystemPrivate
     {
     public:
-        std::vector<Molecule> m_molecules;
+        std::vector<moleculePtr> m_molecules;
     };
 
     ///
@@ -46,8 +46,15 @@ namespace molconv
     }
 
     ///
+    /// \brief System::~System
+    ///
+    /// The default destructor of the System class
+    ///
+    System::~System() {}
+
+    ///
     /// \brief System::size
-    /// \return
+    /// \return size_t
     ///
     /// returns the number of molecules in the system
     ///
@@ -60,31 +67,29 @@ namespace molconv
     ///
     /// \brief System::Molecule
     /// \param index
-    /// \return
+    /// \return moleculePtr
     ///
-    /// returns a boost pointer to the molecule at \p index
+    /// returns a shared pointer to the molecule at \p index
     ///
-    Molecule *System::getMolecule(const size_t index) const
+    moleculePtr System::getMolecule(const size_t index) const
     {
         qDebug() << "entering System::getMolecule()";
         if (index >= size())
             throw std::invalid_argument("index out of range.\n");
 
-        Molecule *molptr = &(d->m_molecules.at(index));
-        //return boost::make_shared<Molecule>(d->m_molecules.at(index));
-        return molptr;
+        return d->m_molecules.at(index);
     }
 
     ///
     /// \brief System::addMolecule
     /// \param newMolecule
     ///
-    /// adds a new molecule to the system
+    /// adds a new molecule \p newMolecule to the system
     ///
-    void System::addMolecule(Molecule *newMolecule)
+    void System::addMolecule(moleculePtr newMolecule)
     {
         qDebug() << "entering System::addMolecule()";
-        d->m_molecules.push_back(*newMolecule);
+        d->m_molecules.push_back(newMolecule);
     }
 
     ///
