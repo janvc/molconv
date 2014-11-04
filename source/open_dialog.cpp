@@ -55,8 +55,8 @@ void OpenDialog::openFile(const QString &filename)
         std::cerr << "Could not read molecule file " << filename.toStdString() << std::endl;
         QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(the_molfile->errorString().c_str()));
         delete the_molfile;
-        return;
         ui->settings->setEnabled(false);
+        return;
     }
 
     if (the_molfile->moleculeCount() > 0)
