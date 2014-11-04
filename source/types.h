@@ -24,22 +24,34 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include<boost/shared_ptr.hpp>
+
 namespace molconv {
     /*
      * Center of a molecule
      */
-    enum origin { kCenterOnZero, kCenterOfMass, kCenterOfGeometry, kCenterOnAtom, kCenterBetweenAtoms };
+    enum origin {
+        kCenterOnZero,
+        kCenterOfMass,
+        kCenterOfGeometry,
+        kCenterOnAtom,
+        kCenterBetweenAtoms
+    };
 
     /*
      * Which vectors to use for new internal basis
      */
-    enum basis { kIdentityVectors, kCovarianceVectors, kInertiaVectors, kVectorsFromAtoms };
+    enum basis {
+        kIdentityVectors,
+        kCovarianceVectors,
+        kInertiaVectors,
+        kVectorsFromAtoms
+    };
 
     /*
      * Which molecule-specific vector is parallel in a stack
      */
-    enum parallelVector
-    {
+    enum parallelVector {
         kInertVSmall,
         kInertVMedium,
         kInertVLarge,
@@ -48,6 +60,10 @@ namespace molconv {
         kCovarVLarge,
         kAtoms
     };
+
+    // pointer to a molecule
+    class Molecule;
+    typedef boost::shared_ptr<Molecule> moleculePtr;
 } // namespace molconv
 
 #endif // TYPES_H
