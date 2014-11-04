@@ -127,6 +127,8 @@ molconv::origin OpenDialog::getOrigin()
         return molconv::kCenterOfGeometry;
     else if(ui->coa->isChecked())
         return molconv::kCenterOnAtom;
+    else
+        return molconv::kCenterOnZero;
 }
 
 molconv::basis OpenDialog::getBasis()
@@ -139,6 +141,8 @@ molconv::basis OpenDialog::getBasis()
         return molconv::kInertiaVectors;
     else if(ui->atoms->isChecked())
         return molconv::kVectorsFromAtoms;
+    else
+        return molconv::kIdentityVectors;
 }
 
 void OpenDialog::on_atoms_toggled(bool checked)
