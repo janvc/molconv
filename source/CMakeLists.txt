@@ -66,7 +66,7 @@ qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
 qt5_add_resources(RCC_SOURCES ${RESOURCES})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -ggdb -O0 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 add_executable(molconv main.cpp ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
