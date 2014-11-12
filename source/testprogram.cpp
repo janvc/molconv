@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
 
     std::string firstFileName = argv[1];
     std::string secondFileName = argv[2];
+    std::string outputFileName = argv[3];
 
     qDebug("creating and reading the molecule files");
     chemkit::MoleculeFile firstMolFile(firstFileName);
@@ -92,6 +93,20 @@ int main(int argc, char *argv[])
     theStack.addMolecule(theSystem.getMolecule(0), molconv::kInertVLarge);
     qDebug("adding the second molecule to the stack");
     theStack.addMolecule(theSystem.getMolecule(1), molconv::kCovarVMedium);
+
+    qDebug("creating a dummy molecule for the output file");
+    chemkit::Molecule outputDummyMolecule = *(theSystem.getMolecule(0).get());
+
+    qDebug("adding the atoms of the other molecule(s)");
+    for (size_t i = 0; i < theSystem.getMolecule(1)->size(); i++)
+    {
+        outputDummyMolecule.addAtomCopy(theSystem.getMolecule(1)->atom(i));
+    }
+
+    qDebug("creating (and writing to) the output file");
+    chemkit::MoleculeFile outputFile(outputFileName);
+    outputFile.addMolecule(boost::make_shared<chemkit::Molecule>(outputDummyMolecule));
+    outputFile.write();
 
     qDebug("ending the program");
     return 0;
