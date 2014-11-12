@@ -21,6 +21,7 @@
 
 #include<algorithm>
 #include<stdexcept>
+#include<QDebug>
 #include "abstractmoleculegroup.h"
 
 
@@ -40,6 +41,7 @@ namespace molconv
     abstractMoleculeGroup::abstractMoleculeGroup()
         : d(new abstractMoleculeGroupPrivate)
     {
+        qDebug("this is the constructor of abstractMoleculeGroup");
     }
 
     ///
@@ -57,6 +59,7 @@ namespace molconv
     ///
     size_t abstractMoleculeGroup::size() const
     {
+        qDebug("entering abstractMoleculeGroup::size()");
         return d->m_molecules.size();
     }
 
@@ -70,6 +73,7 @@ namespace molconv
     ///
     double abstractMoleculeGroup::Distance(const size_t firstMolecule, const size_t secondMolecule) const
     {
+        qDebug("entering abstractMoleculeGroup::Distance()");
         return DistanceVector(firstMolecule, secondMolecule).norm();
     }
 
@@ -84,6 +88,7 @@ namespace molconv
     ///
     Eigen::Vector3d abstractMoleculeGroup::DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const
     {
+        qDebug("entering abstractMoleculeGroup::DistanceVector()");
         checkIndex(firstMolecule);
         checkIndex(secondMolecule);
 
@@ -98,6 +103,7 @@ namespace molconv
     ///
     void abstractMoleculeGroup::checkIndex(const size_t index) const
     {
+        qDebug("entering abstractMoleculeGroup::checkIndex()");
         if (index > size())
             throw std::invalid_argument("Index out of range in abstractMoleculeGroup.\n");
     }
@@ -111,6 +117,7 @@ namespace molconv
     ///
     boost::shared_ptr<Molecule> abstractMoleculeGroup::getMolecule(const size_t index) const
     {
+        qDebug("entering abstractMoleculeGroup::getMolecule()");
         return d->m_molecules.at(index);
     }
 
@@ -122,6 +129,7 @@ namespace molconv
     ///
     void abstractMoleculeGroup::addMolecule(const boost::shared_ptr<Molecule> newMolecule)
     {
+        qDebug("entering abstractMoleculeGroup::addMolecule()");
         d->m_molecules.push_back(newMolecule);
     }
 
@@ -133,6 +141,7 @@ namespace molconv
     ///
     void abstractMoleculeGroup::removeMolecule(const size_t index)
     {
+        qDebug("entering abstractMoleculeGroup::removeMolecule()");
         checkIndex(index);
 
         d->m_molecules.erase(d->m_molecules.begin() + index);

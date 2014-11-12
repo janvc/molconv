@@ -1,3 +1,4 @@
+#include<QDebug>
 #include "moleculegroup.h"
 
 namespace molconv
@@ -19,6 +20,7 @@ namespace molconv
         : abstractMoleculeGroup()
         , d(new MoleculeGroupPrivate)
     {
+        qDebug("this is the constructor of MoleculeGroup");
     }
 
     ///
