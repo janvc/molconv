@@ -36,13 +36,14 @@ namespace molconv
         MoleculeStack();
         ~MoleculeStack();
 
-        void addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector);
+        void addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector, const size_t atom1 = 0, const size_t atom2 = 0);
 
         size_t ReferenceMolecule() const;
         void setReferenceMolecule(const size_t newRef);
 
         parallelVector getParallelVector(const size_t index) const;
-        void setParallelVector(const size_t index, const parallelVector newVector);
+        Eigen::Vector3d getParallelVectorDirection(const size_t index) const;
+        void setParallelVector(const size_t index, const parallelVector newVector, const size_t atom1 = 0, const size_t atom2 = 0);
 
         double PlaneDistance(const size_t index) const;
         double LineDistance(const size_t index) const;
