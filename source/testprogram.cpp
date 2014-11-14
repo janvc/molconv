@@ -48,51 +48,32 @@ int main(int argc, char *argv[])
     molconv::System theSystem;
 
 
-    qDebug("trying a new thing");
+    qDebug("adding the molecules to the system");
     theSystem.addMolecule(boost::make_shared<molconv::Molecule>(molconv::Molecule(firstMolFile.molecule())));
     theSystem.addMolecule(boost::make_shared<molconv::Molecule>(molconv::Molecule(secondMolFile.molecule())));
 
 
     std::cout << "the system contains " << theSystem.size() << " molecules.\n";
 
-    qDebug("setting the origins of the molecules");
-    theSystem.getMolecule(0)->setOrigin(molconv::kCenterOfGeometry);
+    qDebug("setting the origins and the bases of the molecules");
+    theSystem.getMolecule(0)->setOrigin(molconv::kCenterOfMass);
     theSystem.getMolecule(1)->setOrigin(molconv::kCenterOfMass);
+    theSystem.getMolecule(0)->setBasis(molconv::kInertiaVectors);
+    theSystem.getMolecule(1)->setBasis(molconv::kInertiaVectors);
 
-    qDebug("writing out the origin positions");
-    std::cout << std::endl << theSystem.getMolecule(0)->internalOriginPosition() << std::endl;
-    std::cout << std::endl << theSystem.getMolecule(1)->internalOriginPosition() << std::endl;
+    qDebug("shifting the second molecule");
+    theSystem.getMolecule(1)->translate(Eigen::Vector3d(0.0, 0.0, 3.0));
 
-    qDebug("creating the group");
-    molconv::MoleculeGroup theGroup;
-
-    qDebug("adding the molecules to the group");
-    theGroup.addMolecule(theSystem.getMolecule(0));
-    theGroup.addMolecule(theSystem.getMolecule(1));
-
-    std::cout << "the group contains " << theGroup.size() << " molecules.\n";
-
-    qDebug("writing out the distance vector");
-    std::cout << std::endl << theGroup.DistanceVector(0, 1) << std::endl;
-
-    qDebug("and the distance");
-    std::cout << std::endl << theGroup.Distance(0, 1) << std::endl;
-
-    qDebug("removing the molecules");
-    theGroup.removeMolecule(0);
-    theGroup.removeMolecule(0);
-
-    std::cout << "the group contains " << theGroup.size() << " molecules.\n";
-
-    qDebug("creating a stack");
+    qDebug("creating the stack");
     molconv::MoleculeStack theStack;
-
-    std::cout << theStack.size() << std::endl;
 
     qDebug("adding the first molecule to the stack");
     theStack.addMolecule(theSystem.getMolecule(0), molconv::kInertVLarge);
     qDebug("adding the second molecule to the stack");
-    theStack.addMolecule(theSystem.getMolecule(1), molconv::kCovarVMedium);
+    theStack.addMolecule(theSystem.getMolecule(1), molconv::kInertVLarge);
+
+    qDebug("setting the distance to 1 angstrom");
+    theStack.setPlaneDistance(1, 1.0);
 
     qDebug("creating a dummy molecule for the output file");
     chemkit::Molecule outputDummyMolecule = *(theSystem.getMolecule(0).get());
