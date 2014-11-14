@@ -19,6 +19,7 @@
  */
 
 #include<iostream>
+#include<QDebug>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
@@ -35,6 +36,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     : QMainWindow(parent)
     , ui(new Ui::MolconvWindow)
 {
+    qDebug("this is the constructor of MolconvWindow");
     this->the_molfile = 0;
 
     ui->setupUi(this);
@@ -51,12 +53,14 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
 MolconvWindow::~MolconvWindow()
 {
+    qDebug("this is the destructor of MolconvWindow");
     delete ui->molconv_graphicsview;
     delete ui;
 }
 
 void MolconvWindow::openFile(const QString &filename)
 {
+    qDebug("entering MolconvWindow::openFile()");
     std::cout << "Opening file " << filename.toStdString() << std::endl;
     this->the_molfile = new chemkit::MoleculeFile(filename.toStdString());
     if (! this->the_molfile->read())
@@ -75,6 +79,7 @@ void MolconvWindow::openFile(const QString &filename)
 
 void MolconvWindow::add_molecule()
 {
+    qDebug("entering MolconvWindow::add_molecule()");
     //this->the_molecule_pointers.push_back(boost::make_shared<molconv::Molecule>(this->the_molecule_objects.back()));
     this->the_graph_items.push_back(new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get()));
     this->ui->molconv_graphicsview->addItem(this->the_graph_items.back());
@@ -84,6 +89,7 @@ void MolconvWindow::add_molecule()
 
 void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
+    qDebug("entering MolconvWindow::add_molecule(temp_mol)");
     this->the_molecule_pointers.push_back(temp_mol);
     this->the_graph_items.push_back(new chemkit::GraphicsMoleculeItem(this->the_molecule_pointers.back().get()));
     this->ui->molconv_graphicsview->addItem(this->the_graph_items.back());
@@ -93,6 +99,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 
 void MolconvWindow::toggle_molecule(int position, bool state)
 {
+    qDebug("entering MolconvWindow::toggle_molecule()");
     if (state) {
         this->the_graph_items.at(position)->show();
         ui->molconv_graphicsview->update();
@@ -104,29 +111,35 @@ void MolconvWindow::toggle_molecule(int position, bool state)
 
 void MolconvWindow::quit()
 {
+    qDebug("entering MolconvWindow::quit()");
     qApp->quit();
 }
 
 void MolconvWindow::closeFile()
 {
+    qDebug("entering MolconvWindow::closeFile()");
 }
 
 void MolconvWindow::clean_up(const int mol_nr, const molconv::Config &config)
 {
+    qDebug("entering MolconvWindow::clean_up()");
     //this->the_molecule_objects.at(mol_nr).clean_up(config);
 }
 
 void MolconvWindow::set_intbasis(const int mol_nr, const molconv::Config &config)
 {
+    qDebug("entering MolconvWindow::set_intbasis()");
     //this->the_molecule_objects.at(mol_nr).set_basis(config);
 }
 
 void MolconvWindow::saveFile()
 {
+    qDebug("entering MolconvWindow::saveFile()");
 }
 
 void MolconvWindow::saveFile(const QString &filename)
 {
+    qDebug("entering MolconvWindow::saveFile(filename)");
     std::cout << "Saving file " << filename.toStdString() << std::endl;
 
     if (this->the_molfile)
@@ -146,12 +159,14 @@ void MolconvWindow::saveFile(const QString &filename)
 
 void MolconvWindow::openDialog()
 {
+    qDebug("entering MolconvWindow::openDialog()");
     this->open_dialog->setModal(true);
     this->open_dialog->exec();
 }
 
 void MolconvWindow::get_molecule_Dialog()
 {
+    qDebug("entering MolconvWindow::get_molecule_Dialog()");
     boost::shared_ptr<molconv::Molecule> temp_mol = this->open_dialog->getMol();
     temp_mol->cleanUp();
     add_molecule(temp_mol);

@@ -19,7 +19,7 @@
  */
 
 
-
+#include<QDebug>
 #include "molecules_dock.h"
 #include "ui_molecules_dock.h"
 
@@ -29,6 +29,7 @@
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::ListOfMolecules) {
+    qDebug("this is the constructor of ListOfMolecules");
 
     main_window = window;
 
@@ -39,9 +40,11 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 }
 
 ListOfMolecules::~ListOfMolecules() {
+    qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
 void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule) {
+    qDebug("entering ListOfMolecules::list_new_molecule()");
     ui->molecule_settings->setRowCount(ui->molecule_settings->rowCount()+1);
 
     int index = ui->molecule_settings->rowCount()-1;
@@ -58,6 +61,7 @@ void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule) {
 
 void ListOfMolecules::checkbox_toggled(int index)
 {
+    qDebug("entering ListOfMolecules::checkbox_toggled()");
     bool state = static_cast<QCheckBox*>(ui->molecule_settings->cellWidget(index,1))->isChecked();
     main_window->toggle_molecule(index,state);
 }
