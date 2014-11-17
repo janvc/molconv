@@ -46,6 +46,7 @@ public:
     molconv::moleculePtr getMol();
     molconv::origin getOrigin();
     molconv::basis getBasis();
+    std::string getMoleculeName();
 
 private slots:
     void on_filedialog_clicked();

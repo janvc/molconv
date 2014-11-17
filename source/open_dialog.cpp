@@ -121,6 +121,8 @@ molconv::moleculePtr OpenDialog::getMol()
         this->the_molecule->setBasis(getBasis());
     }
 
+    the_molecule->setName(getMoleculeName());
+
     return this->the_molecule;
 }
 
@@ -179,4 +181,13 @@ void OpenDialog::atoms_changed(int useless)
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     else
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+}
+
+std::string OpenDialog::getMoleculeName()
+{
+    qDebug("entering OpenDialog::getMoleculeName()");
+
+    QString moleculeName = ui->moleculeName->text();
+
+    return moleculeName.toStdString();
 }
