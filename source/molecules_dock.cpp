@@ -28,40 +28,50 @@
 
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     : QDockWidget(window)
-    , ui(new Ui::ListOfMolecules) {
+    , ui(new Ui::ListOfMolecules)
+{
     qDebug("this is the constructor of ListOfMolecules");
 
     main_window = window;
 
     ui->setupUi(this);
-    connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(list_new_molecule(molconv::Molecule*)));
 
-    checkboxMapper = new QSignalMapper(this);
+    ui->molecule_settings->setHeaderLabels(QStringList() << "Name" << "Visible");
+
+    connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(list_new_molecule(molconv::Molecule*)));
 }
 
-ListOfMolecules::~ListOfMolecules() {
+ListOfMolecules::~ListOfMolecules()
+{
     qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
-void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule) {
+void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule)
+{
     qDebug("entering ListOfMolecules::list_new_molecule()");
-    ui->molecule_settings->setRowCount(ui->molecule_settings->rowCount()+1);
 
-    int index = ui->molecule_settings->rowCount()-1;
+    QTreeWidgetItem *theItem = new QTreeWidgetItem();
+    theItem->setText(0, QString::fromStdString(molecule->name()));
+    theItem->setFlags(theItem->flags() | Qt::ItemIsUserCheckable);
+    theItem->setCheckState(1, Qt::Checked);
+    m_items.append(theItem);
 
-    QCheckBox *new_checkbox = new QCheckBox(this);
-    new_checkbox->setChecked(true);
-    connect(new_checkbox,SIGNAL(clicked()),checkboxMapper,SLOT(map()));
-    checkboxMapper->setMapping(new_checkbox,index);
-    connect(checkboxMapper,SIGNAL(mapped(int)),this,SLOT(checkbox_toggled(int)));
-
-    ui->molecule_settings->setItem(index,0,new QTableWidgetItem(QString::fromStdString(molecule->formula())));
-    ui->molecule_settings->setCellWidget(index,1,new_checkbox);
+    connect(ui->molecule_settings, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
+    ui->molecule_settings->insertTopLevelItems(0, m_items);
 }
 
-void ListOfMolecules::checkbox_toggled(int index)
+void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *item)
 {
     qDebug("entering ListOfMolecules::checkbox_toggled()");
-    bool state = static_cast<QCheckBox*>(ui->molecule_settings->cellWidget(index,1))->isChecked();
+
+    bool state;
+
+    if (item->checkState(1) == Qt::Checked)
+        state = true;
+    else
+        state = false;
+
+    int index = m_items.indexOf(item);
+
     main_window->toggle_molecule(index,state);
 }

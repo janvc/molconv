@@ -31,7 +31,8 @@ namespace Ui
 
 class MolconvWindow;
 
-class ListOfMolecules : public QDockWidget {
+class ListOfMolecules : public QDockWidget
+{
     Q_OBJECT
 
     public:
@@ -40,13 +41,12 @@ class ListOfMolecules : public QDockWidget {
 
     private slots:
         void list_new_molecule(molconv::Molecule *molecule);
-        void checkbox_toggled(int index);
+        void checkbox_toggled(QTreeWidgetItem *item);
 
     private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *main_window;
-        QListWidgetItem *list_item;
-        QSignalMapper *checkboxMapper;
+        QList<QTreeWidgetItem *> m_items;
 };
 
 
