@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>19</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -38,9 +38,32 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen"/>
+    <addaction name="actionImport_Molecule"/>
     <addaction name="actionQuit"/>
    </widget>
+   <widget class="QMenu" name="menuMolecule">
+    <property name="title">
+     <string>Molecule</string>
+    </property>
+    <addaction name="actionDuplicate"/>
+   </widget>
+   <widget class="QMenu" name="menuGrouop">
+    <property name="title">
+     <string>Group</string>
+    </property>
+    <addaction name="actionNew_Molecule_Group"/>
+    <addaction name="actionNew_Molecule_Stack"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuMolecule"/>
+   <addaction name="menuGrouop"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -51,6 +74,31 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionImport_Molecule">
+   <property name="text">
+    <string>Import Molecule</string>
+   </property>
+  </action>
+  <action name="actionDuplicate">
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+  </action>
+  <action name="actionNew_Molecule_Group">
+   <property name="text">
+    <string>New Molecule Group</string>
+   </property>
+  </action>
+  <action name="actionNew_Molecule_Stack">
+   <property name="text">
+    <string>New Molecule Stack</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

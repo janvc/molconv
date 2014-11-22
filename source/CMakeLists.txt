@@ -40,6 +40,7 @@ file(GLOB SOURCES
     molecule.cpp
     moleculegroup.cpp
     molecules_dock.cpp
+    moleculesettings.cpp
     moleculestack.cpp
     open_dialog.cpp
     system.cpp

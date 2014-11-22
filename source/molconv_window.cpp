@@ -29,6 +29,7 @@
 #include "molconv_window.h"
 #include "ui_molconv_window.h"
 #include "molecules_dock.h"
+#include "moleculesettings.h"
 #include "open_dialog.h"
 
 
@@ -42,13 +43,16 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->setupUi(this);
     this->open_dialog = new OpenDialog(this);
     connect(this->open_dialog, SIGNAL(accepted()), this, SLOT(get_molecule_Dialog()));
-    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openDialog()));
+    connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(openDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
 
-    QDockWidget *the_dockwidget;
+    QDockWidget *m_ListOfMolecules;
+    QDockWidget *m_MoleculeSettings;
 
-    the_dockwidget = new ListOfMolecules(this);
-    addDockWidget(Qt::LeftDockWidgetArea, the_dockwidget);
+    m_ListOfMolecules = new ListOfMolecules(this);
+    m_MoleculeSettings = new MoleculeSettings(this);
+    addDockWidget(Qt::BottomDockWidgetArea, m_ListOfMolecules);
+    addDockWidget(Qt::LeftDockWidgetArea, m_MoleculeSettings);
 }
 
 MolconvWindow::~MolconvWindow()
