@@ -23,6 +23,8 @@
 #include "moleculesettings.h"
 #include "ui_moleculesettings.h"
 
+#include "molconv_window.h"
+
 MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::MoleculeSettings)
