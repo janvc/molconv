@@ -86,7 +86,7 @@ namespace molconv
     ///
     /// adds a new molecule \p newMolecule to the system
     ///
-    void System::addMolecule(moleculePtr newMolecule)
+    void System::addMolecule(const moleculePtr newMolecule)
     {
         qDebug() << "entering System::addMolecule()";
         d->m_molecules.push_back(newMolecule);
