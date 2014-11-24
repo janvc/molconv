@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
         if (config.output_exists())
         {
-            the_window.saveFile(QString::fromStdString(config.outputfile()));
+            the_window.saveFile(0, QString::fromStdString(config.outputfile()));
         }
     }
 

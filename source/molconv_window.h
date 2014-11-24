@@ -27,8 +27,9 @@
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
 #endif
-#include "molecule.h"
+//#include "molecule.h"
 #include "config.h"
+#include "system.h"
 #include "open_dialog.h"
 
 
@@ -51,12 +52,12 @@ public:
 
 public slots:
     void openFile(const QString &filename);
-    void saveFile(const QString &filename);
+    void saveFile(const size_t index, const QString &filename);
     void saveFile();
-    void closeFile();
+//    void closeFile();
     void quit();
-    void get_molecule_Dialog();
-    void openDialog();
+    void getMoleculeDialog();
+    void startOpenDialog();
     void toggle_molecule(int position, bool state);
 
 private slots:
@@ -66,10 +67,13 @@ signals:
 
 private:
     Ui::MolconvWindow *ui;
-    chemkit::MoleculeFile *the_molfile;
-    std::vector<molconv::moleculePtr> the_molecule_pointers;
-    std::vector<chemkit::GraphicsMoleculeItem *> the_graph_items;
-    OpenDialog *open_dialog;
+    OpenDialog *m_OpenDialog;
+
+    QDockWidget *m_ListOfMolecules;
+    QDockWidget *m_MoleculeSettings;
+
+    molconv::System m_system;
+    std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
 };
 
 #endif /* MOLCONV_WINDOW_H_ */
