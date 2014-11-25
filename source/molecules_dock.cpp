@@ -36,7 +36,7 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 
     ui->setupUi(this);
 
-    ui->molecule_settings->setHeaderLabels(QStringList() << "Name" << "Visible");
+    ui->molecule_settings->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
 
     connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(list_new_molecule(molconv::Molecule*)));
 }
@@ -51,9 +51,13 @@ void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule)
     qDebug("entering ListOfMolecules::list_new_molecule()");
 
     QTreeWidgetItem *theItem = new QTreeWidgetItem();
+
     theItem->setText(0, QString::fromStdString(molecule->name()));
+    theItem->setText(1, QString::fromStdString(molecule->formula()));
+    theItem->setText(2, QString::number(molecule->mass()));
+
     theItem->setFlags(theItem->flags() | Qt::ItemIsUserCheckable);
-    theItem->setCheckState(1, Qt::Checked);
+    theItem->setCheckState(3, Qt::Checked);
     m_items.append(theItem);
 
     connect(ui->molecule_settings, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
