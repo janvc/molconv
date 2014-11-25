@@ -189,5 +189,8 @@ std::string OpenDialog::getMoleculeName()
 
     QString moleculeName = ui->moleculeName->text();
 
+    if (moleculeName.isEmpty())
+        moleculeName = ui->filename->text().split("/").back();
+
     return moleculeName.toStdString();
 }
