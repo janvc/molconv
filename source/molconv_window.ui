@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -46,6 +46,8 @@
      <string>Molecule</string>
     </property>
     <addaction name="actionDuplicate"/>
+    <addaction name="actionSet_internal_basis"/>
+    <addaction name="actionProperties"/>
    </widget>
    <widget class="QMenu" name="menuGrouop">
     <property name="title">
@@ -99,6 +101,16 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionProperties">
+   <property name="text">
+    <string>Properties</string>
+   </property>
+  </action>
+  <action name="actionSet_internal_basis">
+   <property name="text">
+    <string>Set Internal Basis</string>
    </property>
   </action>
  </widget>
