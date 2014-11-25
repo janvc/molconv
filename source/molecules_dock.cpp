@@ -70,7 +70,7 @@ void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *item)
 
     bool state;
 
-    if (item->checkState(1) == Qt::Checked)
+    if (item->checkState(3) == Qt::Checked)
         state = true;
     else
         state = false;
