@@ -45,13 +45,11 @@ class MolconvWindow : public QMainWindow
 public:
     MolconvWindow(QMainWindow *parent = 0);
     ~MolconvWindow();
-    void add_molecule();
     void add_molecule(molconv::moleculePtr temp_mol);
     void clean_up(const int mol_nr, const molconv::Config &config);
     void set_intbasis(const int mol_nr, const molconv::Config &config);
 
 public slots:
-    void openFile(const QString &filename);
     void saveFile(const size_t index, const QString &filename);
     void saveFile();
 //    void closeFile();
@@ -59,6 +57,7 @@ public slots:
     void getMoleculeDialog();
     void startOpenDialog();
     void toggle_molecule(int position, bool state);
+    void about();
 
 private slots:
 

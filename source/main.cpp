@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel
+ * Copyright 2014 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -18,52 +18,13 @@
  *
  */
 
-#include<iostream>
-#include<boost/make_shared.hpp>
-#include "utilities.h"
-#include "molecule.h"
-#include "config.h"
 #include "molconv_window.h"
-
 
 int main(int argc, char *argv[])
 {
-    print_header();
-
-    molconv::Config config(argc, argv);
-
-    if (config.help_wanted())
-    {
-        config.print_help();
-        return 0;
-    }
-
     QApplication app(argc, argv);
     MolconvWindow the_window;
+    the_window.show();
 
-    if (config.input_exists())
-    {
-
-        for (int i = 0; i < config.get_NumberOfInputs(); i++)
-        {
-            the_window.openFile(QString::fromStdString(config.inputfile(i)));
-            the_window.set_intbasis(i, config);
-            the_window.clean_up(i, config);
-            the_window.add_molecule();
-        }
-
-        if (config.output_exists())
-        {
-            the_window.saveFile(0, QString::fromStdString(config.outputfile()));
-        }
-    }
-
-    if (config.gui_wanted())
-    {
-        std::cout << "GUI wanted." << std::endl;
-        the_window.show();
-
-        return app.exec();
-    }
-    return 0;
+    return app.exec();
 }
