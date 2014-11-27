@@ -23,6 +23,8 @@
 
 #include <QDockWidget>
 
+#include "molconv_window.h"
+
 namespace Ui
 {
     class MoleculeSettings;
@@ -38,6 +40,8 @@ public:
     //explicit MoleculeSettings(MolconvWindow *window);
     MoleculeSettings(MolconvWindow *window);
     ~MoleculeSettings();
+
+    void setValues(const molconv::moleculePtr the_molecule);
 
 private:
     Ui::MoleculeSettings *ui;

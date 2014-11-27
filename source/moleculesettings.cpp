@@ -23,7 +23,6 @@
 #include "moleculesettings.h"
 #include "ui_moleculesettings.h"
 
-#include "molconv_window.h"
 
 MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     : QDockWidget(window)
@@ -34,10 +33,16 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     main_window = window;
 
     ui->setupUi(this);
+
+    connect(main_window, SIGNAL(new_molecule(molconv::moleculePtr)), SLOT(setValues(molconv::moleculePtr)));
 }
 
 MoleculeSettings::~MoleculeSettings()
 {
     qDebug("this is the destructor of MoleculeSettings");
     delete ui;
+}
+
+void MoleculeSettings::setValues(const molconv::moleculePtr the_molecule)
+{
 }
