@@ -48,8 +48,9 @@
     <addaction name="actionDuplicate"/>
     <addaction name="actionSet_internal_basis"/>
     <addaction name="actionProperties"/>
+    <addaction name="actionAdd_To_Group"/>
    </widget>
-   <widget class="QMenu" name="menuGrouop">
+   <widget class="QMenu" name="menuGroup">
     <property name="title">
      <string>Group</string>
     </property>
@@ -64,7 +65,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMolecule"/>
-   <addaction name="menuGrouop"/>
+   <addaction name="menuGroup"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -111,6 +112,11 @@
   <action name="actionSet_internal_basis">
    <property name="text">
     <string>Set Internal Basis</string>
+   </property>
+  </action>
+  <action name="actionAdd_To_Group">
+   <property name="text">
+    <string>Add To Group</string>
    </property>
   </action>
  </widget>

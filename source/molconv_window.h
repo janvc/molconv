@@ -27,9 +27,12 @@
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
 #endif
-//#include "molecule.h"
+
 #include "config.h"
 #include "system.h"
+#include "moleculegroup.h"
+#include "moleculestack.h"
+
 #include "open_dialog.h"
 
 
@@ -58,6 +61,8 @@ public slots:
     void startOpenDialog();
     void toggle_molecule(int position, bool state);
     void about();
+    void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
+    void addMoleculeToGroup();
 
 private slots:
 
@@ -72,6 +77,9 @@ private:
     QDockWidget *m_MoleculeSettings;
 
     molconv::System m_system;
+
+    std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
+    std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
     std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
 };
 

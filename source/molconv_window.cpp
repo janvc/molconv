@@ -42,10 +42,13 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     ui->setupUi(this);
     m_OpenDialog = new OpenDialog(this);
+
     connect(m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
+
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
+    connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateMolecule()));
 
     m_ListOfMolecules = new ListOfMolecules(this);
     m_MoleculeSettings = new MoleculeSettings(this);
@@ -126,4 +129,18 @@ void MolconvWindow::getMoleculeDialog()
     boost::shared_ptr<molconv::Molecule> temp_mol = m_OpenDialog->getMol();
     temp_mol->cleanUp();
     add_molecule(temp_mol);
+}
+
+void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
+{
+    qDebug("entering MolconvWindow::DuplicateMolecule()");
+
+    m_system.addMolecule(oldMolecule);
+    m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(m_system.getMolecule(m_system.size() - 1).get()));
+    ui->molconv_graphicsview->update();
+}
+
+void MolconvWindow::addMoleculeToGroup()
+{
+    qDebug("entering MolconvWindow::addMoleculeToGroup()");
 }
