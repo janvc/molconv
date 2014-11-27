@@ -39,6 +39,13 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     ui->molecule_settings->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
 
     connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(list_new_molecule(molconv::Molecule*)));
+
+    QMenu *contextMenu = new QMenu(ui->molecule_settings);
+    ui->molecule_settings->setContextMenuPolicy(Qt::ActionsContextMenu);
+    QAction *addElement = new QAction("add element", contextMenu);
+    QAction *deleteElement = new QAction("delete element", contextMenu);
+    ui->molecule_settings->addAction(addElement);
+    ui->molecule_settings->addAction(deleteElement);
 }
 
 ListOfMolecules::~ListOfMolecules()
