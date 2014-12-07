@@ -22,7 +22,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#include "types.h"
+#include "include/types.h"
 #ifndef Q_MOC_RUN
     #include<boost/program_options.hpp>
 #endif

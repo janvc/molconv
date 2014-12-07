@@ -20,7 +20,7 @@
 
 #include<iostream>
 #include "config.h"
-#include "types.h"
+//#include "types.h"
 
 namespace molconv {
     Config::Config(int argc, char *argv[]) {

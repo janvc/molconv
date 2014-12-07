@@ -29,9 +29,9 @@
 #endif
 
 #include "config.h"
-#include "system.h"
-#include "moleculegroup.h"
-#include "moleculestack.h"
+#include "molconv-system/system.h"
+#include "molconv-moleculegroup/moleculegroup.h"
+#include "molconv-moleculegroup/moleculestack.h"
 
 #include "open_dialog.h"
 

@@ -24,9 +24,9 @@
 #include<chemkit/moleculefile.h>
 #include<boost/make_shared.hpp>
 #include<QDebug>
-#include"system.h"
-#include"moleculegroup.h"
-#include"moleculestack.h"
+#include"molconv-system/system.h"
+#include"molconv-moleculegroup/moleculegroup.h"
+#include"molconv-moleculegroup/moleculestack.h"
 //#include"types.h"
 
 

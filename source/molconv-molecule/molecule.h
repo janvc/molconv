@@ -28,7 +28,7 @@
     #include<boost/scoped_ptr.hpp>
 #endif
 #include<Eigen/Core>
-#include "types.h"
+#include "../include/types.h"
 
 namespace molconv
 {

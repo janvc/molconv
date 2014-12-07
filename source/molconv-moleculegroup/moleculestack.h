@@ -24,7 +24,7 @@
 
 #include<boost/scoped_ptr.hpp>
 #include"abstractmoleculegroup.h"
-#include"types.h"
+#include"../include/types.h"
 
 namespace molconv
 {
