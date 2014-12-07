@@ -38,7 +38,7 @@ set(SOURCES
     exceptions.cpp
     main.cpp
     molconv_window.cpp
-    molecules_dock.cpp
+    listofmolecules.cpp
     moleculesettings.cpp
     open_dialog.cpp
     utilities.cpp
@@ -46,14 +46,14 @@ set(SOURCES
 
 set(MOC_HEADERS
     molconv_window.h
-    molecules_dock.h
+    listofmolecules.h
     moleculesettings.h
     open_dialog.h
 )
 
 set(UI_FORMS
     molconv_window.ui
-    molecules_dock.ui
+    listofmolecules.ui
     moleculesettings.ui
     open_dialog.ui
 )

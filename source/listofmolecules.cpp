@@ -20,8 +20,8 @@
 
 
 #include<QDebug>
-#include "molecules_dock.h"
-#include "ui_molecules_dock.h"
+#include "listofmolecules.h"
+#include "ui_listofmolecules.h"
 
 #include "molconv_window.h"
 

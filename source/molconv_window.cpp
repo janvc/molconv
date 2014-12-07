@@ -30,7 +30,7 @@
 #include "include/types.h"
 #include "molconv_window.h"
 #include "ui_molconv_window.h"
-#include "molecules_dock.h"
+#include "listofmolecules.h"
 #include "moleculesettings.h"
 #include "open_dialog.h"
 
