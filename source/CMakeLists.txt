@@ -76,19 +76,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPI
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -ggdb -O0 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-#add_subdirectory(molconv)
 add_subdirectory(molconv-molecule)
 add_subdirectory(molconv-moleculegroup)
 add_subdirectory(molconv-system)
 add_subdirectory(include)
-#add_subdirectory(testprogram)
 
-#add_library(molconv-molecule SHARED ${MOLECULESOURCES})
-#add_library(molconv-moleculegroup SHARED ${MOLECULEGROUPSOURCES})
-#add_library(molconv-system SHARED ${SYSTEMSOURCES})
-#target_link_libraries(molconv-molecule ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
-#target_link_libraries(molconv-moleculegroup ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
-#target_link_libraries(molconv-system ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+
 add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
 add_executable(testprogram testprogram.cpp)
 target_link_libraries(molconv molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
