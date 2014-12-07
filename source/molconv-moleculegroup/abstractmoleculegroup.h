@@ -34,6 +34,7 @@ namespace molconv
     {
     public:
         abstractMoleculeGroup();
+        abstractMoleculeGroup(const std::string &name);
         ~abstractMoleculeGroup();
 
         size_t size() const;

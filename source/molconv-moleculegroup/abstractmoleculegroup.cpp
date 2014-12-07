@@ -30,6 +30,7 @@ namespace molconv
     class abstractMoleculeGroupPrivate
     {
     public:
+        std::string m_groupname;
         std::vector<boost::shared_ptr<Molecule> > m_molecules;
     };
 
@@ -41,7 +42,18 @@ namespace molconv
     abstractMoleculeGroup::abstractMoleculeGroup()
         : d(new abstractMoleculeGroupPrivate)
     {
-        qDebug("this is the constructor of abstractMoleculeGroup");
+        qDebug("this is the default constructor of abstractMoleculeGroup");
+
+        d->m_groupname = "";
+    }
+
+
+    abstractMoleculeGroup::abstractMoleculeGroup(const std::string &name)
+        : d(new abstractMoleculeGroupPrivate)
+    {
+        qDebug("this is the second constructor of abstractMoleculeGroup");
+
+        d->m_groupname = name;
     }
 
     ///
