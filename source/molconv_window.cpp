@@ -27,6 +27,7 @@
     #include<boost/make_shared.hpp>
 #endif
 
+#include "include/types.h"
 #include "molconv_window.h"
 #include "ui_molconv_window.h"
 #include "molecules_dock.h"
@@ -116,7 +117,7 @@ void MolconvWindow::saveFile(const size_t index, const QString &filename)
 
 void MolconvWindow::startOpenDialog()
 {
-    qDebug("entering MolconvWindow::openDialog()");
+    qDebug("entering MolconvWindow::startOpenDialog()");
 
     m_OpenDialog->setModal(true);
     m_OpenDialog->exec();
@@ -126,7 +127,7 @@ void MolconvWindow::getMoleculeDialog()
 {
     qDebug("entering MolconvWindow::get_molecule_Dialog()");
 
-    boost::shared_ptr<molconv::Molecule> temp_mol = m_OpenDialog->getMol();
+    molconv::moleculePtr temp_mol = m_OpenDialog->getMol();
     temp_mol->cleanUp();
     add_molecule(temp_mol);
 }

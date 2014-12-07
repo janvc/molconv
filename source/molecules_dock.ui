@@ -49,7 +49,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTreeWidget" name="molecule_settings">
+         <widget class="QTreeWidget" name="system_tree">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>

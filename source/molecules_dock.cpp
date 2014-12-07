@@ -36,16 +36,16 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 
     ui->setupUi(this);
 
-    ui->molecule_settings->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
+    ui->system_tree->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
 
     connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(list_new_molecule(molconv::Molecule*)));
 
-    QMenu *contextMenu = new QMenu(ui->molecule_settings);
-    ui->molecule_settings->setContextMenuPolicy(Qt::ActionsContextMenu);
+    QMenu *contextMenu = new QMenu(ui->system_tree);
+    ui->system_tree->setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction *addElement = new QAction("add element", contextMenu);
     QAction *deleteElement = new QAction("delete element", contextMenu);
-    ui->molecule_settings->addAction(addElement);
-    ui->molecule_settings->addAction(deleteElement);
+    ui->system_tree->addAction(addElement);
+    ui->system_tree->addAction(deleteElement);
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -67,8 +67,8 @@ void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule)
     theItem->setCheckState(3, Qt::Checked);
     m_items.append(theItem);
 
-    connect(ui->molecule_settings, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
-    ui->molecule_settings->insertTopLevelItems(0, m_items);
+    connect(ui->system_tree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
+    ui->system_tree->insertTopLevelItems(0, m_items);
 }
 
 void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *item)
