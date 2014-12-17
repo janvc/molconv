@@ -81,6 +81,28 @@ namespace molconv
     }
 
     ///
+    /// \brief System::MoleculeIndex
+    /// \param theMolecule
+    /// \return
+    ///
+    /// returns the position of the molecule in the vector
+    ///
+    size_t System::MoleculeIndex(const moleculePtr theMolecule)
+    {
+        qDebug("entering System::MoleculeIndex()");
+
+        size_t index;
+
+        for (size_t i = 0; i < size(); i++)
+        {
+            if (getMolecule(i) == theMolecule)
+                index = i;
+        }
+
+        return index;
+    }
+
+    ///
     /// \brief System::addMolecule
     /// \param newMolecule
     ///

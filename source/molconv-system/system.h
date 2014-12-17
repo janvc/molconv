@@ -38,6 +38,7 @@ namespace molconv
         ~System();
         size_t size() const;
         moleculePtr getMolecule(const size_t index) const;
+        size_t MoleculeIndex(const moleculePtr theMolecule);
 
         void addMolecule(const moleculePtr newMolecule);
         void removeMolecule(const size_t index);
