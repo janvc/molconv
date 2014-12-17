@@ -76,6 +76,18 @@ namespace molconv
     }
 
     ///
+    /// \brief abstractMoleculeGroup::name
+    /// \return
+    ///
+    /// return the name of the group
+    ///
+    std::string abstractMoleculeGroup::name() const
+    {
+        qDebug("entering abstractMoleculeGroup::name()");
+        return d->m_groupname;
+    }
+
+    ///
     /// \brief abstractMoleculeGroup::Distance
     /// \param firstMolecule
     /// \param secondMolecule

@@ -38,6 +38,7 @@ namespace molconv
         ~abstractMoleculeGroup();
 
         size_t size() const;
+        std::string name() const;
 
         double EulerTheta(const size_t index) const;
         double EulerPhi(const size_t index) const;
