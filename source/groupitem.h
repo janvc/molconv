@@ -28,10 +28,12 @@ class GroupItem : public QTreeWidgetItem
 {
 public:
     explicit GroupItem(QTreeWidgetItem *parent = 0);
-    explicit GroupItem(QTreeWidgetItem *parent, molconv::abstractMoleculeGroup *theGroup);
+    GroupItem(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup, QTreeWidgetItem *parent = 0);
+
+    boost::shared_ptr<molconv::abstractMoleculeGroup> getGroup();
 
 private:
-    molconv::abstractMoleculeGroup *m_group;
+    boost::shared_ptr<molconv::abstractMoleculeGroup> m_group;
 };
 
 #endif // MOLECULEITEM_H

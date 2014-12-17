@@ -73,6 +73,17 @@ void ListOfMolecules::list_new_molecule(molconv::moleculePtr theMolecule)
     ui->system_tree->addTopLevelItem(theItem);
 }
 
+void ListOfMolecules::list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup)
+{
+    qDebug("entering ListOfMolecules::list_new_group()");
+
+    GroupItem *theItem = new GroupItem(theGroup);
+
+    theItem->setText(0, QString::fromStdString(theGroup->name()));
+
+    ui->system_tree->addTopLevelItem(theItem);
+}
+
 void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *theItem)
 {
     qDebug("entering ListOfMolecules::checkbox_toggled()");

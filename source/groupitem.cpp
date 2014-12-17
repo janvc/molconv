@@ -28,9 +28,14 @@ GroupItem::GroupItem(QTreeWidgetItem *parent)
 }
 
 
-GroupItem::GroupItem(QTreeWidgetItem *parent, molconv::abstractMoleculeGroup *theGroup)
+GroupItem::GroupItem(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup, QTreeWidgetItem *parent)
     : QTreeWidgetItem(parent)
     , m_group(theGroup)
 {
     qDebug("This is the second constructor of GroupItem");
+}
+
+boost::shared_ptr<molconv::abstractMoleculeGroup> GroupItem::getGroup()
+{
+    return m_group;
 }

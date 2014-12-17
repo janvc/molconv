@@ -23,6 +23,7 @@
 
 #include<QtWidgets>
 #include "molconv-molecule/molecule.h"
+#include "molconv-moleculegroup/abstractmoleculegroup.h"
 #include "include/types.h"
 
 namespace Ui
@@ -44,6 +45,7 @@ class ListOfMolecules : public QDockWidget
 
     private slots:
         void list_new_molecule(molconv::moleculePtr theMolecule);
+        void list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup);
         void checkbox_toggled(QTreeWidgetItem *theItem);
 
     private:
