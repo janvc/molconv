@@ -75,20 +75,22 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->addItem(m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
-    emit new_molecule(m_system.getMolecule(m_system.size() - 1).get());
+    emit new_molecule(m_system.getMolecule(m_system.size() - 1));
 }
 
-void MolconvWindow::toggle_molecule(int position, bool state)
+void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
 {
     qDebug("entering MolconvWindow::toggle_molecule()");
+
+    size_t moleculeIndex = m_system.MoleculeIndex(theMolecule);
     if (state)
     {
-        m_GraphicsItemVector.at(position)->show();
+        m_GraphicsItemVector.at(moleculeIndex)->show();
         ui->molconv_graphicsview->update();
     }
     else
     {
-        m_GraphicsItemVector.at(position)->hide();
+        m_GraphicsItemVector.at(moleculeIndex)->hide();
         ui->molconv_graphicsview->update();
     }
 }

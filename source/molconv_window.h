@@ -59,7 +59,7 @@ public slots:
     void quit();
     void getMoleculeDialog();
     void startOpenDialog();
-    void toggle_molecule(int position, bool state);
+    void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
     void addMoleculeToGroup();
@@ -67,7 +67,7 @@ public slots:
 private slots:
 
 signals:
-    void new_molecule(molconv::Molecule *molecule);
+    void new_molecule(molconv::moleculePtr newMolecule);
 
 private:
     Ui::MolconvWindow *ui;

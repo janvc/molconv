@@ -24,6 +24,8 @@
 #include "ui_listofmolecules.h"
 
 #include "molconv_window.h"
+#include "moleculeitem.h"
+#include "groupitem.h"
 
 
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)
@@ -38,7 +40,7 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 
     ui->system_tree->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
 
-    connect(window, SIGNAL(new_molecule(molconv::Molecule*)), SLOT(list_new_molecule(molconv::Molecule*)));
+    connect(window, SIGNAL(new_molecule(molconv::moleculePtr)), SLOT(list_new_molecule(molconv::moleculePtr)));
 
     QMenu *contextMenu = new QMenu(ui->system_tree);
     ui->system_tree->setContextMenuPolicy(Qt::ActionsContextMenu);
@@ -53,36 +55,35 @@ ListOfMolecules::~ListOfMolecules()
     qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
-void ListOfMolecules::list_new_molecule(molconv::Molecule *molecule)
+void ListOfMolecules::list_new_molecule(molconv::moleculePtr theMolecule)
 {
     qDebug("entering ListOfMolecules::list_new_molecule()");
 
-    QTreeWidgetItem *theItem = new QTreeWidgetItem();
+    MoleculeItem *theItem = new MoleculeItem(theMolecule);
 
-    theItem->setText(0, QString::fromStdString(molecule->name()));
-    theItem->setText(1, QString::fromStdString(molecule->formula()));
-    theItem->setText(2, QString::number(molecule->mass()));
+    theItem->setText(0, QString::fromStdString(theMolecule->name()));
+    theItem->setText(1, QString::fromStdString(theMolecule->formula()));
+    theItem->setText(2, QString::number(theMolecule->mass()));
 
     theItem->setFlags(theItem->flags() | Qt::ItemIsUserCheckable);
     theItem->setCheckState(3, Qt::Checked);
-    m_items.append(theItem);
 
     connect(ui->system_tree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
-    ui->system_tree->insertTopLevelItems(0, m_items);
+
+    ui->system_tree->addTopLevelItem(theItem);
 }
 
-void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *item)
+void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *theItem)
 {
     qDebug("entering ListOfMolecules::checkbox_toggled()");
 
+    MoleculeItem *molItem = dynamic_cast<MoleculeItem*>(theItem);
     bool state;
 
-    if (item->checkState(3) == Qt::Checked)
+    if (theItem->checkState(3) == Qt::Checked)
         state = true;
     else
         state = false;
 
-    int index = m_items.indexOf(item);
-
-    main_window->toggle_molecule(index,state);
+    main_window->toggle_molecule(molItem->getMolecule(),state);
 }

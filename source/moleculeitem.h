@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Sebastian Lenz
+ * Copyright 2014 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -18,39 +18,22 @@
  *
  */
 
-#ifndef MOLECULE_LIST_H_
-#define MOLECULE_LIST_H_
+#ifndef MOLECULEITEM_H
+#define MOLECULEITEM_H
 
-#include<QtWidgets>
+#include <QTreeWidgetItem>
 #include "molconv-molecule/molecule.h"
-#include "include/types.h"
 
-namespace Ui
+class MoleculeItem : public QTreeWidgetItem
 {
-    class ListOfMolecules;
-}
+public:
+    explicit MoleculeItem(QTreeWidgetItem *parent = 0);
+    MoleculeItem(molconv::moleculePtr theMolecule, QTreeWidgetItem *parent = 0);
 
-class MolconvWindow;
-class MoleculeItem;
-class GroupItem;
+    molconv::moleculePtr getMolecule();
 
-class ListOfMolecules : public QDockWidget
-{
-    Q_OBJECT
-
-    public:
-        ListOfMolecules(MolconvWindow *window);
-        ~ListOfMolecules();
-
-    private slots:
-        void list_new_molecule(molconv::moleculePtr theMolecule);
-        void checkbox_toggled(QTreeWidgetItem *theItem);
-
-    private:
-        Ui::ListOfMolecules *ui;
-        MolconvWindow *main_window;
-        QList<QTreeWidgetItem *> m_items;
+private:
+    molconv::moleculePtr m_molecule;
 };
 
-
-#endif /* MOLECULE_LIST_H_ */
+#endif // MOLECULEITEM_H

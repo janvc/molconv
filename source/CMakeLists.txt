@@ -36,8 +36,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(SOURCES
     config.cpp
     exceptions.cpp
+    groupitem.cpp
     main.cpp
     molconv_window.cpp
+    moleculeitem.cpp
     listofmolecules.cpp
     moleculesettings.cpp
     open_dialog.cpp
