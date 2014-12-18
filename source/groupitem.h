@@ -18,8 +18,8 @@
  *
  */
 
-#ifndef MOLECULEITEM_H
-#define MOLECULEITEM_H
+#ifndef GROUPITEM_H
+#define GROUPITEM_H
 
 #include <QTreeWidgetItem>
 #include "molconv-moleculegroup/abstractmoleculegroup.h"
@@ -36,4 +36,4 @@ private:
     boost::shared_ptr<molconv::abstractMoleculeGroup> m_group;
 };
 
-#endif // MOLECULEITEM_H
+#endif // GROUPITEM_H

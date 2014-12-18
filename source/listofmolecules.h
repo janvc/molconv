@@ -32,8 +32,6 @@ namespace Ui
 }
 
 class MolconvWindow;
-class MoleculeItem;
-class GroupItem;
 
 class ListOfMolecules : public QDockWidget
 {
