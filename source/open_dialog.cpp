@@ -110,6 +110,11 @@ molconv::moleculePtr OpenDialog::getMol()
         this->the_molecule->setOrigin(getOrigin());
         this->the_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
     }
+    else if(!ui->atoms->isChecked() && ui->coa->isChecked())
+    {
+        this->the_molecule->setOrigin(getOrigin(), ui->an->value());
+        this->the_molecule->setBasis(getBasis());
+    }
     else if(ui->atoms->isChecked() && ui->coa->isChecked())
     {
         this->the_molecule->setOrigin(getOrigin(), ui->an->value());
