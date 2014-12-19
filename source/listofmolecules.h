@@ -41,8 +41,9 @@ class ListOfMolecules : public QDockWidget
         ListOfMolecules(MolconvWindow *window);
         ~ListOfMolecules();
 
-    private slots:
         void list_new_molecule(molconv::moleculePtr theMolecule);
+
+    private slots:
         void list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup);
         void checkbox_toggled(QTreeWidgetItem *theItem);
 

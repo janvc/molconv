@@ -35,6 +35,7 @@
 
 #include "open_dialog.h"
 
+class ListOfMolecules;
 
 namespace Ui
 {
@@ -73,7 +74,7 @@ private:
     Ui::MolconvWindow *ui;
     OpenDialog *m_OpenDialog;
 
-    QDockWidget *m_ListOfMolecules;
+    ListOfMolecules *m_ListOfMolecules;
     QDockWidget *m_MoleculeSettings;
 
     molconv::System m_system;

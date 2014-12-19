@@ -40,8 +40,6 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 
     ui->system_tree->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
 
-    connect(window, SIGNAL(new_molecule(molconv::moleculePtr)), SLOT(list_new_molecule(molconv::moleculePtr)));
-
     QMenu *contextMenu = new QMenu(ui->system_tree);
     ui->system_tree->setContextMenuPolicy(Qt::ActionsContextMenu);
     QAction *addElement = new QAction("add element", contextMenu);

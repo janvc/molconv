@@ -75,7 +75,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->addItem(m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
-    emit new_molecule(m_system.getMolecule(m_system.size() - 1));
+    m_ListOfMolecules->list_new_molecule(temp_mol);
 }
 
 void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
