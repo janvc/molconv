@@ -400,7 +400,7 @@ namespace molconv
             if (atom1 > 0 && atom1 <= size())
             {
                 d->m_origin = newOrigin;
-                d->m_originAtoms[0] = atom1;
+                d->m_originAtoms[0] = atom1 - 1;
                 d->m_originAtoms[1] = 0;
             }
             break;
@@ -409,8 +409,8 @@ namespace molconv
                           && originFactor >= 0.0 && originFactor <= 1.0)
             {
                 d->m_origin = newOrigin;
-                d->m_originAtoms[0] = atom1;
-                d->m_originAtoms[1] = atom2;
+                d->m_originAtoms[0] = atom1 - 1;
+                d->m_originAtoms[1] = atom2 - 1;
                 d->m_originFactor = originFactor;
             }
             break;
@@ -440,9 +440,9 @@ namespace molconv
                 if (atom1 != atom2 && atom1 != atom3 && atom2 != atom3)
                 {
                     d->m_basis = newBasis;
-                    d->m_basisAtoms[0] = atom1;
-                    d->m_basisAtoms[1] = atom2;
-                    d->m_basisAtoms[2] = atom3;
+                    d->m_basisAtoms[0] = atom1 - 1;
+                    d->m_basisAtoms[1] = atom2 - 1;
+                    d->m_basisAtoms[2] = atom3 - 1;
                 }
             }
             break;
