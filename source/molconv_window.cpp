@@ -49,7 +49,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
-    connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateMolecule()));
+    connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
+    connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(newGroup()));
 
     m_ListOfMolecules = new ListOfMolecules(this);
     m_MoleculeSettings = new MoleculeSettings(this);
@@ -138,9 +139,29 @@ void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
 {
     qDebug("entering MolconvWindow::DuplicateMolecule()");
 
-    m_system.addMolecule(oldMolecule);
-    m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(m_system.getMolecule(m_system.size() - 1).get()));
-    ui->molconv_graphicsview->update();
+    molconv::moleculePtr newMol = boost::make_shared<molconv::Molecule>(oldMolecule);
+
+    add_molecule(newMol);
+}
+
+void MolconvWindow::DuplicateSelectedMolecule()
+{
+    qDebug("entering MolconvWindow::DuplicateSelectedMolecule()");
+
+    DuplicateMolecule(m_ListOfMolecules->getSelectedMolecule());
+}
+
+void MolconvWindow::newGroup()
+{
+    qDebug("entering MolconvWindow::newGroup()");
+
+    QLineEdit *newGroupName = new QLineEdit();
+    newGroupName->show();
+
+    QString groupName = newGroupName->text();
+    std::string stdGroupName = groupName.toStdString();
+
+    std::cout << "the new group is " << stdGroupName << std::endl;
 }
 
 void MolconvWindow::addMoleculeToGroup()

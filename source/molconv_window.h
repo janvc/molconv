@@ -63,6 +63,8 @@ public slots:
     void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
+    void DuplicateSelectedMolecule();
+    void newGroup();
     void addMoleculeToGroup();
 
 private slots:
