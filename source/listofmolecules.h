@@ -42,6 +42,7 @@ class ListOfMolecules : public QDockWidget
         ~ListOfMolecules();
 
         void list_new_molecule(molconv::moleculePtr theMolecule);
+        molconv::moleculePtr getSelectedMolecule() const;
 
     private slots:
         void list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup);

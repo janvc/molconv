@@ -53,6 +53,7 @@ ListOfMolecules::~ListOfMolecules()
     qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
+
 void ListOfMolecules::list_new_molecule(molconv::moleculePtr theMolecule)
 {
     qDebug("entering ListOfMolecules::list_new_molecule()");
@@ -69,6 +70,15 @@ void ListOfMolecules::list_new_molecule(molconv::moleculePtr theMolecule)
     connect(ui->system_tree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
 
     ui->system_tree->addTopLevelItem(theItem);
+}
+
+molconv::moleculePtr ListOfMolecules::getSelectedMolecule() const
+{
+    qDebug("entering ListOfMolecules::getSelectedMolecule()");
+
+    MoleculeItem *selectedMolecule = dynamic_cast<MoleculeItem*>(ui->system_tree->currentItem());
+
+    return selectedMolecule->getMolecule();
 }
 
 void ListOfMolecules::list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup)
