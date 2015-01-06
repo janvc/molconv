@@ -43,14 +43,16 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     ui->setupUi(this);
     m_OpenDialog = new OpenDialog(this);
+    m_NewGroupDialog = new NewGroupDialog(this);
 
     connect(m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
+    connect(m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
-    connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(newGroup()));
+    connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
     m_ListOfMolecules = new ListOfMolecules(this);
     m_MoleculeSettings = new MoleculeSettings(this);
@@ -155,13 +157,15 @@ void MolconvWindow::newGroup()
 {
     qDebug("entering MolconvWindow::newGroup()");
 
-    QLineEdit *newGroupName = new QLineEdit();
-    newGroupName->show();
+    std::string newGroupName = m_NewGroupDialog->groupName();
+}
 
-    QString groupName = newGroupName->text();
-    std::string stdGroupName = groupName.toStdString();
+void MolconvWindow::startNewGroupDialog()
+{
+    qDebug("entering MolconvWindow::startNewGroupDialog()");
 
-    std::cout << "the new group is " << stdGroupName << std::endl;
+    m_NewGroupDialog->setModal(true);
+    m_NewGroupDialog->exec();
 }
 
 void MolconvWindow::addMoleculeToGroup()

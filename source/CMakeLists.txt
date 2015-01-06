@@ -40,6 +40,7 @@ set(SOURCES
     main.cpp
     molconv_window.cpp
     moleculeitem.cpp
+    newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
     open_dialog.cpp
@@ -50,6 +51,7 @@ set(MOC_HEADERS
     molconv_window.h
     listofmolecules.h
     moleculesettings.h
+    newgroupdialog.h
     open_dialog.h
 )
 
@@ -57,6 +59,7 @@ set(UI_FORMS
     molconv_window.ui
     listofmolecules.ui
     moleculesettings.ui
+    newgroupdialog.ui
     open_dialog.ui
 )
 

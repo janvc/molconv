@@ -34,6 +34,7 @@
 #include "molconv-moleculegroup/moleculestack.h"
 
 #include "open_dialog.h"
+#include "newgroupdialog.h"
 
 class ListOfMolecules;
 
@@ -65,6 +66,7 @@ public slots:
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
     void DuplicateSelectedMolecule();
     void newGroup();
+    void startNewGroupDialog();
     void addMoleculeToGroup();
 
 private slots:
@@ -75,6 +77,7 @@ signals:
 private:
     Ui::MolconvWindow *ui;
     OpenDialog *m_OpenDialog;
+    NewGroupDialog *m_NewGroupDialog;
 
     ListOfMolecules *m_ListOfMolecules;
     QDockWidget *m_MoleculeSettings;
