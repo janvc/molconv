@@ -37,6 +37,7 @@
 #include "newgroupdialog.h"
 
 class ListOfMolecules;
+class MolconvWindowPrivate;
 
 namespace Ui
 {
@@ -75,18 +76,8 @@ signals:
     void new_molecule(molconv::moleculePtr newMolecule);
 
 private:
+    MolconvWindowPrivate *d;
     Ui::MolconvWindow *ui;
-    OpenDialog *m_OpenDialog;
-    NewGroupDialog *m_NewGroupDialog;
-
-    ListOfMolecules *m_ListOfMolecules;
-    QDockWidget *m_MoleculeSettings;
-
-    molconv::System m_system;
-
-    std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
-    std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
-    std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
 };
 
 #endif /* MOLCONV_WINDOW_H_ */
