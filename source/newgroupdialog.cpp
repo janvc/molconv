@@ -41,3 +41,11 @@ std::string NewGroupDialog::groupName() const
 {
     return ui->groupNameLEdit->text().toStdString();
 }
+
+bool NewGroupDialog::isStack() const
+{
+    if (ui->isStackRB->isChecked())
+        return true;
+    else
+        return false;
+}

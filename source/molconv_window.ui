@@ -55,7 +55,6 @@
      <string>Group</string>
     </property>
     <addaction name="actionNew_Molecule_Group"/>
-    <addaction name="actionNew_Molecule_Stack"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">

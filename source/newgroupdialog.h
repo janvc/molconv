@@ -39,6 +39,7 @@ public:
 
 public slots:
     std::string groupName() const;
+    bool isStack() const;
 
 private:
     Ui::NewGroupDialog *ui;

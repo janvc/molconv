@@ -70,8 +70,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
-    connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog(false)));
-    connect(ui->actionNew_Molecule_Stack, SIGNAL(triggered()), SLOT(startNewGroupDialog(true)));
+    connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
