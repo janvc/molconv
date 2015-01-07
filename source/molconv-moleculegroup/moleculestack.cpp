@@ -44,13 +44,26 @@ namespace molconv
     ///
     /// \brief MoleculeStack::MoleculeStack
     ///
-    /// the constructor of MoleculeStack
+    /// the default constructor of MoleculeStack
     ///
     MoleculeStack::MoleculeStack()
         : abstractMoleculeGroup()
         , d(new MoleculeStackPrivate)
     {
-        qDebug("this is the constructor of MoleculeStack");
+        qDebug("this is the default constructor of MoleculeStack");
+    }
+
+    ///
+    /// \brief MoleculeStack::MoleculeStack
+    /// \param name
+    ///
+    /// this constructor takes the name of the stack as an argument
+    ///
+    MoleculeStack::MoleculeStack(const std::string &name)
+        : abstractMoleculeGroup(name)
+        , d(new MoleculeStackPrivate)
+    {
+        qDebug("this is the second constructor of MoleculeStack");
     }
 
     ///

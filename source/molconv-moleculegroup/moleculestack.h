@@ -34,6 +34,7 @@ namespace molconv
     {
     public:
         MoleculeStack();
+        MoleculeStack(const std::string &name);
         ~MoleculeStack();
 
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector, const size_t atom1 = 0, const size_t atom2 = 0);

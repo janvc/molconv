@@ -20,7 +20,20 @@ namespace molconv
         : abstractMoleculeGroup()
         , d(new MoleculeGroupPrivate)
     {
-        qDebug("this is the constructor of MoleculeGroup");
+        qDebug("this is the default constructor of MoleculeGroup");
+    }
+
+    ///
+    /// \brief MoleculeGroup::MoleculeGroup
+    /// \param name
+    ///
+    /// this constructor takes the group name as an argument
+    ///
+    MoleculeGroup::MoleculeGroup(const std::string &name)
+        : abstractMoleculeGroup(name)
+        , d(new MoleculeGroupPrivate)
+    {
+        qDebug("this is the second constructor of MoleculeGroup");
     }
 
     ///

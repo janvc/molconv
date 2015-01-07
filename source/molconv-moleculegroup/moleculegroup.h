@@ -12,6 +12,7 @@ namespace molconv
     {
     public:
         MoleculeGroup();
+        MoleculeGroup(const std::string &name);
         ~MoleculeGroup();
 
         void setPosition(const size_t index, const Eigen::Vector3d &newPosition);
