@@ -176,6 +176,11 @@ void MolconvWindow::newGroup()
     qDebug("entering MolconvWindow::newGroup()");
 
     std::string newGroupName = d->m_NewGroupDialog->groupName();
+
+    if (d->m_NewGroupDialog->isStack())
+        d->m_MoleculeStacks.push_back(new molconv::MoleculeStack(newGroupName));
+    else
+        d->m_MoleculeGroups.push_back(new molconv::MoleculeGroup(newGroupName));
 }
 
 void MolconvWindow::startNewGroupDialog()
