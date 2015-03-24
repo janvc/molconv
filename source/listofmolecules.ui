@@ -49,7 +49,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTreeWidget" name="system_tree">
+         <widget class="QTreeView" name="system_tree">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -62,19 +62,6 @@
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
           </property>
-          <property name="columnCount">
-           <number>2</number>
-          </property>
-          <column>
-           <property name="text">
-            <string notr="true">1</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string notr="true">2</string>
-           </property>
-          </column>
          </widget>
         </item>
        </layout>
