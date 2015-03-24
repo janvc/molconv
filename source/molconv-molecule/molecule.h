@@ -29,10 +29,12 @@
 #endif
 #include<Eigen/Core>
 #include "../include/types.h"
+#include "../molconv-moleculegroup/abstractmoleculegroup.h"
 
 namespace molconv
 {
     class MoleculePrivate;
+    class abstractMoleculeGroup;
 
     class Molecule : public chemkit::Molecule
     {
@@ -72,6 +74,11 @@ namespace molconv
 
         // clean up the coordinates
         void cleanUp();
+
+        // manage groups
+        void addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup);
+        std::vector<boost::shared_ptr<abstractMoleculeGroup> > &groups() const;
+        bool isInGroup(const boost::shared_ptr<abstractMoleculeGroup> &theGroup) const;
 
     private:
         // private functions:

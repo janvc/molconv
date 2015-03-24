@@ -49,6 +49,8 @@ namespace molconv
         double m_originFactor;
         std::array<int,2> m_originAtoms;
         std::array<int,3> m_basisAtoms;
+
+        std::vector<boost::shared_ptr<abstractMoleculeGroup> > m_groups;
     };
 
     ///
@@ -461,6 +463,52 @@ namespace molconv
         qDebug() << "entering Molecule::cleanUp()";
         translate(-internalOriginPosition());
         rotate(internalBasisVectors().transpose());
+    }
+
+    ///
+    /// \brief Molecule::addGroup
+    /// \param newGroup
+    ///
+    /// This method adds a poiner to a new group, that the molecule now belongs to
+    ///
+    void Molecule::addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup)
+    {
+        qDebug("entering Molecule::addGroup()");
+        d->m_groups.push_back(newGroup);
+    }
+
+    ///
+    /// \brief Molecule::groups
+    /// \return
+    ///
+    /// This method returns a list of the groups that this molecule belongs to
+    ///
+    std::vector<boost::shared_ptr<abstractMoleculeGroup> > &Molecule::groups() const
+    {
+        qDebug("entering Molecule::groups()");
+        return d->m_groups;
+    }
+
+    ///
+    /// \brief Molecule::isInGroup
+    /// \param theGroup
+    /// \return
+    ///
+    /// This method determines if the molecule belongs to a secific group
+    ///
+    bool Molecule::isInGroup(const boost::shared_ptr<abstractMoleculeGroup> &theGroup) const
+    {
+        qDebug("entering Molecule::isInGroup()");
+
+        bool result = false;
+
+        for (size_t i = 0; i < d->m_groups.size(); i++)
+        {
+            if (theGroup == d->m_groups.at(i))
+                result = true;
+        }
+
+        return result;
     }
 
     ///
