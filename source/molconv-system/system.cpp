@@ -32,6 +32,7 @@ namespace molconv
     {
     public:
         std::vector<moleculePtr> m_molecules;
+        std::vector<boost::shared_ptr<abstractMoleculeGroup> > m_groups;
     };
 
     ///
@@ -62,6 +63,18 @@ namespace molconv
     {
         qDebug() << "entering System::size()";
         return d->m_molecules.size();
+    }
+
+    ///
+    /// \brief System::nGroups
+    /// \return
+    ///
+    /// returns the number of groups in the system
+    ///
+    size_t System::nGroups() const
+    {
+        qDebug("entering System::nGroups()");
+        return d->m_groups.size();
     }
 
     ///
@@ -127,6 +140,34 @@ namespace molconv
             throw std::invalid_argument("index out of range.\n");
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
+    }
+
+    ///
+    /// \brief System::addGroup
+    /// \param newGroup
+    ///
+    /// adds a new group to the system
+    ///
+    void System::addGroup(const boost::shared_ptr<abstractMoleculeGroup> &newGroup)
+    {
+        qDebug("entering System::addGroup()");
+        d->m_groups.push_back(newGroup);
+    }
+
+    ///
+    /// \brief System::removeGroup
+    /// \param index
+    ///
+    /// removes the group at index \p index
+    ///
+    void System::removeGroup(const size_t index)
+    {
+        qDebug("entering System::removeGroup()");
+
+        if (index >= nGroups())
+            throw std::invalid_argument("index out of range.\n");
+
+        d->m_groups.erase(d->m_groups.begin() + index);
     }
 
 } // namespace molconv
