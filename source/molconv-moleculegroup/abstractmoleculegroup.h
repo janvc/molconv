@@ -54,6 +54,10 @@ namespace molconv
         void addMolecule(const boost::shared_ptr<Molecule> newMolecule);
         void removeMolecule(const size_t index);
 
+        void addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup);
+        void removeGroup(const size_t index);
+        void addToGroup(const boost::shared_ptr<abstractMoleculeGroup> newParentGroup);
+
     private:
         boost::scoped_ptr<abstractMoleculeGroupPrivate> d;
     };

@@ -32,6 +32,8 @@ namespace molconv
     public:
         std::string m_groupname;
         std::vector<boost::shared_ptr<Molecule> > m_molecules;
+        std::vector<boost::shared_ptr<abstractMoleculeGroup> > m_groups;
+        boost::shared_ptr<abstractMoleculeGroup> m_parentgroup;
     };
 
     ///
@@ -169,6 +171,44 @@ namespace molconv
         checkIndex(index);
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::addGroup
+    /// \param newGroup
+    ///
+    /// add a group to the group
+    ///
+    void abstractMoleculeGroup::addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup)
+    {
+        qDebug("entering abstractMoleculeGroup::addGroup()");
+        d->m_groups.push_back(newGroup);
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::removeGroup
+    /// \param index
+    ///
+    /// remove a group from the group
+    ///
+    void abstractMoleculeGroup::removeGroup(const size_t index)
+    {
+        qDebug("entering abstractMoleculeGroup::removeGroup()");
+        checkIndex(index);
+
+        d->m_groups.erase(d->m_groups.begin() + index);
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::addToGroup
+    /// \param newParentGroup
+    ///
+    /// set the parent of this group when it gets added to another group
+    ///
+    void abstractMoleculeGroup::addToGroup(const boost::shared_ptr<abstractMoleculeGroup> newParentGroup)
+    {
+        qDebug("entering abstractMoleculeGroup::addGroup()");
+        d->m_parentgroup = newParentGroup;
     }
 
 } // namespace molconv
