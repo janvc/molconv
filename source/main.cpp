@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     MolconvWindow the_window;
-    the_window.show();
+    the_window.showMaximized();
 
     return app.exec();
 }
