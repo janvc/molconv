@@ -77,7 +77,7 @@ namespace molconv
 
         // manage groups
         void addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup);
-        std::vector<boost::shared_ptr<abstractMoleculeGroup> > &groups() const;
+        boost::shared_ptr<abstractMoleculeGroup> &group() const;
         bool isInGroup(const boost::shared_ptr<abstractMoleculeGroup> &theGroup) const;
 
     private:

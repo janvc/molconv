@@ -50,7 +50,7 @@ namespace molconv
         std::array<int,2> m_originAtoms;
         std::array<int,3> m_basisAtoms;
 
-        std::vector<boost::shared_ptr<abstractMoleculeGroup> > m_groups;
+        boost::shared_ptr<abstractMoleculeGroup> m_group;
     };
 
     ///
@@ -474,19 +474,19 @@ namespace molconv
     void Molecule::addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup)
     {
         qDebug("entering Molecule::addGroup()");
-        d->m_groups.push_back(newGroup);
+        d->m_group = newGroup;
     }
 
     ///
-    /// \brief Molecule::groups
+    /// \brief Molecule::group
     /// \return
     ///
-    /// This method returns a list of the groups that this molecule belongs to
+    /// This method returns the group that this molecule belongs to
     ///
-    std::vector<boost::shared_ptr<abstractMoleculeGroup> > &Molecule::groups() const
+    boost::shared_ptr<abstractMoleculeGroup> &Molecule::group() const
     {
         qDebug("entering Molecule::groups()");
-        return d->m_groups;
+        return d->m_group;
     }
 
     ///
@@ -500,15 +500,10 @@ namespace molconv
     {
         qDebug("entering Molecule::isInGroup()");
 
-        bool result = false;
-
-        for (size_t i = 0; i < d->m_groups.size(); i++)
-        {
-            if (theGroup == d->m_groups.at(i))
-                result = true;
-        }
-
-        return result;
+        if (theGroup == d->m_group)
+            return true;
+        else
+            return false;
     }
 
     ///
