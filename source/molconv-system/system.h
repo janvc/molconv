@@ -41,6 +41,7 @@ namespace molconv
         moleculePtr getMolecule(const size_t index) const;
         groupPtr getGroup(const size_t index) const;
         size_t MoleculeIndex(const moleculePtr theMolecule);
+        size_t GroupIndex(const groupPtr &theGroup) const;
 
         void addMolecule(const moleculePtr newMolecule);
         void removeMolecule(const size_t index);

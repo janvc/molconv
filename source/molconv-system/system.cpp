@@ -132,6 +132,28 @@ namespace molconv
     }
 
     ///
+    /// \brief System::GroupIndex
+    /// \param theGroup
+    /// \return
+    ///
+    /// returns the position of the group in the vector
+    ///
+    size_t System::GroupIndex(const groupPtr &theGroup) const
+    {
+        qDebug("entering System::GroupIndex()");
+
+        size_t index = 0;
+
+        for (size_t i = 0; i < nGroups(); i++)
+        {
+            if (getGroup(i) == theGroup)
+                index = i;
+        }
+
+        return index;
+    }
+
+    ///
     /// \brief System::addMolecule
     /// \param newMolecule
     ///
