@@ -76,9 +76,9 @@ namespace molconv
         void cleanUp();
 
         // manage groups
-        void addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup);
-        boost::shared_ptr<abstractMoleculeGroup> &group() const;
-        bool isInGroup(const boost::shared_ptr<abstractMoleculeGroup> &theGroup) const;
+        void addGroup(const groupPtr newGroup);
+        groupPtr &group() const;
+        bool isInGroup(const groupPtr &theGroup) const;
 
     private:
         // private functions:

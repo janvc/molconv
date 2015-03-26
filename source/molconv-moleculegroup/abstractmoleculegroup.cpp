@@ -32,8 +32,8 @@ namespace molconv
     public:
         std::string m_groupname;
         std::vector<boost::shared_ptr<Molecule> > m_molecules;
-        std::vector<boost::shared_ptr<abstractMoleculeGroup> > m_groups;
-        boost::shared_ptr<abstractMoleculeGroup> m_parentgroup;
+        std::vector<groupPtr> m_groups;
+        groupPtr m_parentgroup;
     };
 
     ///
@@ -179,7 +179,7 @@ namespace molconv
     ///
     /// add a group to the group
     ///
-    void abstractMoleculeGroup::addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup)
+    void abstractMoleculeGroup::addGroup(const groupPtr &newGroup)
     {
         qDebug("entering abstractMoleculeGroup::addGroup()");
         d->m_groups.push_back(newGroup);
@@ -205,7 +205,7 @@ namespace molconv
     ///
     /// set the parent of this group when it gets added to another group
     ///
-    void abstractMoleculeGroup::addToGroup(const boost::shared_ptr<abstractMoleculeGroup> newParentGroup)
+    void abstractMoleculeGroup::addToGroup(const groupPtr &newParentGroup)
     {
         qDebug("entering abstractMoleculeGroup::addGroup()");
         d->m_parentgroup = newParentGroup;

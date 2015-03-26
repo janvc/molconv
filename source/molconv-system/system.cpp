@@ -32,7 +32,7 @@ namespace molconv
     {
     public:
         std::vector<moleculePtr> m_molecules;
-        std::vector<boost::shared_ptr<abstractMoleculeGroup> > m_groups;
+        std::vector<groupPtr> m_groups;
     };
 
     ///
@@ -59,7 +59,7 @@ namespace molconv
     ///
     /// returns the number of molecules in the system
     ///
-    size_t System::size() const
+    size_t System::nMolecules() const
     {
         qDebug() << "entering System::size()";
         return d->m_molecules.size();
@@ -87,10 +87,26 @@ namespace molconv
     moleculePtr System::getMolecule(const size_t index) const
     {
         qDebug() << "entering System::getMolecule()";
-        if (index >= size())
+        if (index >= nMolecules())
             throw std::invalid_argument("index out of range.\n");
 
         return d->m_molecules.at(index);
+    }
+
+    ///
+    /// \brief System::getGroup
+    /// \param index
+    /// \return
+    ///
+    /// returns a shared pointer to the group at \p index
+    ///
+    groupPtr System::getGroup(const size_t index) const
+    {
+        qDebug("entering System::getGroup()");
+        if (index >= nGroups())
+            throw std::invalid_argument("index out of range.\n");
+
+        return d->m_groups.at(index);
     }
 
     ///
@@ -106,7 +122,7 @@ namespace molconv
 
         size_t index;
 
-        for (size_t i = 0; i < size(); i++)
+        for (size_t i = 0; i < nMolecules(); i++)
         {
             if (getMolecule(i) == theMolecule)
                 index = i;
@@ -136,7 +152,7 @@ namespace molconv
     void System::removeMolecule(const size_t index)
     {
         qDebug() << "entering System::removeMolecule()";
-        if (index >= size())
+        if (index >= nMolecules())
             throw std::invalid_argument("index out of range.\n");
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
@@ -148,7 +164,7 @@ namespace molconv
     ///
     /// adds a new group to the system
     ///
-    void System::addGroup(const boost::shared_ptr<abstractMoleculeGroup> &newGroup)
+    void System::addGroup(const groupPtr &newGroup)
     {
         qDebug("entering System::addGroup()");
         d->m_groups.push_back(newGroup);

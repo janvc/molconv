@@ -36,14 +36,15 @@ namespace molconv
     public:
         System();
         ~System();
-        size_t size() const;
+        size_t nMolecules() const;
         size_t nGroups() const;
         moleculePtr getMolecule(const size_t index) const;
+        groupPtr getGroup(const size_t index) const;
         size_t MoleculeIndex(const moleculePtr theMolecule);
 
         void addMolecule(const moleculePtr newMolecule);
         void removeMolecule(const size_t index);
-        void addGroup(const boost::shared_ptr<abstractMoleculeGroup> &newGroup);
+        void addGroup(const groupPtr &newGroup);
         void removeGroup(const size_t index);
 
     private:

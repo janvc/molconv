@@ -50,7 +50,7 @@ namespace molconv
         std::array<int,2> m_originAtoms;
         std::array<int,3> m_basisAtoms;
 
-        boost::shared_ptr<abstractMoleculeGroup> m_group;
+        groupPtr m_group;
     };
 
     ///
@@ -471,7 +471,7 @@ namespace molconv
     ///
     /// This method adds a poiner to a new group, that the molecule now belongs to
     ///
-    void Molecule::addGroup(const boost::shared_ptr<abstractMoleculeGroup> newGroup)
+    void Molecule::addGroup(const groupPtr newGroup)
     {
         qDebug("entering Molecule::addGroup()");
         d->m_group = newGroup;
@@ -483,7 +483,7 @@ namespace molconv
     ///
     /// This method returns the group that this molecule belongs to
     ///
-    boost::shared_ptr<abstractMoleculeGroup> &Molecule::group() const
+    groupPtr &Molecule::group() const
     {
         qDebug("entering Molecule::groups()");
         return d->m_group;
@@ -496,7 +496,7 @@ namespace molconv
     ///
     /// This method determines if the molecule belongs to a secific group
     ///
-    bool Molecule::isInGroup(const boost::shared_ptr<abstractMoleculeGroup> &theGroup) const
+    bool Molecule::isInGroup(const groupPtr &theGroup) const
     {
         qDebug("entering Molecule::isInGroup()");
 

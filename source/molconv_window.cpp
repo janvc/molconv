@@ -92,7 +92,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     qDebug("entering MolconvWindow::add_molecule(temp_mol)");
 
     d->m_system.addMolecule(temp_mol);
-    d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system.getMolecule(d->m_system.size() - 1).get()));
+    d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system.getMolecule(d->m_system.nMolecules() - 1).get()));
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
