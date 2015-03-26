@@ -40,6 +40,7 @@ set(SOURCES
     main.cpp
     molconv_window.cpp
     moleculeitem.cpp
+    moleculelistmodel.cpp
     newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
