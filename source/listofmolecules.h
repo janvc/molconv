@@ -25,6 +25,7 @@
 #include "molconv-molecule/molecule.h"
 #include "molconv-moleculegroup/abstractmoleculegroup.h"
 #include "include/types.h"
+#include "moleculelistmodel.h"
 
 namespace Ui
 {
@@ -51,7 +52,9 @@ class ListOfMolecules : public QDockWidget
     private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *main_window;
-        QList<QTreeWidgetItem *> m_items;
+        //QList<QTreeWidgetItem *> m_items;
+        MoleculeListModel *m_model;
+
 };
 
 

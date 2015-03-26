@@ -24,3 +24,23 @@ MoleculeListModel::MoleculeListModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
 }
+
+QModelIndex MoleculeListModel::index(int row, int column, const QModelIndex &parent) const
+{
+}
+
+QModelIndex MoleculeListModel::parent(const QModelIndex &child) const
+{
+}
+
+int MoleculeListModel::rowCount(const QModelIndex &parent) const
+{
+}
+
+int MoleculeListModel::columnCount(const QModelIndex &parent) const
+{
+}
+
+QVariant MoleculeListModel::data(const QModelIndex &index, int role) const
+{
+}
