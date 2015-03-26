@@ -63,7 +63,9 @@ namespace molconv {
 
     // pointer to a molecule
     class Molecule;
+    class abstractMoleculeGroup;
     typedef boost::shared_ptr<Molecule> moleculePtr;
+    typedef boost::shared_ptr<abstractMoleculeGroup> groupPtr;
 } // namespace molconv
 
 #endif // TYPES_H
