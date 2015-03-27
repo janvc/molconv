@@ -38,13 +38,18 @@
 class MolconvWindowPrivate
 {
 public:
+    MolconvWindowPrivate()
+        : m_system(new molconv::System)
+    {
+    }
+
     OpenDialog *m_OpenDialog;
     NewGroupDialog *m_NewGroupDialog;
 
     ListOfMolecules *m_ListOfMolecules;
     QDockWidget *m_MoleculeSettings;
 
-    molconv::System m_system;
+    molconv::sysPtr m_system;
 
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
@@ -60,6 +65,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     qDebug("this is the constructor of MolconvWindow");
 
     ui->setupUi(this);
+
     d->m_OpenDialog = new OpenDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
 
@@ -72,7 +78,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
-    d->m_ListOfMolecules = new ListOfMolecules(this);
+    d->m_ListOfMolecules = new ListOfMolecules(this, d->m_system);
     d->m_MoleculeSettings = new MoleculeSettings(this);
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
@@ -91,8 +97,8 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
     qDebug("entering MolconvWindow::add_molecule(temp_mol)");
 
-    d->m_system.addMolecule(temp_mol);
-    d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system.getMolecule(d->m_system.nMolecules() - 1).get()));
+    d->m_system->addMolecule(temp_mol);
+    d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system->getMolecule(d->m_system->nMolecules() - 1).get()));
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
@@ -103,7 +109,7 @@ void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state
 {
     qDebug("entering MolconvWindow::toggle_molecule()");
 
-    size_t moleculeIndex = d->m_system.MoleculeIndex(theMolecule);
+    size_t moleculeIndex = d->m_system->MoleculeIndex(theMolecule);
     if (state)
     {
         d->m_GraphicsItemVector.at(moleculeIndex)->show();

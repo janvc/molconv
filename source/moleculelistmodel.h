@@ -22,12 +22,13 @@
 #define MOLECULELISTMODEL_H
 
 #include <QAbstractItemModel>
+#include "molconv-system/system.h"
 
 class MoleculeListModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit MoleculeListModel(QObject *parent = 0);
+    explicit MoleculeListModel(molconv::sysPtr &newSystem, QObject *parent = 0);
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -38,6 +39,8 @@ signals:
 
 public slots:
 
+private:
+    molconv::sysPtr m_system;
 };
 
 #endif // MOLECULELISTMODEL_H

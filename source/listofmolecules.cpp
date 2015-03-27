@@ -28,13 +28,14 @@
 #include "groupitem.h"
 
 
-ListOfMolecules::ListOfMolecules(MolconvWindow *window)
+ListOfMolecules::ListOfMolecules(MolconvWindow *window, molconv::sysPtr &newSystem)
     : QDockWidget(window)
     , ui(new Ui::ListOfMolecules)
 {
     qDebug("this is the constructor of ListOfMolecules");
 
     main_window = window;
+    m_model = new MoleculeListModel(newSystem);
 
     ui->setupUi(this);
 

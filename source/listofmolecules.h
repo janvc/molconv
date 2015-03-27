@@ -39,7 +39,7 @@ class ListOfMolecules : public QDockWidget
     Q_OBJECT
 
     public:
-        ListOfMolecules(MolconvWindow *window);
+        ListOfMolecules(MolconvWindow *window, molconv::sysPtr &newSystem);
         ~ListOfMolecules();
 
         void list_new_molecule(molconv::moleculePtr theMolecule);
@@ -52,9 +52,7 @@ class ListOfMolecules : public QDockWidget
     private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *main_window;
-        //QList<QTreeWidgetItem *> m_items;
         MoleculeListModel *m_model;
-
 };
 
 

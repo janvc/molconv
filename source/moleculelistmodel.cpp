@@ -20,8 +20,9 @@
 
 #include "moleculelistmodel.h"
 
-MoleculeListModel::MoleculeListModel(QObject *parent) :
-    QAbstractItemModel(parent)
+MoleculeListModel::MoleculeListModel(molconv::sysPtr &newSystem, QObject *parent)
+    : QAbstractItemModel(parent)
+    , m_system(newSystem)
 {
 }
 
