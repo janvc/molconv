@@ -24,10 +24,15 @@ MoleculeListModel::MoleculeListModel(molconv::sysPtr &newSystem, QObject *parent
     : QAbstractItemModel(parent)
     , m_system(newSystem)
 {
+    qDebug("this is the constructor of MoleculeListModel");
 }
 
 QModelIndex MoleculeListModel::index(int row, int column, const QModelIndex &parent) const
 {
+    qDebug("entering MoleculeListModel::index()");
+
+    if (!hasIndex(row, column, parent))
+        return QModelIndex();
 }
 
 QModelIndex MoleculeListModel::parent(const QModelIndex &child) const
@@ -40,8 +45,13 @@ int MoleculeListModel::rowCount(const QModelIndex &parent) const
 
 int MoleculeListModel::columnCount(const QModelIndex &parent) const
 {
+    return 3;
 }
 
 QVariant MoleculeListModel::data(const QModelIndex &index, int role) const
+{
+}
+
+bool MoleculeListModel::insertRows(int row, int count, const QModelIndex &parent)
 {
 }

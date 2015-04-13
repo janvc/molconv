@@ -35,20 +35,11 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window, molconv::sysPtr &newSyst
     qDebug("this is the constructor of ListOfMolecules");
 
     main_window = window;
-    m_model = new MoleculeListModel(newSystem);
+    //m_model = new MoleculeListModel(newSystem);
 
     ui->setupUi(this);
 
-    ui->system_tree->setModel(m_model);
-
-    //ui->system_tree->setHeaderLabels(QStringList() << "Name" << "Formula" << "Mass [u]" << "Visible");
-
-//    QMenu *contextMenu = new QMenu(ui->system_tree);
-//    ui->system_tree->setContextMenuPolicy(Qt::ActionsContextMenu);
-//    QAction *addElement = new QAction("add element", contextMenu);
-//    QAction *deleteElement = new QAction("delete element", contextMenu);
-//    ui->system_tree->addAction(addElement);
-//    ui->system_tree->addAction(deleteElement);
+    ui->system_tree->setModel(newSystem.get());
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -56,56 +47,24 @@ ListOfMolecules::~ListOfMolecules()
     qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
-
-void ListOfMolecules::list_new_molecule(molconv::moleculePtr theMolecule)
+/*
+void ListOfMolecules::addMolecule(molconv::moleculePtr &theMolecule)
 {
-    qDebug("entering ListOfMolecules::list_new_molecule()");
-
-//    MoleculeItem *theItem = new MoleculeItem(theMolecule);
-
-//    theItem->setText(0, QString::fromStdString(theMolecule->name()));
-//    theItem->setText(1, QString::fromStdString(theMolecule->formula()));
-//    theItem->setText(2, QString::number(theMolecule->mass()));
-
-//    theItem->setFlags(theItem->flags() | Qt::ItemIsUserCheckable);
-//    theItem->setCheckState(3, Qt::Checked);
-
-//    connect(ui->system_tree, SIGNAL(itemChanged(QTreeWidgetItem*, int)), this, SLOT(checkbox_toggled(QTreeWidgetItem*)));
-
-//    ui->system_tree->addTopLevelItem(theItem);
+    qDebug("entering ListOfMolecules::addMolecule()");
 }
 
 molconv::moleculePtr ListOfMolecules::getSelectedMolecule() const
 {
     qDebug("entering ListOfMolecules::getSelectedMolecule()");
-
-//    MoleculeItem *selectedMolecule = dynamic_cast<MoleculeItem*>(ui->system_tree->currentItem());
-
-//    return selectedMolecule->getMolecule();
 }
 
-void ListOfMolecules::list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup)
+void ListOfMolecules::addGroup(molconv::groupPtr &theGroup)
 {
     qDebug("entering ListOfMolecules::list_new_group()");
-
-//    GroupItem *theItem = new GroupItem(theGroup);
-
-//    theItem->setText(0, QString::fromStdString(theGroup->name()));
-
-//    ui->system_tree->addTopLevelItem(theItem);
 }
 
 void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *theItem)
 {
     qDebug("entering ListOfMolecules::checkbox_toggled()");
-
-//    MoleculeItem *molItem = dynamic_cast<MoleculeItem*>(theItem);
-//    bool state;
-
-//    if (theItem->checkState(3) == Qt::Checked)
-//        state = true;
-//    else
-//        state = false;
-
-//    main_window->toggle_molecule(molItem->getMolecule(),state);
 }
+*/

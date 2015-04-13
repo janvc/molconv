@@ -466,14 +466,14 @@ namespace molconv
     }
 
     ///
-    /// \brief Molecule::addGroup
+    /// \brief Molecule::addToGroup
     /// \param newGroup
     ///
-    /// This method adds a poiner to a new group, that the molecule now belongs to
+    /// This method adds a poiner to the new group, that the molecule now belongs to
     ///
-    void Molecule::addGroup(const groupPtr newGroup)
+    void Molecule::addToGroup(const groupPtr newGroup)
     {
-        qDebug("entering Molecule::addGroup()");
+        qDebug("entering Molecule::addToGroup()");
         d->m_group = newGroup;
     }
 
@@ -485,25 +485,8 @@ namespace molconv
     ///
     groupPtr &Molecule::group() const
     {
-        qDebug("entering Molecule::groups()");
+        qDebug("entering Molecule::group()");
         return d->m_group;
-    }
-
-    ///
-    /// \brief Molecule::isInGroup
-    /// \param theGroup
-    /// \return
-    ///
-    /// This method determines if the molecule belongs to a secific group
-    ///
-    bool Molecule::isInGroup(const groupPtr &theGroup) const
-    {
-        qDebug("entering Molecule::isInGroup()");
-
-        if (theGroup == d->m_group)
-            return true;
-        else
-            return false;
     }
 
     ///

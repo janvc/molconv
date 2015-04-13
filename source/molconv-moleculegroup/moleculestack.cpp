@@ -95,18 +95,18 @@ namespace molconv
         d->parallelAtoms.push_back(theAtoms);
 
         // if this is NOT the first molecule, align the new molecule to the reference molecule:
-        if (size() != 1)
+        if (nMolecules() != 1)
         {
-            double distance = Distance(ReferenceMolecule(), size() - 1);
+            double distance = Distance(ReferenceMolecule(), nMolecules() - 1);
             Eigen::Vector3d newPosition = getMolecule(ReferenceMolecule())->internalOriginPosition() + getParallelVectorDirection(ReferenceMolecule()) * distance;
-            Eigen::Vector3d translationVector = newPosition - getMolecule(size() - 1)->internalOriginPosition();
+            Eigen::Vector3d translationVector = newPosition - getMolecule(nMolecules() - 1)->internalOriginPosition();
 
-            getMolecule(size() - 1)->translate(translationVector);
+            getMolecule(nMolecules() - 1)->translate(translationVector);
 
-            Eigen::Vector3d rotationAxis = getParallelVectorDirection(ReferenceMolecule()).cross(getParallelVectorDirection(size() - 1));
-            double rotAngle = acos(getParallelVectorDirection(ReferenceMolecule()).dot(getParallelVectorDirection(size() - 1)));
+            Eigen::Vector3d rotationAxis = getParallelVectorDirection(ReferenceMolecule()).cross(getParallelVectorDirection(nMolecules() - 1));
+            double rotAngle = acos(getParallelVectorDirection(ReferenceMolecule()).dot(getParallelVectorDirection(nMolecules() - 1)));
 
-            getMolecule(size() - 1)->rotate(rotationAxis, rotAngle);
+            getMolecule(nMolecules() - 1)->rotate(rotationAxis, rotAngle);
         }
     }
 

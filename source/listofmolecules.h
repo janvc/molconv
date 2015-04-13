@@ -25,7 +25,7 @@
 #include "molconv-molecule/molecule.h"
 #include "molconv-moleculegroup/abstractmoleculegroup.h"
 #include "include/types.h"
-#include "moleculelistmodel.h"
+//#include "moleculelistmodel.h"
 
 namespace Ui
 {
@@ -41,18 +41,19 @@ class ListOfMolecules : public QDockWidget
     public:
         ListOfMolecules(MolconvWindow *window, molconv::sysPtr &newSystem);
         ~ListOfMolecules();
-
-        void list_new_molecule(molconv::moleculePtr theMolecule);
+/*
+        void addMolecule(molconv::moleculePtr &theMolecule);
+        void addGroup(molconv::groupPtr &theGroup);
         molconv::moleculePtr getSelectedMolecule() const;
 
     private slots:
-        void list_new_group(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup);
-        void checkbox_toggled(QTreeWidgetItem *theItem);
 
+        void checkbox_toggled(QTreeWidgetItem *theItem);
+*/
     private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *main_window;
-        MoleculeListModel *m_model;
+        //MoleculeListModel *m_model;
 };
 
 

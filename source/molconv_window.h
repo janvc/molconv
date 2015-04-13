@@ -56,7 +56,7 @@ public:
     void set_intbasis(const int mol_nr, const molconv::Config &config);
 
 public slots:
-    void saveFile(const size_t index, const QString &filename);
+    //void saveFile(const size_t index, const QString &filename);
     void saveFile();
 //    void closeFile();
     void quit();
@@ -65,7 +65,7 @@ public slots:
     void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
-    void DuplicateSelectedMolecule();
+    //void DuplicateSelectedMolecule();
     void newGroup();
     void startNewGroupDialog();
     void addMoleculeToGroup();

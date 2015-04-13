@@ -37,7 +37,8 @@ namespace molconv
         abstractMoleculeGroup(const std::string &name);
         ~abstractMoleculeGroup();
 
-        size_t size() const;
+        size_t nMolecules() const;
+        size_t nGroups() const;
         std::string name() const;
 
         double EulerTheta(const size_t index) const;
@@ -49,9 +50,13 @@ namespace molconv
 
         void checkIndex(const size_t index) const;
 
-        boost::shared_ptr<Molecule> getMolecule(const size_t index) const;
+        moleculePtr getMolecule(const size_t index) const;
+        groupPtr getGroup(const size_t index) const;
+        groupPtr parent() const;
 
-        void addMolecule(const boost::shared_ptr<Molecule> newMolecule);
+        void setName(const std::string &newName);
+
+        void addMolecule(const moleculePtr newMolecule);
         void removeMolecule(const size_t index);
 
         void addGroup(const groupPtr &newGroup);

@@ -76,9 +76,8 @@ namespace molconv
         void cleanUp();
 
         // manage groups
-        void addGroup(const groupPtr newGroup);
+        void addToGroup(const groupPtr newGroup);
         groupPtr &group() const;
-        bool isInGroup(const groupPtr &theGroup) const;
 
     private:
         // private functions:

@@ -66,15 +66,27 @@ namespace molconv
     abstractMoleculeGroup::~abstractMoleculeGroup() {}
 
     ///
-    /// \brief abstractMoleculeGroup::size
+    /// \brief abstractMoleculeGroup::nMolecules
     /// \return
     ///
     /// return the number of molecules in the group
     ///
-    size_t abstractMoleculeGroup::size() const
+    size_t abstractMoleculeGroup::nMolecules() const
     {
-        qDebug("entering abstractMoleculeGroup::size()");
+        qDebug("entering abstractMoleculeGroup::nMolecules()");
         return d->m_molecules.size();
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::nGroups
+    /// \return
+    ///
+    /// return the number of groups in the group
+    ///
+    size_t abstractMoleculeGroup::nGroups() const
+    {
+        qDebug("entering abstractMoleculeGroup::nGroups()");
+        return d->m_groups.size();
     }
 
     ///
@@ -130,7 +142,7 @@ namespace molconv
     void abstractMoleculeGroup::checkIndex(const size_t index) const
     {
         qDebug("entering abstractMoleculeGroup::checkIndex()");
-        if (index > size())
+        if (index > nMolecules())
             throw std::invalid_argument("Index out of range in abstractMoleculeGroup.\n");
     }
 
@@ -141,10 +153,47 @@ namespace molconv
     ///
     /// return a boost pointer to the molecule at \p index
     ///
-    boost::shared_ptr<Molecule> abstractMoleculeGroup::getMolecule(const size_t index) const
+    moleculePtr abstractMoleculeGroup::getMolecule(const size_t index) const
     {
         qDebug("entering abstractMoleculeGroup::getMolecule()");
         return d->m_molecules.at(index);
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::getGroup
+    /// \param index
+    /// \return
+    ///
+    /// return a boost pointer to the group at \p index
+    ///
+    groupPtr abstractMoleculeGroup::getGroup(const size_t index) const
+    {
+        qDebug("entering abstractMoleculeGroup::getGroup()");
+        return d->m_groups.at(index);
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::parent
+    /// \return
+    ///
+    /// return a boost pointer to the parent of this group
+    ///
+    groupPtr abstractMoleculeGroup::parent() const
+    {
+        qDebug("entering abstractMoleculeGroup::parent()");
+        return d->m_parentgroup;
+    }
+
+    ///
+    /// \brief abstractMoleculeGroup::setName
+    /// \param newName
+    ///
+    /// set the name of the group to \p newName
+    ///
+    void abstractMoleculeGroup::setName(const std::string &newName)
+    {
+        qDebug("entering abstractMoleculeGroup::setName()");
+        d->m_groupname = newName;
     }
 
     ///
@@ -153,7 +202,7 @@ namespace molconv
     ///
     /// add a molecule to the group
     ///
-    void abstractMoleculeGroup::addMolecule(const boost::shared_ptr<Molecule> newMolecule)
+    void abstractMoleculeGroup::addMolecule(const moleculePtr newMolecule)
     {
         qDebug("entering abstractMoleculeGroup::addMolecule()");
         d->m_molecules.push_back(newMolecule);

@@ -61,7 +61,7 @@ namespace molconv
     ///
     size_t System::nMolecules() const
     {
-        qDebug() << "entering System::size()";
+        qDebug() << "entering System::nMolecules()";
         return d->m_molecules.size();
     }
 
@@ -163,6 +163,10 @@ namespace molconv
     {
         qDebug() << "entering System::addMolecule()";
         d->m_molecules.push_back(newMolecule);
+
+        //QModelIndex index = createIndex(nMolecules(), 0, newMolecule.get());
+
+        //emit dataChanged(index, index);
     }
 
     ///
@@ -206,6 +210,258 @@ namespace molconv
             throw std::invalid_argument("index out of range.\n");
 
         d->m_groups.erase(d->m_groups.begin() + index);
+    }
+
+    ///
+    /// \brief System::data
+    /// \param index
+    /// \param role
+    /// \return
+    ///
+    /// get the data from the model to the tree view
+    /// 1st column: name of molecule/group
+    /// 2nd column: number of atoms/molecules of molecule/group
+    ///
+    QVariant System::data(const QModelIndex &index, int role) const
+    {
+        qDebug("entering System::data()");
+
+        if (!index.isValid())
+            return QVariant();
+
+        if (role != Qt::DisplayRole && role != Qt::EditRole)
+            return QVariant();
+
+        // find out if index points to a molecule or a group
+        Molecule *testMol = getMolecule(index);
+        abstractMoleculeGroup *testGroup = getGroup(index);
+
+        if (testMol)    // it is a molecule!!
+        {
+            switch (index.column())
+            {
+            case 0:
+            {
+                return QVariant(QString::fromStdString(testMol->name()));
+                break;
+            }
+            case 1:
+            {
+                int molSize = testMol->size();
+                return QVariant(molSize);
+                break;
+            }
+            default:
+            {
+                return QVariant();
+                break;
+            }
+            }
+        }
+        else if (testGroup) // no it's not!!
+        {
+            switch (index.column())
+            {
+            case 0:
+            {
+                return QVariant(QString::fromStdString(testGroup->name()));
+                break;
+            }
+            case 1:
+            {
+                int groupSize = testGroup->nMolecules();
+                return QVariant(groupSize);
+                break;
+            }
+            default:
+            {
+                return QVariant();
+                break;
+            }
+            }
+        }
+        else    // WTF!?
+            return QVariant();
+    }
+
+
+    QVariant System::headerData(int section, Qt::Orientation orientation, int role) const
+    {
+        qDebug("entering System::headerData()");
+
+        if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        {
+            switch (section)
+            {
+            case 0:
+                return QVariant("Name");
+                break;
+            case 1:
+                return QVariant("Number of Atoms/Molecules");
+                break;
+            }
+        }
+
+        return QVariant();
+    }
+
+
+    QModelIndex System::index(int row, int column, const QModelIndex &parent) const
+    {
+        qDebug("entering System::index()");
+
+        if (parent.isValid() && parent.column() != 0)
+            return QModelIndex();
+
+        abstractMoleculeGroup *parentGroup = getGroup(parent);
+        int groupsInParent = parentGroup->nGroups();
+
+        if (row >= groupsInParent)
+        {
+            // it must be a molecule, because the groups always come first
+            Molecule *childMol = parentGroup->getMolecule(row - groupsInParent).get();
+            if (childMol)
+                return createIndex(row, column, childMol);
+            else
+                return QModelIndex();
+        }
+        else
+        {
+            abstractMoleculeGroup *childGroup = parentGroup->getGroup(row).get();
+            if (childGroup)
+                return createIndex(row, column, childGroup);
+            else
+                return QModelIndex();
+        }
+    }
+
+
+    QModelIndex System::parent(const QModelIndex &child) const
+    {
+        qDebug("entering System::parent()");
+
+        if (!child.isValid())
+            return QModelIndex();
+
+        Molecule *testMol = getMolecule(child);
+        if (testMol)    // "this" is a molecule
+        {
+            abstractMoleculeGroup *parentGroup = testMol->group().get();
+            if (parentGroup == 0)
+                return QModelIndex();
+
+            int index = 0;
+            while (parentGroup->getMolecule(index).get() != child.internalPointer())
+                index++;
+
+            return createIndex(index, 0, parentGroup);
+        }
+        else    // it is a group
+        {
+            abstractMoleculeGroup *testGroup = getGroup(child);
+            abstractMoleculeGroup *parentGroup = testGroup->parent().get();
+            if (parentGroup == 0)
+                return QModelIndex();
+
+            int index = 0;
+            while (parentGroup->getGroup(index).get() != child.internalPointer())
+                index++;
+
+            return createIndex(index, 0, parentGroup);
+        }
+    }
+
+
+    bool System::setData(const QModelIndex &index, const QVariant &value, int role)
+    {
+        qDebug("entering System::setData()");
+
+        if (role != Qt::EditRole)
+            return false;
+
+        switch (index.column())
+        {
+            case 0:
+        {
+                Molecule *testMol = getMolecule(index);
+                if (testMol)
+                    testMol->setName(value.toString().toStdString());
+                else
+                {
+                    abstractMoleculeGroup *testGroup = getGroup(index);
+                    testGroup->setName(value.toString().toStdString());
+                }
+                return true;
+                break;
+        }
+        default:
+            return false;
+            break;
+        }
+    }
+
+
+    bool System::insertRows(int row, int count, const QModelIndex &parent)
+    {
+        qDebug("entering System::insertRows()");
+        //return false;
+        beginInsertRows(parent, row, row + count -1);
+        endInsertRows();
+        return true;
+    }
+
+
+//    bool System::removeRows(int row, int count, const QModelIndex &parent)
+//    {
+//        qDebug("entering System::removeRows()");
+//        return false;
+//    }
+
+
+    int System::rowCount(const QModelIndex &parent) const
+    {
+        qDebug("entering System::rowCount()");
+
+        abstractMoleculeGroup *testGroup = getGroup(parent);
+        if (testGroup)
+            return testGroup->nGroups() + testGroup->nMolecules();
+        else
+            return 0;
+    }
+
+
+    int System::columnCount(const QModelIndex & /* parent */) const
+    {
+        qDebug("entering System::columnCount()");
+        return 2;
+    }
+
+
+    Molecule *System::getMolecule(const QModelIndex &index) const
+    {
+        qDebug("entering System::getMolecule()");
+
+        if (index.isValid())
+        {
+            Molecule *theMol = static_cast<Molecule*>(index.internalPointer());
+            if (theMol)
+                return theMol;
+        }
+        return 0;
+    }
+
+
+    abstractMoleculeGroup *System::getGroup(const QModelIndex &index) const
+    {
+        qDebug("entering System::getGroup()");
+
+        if (index.isValid())
+        {
+            abstractMoleculeGroup *theGroup = static_cast<abstractMoleculeGroup*>(index.internalPointer());
+            if (theGroup)
+                return theGroup;
+        }
+        return 0;
     }
 
 } // namespace molconv

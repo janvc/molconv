@@ -75,7 +75,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
-    connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
+    //connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this, d->m_system);
@@ -102,7 +102,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
-    d->m_ListOfMolecules->list_new_molecule(temp_mol);
+    //d->m_ListOfMolecules->addMolecule(temp_mol);
 }
 
 void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
@@ -139,10 +139,10 @@ void MolconvWindow::saveFile()
     qDebug("entering MolconvWindow::saveFile()");
 }
 
-void MolconvWindow::saveFile(const size_t index, const QString &filename)
-{
-    qDebug("entering MolconvWindow::saveFile(filename)");
-}
+//void MolconvWindow::saveFile(const size_t index, const QString &filename)
+//{
+//    qDebug("entering MolconvWindow::saveFile(filename)");
+//}
 
 void MolconvWindow::startOpenDialog()
 {
@@ -170,12 +170,12 @@ void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
     add_molecule(newMol);
 }
 
-void MolconvWindow::DuplicateSelectedMolecule()
-{
-    qDebug("entering MolconvWindow::DuplicateSelectedMolecule()");
+//void MolconvWindow::DuplicateSelectedMolecule()
+//{
+//    qDebug("entering MolconvWindow::DuplicateSelectedMolecule()");
 
-    DuplicateMolecule(d->m_ListOfMolecules->getSelectedMolecule());
-}
+//    DuplicateMolecule(d->m_ListOfMolecules->getSelectedMolecule());
+//}
 
 void MolconvWindow::newGroup()
 {

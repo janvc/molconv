@@ -34,13 +34,14 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
-    config.cpp
-    exceptions.cpp
-    groupitem.cpp
+#   config.cpp
+#   exceptions.cpp
+#   groupitem.cpp
     main.cpp
     molconv_window.cpp
-    moleculeitem.cpp
-    moleculelistmodel.cpp
+#   moleculeitem.cpp
+#   moleculelistitem.cpp
+#   moleculelistmodel.cpp
     newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
