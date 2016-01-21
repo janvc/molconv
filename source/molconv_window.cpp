@@ -33,12 +33,14 @@
 #include "listofmolecules.h"
 #include "moleculesettings.h"
 #include "open_dialog.h"
+#include "export_dialog.h"
 
 
 class MolconvWindowPrivate
 {
 public:
     OpenDialog *m_OpenDialog;
+    ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
 
     ListOfMolecules *m_ListOfMolecules;
@@ -61,12 +63,14 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     ui->setupUi(this);
     d->m_OpenDialog = new OpenDialog(this);
+    d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
+    connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
@@ -144,6 +148,14 @@ void MolconvWindow::startOpenDialog()
 
     d->m_OpenDialog->setModal(true);
     d->m_OpenDialog->exec();
+}
+
+void MolconvWindow::startExportDialog()
+{
+    qDebug("entering MolconvWindow::startExportDialog()");
+
+    d->m_ExportDialog->setModal(true);
+    d->m_ExportDialog->exec();
 }
 
 void MolconvWindow::getMoleculeDialog()

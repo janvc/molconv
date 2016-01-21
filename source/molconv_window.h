@@ -62,6 +62,7 @@ public slots:
     void quit();
     void getMoleculeDialog();
     void startOpenDialog();
+    void startExportDialog();
     void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);

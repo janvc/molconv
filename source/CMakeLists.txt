@@ -63,6 +63,7 @@ set(SOURCES
     listofmolecules.cpp
     moleculesettings.cpp
     open_dialog.cpp
+    export_dialog.cpp
     utilities.cpp
 )
 
@@ -72,6 +73,7 @@ set(MOC_HEADERS
     moleculesettings.h
     newgroupdialog.h
     open_dialog.h
+    export_dialog.h
 )
 
 set(UI_FORMS
@@ -80,6 +82,7 @@ set(UI_FORMS
     moleculesettings.ui
     newgroupdialog.ui
     open_dialog.ui
+    export_dialog.ui
 )
 
 set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})

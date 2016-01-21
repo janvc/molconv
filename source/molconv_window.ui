@@ -39,6 +39,7 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionImport_Molecule"/>
+    <addaction name="actionExport_Molecule"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuMolecule">
@@ -116,6 +117,11 @@
   <action name="actionAdd_To_Group">
    <property name="text">
     <string>Add To Group</string>
+   </property>
+  </action>
+  <action name="actionExport_Molecule">
+   <property name="text">
+    <string>Export Molecule</string>
    </property>
   </action>
  </widget>
