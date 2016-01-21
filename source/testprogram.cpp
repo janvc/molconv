@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     theSystem.addMolecule(boost::make_shared<molconv::Molecule>(molconv::Molecule(secondMolFile.molecule())));
 
 
-    std::cout << "the system contains " << theSystem.size() << " molecules.\n";
+    std::cout << "the system contains " << theSystem.nMolecules() << " molecules.\n";
 
     qDebug("setting the origins and the bases of the molecules");
     theSystem.getMolecule(0)->setOrigin(molconv::kCenterOfMass);

@@ -40,4 +40,13 @@ ExportDialog::~ExportDialog()
 
 void ExportDialog::createMoleculeList()
 {
+    ui->molExportList->clear();
+
+    for (int i = 0; i < theWindow->nMolecules(); i++)
+    {
+        std::string currentName = theWindow->getMol(i)->name();
+        QListWidgetItem *molItem = new QListWidgetItem(QString::fromStdString(currentName), ui->molExportList);
+        molItem->setCheckState(Qt::Unchecked);
+        ui->molExportList->addItem(molItem);
+    }
 }

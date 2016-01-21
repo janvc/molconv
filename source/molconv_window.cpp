@@ -39,6 +39,10 @@
 class MolconvWindowPrivate
 {
 public:
+    MolconvWindowPrivate() : m_system(new molconv::System)
+    {
+    }
+
     OpenDialog *m_OpenDialog;
     ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
@@ -46,7 +50,7 @@ public:
     ListOfMolecules *m_ListOfMolecules;
     QDockWidget *m_MoleculeSettings;
 
-    molconv::System m_system;
+    boost::shared_ptr<molconv::System> m_system;
 
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
@@ -65,6 +69,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_OpenDialog = new OpenDialog(this);
     d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
+
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
@@ -95,19 +100,29 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
     qDebug("entering MolconvWindow::add_molecule(temp_mol)");
 
-    d->m_system.addMolecule(temp_mol);
-    d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system.getMolecule(d->m_system.size() - 1).get()));
+    d->m_system->addMolecule(temp_mol);
+    d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system->getMolecule(d->m_system->nMolecules() - 1).get()));
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
     d->m_ListOfMolecules->list_new_molecule(temp_mol);
 }
 
+int MolconvWindow::nMolecules()
+{
+    return d->m_system->nMolecules();
+}
+
+molconv::moleculePtr MolconvWindow::getMol(int index)
+{
+    return d->m_system->getMolecule(index);
+}
+
 void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
 {
     qDebug("entering MolconvWindow::toggle_molecule()");
 
-    size_t moleculeIndex = d->m_system.MoleculeIndex(theMolecule);
+    size_t moleculeIndex = d->m_system->MoleculeIndex(theMolecule);
     if (state)
     {
         d->m_GraphicsItemVector.at(moleculeIndex)->show();
@@ -154,6 +169,7 @@ void MolconvWindow::startExportDialog()
 {
     qDebug("entering MolconvWindow::startExportDialog()");
 
+    d->m_ExportDialog->createMoleculeList();
     d->m_ExportDialog->setModal(true);
     d->m_ExportDialog->exec();
 }

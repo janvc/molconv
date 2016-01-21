@@ -15,21 +15,14 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QScrollArea" name="scrollArea">
-     <property name="widgetResizable">
-      <bool>true</bool>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Select the molecules to export</string>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>380</width>
-        <height>243</height>
-       </rect>
-      </property>
-     </widget>
     </widget>
+   </item>
+   <item>
+    <widget class="QListWidget" name="molExportList"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

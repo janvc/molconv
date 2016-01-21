@@ -36,7 +36,7 @@ namespace molconv
     public:
         System();
         ~System();
-        size_t size() const;
+        size_t nMolecules() const;
         moleculePtr getMolecule(const size_t index) const;
         size_t MoleculeIndex(const moleculePtr theMolecule);
 

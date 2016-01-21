@@ -52,6 +52,8 @@ public:
     MolconvWindow(QMainWindow *parent = 0);
     ~MolconvWindow();
     void add_molecule(molconv::moleculePtr temp_mol);
+    int nMolecules();
+    molconv::moleculePtr getMol(int index);
     void clean_up(const int mol_nr, const molconv::Config &config);
     void set_intbasis(const int mol_nr, const molconv::Config &config);
 

@@ -58,7 +58,7 @@ namespace molconv
     ///
     /// returns the number of molecules in the system
     ///
-    size_t System::size() const
+    size_t System::nMolecules() const
     {
         qDebug() << "entering System::size()";
         return d->m_molecules.size();
@@ -74,7 +74,7 @@ namespace molconv
     moleculePtr System::getMolecule(const size_t index) const
     {
         qDebug() << "entering System::getMolecule()";
-        if (index >= size())
+        if (index >= nMolecules())
             throw std::invalid_argument("index out of range.\n");
 
         return d->m_molecules.at(index);
@@ -93,7 +93,7 @@ namespace molconv
 
         size_t index;
 
-        for (size_t i = 0; i < size(); i++)
+        for (size_t i = 0; i < nMolecules(); i++)
         {
             if (getMolecule(i) == theMolecule)
                 index = i;
@@ -123,7 +123,7 @@ namespace molconv
     void System::removeMolecule(const size_t index)
     {
         qDebug() << "entering System::removeMolecule()";
-        if (index >= size())
+        if (index >= nMolecules())
             throw std::invalid_argument("index out of range.\n");
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
