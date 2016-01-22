@@ -24,6 +24,7 @@
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
+    #include<chemkit/graphicscamera.h>
     #include<boost/make_shared.hpp>
 #endif
 
@@ -80,6 +81,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
+    connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -222,4 +224,22 @@ void MolconvWindow::startNewGroupDialog()
 void MolconvWindow::addMoleculeToGroup()
 {
     qDebug("entering MolconvWindow::addMoleculeToGroup()");
+}
+
+void MolconvWindow::ResetView()
+{
+    // determine largest distance from origin:
+    double maxLength = 0;
+    for (int i = 0; i < d->m_system->nMolecules(); i++)
+        for (int j = 0; j < d->m_system->getMolecule(i)->size(); j++)
+        {
+            double length = d->m_system->getMolecule(i)->atom(j)->position().norm();
+            if (length > maxLength)
+                maxLength = length;
+        }
+
+    // d = r / tan(22.5 degrees)
+    double dist = maxLength / 0.4142135624;
+
+    ui->molconv_graphicsview->setCamera(boost::make_shared<chemkit::GraphicsCamera>(0,0,dist));
 }

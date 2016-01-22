@@ -72,6 +72,7 @@ public slots:
     void newGroup();
     void startNewGroupDialog();
     void addMoleculeToGroup();
+    void ResetView();
 
 private slots:
 
