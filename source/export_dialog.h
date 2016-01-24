@@ -41,6 +41,9 @@ public:
     void createMoleculeList();
     void writeFile(const QString &filename, const molconv::moleculePtr &theMolecule) const;
 
+private slots:
+    void on_buttonBox_accepted();
+
 private:
     Ui::ExportDialog *ui;
     MolconvWindow *theWindow;
