@@ -67,7 +67,7 @@ void ExportDialog::on_buttonBox_accepted()
         }
     }
 
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save File"));
+    QString filename = QFileDialog::getSaveFileName(theWindow, tr("Save File"));
 
     boost::shared_ptr<chemkit::MoleculeFile> theMolFile(new chemkit::MoleculeFile(filename.toStdString()));
     theMolFile->addMolecule(dummyMol);
