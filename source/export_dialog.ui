@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,52 @@
    </item>
    <item>
     <widget class="QListWidget" name="molExportList"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Format:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="formatSelector">
+     <item>
+      <property name="text">
+       <string>XYZ Format (*.xyz)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Chemical JSON Format (*.cjson)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Chemical Markup Language (*.cml)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>MDL Molfile (*.mol)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Structure-Data-File (*.sdf)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>MOL2 Format (*.mol2)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>YXYZ Format (*.txyz)</string>
+      </property>
+     </item>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

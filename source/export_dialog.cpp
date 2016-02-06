@@ -55,7 +55,6 @@ void ExportDialog::on_buttonBox_accepted()
 {
     // create a dummy molecule containing the atoms of all selected molecules:
     molconv::moleculePtr dummyMol(new molconv::Molecule);
-
     for (int i = 0; i < ui->molExportList->count(); i++)
     {
         if (ui->molExportList->item(i)->checkState() == Qt::Checked)
@@ -67,9 +66,41 @@ void ExportDialog::on_buttonBox_accepted()
         }
     }
 
-    QString filename = QFileDialog::getSaveFileName(theWindow, tr("Save File"));
+    QStringList formats;
+    formats << "XYZ Format (*.xyz)";
+    formats << "Chemical JSON Format (*.cjson)";
+    formats << "Chemical Markup Language (*.cml)";
+    formats << "MDL Molfile (*.mol)";
+    formats << "Structure-Data-File (*.sdf)";
+    formats << "MOL2 Format (*.mol2)";
+    formats << "TXYZ Format (*.txyz)";
 
-    boost::shared_ptr<chemkit::MoleculeFile> theMolFile(new chemkit::MoleculeFile(filename.toStdString()));
-    theMolFile->addMolecule(dummyMol);
-    theMolFile->write();
+    QStringList suffixes;
+    suffixes << ".xyz";
+    suffixes << ".cjson";
+    suffixes << ".cml";
+    suffixes << ".mol";
+    suffixes << ".sdf";
+    suffixes << ".mol2";
+    suffixes << ".txyz";
+
+    QString formatString = formats.at(ui->formatSelector->currentIndex());
+
+    QString filename = QFileDialog::getSaveFileName(theWindow, tr("Save File"), 0, formatString, 0, QFileDialog::DontConfirmOverwrite);
+
+    if (filename == "")
+        return;
+    else
+    {
+        if (!filename.contains(suffixes.at(ui->formatSelector->currentIndex())))
+            filename += suffixes.at(ui->formatSelector->currentIndex());
+
+        if (QFileInfo::exists(filename))
+            if (QMessageBox::question(this, tr("Warning: File exists!"), QString("The file %1 exists. Overwrite?").arg(filename)) != QMessageBox::Yes)
+                return;
+
+        boost::shared_ptr<chemkit::MoleculeFile> theMolFile(new chemkit::MoleculeFile(filename.toStdString()));
+        theMolFile->addMolecule(dummyMol);
+        theMolFile->write();
+    }
 }
