@@ -44,6 +44,8 @@ public:
 private slots:
     void on_buttonBox_accepted();
 
+    void on_selectAllBox_stateChanged();
+
 private:
     Ui::ExportDialog *ui;
     MolconvWindow *theWindow;

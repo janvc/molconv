@@ -41,6 +41,7 @@ ExportDialog::~ExportDialog()
 void ExportDialog::createMoleculeList()
 {
     ui->molExportList->clear();
+    ui->selectAllBox->setCheckState(Qt::Unchecked);
 
     for (int i = 0; i < theWindow->nMolecules(); i++)
     {
@@ -103,4 +104,14 @@ void ExportDialog::on_buttonBox_accepted()
         theMolFile->addMolecule(dummyMol);
         theMolFile->write();
     }
+}
+
+void ExportDialog::on_selectAllBox_stateChanged()
+{
+    if (ui->selectAllBox->checkState() == Qt::Checked)
+        for (int i = 0; i < ui->molExportList->count(); i++)
+            ui->molExportList->item(i)->setCheckState(Qt::Checked);
+    else
+        for (int i = 0; i < ui->molExportList->count(); i++)
+            ui->molExportList->item(i)->setCheckState(Qt::Unchecked);
 }
