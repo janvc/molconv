@@ -22,7 +22,7 @@ find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIR
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Chemkit libraries are required
-find_package(Chemkit COMPONENTS io graphics REQUIRED)
+find_package(Chemkit COMPONENTS io graphics gui REQUIRED)
 include_directories(${CHEMKIT_INCLUDE_DIRS})
 
 # Eigen3 is required
@@ -33,6 +33,9 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
+
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
 
 FIND_PACKAGE(Qt5LinguistTools)
 IF(UPDATE_TRANSLATIONS)
@@ -65,6 +68,7 @@ set(SOURCES
     open_dialog.cpp
     export_dialog.cpp
     utilities.cpp
+    graphicsaxisitem.cpp
 )
 
 set(MOC_HEADERS
@@ -111,5 +115,5 @@ add_subdirectory(include)
 
 add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
 add_executable(testprogram testprogram.cpp)
-target_link_libraries(molconv molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(molconv molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})
 target_link_libraries(testprogram molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})

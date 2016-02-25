@@ -65,6 +65,9 @@ namespace molconv
         void translate(const Eigen::Vector3d &shiftVector);
         void rotate(const Eigen::Matrix3d &rotationMatrix);
         void rotate(const Eigen::Vector3d &axis, const double angle);
+        void setPhi(const double newPhi);
+        void setTheta(const double newTheta);
+        void setPsi(const double newPsi);
 
         // changing the internal basis:
         void setOrigin(const origin &newOrigin, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);
@@ -81,6 +84,9 @@ namespace molconv
         Eigen::Matrix3d calcInertiaEigenvectors() const;
         Eigen::Vector3d calcCovarianceEigenvalues() const;
         Eigen::Matrix3d calcCovarianceEigenvectors() const;
+
+        void initIntPos();
+
         boost::scoped_ptr<MoleculePrivate> d;
     };
 

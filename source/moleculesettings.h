@@ -41,11 +41,29 @@ public:
     MoleculeSettings(MolconvWindow *window);
     ~MoleculeSettings();
 
-    void setValues(const molconv::moleculePtr the_molecule);
+    molconv::moleculePtr molecule() const;
+
+public slots:
+    void setMolecule(molconv::moleculePtr newMolecule);
+
+private slots:
+    void on_xSlider_valueChanged(int value);
+    void on_ySlider_valueChanged(int value);
+    void on_zSlider_valueChanged(int value);
+    void on_xSpinBox_valueChanged(double value);
+    void on_ySpinBox_valueChanged(double value);
+    void on_zSpinBox_valueChanged(double value);
+
+    void on_phiSlider_valueChanged(int value);
+
+    void on_phiSpinBox_valueChanged(double value);
 
 private:
+    void setValues();
+
     Ui::MoleculeSettings *ui;
     MolconvWindow *main_window;
+    molconv::moleculePtr m_molecule;
 };
 
 #endif // MOLECULESETTINGS_H

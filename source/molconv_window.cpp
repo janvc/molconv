@@ -35,6 +35,7 @@
 #include "moleculesettings.h"
 #include "open_dialog.h"
 #include "export_dialog.h"
+#include "graphicsaxisitem.h"
 
 
 class MolconvWindowPrivate
@@ -56,6 +57,8 @@ public:
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
     std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
+
+    molconv::moleculePtr activeMolecule;
 };
 
 
@@ -88,6 +91,9 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
 
+    GraphicsAxisItem *axes = new GraphicsAxisItem;
+    ui->molconv_graphicsview->addItem(axes);
+
     ui->molconv_graphicsview->update();
 }
 
@@ -108,6 +114,9 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->update();
 
     d->m_ListOfMolecules->list_new_molecule(temp_mol);
+    d->activeMolecule = temp_mol;
+
+    emit new_molecule(temp_mol);
 }
 
 int MolconvWindow::nMolecules()
@@ -181,7 +190,6 @@ void MolconvWindow::getMoleculeDialog()
     qDebug("entering MolconvWindow::get_molecule_Dialog()");
 
     molconv::moleculePtr temp_mol = d->m_OpenDialog->getMol();
-    temp_mol->cleanUp();
     add_molecule(temp_mol);
 }
 
@@ -239,7 +247,7 @@ void MolconvWindow::ResetView()
         }
 
     // d = r / tan(22.5 degrees)
-    double dist = maxLength / 0.4142135624;
+    double dist = maxLength / 0.4142135624 > 10.0 ? maxLength / 0.4142135624 : 10.0;
 
     ui->molconv_graphicsview->setCamera(boost::make_shared<chemkit::GraphicsCamera>(0,0,dist));
 }

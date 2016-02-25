@@ -18,45 +18,29 @@
  *
  */
 
-
-#ifndef OPEN_DIALOG_H
-#define OPEN_DIALOG_H
+#ifndef GRAPHICSAXISITEM_H
+#define GRAPHICSAXISITEM_H
 
 #ifndef Q_MOC_RUN
-    #include<chemkit/moleculefile.h>
+    #include<chemkit/graphicsitem.h>
     #include<boost/shared_ptr.hpp>
 #endif
-#include<QDialog>
-#include<QtWidgets>
-#include "molconv-molecule/molecule.h"
 
-namespace Ui
+class GraphicsAxisItemPrivate;
+
+class GraphicsAxisItem : public chemkit::GraphicsItem
 {
-    class OpenDialog;
-}
-
-class OpenDialog : public QDialog
-{
-    Q_OBJECT
-
 public:
-    OpenDialog(QWidget *parent = 0);
-    ~OpenDialog();
-    void openFile(const QString &filename);
-    molconv::moleculePtr getMol();
-    molconv::origin getOrigin();
-    molconv::basis getBasis();
-    std::string getMoleculeName();
+    GraphicsAxisItem();
+    GraphicsAxisItem(const Eigen::Vector3d &position, const Eigen::Matrix3d &vectors, const double length);
+    ~GraphicsAxisItem();
 
-private slots:
-    void on_filedialog_clicked();
-    void on_coa_toggled(bool checked);
-    void on_atoms_toggled(bool checked);
-    void atoms_changed(int useless);
+    void setPosition(const Eigen::Vector3d &newPosition);
+
+    void paint(chemkit::GraphicsPainter *painter);
 
 private:
-    Ui::OpenDialog *ui;
-    molconv::moleculePtr m_molecule;
+    boost::shared_ptr<GraphicsAxisItemPrivate> d;
 };
 
-#endif // OPEN_DIALOG_H
+#endif // GRAPHICSAXISITEM_H
