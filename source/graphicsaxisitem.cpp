@@ -30,28 +30,31 @@ class GraphicsAxisItemPrivate
 {
 public:
     // position:
-    Eigen::Vector3d m_position;
+    Eigen::Vector3f m_position;
 
     // orientation: basis vectors:
-    Eigen::Matrix3d m_vectors;
+    Eigen::Matrix3f m_vectors;
 
-    double axisLength;
+    float m_axisLength;
+    float m_radius;
 };
 
 GraphicsAxisItem::GraphicsAxisItem()
     : d(new GraphicsAxisItemPrivate)
 {
-    d->m_position = Eigen::Vector3d::Zero();
-    d->m_vectors = Eigen::Matrix3d::Identity();
-    d->axisLength = 1.0;
+    d->m_position = Eigen::Vector3f::Zero();
+    d->m_vectors = Eigen::Matrix3f::Identity();
+    d->m_axisLength = 1.0f;
+    d->m_radius = 0.1f;
 }
 
-GraphicsAxisItem::GraphicsAxisItem(const Eigen::Vector3d &position, const Eigen::Matrix3d &vectors, const double length)
+GraphicsAxisItem::GraphicsAxisItem(const Eigen::Vector3d &position, const Eigen::Matrix3d &vectors, const float length, const float radius)
     : d(new GraphicsAxisItemPrivate)
 {
-    d->m_position = position;
-    d->m_vectors = vectors;
-    d->axisLength = length;
+    d->m_position = position.cast<float>();
+    d->m_vectors = vectors.cast<float>();
+    d->m_axisLength = length;
+    d->m_radius = radius;
 }
 
 GraphicsAxisItem::~GraphicsAxisItem()
@@ -60,51 +63,44 @@ GraphicsAxisItem::~GraphicsAxisItem()
 
 void GraphicsAxisItem::setPosition(const Eigen::Vector3d &newPosition)
 {
-    d->m_position = newPosition;
+    d->m_position = newPosition.cast<float>();
+}
+
+void GraphicsAxisItem::setVectors(const Eigen::Matrix3d &newVectors)
+{
+    d->m_vectors = newVectors.cast<float>();
 }
 
 void GraphicsAxisItem::paint(chemkit::GraphicsPainter *painter)
 {
-    QVector<Eigen::Vector3f> vertices;
-    QVector<unsigned short> indices;
-    QVector<QColor> colors;
+    // create the vertices:
+    // the origin
+    Eigen::Vector3f vert0 = d->m_position.cast<float>();
+    // the half-way vertices
+    Eigen::Vector3f vert1 = d->m_position + 0.5f * d->m_axisLength * d->m_vectors.col(0);
+    Eigen::Vector3f vert2 = d->m_position + 0.5f * d->m_axisLength * d->m_vectors.col(1);
+    Eigen::Vector3f vert3 = d->m_position + 0.5f * d->m_axisLength * d->m_vectors.col(2);
+    // the ends of the axes
+    Eigen::Vector3f vert4 = d->m_position + d->m_axisLength * d->m_vectors.col(0);
+    Eigen::Vector3f vert5 = d->m_position + d->m_axisLength * d->m_vectors.col(1);
+    Eigen::Vector3f vert6 = d->m_position + d->m_axisLength * d->m_vectors.col(2);
 
-    vertices.append(d->m_position.cast<float>());
-    vertices.append(Eigen::Vector3d(d->m_position + d->axisLength * d->m_vectors.col(0)).cast<float>());
-    vertices.append(Eigen::Vector3d(d->m_position + d->axisLength * d->m_vectors.col(1)).cast<float>());
-    vertices.append(Eigen::Vector3d(d->m_position + d->axisLength * d->m_vectors.col(2)).cast<float>());
-
-    indices << 0 << 1 << 0 << 2 << 0 << 3;
-
-    colors.append(QColor(128, 128, 128));
-    colors.append(QColor(255, 0, 0));
-    colors.append(QColor(0, 255, 0));
-    colors.append(QColor(0, 0, 255));
-
-    chemkit::GraphicsVertexBuffer buffer;
-
-    buffer.setVertices(vertices);
-    buffer.setIndices(indices);
-    buffer.setColors(colors);
-
-    glDisable(GL_LIGHTING);
-    glShadeModel(GL_FLAT);
-
-    QGLShaderProgram program;
-
-    QString vert("void main(){gl_Position=gl_ModelViewProjectionMatrix*gl_Vertex;gl_FrontColor=gl_Color;}");
-    QString frag("void main(){gl_FragColor=gl_Color;}");
-
-    program.addShaderFromSourceCode(QGLShader::Vertex, vert);
-    program.addShaderFromSourceCode(QGLShader::Fragment, frag);
-
-    program.link();
-    program.bind();
-
-    painter->draw(&buffer, chemkit::GraphicsPainter::Lines);
-
-    program.release();
-
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_LIGHTING);
+    // draw the stuff:
+    // the grey sphere at the origin
+    painter->setColor(QColor(128, 128, 128));
+    painter->drawSphere(vert0, d->m_radius);
+    // the grey first half of the axes
+    painter->drawCylinder(vert0, vert1, d->m_radius);
+    painter->drawCylinder(vert0, vert2, d->m_radius);
+    painter->drawCylinder(vert0, vert3, d->m_radius);
+    // the colored second half of the axes
+    painter->setColor(QColor(255, 0, 0));
+    painter->drawCylinder(vert1, vert4, d->m_radius);
+    painter->drawSphere(vert4, d->m_radius);
+    painter->setColor(QColor(0, 255, 0));
+    painter->drawCylinder(vert2, vert5, d->m_radius);
+    painter->drawSphere(vert5, d->m_radius);
+    painter->setColor(QColor(0, 0, 255));
+    painter->drawCylinder(vert3, vert6, d->m_radius);
+    painter->drawSphere(vert6, d->m_radius);
 }

@@ -32,10 +32,11 @@ class GraphicsAxisItem : public chemkit::GraphicsItem
 {
 public:
     GraphicsAxisItem();
-    GraphicsAxisItem(const Eigen::Vector3d &position, const Eigen::Matrix3d &vectors, const double length);
+    GraphicsAxisItem(const Eigen::Vector3d &position, const Eigen::Matrix3d &vectors, const float length, const float radius);
     ~GraphicsAxisItem();
 
     void setPosition(const Eigen::Vector3d &newPosition);
+    void setVectors(const Eigen::Matrix3d &newVectors);
 
     void paint(chemkit::GraphicsPainter *painter);
 
