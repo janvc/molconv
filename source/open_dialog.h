@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Sebastian Lenz
+ * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -56,7 +56,7 @@ private slots:
 
 private:
     Ui::OpenDialog *ui;
-    molconv::moleculePtr the_molecule;
+    molconv::moleculePtr m_molecule;
 };
 
 #endif // OPEN_DIALOG_H

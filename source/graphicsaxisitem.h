@@ -18,24 +18,30 @@
  *
  */
 
-#include<QDebug>
-#include "groupitem.h"
+#ifndef GRAPHICSAXISITEM_H
+#define GRAPHICSAXISITEM_H
 
-GroupItem::GroupItem(QTreeWidgetItem *parent)
-    : QTreeWidgetItem(parent)
+#ifndef Q_MOC_RUN
+    #include<chemkit/graphicsitem.h>
+    #include<boost/shared_ptr.hpp>
+#endif
+
+class GraphicsAxisItemPrivate;
+
+class GraphicsAxisItem : public chemkit::GraphicsItem
 {
-    qDebug("This is the default constructor of GroupItem");
-}
+public:
+    GraphicsAxisItem();
+    GraphicsAxisItem(const Eigen::Vector3d &position, const Eigen::Matrix3d &vectors, const float length, const float radius);
+    ~GraphicsAxisItem();
 
+    void setPosition(const Eigen::Vector3d &newPosition);
+    void setVectors(const Eigen::Matrix3d &newVectors);
 
-GroupItem::GroupItem(boost::shared_ptr<molconv::abstractMoleculeGroup> theGroup, QTreeWidgetItem *parent)
-    : QTreeWidgetItem(parent)
-    , m_group(theGroup)
-{
-    qDebug("This is the second constructor of GroupItem");
-}
+    void paint(chemkit::GraphicsPainter *painter);
 
-boost::shared_ptr<molconv::abstractMoleculeGroup> GroupItem::getGroup()
-{
-    return m_group;
-}
+private:
+    boost::shared_ptr<GraphicsAxisItemPrivate> d;
+};
+
+#endif // GRAPHICSAXISITEM_H

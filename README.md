@@ -6,7 +6,7 @@ convert and edit molecular structure files
 Copyright and Warrenty
 ----------------------
 
-Copyright 2014 Jan von Cosel & Sebastian Lenz
+Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
 
 molconv if free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

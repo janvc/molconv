@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 - 2016 Jan von Cosel and Sebastian Lenz
+ * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -18,34 +18,37 @@
  *
  */
 
+#ifndef EXPORT_DIALOG_H
+#define EXPORT_DIALOG_H
 
-#include<QDebug>
-#include "newgroupdialog.h"
-#include "ui_newgroupdialog.h"
+#include <QDialog>
+#include "molconv-molecule/molecule.h"
+#include "molconv_window.h"
 
-NewGroupDialog::NewGroupDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::NewGroupDialog)
+namespace Ui
 {
-    qDebug("this is the constructor of NewGroupDialog");
-    ui->setupUi(this);
+    class ExportDialog;
 }
 
-NewGroupDialog::~NewGroupDialog()
+class ExportDialog : public QDialog
 {
-    qDebug("this is the destructor of NewGroupDialog");
-    delete ui;
-}
+    Q_OBJECT
 
-std::string NewGroupDialog::groupName() const
-{
-    return ui->groupNameLEdit->text().toStdString();
-}
+public:
+    explicit ExportDialog(QWidget *parent = 0);
+    ~ExportDialog();
 
-bool NewGroupDialog::isStack() const
-{
-    if (ui->isStackRB->isChecked())
-        return true;
-    else
-        return false;
-}
+    void createMoleculeList();
+    void writeFile(const QString &filename, const molconv::moleculePtr &theMolecule) const;
+
+private slots:
+    void on_buttonBox_accepted();
+
+    void on_selectAllBox_stateChanged();
+
+private:
+    Ui::ExportDialog *ui;
+    MolconvWindow *theWindow;
+};
+
+#endif // EXPORT_DIALOG_H

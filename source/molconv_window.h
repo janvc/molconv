@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel & Sebastian Lenz
+ * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -52,6 +52,8 @@ public:
     MolconvWindow(QMainWindow *parent = 0);
     ~MolconvWindow();
     void add_molecule(molconv::moleculePtr temp_mol);
+    int nMolecules();
+    molconv::moleculePtr getMol(int index);
     void clean_up(const int mol_nr, const molconv::Config &config);
     void set_intbasis(const int mol_nr, const molconv::Config &config);
 
@@ -62,6 +64,7 @@ public slots:
     void quit();
     void getMoleculeDialog();
     void startOpenDialog();
+    void startExportDialog();
     void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
@@ -69,6 +72,7 @@ public slots:
     void newGroup();
     void startNewGroupDialog();
     void addMoleculeToGroup();
+    void ResetView();
 
 private slots:
 

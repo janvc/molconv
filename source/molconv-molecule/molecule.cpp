@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel & Sebastian Lenz
+ * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -36,8 +36,8 @@ namespace molconv
     public:
         MoleculePrivate()
         {
-            m_origin = kCenterOnZero;
-            m_basis = kIdentityVectors;
+            m_origin = kCenterOfGeometry;
+            m_basis = kCovarianceVectors;
             m_originFactor = 0.0;
             m_originAtoms.fill(0);
             m_basisAtoms.fill(0);
@@ -51,6 +51,7 @@ namespace molconv
         std::array<int,3> m_basisAtoms;
 
         groupPtr m_group;
+        Eigen::Matrix3Xd m_intPos;
     };
 
     ///
@@ -114,6 +115,19 @@ namespace molconv
     /// The default destructor
     ///
     Molecule::~Molecule() {}
+
+
+    void Molecule::initIntPos()
+    {
+        d->m_intPos.resize(3, size());
+
+        for (int i = 0; i < size(); i++)
+        {
+            Eigen::Vector3d origPos = atom(i)->position();
+            Eigen::Vector3d intPos = internalBasisVectors().transpose() * (origPos - internalOriginPosition());
+            d->m_intPos.col(i) = intPos;
+        }
+    }
 
     ///
     /// \brief Molecule::internalOrigin
@@ -379,6 +393,44 @@ namespace molconv
         rotationMatrix = Eigen::AngleAxisd(angle, rotAxis);
 
         rotate(rotationMatrix);
+    }
+
+    ///
+    /// \brief Molecule::setPhi
+    /// \param newPhi
+    ///
+    /// rotate the molecule about the z-Axis
+    ///
+    void Molecule::setPhi(const double newPhi)
+    {
+        qDebug("entering Molecule::setPhi()");
+
+        Eigen::Matrix3d intBasis = internalBasisVectors();
+        double a31 = intBasis(2, 0);
+        double a32 = intBasis(2, 1);
+        double currentPhi = 180.0 * atan(a31 / a32) / M_PI;
+
+        rotate(Eigen::Vector3d(0, 0, 1), (newPhi - currentPhi) * M_PI / 180.0);
+    }
+
+    ///
+    /// \brief Molecule::setTheta
+    /// \param newTheta
+    ///
+    /// rotate the molecule about the xi-Axis
+    ///
+    void Molecule::setTheta(const double newTheta)
+    {
+    }
+
+    ///
+    /// \brief Molecule::setPsi
+    /// \param newPsi
+    ///
+    /// rotate the molecule about the z'-Axis
+    ///
+    void Molecule::setPsi(const double newPsi)
+    {
     }
 
     ///

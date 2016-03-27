@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jan von Cosel & Sebastian Lenz
+ * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -24,6 +24,7 @@
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
+    #include<chemkit/graphicscamera.h>
     #include<boost/make_shared.hpp>
 #endif
 
@@ -33,6 +34,8 @@
 #include "listofmolecules.h"
 #include "moleculesettings.h"
 #include "open_dialog.h"
+#include "export_dialog.h"
+#include "graphicsaxisitem.h"
 
 
 class MolconvWindowPrivate
@@ -44,6 +47,7 @@ public:
     }
 
     OpenDialog *m_OpenDialog;
+    ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
 
     ListOfMolecules *m_ListOfMolecules;
@@ -54,6 +58,8 @@ public:
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
     std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
+
+    molconv::moleculePtr activeMolecule;
 };
 
 
@@ -67,21 +73,28 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->setupUi(this);
 
     d->m_OpenDialog = new OpenDialog(this);
+    d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
+
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
+    connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     //connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
+    connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this, d->m_system);
     d->m_MoleculeSettings = new MoleculeSettings(this);
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
+
+    GraphicsAxisItem *axes = new GraphicsAxisItem;
+    ui->molconv_graphicsview->addItem(axes);
 
     ui->molconv_graphicsview->update();
 }
@@ -103,6 +116,20 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->update();
 
     //d->m_ListOfMolecules->addMolecule(temp_mol);
+    //d->m_ListOfMolecules->list_new_molecule(temp_mol);
+    d->activeMolecule = temp_mol;
+
+    emit new_molecule(temp_mol);
+}
+
+int MolconvWindow::nMolecules()
+{
+    return d->m_system->nMolecules();
+}
+
+molconv::moleculePtr MolconvWindow::getMol(int index)
+{
+    return d->m_system->getMolecule(index);
 }
 
 void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
@@ -152,12 +179,20 @@ void MolconvWindow::startOpenDialog()
     d->m_OpenDialog->exec();
 }
 
+void MolconvWindow::startExportDialog()
+{
+    qDebug("entering MolconvWindow::startExportDialog()");
+
+    d->m_ExportDialog->createMoleculeList();
+    d->m_ExportDialog->setModal(true);
+    d->m_ExportDialog->exec();
+}
+
 void MolconvWindow::getMoleculeDialog()
 {
     qDebug("entering MolconvWindow::get_molecule_Dialog()");
 
     molconv::moleculePtr temp_mol = d->m_OpenDialog->getMol();
-    temp_mol->cleanUp();
     add_molecule(temp_mol);
 }
 
@@ -200,4 +235,22 @@ void MolconvWindow::startNewGroupDialog()
 void MolconvWindow::addMoleculeToGroup()
 {
     qDebug("entering MolconvWindow::addMoleculeToGroup()");
+}
+
+void MolconvWindow::ResetView()
+{
+    // determine largest distance from origin:
+    double maxLength = 0;
+    for (int i = 0; i < d->m_system->nMolecules(); i++)
+        for (int j = 0; j < d->m_system->getMolecule(i)->size(); j++)
+        {
+            double length = d->m_system->getMolecule(i)->atom(j)->position().norm();
+            if (length > maxLength)
+                maxLength = length;
+        }
+
+    // d = r / tan(22.5 degrees)
+    double dist = maxLength / 0.4142135624 > 10.0 ? maxLength / 0.4142135624 : 10.0;
+
+    ui->molconv_graphicsview->setCamera(boost::make_shared<chemkit::GraphicsCamera>(0,0,dist));
 }

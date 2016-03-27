@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Sebastian Lenz
+ * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -73,7 +73,7 @@ void OpenDialog::openFile(const QString &filename)
         ui->origin->setEnabled(true);
         ui->basis->setEnabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-        this->the_molecule.reset(new molconv::Molecule(temp_mol));
+        m_molecule.reset(new molconv::Molecule(temp_mol));
     }
 }
 
@@ -89,7 +89,8 @@ void OpenDialog::on_filedialog_clicked()
 
     QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), 0, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
 
-    ui->filename->setText(filename);
+    ui->filename->setText(filename.split("/").last());
+    ui->moleculeName->setText(filename.split("/").last());
     openFile(filename);
 }
 
@@ -107,28 +108,28 @@ molconv::moleculePtr OpenDialog::getMol()
     qDebug("entering OpenDialog::getMol()");
     if(ui->atoms->isChecked() && !ui->coa->isChecked())
     {
-        this->the_molecule->setOrigin(getOrigin());
-        this->the_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
+        m_molecule->setOrigin(getOrigin());
+        m_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
     }
     else if(!ui->atoms->isChecked() && ui->coa->isChecked())
     {
-        this->the_molecule->setOrigin(getOrigin(), ui->an->value());
-        this->the_molecule->setBasis(getBasis());
+        m_molecule->setOrigin(getOrigin(), ui->an->value());
+        m_molecule->setBasis(getBasis());
     }
     else if(ui->atoms->isChecked() && ui->coa->isChecked())
     {
-        this->the_molecule->setOrigin(getOrigin(), ui->an->value());
-        this->the_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
+        m_molecule->setOrigin(getOrigin(), ui->an->value());
+        m_molecule->setBasis(getBasis(), ui->atom1->value(), ui->atom2->value(), ui->atom3->value());
     }
     else if(!ui->atoms->isChecked() && !ui->coa->isChecked())
     {
-        this->the_molecule->setOrigin(getOrigin());
-        this->the_molecule->setBasis(getBasis());
+        m_molecule->setOrigin(getOrigin());
+        m_molecule->setBasis(getBasis());
     }
 
-    the_molecule->setName(getMoleculeName());
+    m_molecule->setName(getMoleculeName());
 
-    return this->the_molecule;
+    return m_molecule;
 }
 
 molconv::origin OpenDialog::getOrigin()

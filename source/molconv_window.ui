@@ -39,6 +39,7 @@
     </property>
     <addaction name="actionOpen"/>
     <addaction name="actionImport_Molecule"/>
+    <addaction name="actionExport_Molecule"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuMolecule">
@@ -62,9 +63,16 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionReset"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMolecule"/>
    <addaction name="menuGroup"/>
+   <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -116,6 +124,16 @@
   <action name="actionAdd_To_Group">
    <property name="text">
     <string>Add To Group</string>
+   </property>
+  </action>
+  <action name="actionExport_Molecule">
+   <property name="text">
+    <string>Export Molecule</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
    </property>
   </action>
  </widget>

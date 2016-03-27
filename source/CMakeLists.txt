@@ -1,9 +1,28 @@
+#
+# Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
+#
+# This file is part of molconv.
+#
+# molconv is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# molconv is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have recieved a copy of the GNU General Public License
+# along with molconv. If not, see <http://www.gnu.org/licenses/>.
+#
+
 # Boost libraries are required
 find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Chemkit libraries are required
-find_package(Chemkit COMPONENTS io graphics REQUIRED)
+find_package(Chemkit COMPONENTS io graphics gui REQUIRED)
 include_directories(${CHEMKIT_INCLUDE_DIRS})
 
 # Eigen3 is required
@@ -14,6 +33,9 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
+
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
 
 FIND_PACKAGE(Qt5LinguistTools)
 IF(UPDATE_TRANSLATIONS)
@@ -46,7 +68,9 @@ set(SOURCES
     listofmolecules.cpp
     moleculesettings.cpp
     open_dialog.cpp
+    export_dialog.cpp
     utilities.cpp
+    graphicsaxisitem.cpp
 )
 
 set(MOC_HEADERS
@@ -55,6 +79,7 @@ set(MOC_HEADERS
     moleculesettings.h
     newgroupdialog.h
     open_dialog.h
+    export_dialog.h
 )
 
 set(UI_FORMS
@@ -63,6 +88,7 @@ set(UI_FORMS
     moleculesettings.ui
     newgroupdialog.ui
     open_dialog.ui
+    export_dialog.ui
 )
 
 set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})
@@ -91,5 +117,5 @@ add_subdirectory(include)
 
 add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
 add_executable(testprogram testprogram.cpp)
-target_link_libraries(molconv molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(molconv molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})
 target_link_libraries(testprogram molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
