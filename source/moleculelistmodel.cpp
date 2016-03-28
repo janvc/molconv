@@ -18,25 +18,60 @@
  *
  */
 
+#include "moleculelistitem.h"
 #include "moleculelistmodel.h"
 
-MoleculeListModel::MoleculeListModel(molconv::sysPtr &newSystem, QObject *parent)
+class MoleculeListModelPrivate
+{
+public:
+    MoleculeListModelPrivate()
+        : rootItem(0)
+    {
+    }
+
+    MoleculeListItem *rootItem;
+};
+
+MoleculeListModel::MoleculeListModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_system(newSystem)
+    , d(new MoleculeListModelPrivate)
 {
     qDebug("this is the constructor of MoleculeListModel");
+
+    QVector<QVariant> rootData;
+    rootData << tr("Molecule Name (test 1)");
+    rootData << tr("Mass [u] (test 2)");
+    d->rootItem = new MoleculeListItem(rootData);
 }
 
 QModelIndex MoleculeListModel::index(int row, int column, const QModelIndex &parent) const
 {
     qDebug("entering MoleculeListModel::index()");
 
-    if (!hasIndex(row, column, parent))
+    if (parent.isValid() && parent.column() != 0)
+        return QModelIndex();
+
+    MoleculeListItem *parentItem = item(parent);
+    MoleculeListItem *childItem = parentItem->child(row);
+
+    if (childItem)
+        return createIndex(row, column, childItem);
+    else
         return QModelIndex();
 }
 
 QModelIndex MoleculeListModel::parent(const QModelIndex &child) const
 {
+    if (!child.isValid())
+        return QModelIndex();
+
+    MoleculeListItem *childItem = item(child);
+    MoleculeListItem *parentItem = childItem->parent();
+
+    if (parentItem == d->rootItem)
+        return QModelIndex();
+
+    return createIndex(parentItem->childNumber(), 0, parentItem);
 }
 
 int MoleculeListModel::rowCount(const QModelIndex &parent) const
@@ -50,7 +85,40 @@ int MoleculeListModel::columnCount(const QModelIndex &parent) const
 
 QVariant MoleculeListModel::data(const QModelIndex &index, int role) const
 {
+    if (!index.isValid())
+        return QVariant();
+
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    MoleculeListItem *MolItem = item(index);
+
+    if (MolItem)
+        if (index.column() < MolItem->columnCount())
+            return MolItem->data(index.column());
+
+    return QVariant();
 }
+
+MoleculeListItem *MoleculeListModel::item(const QModelIndex &index) const
+{
+    if (index.isValid())
+    {
+        MoleculeListItem *item = static_cast<MoleculeListItem*>(index.internalPointer());
+
+        if (item)
+            return item;
+    }
+
+    return d->rootItem;
+}
+
+void MoleculeListModel::setMolecule(const QModelIndex &index, molconv::moleculePtr &mol)
+{
+    MoleculeListItem *theItem = item(index);
+    theItem->setMolecule(mol);
+}
+
 
 bool MoleculeListModel::insertRows(int row, int count, const QModelIndex &parent)
 {

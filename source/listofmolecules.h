@@ -33,17 +33,18 @@ namespace Ui
 }
 
 class MolconvWindow;
+class ListOfMoleculesPrivate;
 
 class ListOfMolecules : public QDockWidget
 {
     Q_OBJECT
 
     public:
-        ListOfMolecules(MolconvWindow *window, molconv::sysPtr &newSystem);
+        ListOfMolecules(MolconvWindow *window);
         ~ListOfMolecules();
-/*
+
         void addMolecule(molconv::moleculePtr &theMolecule);
-        void addGroup(molconv::groupPtr &theGroup);
+/*      void addGroup(molconv::groupPtr &theGroup);
         molconv::moleculePtr getSelectedMolecule() const;
 
     private slots:
@@ -52,8 +53,7 @@ class ListOfMolecules : public QDockWidget
 */
     private:
         Ui::ListOfMolecules *ui;
-        MolconvWindow *main_window;
-        //MoleculeListModel *m_model;
+        ListOfMoleculesPrivate *d;
 };
 
 

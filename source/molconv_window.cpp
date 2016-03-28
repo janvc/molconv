@@ -88,7 +88,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
 
-    d->m_ListOfMolecules = new ListOfMolecules(this, d->m_system);
+    d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
@@ -115,7 +115,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
-    //d->m_ListOfMolecules->addMolecule(temp_mol);
+    d->m_ListOfMolecules->addMolecule(temp_mol);
     //d->m_ListOfMolecules->list_new_molecule(temp_mol);
     d->activeMolecule = temp_mol;
 

@@ -22,13 +22,15 @@
 #define MOLECULELISTMODEL_H
 
 #include <QAbstractItemModel>
-#include "molconv-system/system.h"
+
+class MoleculeListItem;
+class MoleculeListModelPrivate;
 
 class MoleculeListModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit MoleculeListModel(molconv::sysPtr &newSystem, QObject *parent = 0);
+    explicit MoleculeListModel(QObject *parent = 0);
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -36,13 +38,17 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
 
+    MoleculeListItem *item(const QModelIndex &index) const;
+
+    void setMolecule(const QModelIndex &index, molconv::moleculePtr &mol);
+
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
 signals:
 
 public slots:
 
 private:
-    molconv::sysPtr m_system;
+    MoleculeListModelPrivate *d;
 };
 
 #endif // MOLECULELISTMODEL_H

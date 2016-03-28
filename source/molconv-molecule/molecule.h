@@ -35,6 +35,7 @@ namespace molconv
 {
     class MoleculePrivate;
     class abstractMoleculeGroup;
+    class MoleculeListItem;
 
     class Molecule : public chemkit::Molecule
     {
@@ -81,6 +82,9 @@ namespace molconv
         // manage groups
         void addToGroup(const groupPtr newGroup);
         groupPtr &group() const;
+
+        boost::shared_ptr<MoleculeListItem> listItem() const;
+        void setListItem(boost::shared_ptr<MoleculeListItem> &newItem);
 
     private:
         // private functions:

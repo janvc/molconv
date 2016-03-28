@@ -120,7 +120,7 @@ namespace molconv
     {
         qDebug("entering System::MoleculeIndex()");
 
-        size_t index;
+        size_t index = 0;
 
         for (size_t i = 0; i < nMolecules(); i++)
         {
@@ -212,7 +212,7 @@ namespace molconv
         d->m_groups.erase(d->m_groups.begin() + index);
     }
 
-    ///
+/*    ///
     /// \brief System::data
     /// \param index
     /// \param role
@@ -427,10 +427,10 @@ namespace molconv
             return testGroup->nGroups() + testGroup->nMolecules();
         else
             return 0;
-    }
+    } */
 
 
-    int System::columnCount(const QModelIndex & /* parent */) const
+/*    int System::columnCount(const QModelIndex & parent) const
     {
         qDebug("entering System::columnCount()");
         return 2;
@@ -462,6 +462,6 @@ namespace molconv
                 return theGroup;
         }
         return 0;
-    }
+    } */
 
 } // namespace molconv

@@ -32,7 +32,7 @@ namespace molconv
 {
     class SystemPrivate;
 
-    class System : public QAbstractItemModel
+    class System //: public QAbstractItemModel
     {
     public:
         System();
@@ -49,7 +49,7 @@ namespace molconv
         void addGroup(const groupPtr &newGroup);
         void removeGroup(const size_t index);
 
-        // model-view related stuff
+/*        // model-view related stuff
         QVariant data(const QModelIndex &index, int role) const;
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -58,11 +58,11 @@ namespace molconv
         bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
 //        bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
-        int columnCount(const QModelIndex &parent = QModelIndex()) const;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const; */
 
     private:
-        Molecule *getMolecule(const QModelIndex &index) const;
-        abstractMoleculeGroup *getGroup(const QModelIndex &index) const;
+        //Molecule *getMolecule(const QModelIndex &index) const;
+        //abstractMoleculeGroup *getGroup(const QModelIndex &index) const;
         boost::scoped_ptr<SystemPrivate> d;
     };
 

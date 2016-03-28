@@ -21,42 +21,107 @@
 
 #include "moleculelistitem.h"
 
-moleculeListItem::moleculeListItem(const bool molecule, QList<QVariant> &newData, moleculeListItem *parent)
-    : isMolecule(molecule)
-    , itemData(newData)
-    , parentItem(parent)
+class MoleculeListItemPrivate
 {
+public:
+    MoleculeListItemPrivate()
+        : m_isMolecule(true)
+        , m_ParentItem(0)
+        , m_childItems(new QList<MoleculeListItem*>)
+        , m_molecule(0)
+    {
+    }
+
+    bool m_isMolecule;
+    MoleculeListItem *m_ParentItem;
+    QList<MoleculeListItem*> *m_childItems;
+    QVector<QVariant> itemData;
+    molconv::moleculePtr m_molecule;
+};
+
+MoleculeListItem::MoleculeListItem(molconv::moleculePtr &molecule, MoleculeListItem *parent)
+    : d(new MoleculeListItemPrivate)
+{
+    qDebug("this is the first constructor of MoleculeListItem");
+
+    d->m_ParentItem = parent;
+    d->m_molecule = molecule;
+    d->itemData << QString::fromStdString(d->m_molecule->name());
+    d->itemData << d->m_molecule->mass();
 }
 
-moleculeListItem::~moleculeListItem()
+MoleculeListItem::MoleculeListItem(const QVector<QVariant> &data, MoleculeListItem *parent)
+    : d(new MoleculeListItemPrivate)
 {
-    qDeleteAll(childItems);
+    qDebug("this is the second constructor of MoleculeListItem");
+
+    d->itemData = data;
 }
 
-void moleculeListItem::appendChild(moleculeListItem *child)
+MoleculeListItem::~MoleculeListItem()
 {
-    childItems.append(child);
+    qDeleteAll(d->m_childItems->begin(), d->m_childItems->end());
 }
 
-moleculeListItem *moleculeListItem::child(const int row)
+void MoleculeListItem::appendChild(MoleculeListItem *child)
 {
-    return childItems.value(row);
+    d->m_childItems->append(child);
 }
 
-moleculeListItem *moleculeListItem::parent()
+MoleculeListItem *MoleculeListItem::child(const int row)
 {
-    return parentItem;
+    return d->m_childItems->value(row);
 }
 
-int moleculeListItem::childCount() const
+MoleculeListItem *MoleculeListItem::parent()
 {
-    return childItems.count();
+    return d->m_ParentItem;
 }
 
-int moleculeListItem::row() const
+int MoleculeListItem::columnCount() const
 {
-    if (parentItem)
-        return parentItem->childItems.indexOf(const_cast<moleculeListItem*>(this));
+    return d->itemData.count();
+}
+
+int MoleculeListItem::childNumber() const
+{
+    if (d->m_ParentItem)
+        return d->m_ParentItem->children()->indexOf(const_cast<MoleculeListItem*>(this));
 
     return 0;
 }
+
+molconv::moleculePtr MoleculeListItem::Molecule() const
+{
+    return d->m_molecule;
+}
+
+void MoleculeListItem::setMolecule(molconv::moleculePtr &mol)
+{
+    d->m_molecule = mol;
+}
+
+int MoleculeListItem::childCount() const
+{
+    return d->m_childItems->count();
+}
+
+int MoleculeListItem::row() const
+{
+    if (d->m_ParentItem)
+        return d->m_ParentItem->children()->indexOf(const_cast<MoleculeListItem*>(this));
+
+    return 0;
+}
+
+QList<MoleculeListItem*> *MoleculeListItem::children() const
+{
+    return d->m_childItems;
+}
+
+QVariant MoleculeListItem::data(int column) const
+{
+    return d->itemData.value(column);
+}
+
+

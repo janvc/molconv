@@ -27,6 +27,7 @@
 #include<chemkit/bondpredictor.h>
 #include<QDebug>
 #include "molecule.h"
+#include "../moleculelistitem.h"
 
 
 namespace molconv
@@ -41,6 +42,7 @@ namespace molconv
             m_originFactor = 0.0;
             m_originAtoms.fill(0);
             m_basisAtoms.fill(0);
+            m_listItem = 0;
         }
 
         origin m_origin;
@@ -52,6 +54,8 @@ namespace molconv
 
         groupPtr m_group;
         Eigen::Matrix3Xd m_intPos;
+
+        boost::shared_ptr<MoleculeListItem> m_listItem;
     };
 
     ///
@@ -674,6 +678,28 @@ namespace molconv
             throw std::runtime_error("The covariance matrix could not be diagonalized.\n");
         else
             return solver.eigenvectors();
+    }
+
+    ///
+    /// \brief Molecule::listItem
+    /// \return
+    ///
+    /// return the List Item corresponding to this molecule
+    ///
+    boost::shared_ptr<MoleculeListItem> Molecule::listItem() const
+    {
+        return d->m_listItem;
+    }
+
+    ///
+    /// \brief Molecule::setListItem
+    /// \param newItem
+    ///
+    /// set this molecule's List Item to \p newItem
+    ///
+    void Molecule::setListItem(boost::shared_ptr<MoleculeListItem> &newItem)
+    {
+        d->m_listItem = newItem;
     }
 
 } // namespace molconv

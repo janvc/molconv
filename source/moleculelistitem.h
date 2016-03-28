@@ -23,30 +23,38 @@
 #define MOLECULELISTITEM_H
 
 #include<QList>
+#include<QVector>
 #include<QVariant>
+#include "molconv-molecule/molecule.h"
 
+class MoleculeListItemPrivate;
 
-class moleculeListItem
+class MoleculeListItem
 {
 public:
-    moleculeListItem(const bool molecule, QList<QVariant> &newData, moleculeListItem *parent = 0);
-    ~moleculeListItem();
+    MoleculeListItem(molconv::moleculePtr &molecule, MoleculeListItem *parent = 0);
+    MoleculeListItem(const QVector<QVariant> &data, MoleculeListItem *parent = 0);
+    ~MoleculeListItem();
 
-    void appendChild(moleculeListItem *child);
-    moleculeListItem *child(const int row);
-    moleculeListItem *parent();
+    void appendChild(MoleculeListItem *child);
+    MoleculeListItem *child(const int row);
+    MoleculeListItem *parent();
+    int columnCount() const;
+    int childNumber() const;
+
+    molconv::moleculePtr Molecule() const;
+    void setMolecule(molconv::moleculePtr &mol);
 
     int childCount() const;
     int row() const;
+
+    QList<MoleculeListItem*> *children() const;
 
     QVariant data(int column) const;
     void setData(int column, QVariant &newData);
 
 private:
-    bool isMolecule;    // the item can either represent a molecule or a group
-    moleculeListItem *parentItem;
-    QList<moleculeListItem*> childItems;
-    QList<QVariant> itemData;
+    MoleculeListItemPrivate *d;
 };
 
 #endif // MOLECULELISTITEM_H

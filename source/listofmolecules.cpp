@@ -25,21 +25,35 @@
 
 #include "molconv_window.h"
 #include "moleculeitem.h"
+#include "moleculelistmodel.h"
 #include "groupitem.h"
 
 
-ListOfMolecules::ListOfMolecules(MolconvWindow *window, molconv::sysPtr &newSystem)
+class ListOfMoleculesPrivate
+{
+public:
+    ListOfMoleculesPrivate()
+        : m_MolconvWindow(0)
+        , m_Model(0)
+    {
+    }
+
+    MolconvWindow *m_MolconvWindow;
+    MoleculeListModel *m_Model;
+};
+
+ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::ListOfMolecules)
 {
     qDebug("this is the constructor of ListOfMolecules");
 
-    main_window = window;
-    //m_model = new MoleculeListModel(newSystem);
+    d->m_MolconvWindow = window;
+    d->m_Model = new MoleculeListModel(this);
 
     ui->setupUi(this);
 
-    ui->system_tree->setModel(newSystem.get());
+    ui->system_tree->setModel(d->m_Model);
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -47,12 +61,26 @@ ListOfMolecules::~ListOfMolecules()
     qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
-/*
+
 void ListOfMolecules::addMolecule(molconv::moleculePtr &theMolecule)
 {
     qDebug("entering ListOfMolecules::addMolecule()");
-}
 
+    QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
+    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+
+    model->setMolecule(index, theMolecule);
+
+//    if (model->columnCount(index) == 0)
+//        if (!model->insertColumn(0, index))
+//            return;
+
+//    if (!model->insertRow(0, index))
+//        return;
+
+
+}
+/*
 molconv::moleculePtr ListOfMolecules::getSelectedMolecule() const
 {
     qDebug("entering ListOfMolecules::getSelectedMolecule()");
