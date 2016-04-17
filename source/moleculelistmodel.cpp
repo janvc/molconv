@@ -21,66 +21,25 @@
 #include "moleculelistitem.h"
 #include "moleculelistmodel.h"
 
-class MoleculeListModelPrivate
-{
-public:
-    MoleculeListModelPrivate()
-        : rootItem(0)
-    {
-    }
 
-    MoleculeListItem *rootItem;
-};
-
-MoleculeListModel::MoleculeListModel(QObject *parent)
+MoleculeListModel::MoleculeListModel(const QStringList &headers, QObject *parent)
     : QAbstractItemModel(parent)
-    , d(new MoleculeListModelPrivate)
 {
-    qDebug("this is the constructor of MoleculeListModel");
-
     QVector<QVariant> rootData;
-    rootData << tr("Molecule Name (test 1)");
-    rootData << tr("Mass [u] (test 2)");
-    d->rootItem = new MoleculeListItem(rootData);
+    foreach (QString header, headers)
+        rootData << header;
+
+    rootItem = new MoleculeListItem(rootData);
 }
 
-QModelIndex MoleculeListModel::index(int row, int column, const QModelIndex &parent) const
+MoleculeListModel::~MoleculeListModel()
 {
-    qDebug("entering MoleculeListModel::index()");
-
-    if (parent.isValid() && parent.column() != 0)
-        return QModelIndex();
-
-    MoleculeListItem *parentItem = item(parent);
-    MoleculeListItem *childItem = parentItem->child(row);
-
-    if (childItem)
-        return createIndex(row, column, childItem);
-    else
-        return QModelIndex();
+    delete rootItem;
 }
 
-QModelIndex MoleculeListModel::parent(const QModelIndex &child) const
+int MoleculeListModel::columnCount(const QModelIndex & /*parent */) const
 {
-    if (!child.isValid())
-        return QModelIndex();
-
-    MoleculeListItem *childItem = item(child);
-    MoleculeListItem *parentItem = childItem->parent();
-
-    if (parentItem == d->rootItem)
-        return QModelIndex();
-
-    return createIndex(parentItem->childNumber(), 0, parentItem);
-}
-
-int MoleculeListModel::rowCount(const QModelIndex &parent) const
-{
-}
-
-int MoleculeListModel::columnCount(const QModelIndex &parent) const
-{
-    return 3;
+    return rootItem->columnCount();
 }
 
 QVariant MoleculeListModel::data(const QModelIndex &index, int role) const
@@ -88,19 +47,23 @@ QVariant MoleculeListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
-    MoleculeListItem *MolItem = item(index);
+    MoleculeListItem *item = getItem(index);
 
-    if (MolItem)
-        if (index.column() < MolItem->columnCount())
-            return MolItem->data(index.column());
-
-    return QVariant();
+    return item->data(index.column());
 }
 
-MoleculeListItem *MoleculeListModel::item(const QModelIndex &index) const
+Qt::ItemFlags MoleculeListModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return 0;
+
+    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+}
+
+MoleculeListItem *MoleculeListModel::getItem(const QModelIndex &index) const
 {
     if (index.isValid())
     {
@@ -109,17 +72,124 @@ MoleculeListItem *MoleculeListModel::item(const QModelIndex &index) const
         if (item)
             return item;
     }
-
-    return d->rootItem;
+    return rootItem;
 }
 
-void MoleculeListModel::setMolecule(const QModelIndex &index, molconv::moleculePtr &mol)
+QVariant MoleculeListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    MoleculeListItem *theItem = item(index);
-    theItem->setMolecule(mol);
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return rootItem->data(section);
+
+    return QVariant();
 }
 
-
-bool MoleculeListModel::insertRows(int row, int count, const QModelIndex &parent)
+QModelIndex MoleculeListModel::index(int row, int column, const QModelIndex &parent) const
 {
+    if (parent.isValid() && parent.column() != 0)
+        return QModelIndex();
+
+    MoleculeListItem *parentItem = getItem(parent);
+
+    MoleculeListItem *childItem = parentItem->child(row);
+    if (childItem)
+        return createIndex(row, column, childItem);
+    else
+        return QModelIndex();
+}
+
+bool MoleculeListModel::insertColumns(int position, int columns, const QModelIndex &parent)
+{
+    bool success;
+
+    beginInsertColumns(parent, position, position + columns - 1);
+    success = rootItem->insertColumns(position, columns);
+    endInsertColumns();
+
+    return success;
+}
+
+bool MoleculeListModel::insertRows(int position, int rows, const QModelIndex &parent)
+{
+    MoleculeListItem *parentItem = getItem(parent);
+    bool success;
+
+    beginInsertRows(parent, position, position + rows - 1);
+    success = parentItem->insertChildren(position, rows, rootItem->columnCount());
+    endInsertRows();
+
+    return success;
+}
+
+QModelIndex MoleculeListModel::parent(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return QModelIndex();
+
+    MoleculeListItem *childItem = getItem(index);
+    MoleculeListItem *parentItem = childItem->parent();
+
+    if (parentItem == rootItem)
+        return QModelIndex();
+
+    return createIndex(parentItem->childNumber(), 0, parentItem);
+}
+
+bool MoleculeListModel::removeColumns(int position, int columns, const QModelIndex &parent)
+{
+    bool success;
+
+    beginRemoveColumns(parent, position, position + columns - 1);
+    success = rootItem->removeColumns(position, columns);
+    endRemoveColumns();
+
+    if (rootItem->columnCount() == 0)
+        removeRows(0, rowCount());
+
+    return success;
+}
+
+bool MoleculeListModel::removeRows(int position, int rows, const QModelIndex &parent)
+{
+    MoleculeListItem *parentItem = getItem(parent);
+    bool success = true;
+
+    beginRemoveRows(parent, position, position + rows - 1);
+    success = parentItem->removeChildren(position, rows);
+    endRemoveRows();
+
+    return success;
+}
+
+int MoleculeListModel::rowCount(const QModelIndex &parent) const
+{
+    MoleculeListItem *parentItem = getItem(parent);
+
+    return parentItem->childCount();
+}
+
+bool MoleculeListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (role != Qt::EditRole)
+        return false;
+
+    MoleculeListItem *item = getItem(index);
+    bool result = item->setData(index.column(), value);
+
+    if (result)
+        emit dataChanged(index, index);
+
+    return result;
+}
+
+bool MoleculeListModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+{
+    if (role != Qt::EditRole || orientation != Qt::Horizontal)
+        return false;
+
+    bool result = rootItem->setData(section, value);
+
+    if (result)
+        emit headerDataChanged(orientation, section, section);
+
+    return result;
 }

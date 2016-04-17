@@ -29,70 +29,56 @@
 #include "groupitem.h"
 
 
-class ListOfMoleculesPrivate
-{
-public:
-    ListOfMoleculesPrivate()
-        : m_MolconvWindow(0)
-        , m_Model(0)
-    {
-    }
-
-    MolconvWindow *m_MolconvWindow;
-    MoleculeListModel *m_Model;
-};
-
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::ListOfMolecules)
 {
-    qDebug("this is the constructor of ListOfMolecules");
-
-    d->m_MolconvWindow = window;
-    d->m_Model = new MoleculeListModel(this);
-
     ui->setupUi(this);
+    m_window = window;
 
-    ui->system_tree->setModel(d->m_Model);
+    QStringList headers;
+    headers << tr("Name") << tr("Number of atoms") << tr("Mass");
+
+    MoleculeListModel *model = new MoleculeListModel(headers);
+
+    ui->system_tree->setModel(model);
+    for (int column = 0; column < model->columnCount(); column++)
+        ui->system_tree->resizeColumnToContents(column);
 }
 
 ListOfMolecules::~ListOfMolecules()
 {
-    qDebug("this is the destructor of ListOfMolecules");
     delete ui;
 }
 
-void ListOfMolecules::addMolecule(molconv::moleculePtr &theMolecule)
+void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
 {
-    qDebug("entering ListOfMolecules::addMolecule()");
-
     QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
-    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+    QAbstractItemModel *model = ui->system_tree->model();
 
-    model->setMolecule(index, theMolecule);
+    if (!model->insertRow(index.row() + 1, index.parent()))
+        return;
 
-//    if (model->columnCount(index) == 0)
-//        if (!model->insertColumn(0, index))
-//            return;
+    for (int column = 0; column < model->columnCount(index.parent()); column++)
+    {
+        QModelIndex child = model->index(index.row() + 1, column, index.parent());
 
-//    if (!model->insertRow(0, index))
-//        return;
+        switch (column)
+        {
+        case 0:
+            model->setData(child, QVariant(QString::fromStdString(newMol->name())), Qt::EditRole);
+            break;
+        case 1:
+            model->setData(child, QVariant(int(newMol->size())), Qt::EditRole);
+            break;
+        case 2:
+            model->setData(child, QVariant(newMol->mass()), Qt::EditRole);
+            break;
+        default:
+            break;
+        }
+    }
 
-
+    for (int column = 0; column < model->columnCount(); column++)
+        ui->system_tree->resizeColumnToContents(column);
 }
-/*
-molconv::moleculePtr ListOfMolecules::getSelectedMolecule() const
-{
-    qDebug("entering ListOfMolecules::getSelectedMolecule()");
-}
-
-void ListOfMolecules::addGroup(molconv::groupPtr &theGroup)
-{
-    qDebug("entering ListOfMolecules::list_new_group()");
-}
-
-void ListOfMolecules::checkbox_toggled(QTreeWidgetItem *theItem)
-{
-    qDebug("entering ListOfMolecules::checkbox_toggled()");
-}
-*/

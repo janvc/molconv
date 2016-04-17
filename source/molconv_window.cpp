@@ -115,8 +115,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
     ui->molconv_graphicsview->update();
 
-    d->m_ListOfMolecules->addMolecule(temp_mol);
-    //d->m_ListOfMolecules->list_new_molecule(temp_mol);
+    d->m_ListOfMolecules->insertMolecule(temp_mol);
     d->activeMolecule = temp_mol;
 
     emit new_molecule(temp_mol);

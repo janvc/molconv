@@ -25,7 +25,6 @@
 #include "molconv-molecule/molecule.h"
 #include "molconv-moleculegroup/abstractmoleculegroup.h"
 #include "include/types.h"
-//#include "moleculelistmodel.h"
 
 namespace Ui
 {
@@ -33,7 +32,6 @@ namespace Ui
 }
 
 class MolconvWindow;
-class ListOfMoleculesPrivate;
 
 class ListOfMolecules : public QDockWidget
 {
@@ -44,16 +42,13 @@ class ListOfMolecules : public QDockWidget
         ~ListOfMolecules();
 
         void addMolecule(molconv::moleculePtr &theMolecule);
-/*      void addGroup(molconv::groupPtr &theGroup);
-        molconv::moleculePtr getSelectedMolecule() const;
 
-    private slots:
 
-        void checkbox_toggled(QTreeWidgetItem *theItem);
-*/
+        void insertMolecule(molconv::moleculePtr &newMol);
+
     private:
         Ui::ListOfMolecules *ui;
-        ListOfMoleculesPrivate *d;
+        MolconvWindow *m_window;
 };
 
 

@@ -24,31 +24,36 @@
 #include <QAbstractItemModel>
 
 class MoleculeListItem;
-class MoleculeListModelPrivate;
 
 class MoleculeListModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit MoleculeListModel(QObject *parent = 0);
+    MoleculeListModel(const QStringList &headers, QObject *parent = 0);
+    ~MoleculeListModel();
 
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
-    QModelIndex parent(const QModelIndex &child) const;
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    MoleculeListItem *item(const QModelIndex &index) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-    void setMolecule(const QModelIndex &index, molconv::moleculePtr &mol);
+    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
 
-    bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
-signals:
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
 
-public slots:
+    bool insertColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+    bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+    bool insertRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+    bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
 
 private:
-    MoleculeListModelPrivate *d;
+    MoleculeListItem *getItem(const QModelIndex &index) const;
+
+    MoleculeListItem *rootItem;
 };
 
 #endif // MOLECULELISTMODEL_H

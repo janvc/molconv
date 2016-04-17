@@ -21,107 +21,110 @@
 
 #include "moleculelistitem.h"
 
-class MoleculeListItemPrivate
-{
-public:
-    MoleculeListItemPrivate()
-        : m_isMolecule(true)
-        , m_ParentItem(0)
-        , m_childItems(new QList<MoleculeListItem*>)
-        , m_molecule(0)
-    {
-    }
-
-    bool m_isMolecule;
-    MoleculeListItem *m_ParentItem;
-    QList<MoleculeListItem*> *m_childItems;
-    QVector<QVariant> itemData;
-    molconv::moleculePtr m_molecule;
-};
-
-MoleculeListItem::MoleculeListItem(molconv::moleculePtr &molecule, MoleculeListItem *parent)
-    : d(new MoleculeListItemPrivate)
-{
-    qDebug("this is the first constructor of MoleculeListItem");
-
-    d->m_ParentItem = parent;
-    d->m_molecule = molecule;
-    d->itemData << QString::fromStdString(d->m_molecule->name());
-    d->itemData << d->m_molecule->mass();
-}
 
 MoleculeListItem::MoleculeListItem(const QVector<QVariant> &data, MoleculeListItem *parent)
-    : d(new MoleculeListItemPrivate)
 {
-    qDebug("this is the second constructor of MoleculeListItem");
-
-    d->itemData = data;
+    parentItem = parent;
+    itemData = data;
 }
 
 MoleculeListItem::~MoleculeListItem()
 {
-    qDeleteAll(d->m_childItems->begin(), d->m_childItems->end());
+    qDeleteAll(childItems);
 }
 
-void MoleculeListItem::appendChild(MoleculeListItem *child)
+MoleculeListItem *MoleculeListItem::child(int number)
 {
-    d->m_childItems->append(child);
-}
-
-MoleculeListItem *MoleculeListItem::child(const int row)
-{
-    return d->m_childItems->value(row);
-}
-
-MoleculeListItem *MoleculeListItem::parent()
-{
-    return d->m_ParentItem;
-}
-
-int MoleculeListItem::columnCount() const
-{
-    return d->itemData.count();
-}
-
-int MoleculeListItem::childNumber() const
-{
-    if (d->m_ParentItem)
-        return d->m_ParentItem->children()->indexOf(const_cast<MoleculeListItem*>(this));
-
-    return 0;
-}
-
-molconv::moleculePtr MoleculeListItem::Molecule() const
-{
-    return d->m_molecule;
-}
-
-void MoleculeListItem::setMolecule(molconv::moleculePtr &mol)
-{
-    d->m_molecule = mol;
+    return childItems.value(number);
 }
 
 int MoleculeListItem::childCount() const
 {
-    return d->m_childItems->count();
+    return childItems.count();
 }
 
-int MoleculeListItem::row() const
+int MoleculeListItem::childNumber() const
 {
-    if (d->m_ParentItem)
-        return d->m_ParentItem->children()->indexOf(const_cast<MoleculeListItem*>(this));
+    if (parentItem)
+        return parentItem->childItems.indexOf(const_cast<MoleculeListItem*>(this));
 
     return 0;
 }
 
-QList<MoleculeListItem*> *MoleculeListItem::children() const
+int MoleculeListItem::columnCount() const
 {
-    return d->m_childItems;
+    return itemData.count();
 }
 
 QVariant MoleculeListItem::data(int column) const
 {
-    return d->itemData.value(column);
+    return itemData.value(column);
 }
 
+bool MoleculeListItem::insertChildren(int position, int count, int columns)
+{
+    if (position < 0 || position > childItems.size())
+        return false;
 
+    for (int row = 0; row < count; row++)
+    {
+        QVector<QVariant> data(columns);
+        MoleculeListItem *item = new MoleculeListItem(data, this);
+        childItems.insert(position, item);
+    }
+
+    return true;
+}
+
+bool MoleculeListItem::insertColumns(int position, int columns)
+{
+    if (position < 0 || position > itemData.size())
+        return false;
+
+    for (int column = 0; column < columns; column++)
+        itemData.insert(position, QVariant());
+
+    foreach (MoleculeListItem *child, childItems)
+        child->insertColumns(position, columns);
+
+    return true;
+}
+
+MoleculeListItem *MoleculeListItem::parent()
+{
+    return parentItem;
+}
+
+bool MoleculeListItem::removeChildren(int position, int count)
+{
+    if (position < 0 || position + count > childItems.size())
+        return false;
+
+    for (int row = 0; row < count; row++)
+        delete childItems.takeAt(position);
+
+    return true;
+}
+
+bool MoleculeListItem::removeColumns(int position, int columns)
+{
+    if (position < 0 || position + columns > itemData.size())
+        return false;
+
+    for (int column = 0; column < columns; column++)
+        itemData.remove(position);
+
+    foreach (MoleculeListItem *child, childItems)
+        child->removeColumns(position, columns);
+
+    return true;
+}
+
+bool MoleculeListItem::setData(int column, const QVariant &newData)
+{
+    if (column < 0 || column >= itemData.size())
+        return false;
+
+    itemData[column] = newData;
+    return true;
+}
