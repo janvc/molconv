@@ -47,10 +47,13 @@ QVariant MoleculeListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+    MoleculeListItem *item = getItem(index);
+
+    if (role == Qt::CheckStateRole && index.column() == 0)
+        return static_cast<int>(item->isChecked() ? Qt::Checked : Qt::Unchecked);
+
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
-
-    MoleculeListItem *item = getItem(index);
 
     return item->data(index.column());
 }
@@ -60,7 +63,12 @@ Qt::ItemFlags MoleculeListModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return 0;
 
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    Qt::ItemFlags flags = Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+
+    if (index.column() == 0)
+        flags |= Qt::ItemIsUserCheckable;
+
+    return flags;
 }
 
 MoleculeListItem *MoleculeListModel::getItem(const QModelIndex &index) const
@@ -169,11 +177,18 @@ int MoleculeListModel::rowCount(const QModelIndex &parent) const
 
 bool MoleculeListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (role != Qt::EditRole)
+    if (role != Qt::EditRole && role != Qt::CheckStateRole)
         return false;
 
     MoleculeListItem *item = getItem(index);
-    bool result = item->setData(index.column(), value);
+    bool result;
+    if (role == Qt::CheckStateRole)
+    {
+        item->toggleChecked();
+        result = true;
+    }
+    else
+        result = item->setData(index.column(), value);
 
     if (result)
         emit dataChanged(index, index);
@@ -192,4 +207,23 @@ bool MoleculeListModel::setHeaderData(int section, Qt::Orientation orientation, 
         emit headerDataChanged(orientation, section, section);
 
     return result;
+}
+
+void MoleculeListModel::setMolecule(const QModelIndex &index, molconv::moleculePtr &newMol)
+{
+    MoleculeListItem *item = getItem(index);
+
+    item->setMolecule(newMol);
+}
+
+molconv::moleculePtr MoleculeListModel::Molecule(const QModelIndex &index) const
+{
+    MoleculeListItem *item = getItem(index);
+    return item->Molecule();
+}
+
+bool MoleculeListModel::isChecked(const QModelIndex &index) const
+{
+    MoleculeListItem *item = getItem(index);
+    return item->isChecked();
 }

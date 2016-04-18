@@ -26,6 +26,7 @@ MoleculeListItem::MoleculeListItem(const QVector<QVariant> &data, MoleculeListIt
 {
     parentItem = parent;
     itemData = data;
+    checked = true;
 }
 
 MoleculeListItem::~MoleculeListItem()
@@ -127,4 +128,29 @@ bool MoleculeListItem::setData(int column, const QVariant &newData)
 
     itemData[column] = newData;
     return true;
+}
+
+bool MoleculeListItem::isChecked() const
+{
+    return checked;
+}
+
+void MoleculeListItem::setChecked(bool set)
+{
+    checked = set;
+}
+
+void MoleculeListItem::toggleChecked()
+{
+    checked = !checked;
+}
+
+void MoleculeListItem::setMolecule(molconv::moleculePtr &newMol)
+{
+    molecule = newMol;
+}
+
+molconv::moleculePtr MoleculeListItem::Molecule() const
+{
+    return molecule;
 }

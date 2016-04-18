@@ -22,6 +22,7 @@
 #define MOLECULELISTMODEL_H
 
 #include <QAbstractItemModel>
+#include "molconv-molecule/molecule.h"
 
 class MoleculeListItem;
 
@@ -49,6 +50,10 @@ public:
     bool removeColumns(int position, int columns, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool insertRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+
+    void setMolecule(const QModelIndex &index, molconv::moleculePtr &newMol);
+    molconv::moleculePtr Molecule(const QModelIndex &index) const;
+    bool isChecked(const QModelIndex &index) const;
 
 private:
     MoleculeListItem *getItem(const QModelIndex &index) const;

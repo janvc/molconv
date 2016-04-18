@@ -25,6 +25,7 @@
 #include<QList>
 #include<QVector>
 #include<QVariant>
+#include "molconv-molecule/molecule.h"
 
 
 class MoleculeListItem
@@ -44,11 +45,18 @@ public:
     bool removeColumns(int position, int columns);
     int childNumber() const;
     bool setData(int column, const QVariant &newData);
+    bool isChecked() const;
+    void setChecked(bool set);
+    void toggleChecked();
+    void setMolecule(molconv::moleculePtr &newMol);
+    molconv::moleculePtr Molecule() const;
 
 private:
     QList<MoleculeListItem*> childItems;
     QVector<QVariant> itemData;
     MoleculeListItem *parentItem;
+    bool checked;
+    molconv::moleculePtr molecule;
 };
 
 #endif // MOLECULELISTITEM_H

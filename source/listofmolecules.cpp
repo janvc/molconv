@@ -37,13 +37,15 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     m_window = window;
 
     QStringList headers;
-    headers << tr("Name") << tr("Number of atoms") << tr("Mass");
+    headers << tr("Show") << tr("Name") << tr("Number of atoms") << tr("Formula") << tr("Mass");
 
     MoleculeListModel *model = new MoleculeListModel(headers);
 
     ui->system_tree->setModel(model);
     for (int column = 0; column < model->columnCount(); column++)
         ui->system_tree->resizeColumnToContents(column);
+
+    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(toggleMolecule(QModelIndex)));
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -54,7 +56,7 @@ ListOfMolecules::~ListOfMolecules()
 void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
 {
     QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
-    QAbstractItemModel *model = ui->system_tree->model();
+    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
 
     if (!model->insertRow(index.row() + 1, index.parent()))
         return;
@@ -65,13 +67,16 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
 
         switch (column)
         {
-        case 0:
+        case 1:
             model->setData(child, QVariant(QString::fromStdString(newMol->name())), Qt::EditRole);
             break;
-        case 1:
+        case 2:
             model->setData(child, QVariant(int(newMol->size())), Qt::EditRole);
             break;
-        case 2:
+        case 3:
+            model->setData(child, QVariant(QString::fromStdString(newMol->formula())), Qt::EditRole);
+            break;
+        case 4:
             model->setData(child, QVariant(newMol->mass()), Qt::EditRole);
             break;
         default:
@@ -79,6 +84,22 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
         }
     }
 
+    QModelIndex child = model->index(index.row() + 1, 1, index.parent());
+    model->setMolecule(child, newMol);
+
     for (int column = 0; column < model->columnCount(); column++)
         ui->system_tree->resizeColumnToContents(column);
+}
+
+void ListOfMolecules::toggleMolecule(const QModelIndex &index)
+{
+    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+    bool state;
+
+    if (model->isChecked(index))
+        state = true;
+    else
+        state = false;
+
+    m_window->toggle_molecule(model->Molecule(index), state);
 }
