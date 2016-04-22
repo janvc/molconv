@@ -21,6 +21,7 @@
 
 #include<QDebug>
 #include "moleculesettings.h"
+#include "listofmolecules.h"
 #include "ui_moleculesettings.h"
 
 
@@ -47,7 +48,7 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     ui->zSpinBox->setMaximum( 100.0);
     ui->zSpinBox->setMinimum(-100.0);
 
-    connect(main_window, SIGNAL(new_molecule(molconv::moleculePtr)), SLOT(setMolecule(molconv::moleculePtr)));
+    connect(main_window, SIGNAL(new_molecule(molconv::moleculePtr&)), SLOT(setMolecule(molconv::moleculePtr&)));
 }
 
 MoleculeSettings::~MoleculeSettings()
@@ -58,6 +59,7 @@ MoleculeSettings::~MoleculeSettings()
 
 void MoleculeSettings::setValues()
 {
+
     double x = m_molecule->internalOriginPosition()(0);
     double y = m_molecule->internalOriginPosition()(1);
     double z = m_molecule->internalOriginPosition()(2);
@@ -77,7 +79,7 @@ molconv::moleculePtr MoleculeSettings::molecule() const
     return m_molecule;
 }
 
-void MoleculeSettings::setMolecule(molconv::moleculePtr newMolecule)
+void MoleculeSettings::setMolecule(molconv::moleculePtr &newMolecule)
 {
     m_molecule = newMolecule;
 

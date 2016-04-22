@@ -44,7 +44,7 @@ public:
     molconv::moleculePtr molecule() const;
 
 public slots:
-    void setMolecule(molconv::moleculePtr newMolecule);
+    void setMolecule(molconv::moleculePtr &newMolecule);
 
 private slots:
     void on_xSlider_valueChanged(int value);

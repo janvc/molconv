@@ -103,3 +103,14 @@ void ListOfMolecules::toggleMolecule(const QModelIndex &index)
 
     m_window->toggle_molecule(model->Molecule(index), state);
 }
+
+void ListOfMolecules::on_system_tree_clicked(const QModelIndex &index)
+{
+    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+
+    if (model->isChecked(index))
+    {
+        molconv::moleculePtr tmp = model->Molecule(index);
+        emit newMoleculeSelected(tmp);
+    }
+}

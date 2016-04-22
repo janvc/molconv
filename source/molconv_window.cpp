@@ -93,6 +93,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
 
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
+
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);
 

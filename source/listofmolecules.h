@@ -43,10 +43,14 @@ class ListOfMolecules : public QDockWidget
 
         void insertMolecule(molconv::moleculePtr &newMol);
 
+signals:
+        void newMoleculeSelected(molconv::moleculePtr &newMol);
+
 private slots:
         void toggleMolecule(const QModelIndex &index);
+        void on_system_tree_clicked(const QModelIndex &index);
 
-    private:
+private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *m_window;
 };

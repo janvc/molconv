@@ -77,7 +77,7 @@ public slots:
 private slots:
 
 signals:
-    void new_molecule(molconv::moleculePtr newMolecule);
+    void new_molecule(molconv::moleculePtr &newMolecule);
 
 private:
     MolconvWindowPrivate *d;
