@@ -28,6 +28,7 @@
 MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::MoleculeSettings)
+    , settingMolecule(false)
 {
     qDebug("this is the constructor of MoleculeSettings");
 
@@ -59,10 +60,11 @@ MoleculeSettings::~MoleculeSettings()
 
 void MoleculeSettings::setValues()
 {
+    Eigen::Vector3d origin = m_molecule->internalOriginPosition();
 
-    double x = m_molecule->internalOriginPosition()(0);
-    double y = m_molecule->internalOriginPosition()(1);
-    double z = m_molecule->internalOriginPosition()(2);
+    double x = origin(0);
+    double y = origin(1);
+    double z = origin(2);
 
     ui->xSlider->setValue(int(x*10.0));
     ui->ySlider->setValue(int(y*10.0));
@@ -71,7 +73,6 @@ void MoleculeSettings::setValues()
     ui->xSpinBox->setValue(x);
     ui->ySpinBox->setValue(y);
     ui->zSpinBox->setValue(z);
-
 }
 
 molconv::moleculePtr MoleculeSettings::molecule() const
@@ -81,6 +82,8 @@ molconv::moleculePtr MoleculeSettings::molecule() const
 
 void MoleculeSettings::setMolecule(molconv::moleculePtr &newMolecule)
 {
+    settingMolecule = true;
+
     m_molecule = newMolecule;
 
     ui->xSlider->setEnabled(true);
@@ -97,30 +100,26 @@ void MoleculeSettings::setMolecule(molconv::moleculePtr &newMolecule)
     ui->thetaSpinBox->setEnabled(true);
 
     setValues();
+
+    settingMolecule = false;
 }
 
 void MoleculeSettings::on_xSlider_valueChanged(int value)
 {
     double realValue = double(value) / 10.0;
     ui->xSpinBox->setValue(realValue);
-
-    m_molecule->setCenter(realValue, m_molecule->center()(1), m_molecule->center()(2));
 }
 
 void MoleculeSettings::on_ySlider_valueChanged(int value)
 {
     double realValue = double(value) / 10.0;
     ui->ySpinBox->setValue(realValue);
-
-    m_molecule->setCenter(m_molecule->center()(0), realValue, m_molecule->center()(2));
 }
 
 void MoleculeSettings::on_zSlider_valueChanged(int value)
 {
     double realValue = double(value) / 10.0;
     ui->zSpinBox->setValue(realValue);
-
-    m_molecule->setCenter(m_molecule->center()(0), m_molecule->center()(1), realValue);
 }
 
 void MoleculeSettings::on_xSpinBox_valueChanged(double value)
@@ -128,7 +127,8 @@ void MoleculeSettings::on_xSpinBox_valueChanged(double value)
     int intValue = int(value * 10.0);
     ui->xSlider->setValue(intValue);
 
-    m_molecule->setCenter(value, m_molecule->center()(1), m_molecule->center()(2));
+    if (!settingMolecule)
+        m_molecule->setCenter(value, m_molecule->center()(1), m_molecule->center()(2));
 }
 
 void MoleculeSettings::on_ySpinBox_valueChanged(double value)
@@ -136,7 +136,8 @@ void MoleculeSettings::on_ySpinBox_valueChanged(double value)
     int intValue = int(value * 10.0);
     ui->ySlider->setValue(intValue);
 
-    m_molecule->setCenter(m_molecule->center()(0), value, m_molecule->center()(2));
+    if (!settingMolecule)
+        m_molecule->setCenter(m_molecule->center()(0), value, m_molecule->center()(2));
 }
 
 void MoleculeSettings::on_zSpinBox_valueChanged(double value)
@@ -144,7 +145,8 @@ void MoleculeSettings::on_zSpinBox_valueChanged(double value)
     int intValue = int(value * 10.0);
     ui->zSlider->setValue(intValue);
 
-    m_molecule->setCenter(m_molecule->center()(0), m_molecule->center()(1), value);
+    if (!settingMolecule)
+        m_molecule->setCenter(m_molecule->center()(0), m_molecule->center()(1), value);
 }
 
 void MoleculeSettings::on_phiSlider_valueChanged(int value)

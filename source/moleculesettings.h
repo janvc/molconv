@@ -64,6 +64,8 @@ private:
     Ui::MoleculeSettings *ui;
     MolconvWindow *main_window;
     molconv::moleculePtr m_molecule;
+
+    bool settingMolecule;
 };
 
 #endif // MOLECULESETTINGS_H
