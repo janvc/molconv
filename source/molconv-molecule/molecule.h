@@ -55,6 +55,9 @@ namespace molconv
         std::array<int,2> internalOriginAtoms() const;
         std::array<int,3> internalBasisAtoms() const;
         double internalOriginFactor() const;
+        double phi() const;
+        double theta() const;
+        double psi() const;
 
         // info about the inertia tensor and the covariance matrix:
         Eigen::Matrix3d inertiaTensor() const;
@@ -71,6 +74,7 @@ namespace molconv
         void setPhi(const double newPhi);
         void setTheta(const double newTheta);
         void setPsi(const double newPsi);
+        void moveFromParas(const double x, const double y, const double z, const double phi, const double theta, const double psi);
 
         // changing the internal basis:
         void setOrigin(const origin &newOrigin, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);

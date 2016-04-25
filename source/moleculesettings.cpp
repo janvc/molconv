@@ -36,18 +36,7 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
 
     ui->setupUi(this);
 
-    ui->xSlider->setMinimum(-1000);
-    ui->xSlider->setMaximum( 1000);
-    ui->ySlider->setMinimum(-1000);
-    ui->ySlider->setMaximum( 1000);
-    ui->zSlider->setMinimum(-1000);
-    ui->zSlider->setMaximum( 1000);
-    ui->xSpinBox->setMaximum( 100.0);
-    ui->xSpinBox->setMinimum(-100.0);
-    ui->ySpinBox->setMaximum( 100.0);
-    ui->ySpinBox->setMinimum(-100.0);
-    ui->zSpinBox->setMaximum( 100.0);
-    ui->zSpinBox->setMinimum(-100.0);
+    setBoundaries();
 
     connect(main_window, SIGNAL(new_molecule(molconv::moleculePtr&)), SLOT(setMolecule(molconv::moleculePtr&)));
 }
@@ -66,13 +55,69 @@ void MoleculeSettings::setValues()
     double y = origin(1);
     double z = origin(2);
 
-    ui->xSlider->setValue(int(x*10.0));
-    ui->ySlider->setValue(int(y*10.0));
-    ui->zSlider->setValue(int(z*10.0));
+    ui->xSlider->setValue(int(x * factor));
+    ui->ySlider->setValue(int(y * factor));
+    ui->zSlider->setValue(int(z * factor));
 
     ui->xSpinBox->setValue(x);
     ui->ySpinBox->setValue(y);
     ui->zSpinBox->setValue(z);
+
+    ui->phiSlider->setValue(int(m_molecule->phi() * rad2deg * factor));
+    ui->thetaSlider->setValue(int(m_molecule->theta() * rad2deg * factor));
+    ui->psiSlider->setValue(int(m_molecule->psi() * rad2deg * factor));
+
+    ui->phiSpinBox->setValue(m_molecule->phi() * rad2deg);
+    ui->thetaSpinBox->setValue(m_molecule->theta() * rad2deg);
+    ui->psiSpinBox->setValue(m_molecule->psi() * rad2deg);
+}
+
+void MoleculeSettings::setBoundaries()
+{
+    ui->xSlider->setMinimum(int(Xmin * factor));
+    ui->ySlider->setMinimum(int(Ymin * factor));
+    ui->zSlider->setMinimum(int(Zmin * factor));
+    ui->xSlider->setMaximum(int(Xmax * factor));
+    ui->ySlider->setMaximum(int(Ymax * factor));
+    ui->zSlider->setMaximum(int(Zmax * factor));
+    ui->xSpinBox->setMinimum(Xmin);
+    ui->ySpinBox->setMinimum(Ymin);
+    ui->zSpinBox->setMinimum(Zmin);
+    ui->xSpinBox->setMaximum(Xmax);
+    ui->ySpinBox->setMaximum(Ymax);
+    ui->zSpinBox->setMaximum(Zmax);
+
+    ui->xSpinBox->setSingleStep(0.001);
+    ui->ySpinBox->setSingleStep(0.001);
+    ui->zSpinBox->setSingleStep(0.001);
+
+    ui->phiSlider->setMinimum(0);
+    ui->thetaSlider->setMinimum(0);
+    ui->psiSlider->setMinimum(0);
+    ui->phiSlider->setMaximum(int(360.0 * factor));
+    ui->thetaSlider->setMaximum(int(180.0 * factor));
+    ui->psiSlider->setMaximum(int(360.0 * factor));
+    ui->phiSpinBox->setMinimum(0.0);
+    ui->thetaSpinBox->setMinimum(0.0);
+    ui->psiSpinBox->setMinimum(0.0);
+    ui->phiSpinBox->setMaximum(360.0);
+    ui->thetaSpinBox->setMaximum(180.0);
+    ui->psiSpinBox->setMaximum(360.0);
+
+    ui->phiSpinBox->setSingleStep(0.001);
+    ui->thetaSpinBox->setSingleStep(0.001);
+    ui->psiSpinBox->setSingleStep(0.001);
+}
+
+void MoleculeSettings::updateMolecule()
+{
+    m_molecule->moveFromParas(
+                ui->xSpinBox->value(),
+                ui->ySpinBox->value(),
+                ui->zSpinBox->value(),
+                ui->phiSpinBox->value() / rad2deg,
+                ui->thetaSpinBox->value() / rad2deg,
+                ui->psiSpinBox->value() / rad2deg);
 }
 
 molconv::moleculePtr MoleculeSettings::molecule() const
@@ -106,61 +151,90 @@ void MoleculeSettings::setMolecule(molconv::moleculePtr &newMolecule)
 
 void MoleculeSettings::on_xSlider_valueChanged(int value)
 {
-    double realValue = double(value) / 10.0;
+    double realValue = double(value) / factor;
     ui->xSpinBox->setValue(realValue);
 }
 
 void MoleculeSettings::on_ySlider_valueChanged(int value)
 {
-    double realValue = double(value) / 10.0;
+    double realValue = double(value) / factor;
     ui->ySpinBox->setValue(realValue);
 }
 
 void MoleculeSettings::on_zSlider_valueChanged(int value)
 {
-    double realValue = double(value) / 10.0;
+    double realValue = double(value) / factor;
     ui->zSpinBox->setValue(realValue);
 }
 
 void MoleculeSettings::on_xSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * 10.0);
+    int intValue = int(value * factor);
     ui->xSlider->setValue(intValue);
 
     if (!settingMolecule)
-        m_molecule->setCenter(value, m_molecule->center()(1), m_molecule->center()(2));
+        updateMolecule();
 }
 
 void MoleculeSettings::on_ySpinBox_valueChanged(double value)
 {
-    int intValue = int(value * 10.0);
+    int intValue = int(value * factor);
     ui->ySlider->setValue(intValue);
 
     if (!settingMolecule)
-        m_molecule->setCenter(m_molecule->center()(0), value, m_molecule->center()(2));
+        updateMolecule();
 }
 
 void MoleculeSettings::on_zSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * 10.0);
+    int intValue = int(value * factor);
     ui->zSlider->setValue(intValue);
 
     if (!settingMolecule)
-        m_molecule->setCenter(m_molecule->center()(0), m_molecule->center()(1), value);
+        updateMolecule();
 }
 
 void MoleculeSettings::on_phiSlider_valueChanged(int value)
 {
-    double realValue = double(value) / 10.0;
+    double realValue = double(value) / factor;
     ui->phiSpinBox->setValue(realValue);
+}
 
-    m_molecule->setPhi(realValue);
+void MoleculeSettings::on_thetaSlider_valueChanged(int value)
+{
+    double realValue = double(value) / factor;
+    ui->thetaSpinBox->setValue(realValue);
+}
+
+void MoleculeSettings::on_psiSlider_valueChanged(int value)
+{
+    double realValue = double(value) / factor;
+    ui->psiSpinBox->setValue(realValue);
 }
 
 void MoleculeSettings::on_phiSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * 10.0);
+    int intValue = int(value * factor);
     ui->phiSlider->setValue(intValue);
 
-    m_molecule->setPhi(value);
+    if (!settingMolecule)
+        updateMolecule();
+}
+
+void MoleculeSettings::on_thetaSpinBox_valueChanged(double value)
+{
+    int intValue = int(value * factor);
+    ui->thetaSlider->setValue(intValue);
+
+    if (!settingMolecule)
+        updateMolecule();
+}
+
+void MoleculeSettings::on_psiSpinBox_valueChanged(double value)
+{
+    int intValue = int(value * factor);
+    ui->psiSlider->setValue(intValue);
+
+    if (!settingMolecule)
+        updateMolecule();
 }

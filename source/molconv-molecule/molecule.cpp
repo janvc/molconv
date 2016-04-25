@@ -53,7 +53,7 @@ namespace molconv
         std::array<int,3> m_basisAtoms;
 
         groupPtr m_group;
-        Eigen::Matrix3Xd m_intPos;
+        std::vector<Eigen::Vector3d> m_intPos;
 
         boost::shared_ptr<MoleculeListItem> m_listItem;
     };
@@ -84,6 +84,7 @@ namespace molconv
     {
         qDebug() << "this is the second constructor of molconv::Molecule.";
         chemkit::BondPredictor::predictBonds(this);
+        initIntPos();
     }
 
 
@@ -93,6 +94,7 @@ namespace molconv
     {
         qDebug() << "this is the third constructor of molconv::Molecule.";
         chemkit::BondPredictor::predictBonds(this);
+        initIntPos();
     }
 
     ///
@@ -111,6 +113,7 @@ namespace molconv
         d->m_originFactor = originalMolecule.internalOriginFactor();
         d->m_originAtoms = originalMolecule.internalOriginAtoms();
         d->m_basisAtoms = originalMolecule.internalBasisAtoms();
+        initIntPos();
     }
 
     ///
@@ -123,13 +126,11 @@ namespace molconv
 
     void Molecule::initIntPos()
     {
-        d->m_intPos.resize(3, size());
-
         for (int i = 0; i < size(); i++)
         {
             Eigen::Vector3d origPos = atom(i)->position();
             Eigen::Vector3d intPos = internalBasisVectors().transpose() * (origPos - internalOriginPosition());
-            d->m_intPos.col(i) = intPos;
+            d->m_intPos.push_back(intPos);
         }
     }
 
@@ -274,6 +275,39 @@ namespace molconv
     {
         qDebug() << "entering Molecule::internalOriginFactor()";
         return d->m_originFactor;
+    }
+
+    ///
+    /// \brief Molecule::phi
+    /// \return
+    ///
+    /// calculate the euler angle phi from the current internal basis
+    ///
+    double Molecule::phi() const
+    {
+        return asin(internalBasisVectors()(2,0) / sin(theta()));
+    }
+
+    ///
+    /// \brief Molecule::theta
+    /// \return
+    ///
+    /// calculate the euler angle theta from the current internal basis
+    ///
+    double Molecule::theta() const
+    {
+        return acos(internalBasisVectors()(2,2));
+    }
+
+    ///
+    /// \brief Molecule::psi
+    /// \return
+    ///
+    /// calculate the euler angle psi from the current internal basis
+    ///
+    double Molecule::psi() const
+    {
+        return asin(internalBasisVectors()(0,2) / sin(theta()));
     }
 
     ///
@@ -435,6 +469,39 @@ namespace molconv
     ///
     void Molecule::setPsi(const double newPsi)
     {
+    }
+
+    ///
+    /// \brief moveFromParas
+    /// \param x
+    /// \param y
+    /// \param z
+    /// \param phi
+    /// \param psi
+    /// \param theta
+    ///
+    /// take the atomic coordinates w.r.t. the internal basis and transform them according
+    /// to the given translation vector and euler angles to construct the position
+    /// and orientation of the molecule in the global coordinate system
+    ///
+    void Molecule::moveFromParas(const double x, const double y, const double z, const double phi, const double theta, const double psi)
+    {
+        Eigen::Vector3d pos(x, y, z);
+
+        Eigen::Matrix3d rot;
+
+        rot(0,0) =  cos(psi) * cos(phi) - cos(theta) * sin(phi) * sin(psi);
+        rot(0,1) =  cos(psi) * sin(phi) + cos(theta) * cos(phi) * sin(psi);
+        rot(0,2) =  sin(psi) * sin(theta);
+        rot(1,0) = -sin(psi) * cos(phi) - cos(theta) * sin(phi) * cos(psi);
+        rot(1,1) = -sin(psi) * sin(phi) + cos(theta) * cos(phi) * cos(psi);
+        rot(1,2) =  cos(psi) * sin(theta);
+        rot(2,0) =  sin(theta) * sin(phi);
+        rot(2,1) = -sin(theta) * cos(phi);
+        rot(2,2) =  cos(theta);
+
+        for (int i = 0; i < size(); i++)
+            atom(i)->setPosition(pos + rot * d->m_intPos.at(i));
     }
 
     ///

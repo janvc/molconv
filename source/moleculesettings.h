@@ -55,17 +55,37 @@ private slots:
     void on_zSpinBox_valueChanged(double value);
 
     void on_phiSlider_valueChanged(int value);
+    void on_thetaSlider_valueChanged(int value);
+    void on_psiSlider_valueChanged(int value);
 
     void on_phiSpinBox_valueChanged(double value);
+    void on_thetaSpinBox_valueChanged(double value);
+    void on_psiSpinBox_valueChanged(double value);
 
 private:
     void setValues();
+    void setBoundaries();
+    void updateMolecule();
 
     Ui::MoleculeSettings *ui;
     MolconvWindow *main_window;
     molconv::moleculePtr m_molecule;
 
     bool settingMolecule;
+
+    // parameters for the molecule movement:
+    double Xmin = -10.0;
+    double Ymin = -10.0;
+    double Zmin = -10.0;
+    double Xmax =  10.0;
+    double Ymax =  10.0;
+    double Zmax =  10.0;
+
+    // conversion factor from the int representation of the
+    // sliders to the floating point representation of the spinboxes
+    double factor = 100.0;
+
+    const double rad2deg = 180.0 / M_PI;
 };
 
 #endif // MOLECULESETTINGS_H
