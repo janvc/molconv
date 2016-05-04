@@ -25,7 +25,7 @@
 #include<QList>
 #include<QVector>
 #include<QVariant>
-#include "molconv-molecule/molecule.h"
+#include "molecule.h"
 
 
 class MoleculeListItem

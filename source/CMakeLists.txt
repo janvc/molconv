@@ -56,12 +56,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
-    config.cpp
-    exceptions.cpp
-    groupitem.cpp
     main.cpp
     molconv_window.cpp
-    moleculeitem.cpp
     moleculelistitem.cpp
     moleculelistmodel.cpp
     newgroupdialog.cpp
@@ -69,8 +65,12 @@ set(SOURCES
     moleculesettings.cpp
     open_dialog.cpp
     export_dialog.cpp
-    utilities.cpp
     graphicsaxisitem.cpp
+    molecule.cpp
+    system.cpp
+    abstractmoleculegroup.cpp
+    moleculegroup.cpp
+    moleculestack.cpp
 )
 
 set(MOC_HEADERS
@@ -109,13 +109,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPI
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -ggdb -O0 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-add_subdirectory(molconv-molecule)
-add_subdirectory(molconv-moleculegroup)
-add_subdirectory(molconv-system)
-add_subdirectory(include)
-
-
 add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
-add_executable(testprogram testprogram.cpp)
-target_link_libraries(molconv molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})
-target_link_libraries(testprogram molconv-molecule molconv-moleculegroup molconv-system Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(molconv Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})

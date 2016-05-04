@@ -28,8 +28,8 @@
     #include<boost/scoped_ptr.hpp>
 #endif
 #include<Eigen/Core>
-#include "../include/types.h"
-#include "../molconv-moleculegroup/abstractmoleculegroup.h"
+#include "types.h"
+#include "abstractmoleculegroup.h"
 
 namespace molconv
 {

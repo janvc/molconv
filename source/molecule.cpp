@@ -27,7 +27,7 @@
 #include<chemkit/bondpredictor.h>
 #include<QDebug>
 #include "molecule.h"
-#include "../moleculelistitem.h"
+#include "moleculelistitem.h"
 
 
 namespace molconv

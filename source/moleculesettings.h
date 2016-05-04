@@ -37,7 +37,6 @@ class MoleculeSettings : public QDockWidget
     Q_OBJECT
 
 public:
-    //explicit MoleculeSettings(MolconvWindow *window);
     MoleculeSettings(MolconvWindow *window);
     ~MoleculeSettings();
 

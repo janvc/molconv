@@ -24,9 +24,7 @@
 #include "ui_listofmolecules.h"
 
 #include "molconv_window.h"
-#include "moleculeitem.h"
 #include "moleculelistmodel.h"
-#include "groupitem.h"
 
 
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)

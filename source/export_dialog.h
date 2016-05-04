@@ -22,7 +22,7 @@
 #define EXPORT_DIALOG_H
 
 #include <QDialog>
-#include "molconv-molecule/molecule.h"
+#include "molecule.h"
 #include "molconv_window.h"
 
 namespace Ui

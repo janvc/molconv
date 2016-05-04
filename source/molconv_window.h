@@ -28,10 +28,9 @@
     #include<chemkit/graphicsmoleculeitem.h>
 #endif
 
-#include "config.h"
-#include "molconv-system/system.h"
-#include "molconv-moleculegroup/moleculegroup.h"
-#include "molconv-moleculegroup/moleculestack.h"
+#include "system.h"
+#include "moleculegroup.h"
+#include "moleculestack.h"
 
 #include "open_dialog.h"
 #include "newgroupdialog.h"
@@ -54,13 +53,9 @@ public:
     void add_molecule(molconv::moleculePtr temp_mol);
     int nMolecules();
     molconv::moleculePtr getMol(int index);
-    void clean_up(const int mol_nr, const molconv::Config &config);
-    void set_intbasis(const int mol_nr, const molconv::Config &config);
 
 public slots:
-    //void saveFile(const size_t index, const QString &filename);
     void saveFile();
-//    void closeFile();
     void quit();
     void getMoleculeDialog();
     void startOpenDialog();
@@ -68,7 +63,6 @@ public slots:
     void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
-    //void DuplicateSelectedMolecule();
     void newGroup();
     void startNewGroupDialog();
     void addMoleculeToGroup();

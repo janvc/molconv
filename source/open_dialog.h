@@ -28,7 +28,7 @@
 #endif
 #include<QDialog>
 #include<QtWidgets>
-#include "molconv-molecule/molecule.h"
+#include "molecule.h"
 
 namespace Ui
 {

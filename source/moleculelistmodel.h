@@ -22,7 +22,7 @@
 #define MOLECULELISTMODEL_H
 
 #include <QAbstractItemModel>
-#include "molconv-molecule/molecule.h"
+#include "molecule.h"
 
 class MoleculeListItem;
 

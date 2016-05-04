@@ -22,9 +22,9 @@
 #define MOLECULE_LIST_H_
 
 #include<QtWidgets>
-#include "molconv-molecule/molecule.h"
-#include "molconv-moleculegroup/abstractmoleculegroup.h"
-#include "include/types.h"
+#include "molecule.h"
+#include "abstractmoleculegroup.h"
+#include "types.h"
 
 namespace Ui
 {

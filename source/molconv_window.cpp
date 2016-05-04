@@ -28,7 +28,7 @@
     #include<boost/make_shared.hpp>
 #endif
 
-#include "include/types.h"
+#include "types.h"
 #include "molconv_window.h"
 #include "ui_molconv_window.h"
 #include "listofmolecules.h"
@@ -84,7 +84,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
-    //connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateSelectedMolecule()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
 
@@ -167,11 +166,6 @@ void MolconvWindow::saveFile()
     qDebug("entering MolconvWindow::saveFile()");
 }
 
-//void MolconvWindow::saveFile(const size_t index, const QString &filename)
-//{
-//    qDebug("entering MolconvWindow::saveFile(filename)");
-//}
-
 void MolconvWindow::startOpenDialog()
 {
     qDebug("entering MolconvWindow::startOpenDialog()");
@@ -205,13 +199,6 @@ void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
 
     add_molecule(newMol);
 }
-
-//void MolconvWindow::DuplicateSelectedMolecule()
-//{
-//    qDebug("entering MolconvWindow::DuplicateSelectedMolecule()");
-
-//    DuplicateMolecule(d->m_ListOfMolecules->getSelectedMolecule());
-//}
 
 void MolconvWindow::newGroup()
 {

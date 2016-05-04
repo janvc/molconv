@@ -24,7 +24,7 @@
 
 #include<boost/shared_ptr.hpp>
 #include<boost/scoped_ptr.hpp>
-#include"../molconv-molecule/molecule.h"
+#include"molecule.h"
 
 namespace molconv
 {
