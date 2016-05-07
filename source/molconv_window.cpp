@@ -36,6 +36,7 @@
 #include "open_dialog.h"
 #include "export_dialog.h"
 #include "graphicsaxisitem.h"
+#include "aboutdialog.h"
 
 
 class MolconvWindowPrivate
@@ -151,8 +152,8 @@ void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state
 
 void MolconvWindow::about()
 {
-    QMessageBox::about(this, tr("About molconv"),
-                tr("<b>molconv</b> is a programm to manipulate molecules."));
+    AboutDialog *ad = new AboutDialog;
+    ad->exec();
 }
 
 void MolconvWindow::quit()

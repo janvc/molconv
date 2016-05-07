@@ -1,0 +1,6 @@
+#ifndef MOLCONFIG_H
+#define MOLCONFIG_H
+
+#define SCM_REVISION "@SCM_REVISION@"
+
+#endif // MOLCONFIG_H

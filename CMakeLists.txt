@@ -47,6 +47,19 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
+# find out the git revision:
+function(git_version dir version_var)
+    if (EXISTS ${dir}/.git)
+        execute_process(COMMAND git rev-parse --short HEAD
+            WORKING_DIRECTORY ${dir}
+            OUTPUT_VARIABLE var)
+        string(REGEX REPLACE "\n" "" var "${var}")
+        set(${version_var} "${var}" PARENT_SCOPE)
+    endif(EXISTS ${dir}/.git)
+endfunction()
+
+git_version(${CMAKE_SOURCE_DIR} SCM_REVISION)
+
 add_subdirectory(source)
 
 # prevent the generated files from being deleted during make clean

@@ -16,6 +16,7 @@
 # You should have recieved a copy of the GNU General Public License
 # along with molconv. If not, see <http://www.gnu.org/licenses/>.
 #
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 # Boost libraries are required
 find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIRED)
@@ -71,6 +72,7 @@ set(SOURCES
     abstractmoleculegroup.cpp
     moleculegroup.cpp
     moleculestack.cpp
+    aboutdialog.cpp
 )
 
 set(MOC_HEADERS
@@ -80,6 +82,7 @@ set(MOC_HEADERS
     newgroupdialog.h
     open_dialog.h
     export_dialog.h
+    aboutdialog.h
 )
 
 set(UI_FORMS
@@ -89,6 +92,7 @@ set(UI_FORMS
     newgroupdialog.ui
     open_dialog.ui
     export_dialog.ui
+    aboutdialog.ui
 )
 
 set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})
