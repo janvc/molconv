@@ -22,6 +22,7 @@
 #include<iostream>
 #include<array>
 #include<stdexcept>
+#include<iomanip>
 #include<Eigen/Geometry>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
@@ -43,6 +44,9 @@ namespace molconv
             m_originAtoms.fill(0);
             m_basisAtoms.fill(0);
             m_listItem = 0;
+            m_phi = 0;
+            m_theta = 0;
+            m_psi = 0;
         }
 
         origin m_origin;
@@ -56,6 +60,10 @@ namespace molconv
         std::vector<Eigen::Vector3d> m_intPos;
 
         boost::shared_ptr<MoleculeListItem> m_listItem;
+
+        double m_phi;
+        double m_theta;
+        double m_psi;
     };
 
     ///
@@ -123,15 +131,56 @@ namespace molconv
     ///
     Molecule::~Molecule() {}
 
-
+    ///
+    /// \brief Molecule::initIntPos
+    ///
+    /// Initialize the atomic positions w.r.t. the internal
+    /// coordinate system of the molecule
+    ///
     void Molecule::initIntPos()
     {
+        Eigen::Matrix3d rotMat = internalBasisVectors();
+        // determine the internal atomic positions:
         for (int i = 0; i < size(); i++)
         {
             Eigen::Vector3d origPos = atom(i)->position();
-            Eigen::Vector3d intPos = internalBasisVectors().transpose() * (origPos - internalOriginPosition());
+            Eigen::Vector3d intPos = rotMat.transpose() * (origPos - internalOriginPosition());
             d->m_intPos.push_back(intPos);
         }
+
+        std::cout << "Initial rotation matrix:\n";
+        std::cout << std::scientific
+                  << std::setw(20) << double(rotMat(0,0))
+                  << std::setw(20) << double(rotMat(0,1))
+                  << std::setw(20) << double(rotMat(0,2)) << std::endl;
+        std::cout << std::scientific
+                  << std::setw(20) << double(rotMat(1,0))
+                  << std::setw(20) << double(rotMat(1,1))
+                  << std::setw(20) << double(rotMat(1,2)) << std::endl;
+        std::cout << std::scientific
+                  << std::setw(20) << double(rotMat(2,0))
+                  << std::setw(20) << double(rotMat(2,1))
+                  << std::setw(20) << double(rotMat(2,2)) << std::endl;
+
+        // determine the initial values of the euler angles:
+        double theta = acos(double(rotMat(2,2)));
+        double phi = -atan2(double(rotMat(2,0)), double(rotMat(2,1)));
+        double psi =  atan2(double(rotMat(0,2)), double(rotMat(1,2)));
+
+        if (phi < 0.0)
+            phi += 2.0 * M_PI;
+
+        if (psi < 0.0)
+            psi += 2.0 * M_PI;
+
+        d->m_phi = phi;
+        d->m_psi = psi;
+        d->m_theta = theta;
+
+        std::cout << "Euler angles determined from this matrix:\n";
+        std::cout << "Theta = " << std::setw(20) << theta << std::setw(20) << theta * 180.0 / M_PI << std::endl;
+        std::cout << "Phi = " << std::setw(20) << phi << std::setw(20) << phi * 180.0 / M_PI << std::endl;
+        std::cout << "Psi = " << std::setw(20) << psi << std::setw(20) << psi * 180.0 / M_PI << std::endl;
     }
 
     ///
@@ -285,7 +334,8 @@ namespace molconv
     ///
     double Molecule::phi() const
     {
-        return asin(internalBasisVectors()(2,0) / sin(theta()));
+        //return asin(internalBasisVectors()(2,0) / sin(theta()));
+        return d->m_phi;
     }
 
     ///
@@ -296,7 +346,8 @@ namespace molconv
     ///
     double Molecule::theta() const
     {
-        return acos(internalBasisVectors()(2,2));
+        //return acos(internalBasisVectors()(2,2));
+        return d->m_theta;
     }
 
     ///
@@ -307,7 +358,8 @@ namespace molconv
     ///
     double Molecule::psi() const
     {
-        return asin(internalBasisVectors()(0,2) / sin(theta()));
+        //return asin(internalBasisVectors()(0,2) / sin(theta()));
+        return d->m_psi;
     }
 
     ///
@@ -572,6 +624,7 @@ namespace molconv
             }
             break;
         }
+        initIntPos();
     }
 
     ///
@@ -673,7 +726,19 @@ namespace molconv
                 covarianceMatrix(alpha, beta) /= size();
             }
         }
-
+        std::cout << "the covarianve matrix:\n";
+        std::cout << std::scientific
+                  << std::setw(20) << double(covarianceMatrix(0,0))
+                  << std::setw(20) << double(covarianceMatrix(0,1))
+                  << std::setw(20) << double(covarianceMatrix(0,2)) << std::endl;
+        std::cout << std::scientific
+                  << std::setw(20) << double(covarianceMatrix(1,0))
+                  << std::setw(20) << double(covarianceMatrix(1,1))
+                  << std::setw(20) << double(covarianceMatrix(1,2)) << std::endl;
+        std::cout << std::scientific
+                  << std::setw(20) << double(covarianceMatrix(2,0))
+                  << std::setw(20) << double(covarianceMatrix(2,1))
+                  << std::setw(20) << double(covarianceMatrix(2,2)) << std::endl;
         return covarianceMatrix;
     }
 
@@ -740,6 +805,28 @@ namespace molconv
     {
         qDebug() << "entering Molecule::calcCovarianceEigenvectors()";
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
+
+        Eigen::Vector3d tmpvec = solver.eigenvalues();
+        Eigen::Matrix3d rotMat = solver.eigenvectors();
+
+        std::cout << "eigenvalues of the covariance matrix:\n";
+        std::cout << std::scientific
+                  << std::setw(20) << double(tmpvec(0))
+                  << std::setw(20) << double(tmpvec(1))
+                  << std::setw(20) << double(tmpvec(2)) << std::endl;
+        std::cout << "eigenvectors of the covarianve matrix:\n";
+        std::cout << std::scientific
+                  << std::setw(20) << double(rotMat(0,0))
+                  << std::setw(20) << double(rotMat(0,1))
+                  << std::setw(20) << double(rotMat(0,2)) << std::endl;
+        std::cout << std::scientific
+                  << std::setw(20) << double(rotMat(1,0))
+                  << std::setw(20) << double(rotMat(1,1))
+                  << std::setw(20) << double(rotMat(1,2)) << std::endl;
+        std::cout << std::scientific
+                  << std::setw(20) << double(rotMat(2,0))
+                  << std::setw(20) << double(rotMat(2,1))
+                  << std::setw(20) << double(rotMat(2,2)) << std::endl;
 
         if (solver.info() != Eigen::Success)
             throw std::runtime_error("The covariance matrix could not be diagonalized.\n");
