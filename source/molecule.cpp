@@ -140,6 +140,7 @@ namespace molconv
     void Molecule::initIntPos()
     {
         Eigen::Matrix3d rotMat = internalBasisVectors();
+
         // determine the internal atomic positions:
         for (int i = 0; i < size(); i++)
         {
@@ -148,24 +149,20 @@ namespace molconv
             d->m_intPos.push_back(intPos);
         }
 
-        std::cout << "Initial rotation matrix:\n";
-        std::cout << std::scientific
-                  << std::setw(20) << double(rotMat(0,0))
-                  << std::setw(20) << double(rotMat(0,1))
-                  << std::setw(20) << double(rotMat(0,2)) << std::endl;
-        std::cout << std::scientific
-                  << std::setw(20) << double(rotMat(1,0))
-                  << std::setw(20) << double(rotMat(1,1))
-                  << std::setw(20) << double(rotMat(1,2)) << std::endl;
-        std::cout << std::scientific
-                  << std::setw(20) << double(rotMat(2,0))
-                  << std::setw(20) << double(rotMat(2,1))
-                  << std::setw(20) << double(rotMat(2,2)) << std::endl;
-
         // determine the initial values of the euler angles:
-        double theta = acos(double(rotMat(2,2)));
-        double phi = -atan2(double(rotMat(2,0)), double(rotMat(2,1)));
-        double psi =  atan2(double(rotMat(0,2)), double(rotMat(1,2)));
+        double theta = std::acos(double(rotMat(2,2)));
+        double psi, phi;
+
+        if (theta == 0.0 || theta == M_PI)
+        {
+            psi = std::acos(double(rotMat(0,0)));
+            phi = 0.0;
+        }
+        else
+        {
+            phi = std::atan2(double(rotMat(0,2)),  double(rotMat(1,2)));
+            psi = std::atan2(double(rotMat(2,0)), -double(rotMat(2,1)));
+        }
 
         if (phi < 0.0)
             phi += 2.0 * M_PI;
@@ -177,10 +174,256 @@ namespace molconv
         d->m_psi = psi;
         d->m_theta = theta;
 
-        std::cout << "Euler angles determined from this matrix:\n";
-        std::cout << "Theta = " << std::setw(20) << theta << std::setw(20) << theta * 180.0 / M_PI << std::endl;
-        std::cout << "Phi = " << std::setw(20) << phi << std::setw(20) << phi * 180.0 / M_PI << std::endl;
-        std::cout << "Psi = " << std::setw(20) << psi << std::setw(20) << psi * 180.0 / M_PI << std::endl;
+
+//        Eigen::Matrix3d rotMat1 = internalBasisVectors();
+//        Eigen::Matrix3d cMat = covarianceMatrix();
+
+
+//        Eigen::Matrix3d iMat = inertiaTensor();
+//        Eigen::Vector3d iVec = inertiaEigenvalues();
+//        Eigen::Matrix3d iRot = inertiaEigenvectors();
+
+//        std::cout << "inertia matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iMat(0,0))
+//                  << std::setw(20) << double(iMat(0,1))
+//                  << std::setw(20) << double(iMat(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iMat(1,0))
+//                  << std::setw(20) << double(iMat(1,1))
+//                  << std::setw(20) << double(iMat(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iMat(2,0))
+//                  << std::setw(20) << double(iMat(2,1))
+//                  << std::setw(20) << double(iMat(2,2)) << std::endl;
+
+//        std::cout << "inertia moments:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iVec(0))
+//                  << std::setw(20) << double(iVec(1))
+//                  << std::setw(20) << double(iVec(2)) << std::endl;
+
+//        std::cout << "inertia eigenvectors:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iRot(0,0))
+//                  << std::setw(20) << double(iRot(0,1))
+//                  << std::setw(20) << double(iRot(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iRot(1,0))
+//                  << std::setw(20) << double(iRot(1,1))
+//                  << std::setw(20) << double(iRot(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(iRot(2,0))
+//                  << std::setw(20) << double(iRot(2,1))
+//                  << std::setw(20) << double(iRot(2,2)) << std::endl;
+
+//        std::cout << "covariance matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(cMat(0,0))
+//                  << std::setw(20) << double(cMat(0,1))
+//                  << std::setw(20) << double(cMat(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(cMat(1,0))
+//                  << std::setw(20) << double(cMat(1,1))
+//                  << std::setw(20) << double(cMat(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(cMat(2,0))
+//                  << std::setw(20) << double(cMat(2,1))
+//                  << std::setw(20) << double(cMat(2,2)) << std::endl;
+
+//        std::cout << "transformation matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat1(0,0))
+//                  << std::setw(20) << double(rotMat1(0,1))
+//                  << std::setw(20) << double(rotMat1(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat1(1,0))
+//                  << std::setw(20) << double(rotMat1(1,1))
+//                  << std::setw(20) << double(rotMat1(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat1(2,0))
+//                  << std::setw(20) << double(rotMat1(2,1))
+//                  << std::setw(20) << double(rotMat1(2,2)) << std::endl;
+
+//        Eigen::Matrix3d rotMat3;
+//        rotMat3.col(0) = rotMat1.col(2);
+//        rotMat3.col(1) = rotMat1.col(1);
+//        rotMat3.col(2) = rotMat1.col(0);
+
+//        std::cout << "Determinant of the initial rotation matrix: " << double(rotMat3.determinant()) << std::endl;
+
+//        Eigen::Matrix3d rotMat = rotMat3;
+//        Eigen::Matrix3d rotMat2 = Eigen::Matrix3d::Zero();
+
+//        if (std::abs(double(rotMat3.determinant()) + 1.0) < 1.0e-12)
+//        {
+//            std::cout << "the determinant is -1\n";
+//            rotMat2.col(0) =  rotMat3.col(0);
+//            rotMat2.col(1) = -rotMat3.col(1);
+//            rotMat2.col(2) =  rotMat3.col(2);
+//            rotMat = rotMat2;
+//        }
+
+//        Eigen::Matrix3d D1 = rotMat3.transpose() * cMat * rotMat3;
+//        Eigen::Matrix3d D2 = rotMat.transpose() * cMat * rotMat;
+
+//        std::cout << "the D1 matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(D1(0,0))
+//                  << std::setw(20) << double(D1(0,1))
+//                  << std::setw(20) << double(D1(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(D1(1,0))
+//                  << std::setw(20) << double(D1(1,1))
+//                  << std::setw(20) << double(D1(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(D1(2,0))
+//                  << std::setw(20) << double(D1(2,1))
+//                  << std::setw(20) << double(D1(2,2)) << std::endl;
+
+//        std::cout << "the D2 matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(D2(0,0))
+//                  << std::setw(20) << double(D2(0,1))
+//                  << std::setw(20) << double(D2(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(D2(1,0))
+//                  << std::setw(20) << double(D2(1,1))
+//                  << std::setw(20) << double(D2(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(D2(2,0))
+//                  << std::setw(20) << double(D2(2,1))
+//                  << std::setw(20) << double(D2(2,2)) << std::endl;
+
+//        std::cout << "the final rotation matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(0,0))
+//                  << std::setw(20) << double(rotMat(0,1))
+//                  << std::setw(20) << double(rotMat(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(1,0))
+//                  << std::setw(20) << double(rotMat(1,1))
+//                  << std::setw(20) << double(rotMat(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(2,0))
+//                  << std::setw(20) << double(rotMat(2,1))
+//                  << std::setw(20) << double(rotMat(2,2)) << std::endl;
+
+//        // determine the initial values of the euler angles:
+//        double theta = std::acos(double(rotMat(2,2)));
+//        double phi = std::atan2(double(rotMat(0,2)),  double(rotMat(1,2)));
+//        double psi = std::atan2(double(rotMat(2,0)), -double(rotMat(2,1)));
+
+//        if (phi < 0.0)
+//            phi += 2.0 * M_PI;
+
+//        if (psi < 0.0)
+//            psi += 2.0 * M_PI;
+
+//        d->m_phi = phi;
+//        d->m_psi = psi;
+//        d->m_theta = theta;
+
+//        std::cout << "Euler angles determined from this matrix:\n";
+//        std::cout << "Theta = " << std::setw(20) << theta << std::setw(20) << theta * 180.0 / M_PI << std::endl;
+//        std::cout << "Phi = " << std::setw(20) << phi << std::setw(20) << phi * 180.0 / M_PI << std::endl;
+//        std::cout << "Psi = " << std::setw(20) << psi << std::setw(20) << psi * 180.0 / M_PI << std::endl;
+
+//        // reconstruct the rotation matrix:
+//        Eigen::Matrix3d analMat;
+//        analMat(0,0) =  std::cos(psi) * std::cos(phi) - std::sin(psi) * std::cos(theta) * std::sin(phi);
+//        analMat(0,1) =  std::sin(psi) * std::cos(phi) + std::cos(psi) * std::cos(theta) * std::sin(phi);
+//        analMat(0,2) =  std::sin(theta) * std::sin(phi);
+//        analMat(1,0) = -std::cos(psi) * std::sin(phi) - std::sin(psi) * std::cos(theta) * std::cos(phi);
+//        analMat(1,1) = -std::sin(psi) * std::sin(phi) + std::cos(psi) * std::cos(theta) * std::cos(phi);
+//        analMat(1,2) =  std::sin(theta) * std::cos(phi);
+//        analMat(2,0) =  std::sin(psi) * std::sin(theta);
+//        analMat(2,1) = -std::cos(psi) * std::sin(theta);
+//        analMat(2,2) =  std::cos(theta);
+
+//        std::cout << "reconstructed rotation matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(analMat(0,0))
+//                  << std::setw(20) << double(analMat(0,1))
+//                  << std::setw(20) << double(analMat(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(analMat(1,0))
+//                  << std::setw(20) << double(analMat(1,1))
+//                  << std::setw(20) << double(analMat(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(analMat(2,0))
+//                  << std::setw(20) << double(analMat(2,1))
+//                  << std::setw(20) << double(analMat(2,2)) << std::endl;
+
+//        std::cout << "Determinant of the reconstructed rotation matrix: " << analMat.determinant() << std::endl;
+
+//        std::cout << "difference matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double((rotMat - analMat)(0,0))
+//                  << std::setw(20) << double((rotMat - analMat)(0,1))
+//                  << std::setw(20) << double((rotMat - analMat)(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double((rotMat - analMat)(1,0))
+//                  << std::setw(20) << double((rotMat - analMat)(1,1))
+//                  << std::setw(20) << double((rotMat - analMat)(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double((rotMat - analMat)(2,0))
+//                  << std::setw(20) << double((rotMat - analMat)(2,1))
+//                  << std::setw(20) << double((rotMat - analMat)(2,2)) << std::endl;
+
+//        std::cout << "quotient matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(0,0)) / double(analMat(0,0))
+//                  << std::setw(20) << double(rotMat(0,1)) / double(analMat(0,1))
+//                  << std::setw(20) << double(rotMat(0,2)) / double(analMat(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(1,0)) / double(analMat(1,0))
+//                  << std::setw(20) << double(rotMat(1,1)) / double(analMat(1,1))
+//                  << std::setw(20) << double(rotMat(1,2)) / double(analMat(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(2,0)) / double(analMat(2,0))
+//                  << std::setw(20) << double(rotMat(2,1)) / double(analMat(2,1))
+//                  << std::setw(20) << double(rotMat(2,2)) / double(analMat(2,2)) << std::endl;
+
+
+
+//        // determine the internal atomic positions:
+//        for (int i = 0; i < size(); i++)
+//        {
+//            Eigen::Vector3d origPos = atom(i)->position();
+//            Eigen::Vector3d intPos = rotMat.transpose() * (origPos - internalOriginPosition());
+//            d->m_intPos.push_back(intPos);
+//        }
+
+//        std::cout << "internal atomic positions:\n";
+//        for (int i = 0; i < size(); i++)
+//            std::cout << std::fixed
+//                      << std::setw(12) << double(d->m_intPos.at(i)(0))
+//                      << std::setw(12) << double(d->m_intPos.at(i)(1))
+//                      << std::setw(12) << double(d->m_intPos.at(i)(2))
+//                      << std::endl;
+
+//        std::cout << "transformed positions using the exact transformation matrix:\n";
+//        for (int i = 0; i < size(); i++)
+//        {
+//            Eigen::Vector3d newPos = rotMat * d->m_intPos.at(i);
+//            std::cout << std::fixed
+//                      << std::setw(12) << double(newPos(0))
+//                      << std::setw(12) << double(newPos(1))
+//                      << std::setw(12) << double(newPos(2))
+//                      << std::endl;
+//        }
+
+//        std::cout << "transformed positions using the reconstructed transformation matrix:\n";
+//        for (int i = 0; i < size(); i++)
+//        {
+//            Eigen::Vector3d newPos = analMat * d->m_intPos.at(i);
+//            std::cout << std::fixed
+//                      << std::setw(12) << double(newPos(0))
+//                      << std::setw(12) << double(newPos(1))
+//                      << std::setw(12) << double(newPos(2))
+//                      << std::endl;
+//        }
     }
 
     ///
@@ -260,7 +503,9 @@ namespace molconv
             basisVectors = Eigen::Matrix3d::Identity();
             break;
         case kCovarianceVectors:
-            basisVectors = calcCovarianceEigenvectors();
+            basisVectors.col(0) = calcCovarianceEigenvectors().col(2);
+            basisVectors.col(1) = calcCovarianceEigenvectors().col(1);
+            basisVectors.col(2) = calcCovarianceEigenvectors().col(0);
             break;
         case kInertiaVectors:
             basisVectors = calcInertiaEigenvectors();
@@ -281,6 +526,13 @@ namespace molconv
             basisVectors.col(2) = vector3;
             break;
         }
+
+        std::cout << "residual determinant: " << std::abs(double(basisVectors.determinant()) + 1.0) << " " << std::abs(double(basisVectors.determinant()) - 1.0) << std::endl;
+
+        // if the determinant of the internal basis is -1, invert the
+        // sign of the middle basis vector:
+        if (std::abs(double(basisVectors.determinant()) + 1.0) < 1.0e-12)
+            basisVectors.col(1) *= -1.0;
 
         return basisVectors;
     }
@@ -726,19 +978,19 @@ namespace molconv
                 covarianceMatrix(alpha, beta) /= size();
             }
         }
-        std::cout << "the covarianve matrix:\n";
-        std::cout << std::scientific
-                  << std::setw(20) << double(covarianceMatrix(0,0))
-                  << std::setw(20) << double(covarianceMatrix(0,1))
-                  << std::setw(20) << double(covarianceMatrix(0,2)) << std::endl;
-        std::cout << std::scientific
-                  << std::setw(20) << double(covarianceMatrix(1,0))
-                  << std::setw(20) << double(covarianceMatrix(1,1))
-                  << std::setw(20) << double(covarianceMatrix(1,2)) << std::endl;
-        std::cout << std::scientific
-                  << std::setw(20) << double(covarianceMatrix(2,0))
-                  << std::setw(20) << double(covarianceMatrix(2,1))
-                  << std::setw(20) << double(covarianceMatrix(2,2)) << std::endl;
+//        std::cout << "the covarianve matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(covarianceMatrix(0,0))
+//                  << std::setw(20) << double(covarianceMatrix(0,1))
+//                  << std::setw(20) << double(covarianceMatrix(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(covarianceMatrix(1,0))
+//                  << std::setw(20) << double(covarianceMatrix(1,1))
+//                  << std::setw(20) << double(covarianceMatrix(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(covarianceMatrix(2,0))
+//                  << std::setw(20) << double(covarianceMatrix(2,1))
+//                  << std::setw(20) << double(covarianceMatrix(2,2)) << std::endl;
         return covarianceMatrix;
     }
 
@@ -806,27 +1058,27 @@ namespace molconv
         qDebug() << "entering Molecule::calcCovarianceEigenvectors()";
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
 
-        Eigen::Vector3d tmpvec = solver.eigenvalues();
-        Eigen::Matrix3d rotMat = solver.eigenvectors();
+//        Eigen::Vector3d tmpvec = solver.eigenvalues();
+//        Eigen::Matrix3d rotMat = solver.eigenvectors();
 
-        std::cout << "eigenvalues of the covariance matrix:\n";
-        std::cout << std::scientific
-                  << std::setw(20) << double(tmpvec(0))
-                  << std::setw(20) << double(tmpvec(1))
-                  << std::setw(20) << double(tmpvec(2)) << std::endl;
-        std::cout << "eigenvectors of the covarianve matrix:\n";
-        std::cout << std::scientific
-                  << std::setw(20) << double(rotMat(0,0))
-                  << std::setw(20) << double(rotMat(0,1))
-                  << std::setw(20) << double(rotMat(0,2)) << std::endl;
-        std::cout << std::scientific
-                  << std::setw(20) << double(rotMat(1,0))
-                  << std::setw(20) << double(rotMat(1,1))
-                  << std::setw(20) << double(rotMat(1,2)) << std::endl;
-        std::cout << std::scientific
-                  << std::setw(20) << double(rotMat(2,0))
-                  << std::setw(20) << double(rotMat(2,1))
-                  << std::setw(20) << double(rotMat(2,2)) << std::endl;
+//        std::cout << "eigenvalues of the covariance matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(tmpvec(0))
+//                  << std::setw(20) << double(tmpvec(1))
+//                  << std::setw(20) << double(tmpvec(2)) << std::endl;
+//        std::cout << "eigenvectors of the covarianve matrix:\n";
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(0,0))
+//                  << std::setw(20) << double(rotMat(0,1))
+//                  << std::setw(20) << double(rotMat(0,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(1,0))
+//                  << std::setw(20) << double(rotMat(1,1))
+//                  << std::setw(20) << double(rotMat(1,2)) << std::endl;
+//        std::cout << std::scientific
+//                  << std::setw(20) << double(rotMat(2,0))
+//                  << std::setw(20) << double(rotMat(2,1))
+//                  << std::setw(20) << double(rotMat(2,2)) << std::endl;
 
         if (solver.info() != Eigen::Success)
             throw std::runtime_error("The covariance matrix could not be diagonalized.\n");
