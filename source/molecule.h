@@ -100,6 +100,7 @@ namespace molconv
         Eigen::Matrix3d calcCovarianceEigenvectors() const;
 
         void initIntPos();
+        Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi) const;
 
         boost::scoped_ptr<MoleculePrivate> d;
     };
