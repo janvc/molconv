@@ -82,7 +82,7 @@ private:
 
     // conversion factor from the int representation of the
     // sliders to the floating point representation of the spinboxes
-    double factor = 100.0;
+    double factor = 1000.0;
 
     const double rad2deg = 180.0 / M_PI;
 };
