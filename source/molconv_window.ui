@@ -50,6 +50,7 @@
     <addaction name="actionSet_internal_basis"/>
     <addaction name="actionProperties"/>
     <addaction name="actionAdd_To_Group"/>
+    <addaction name="actionRemove"/>
    </widget>
    <widget class="QMenu" name="menuGroup">
     <property name="title">
@@ -134,6 +135,11 @@
   <action name="actionReset">
    <property name="text">
     <string>Reset</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="text">
+    <string>Remove Active</string>
    </property>
   </action>
  </widget>

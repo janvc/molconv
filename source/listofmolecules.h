@@ -42,6 +42,8 @@ class ListOfMolecules : public QDockWidget
         ~ListOfMolecules();
 
         void insertMolecule(molconv::moleculePtr &newMol);
+        void removeCurrentMolecule();
+        molconv::moleculePtr currentMolecule();
 
 signals:
         void newMoleculeSelected(molconv::moleculePtr &newMol);

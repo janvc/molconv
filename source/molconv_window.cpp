@@ -52,7 +52,7 @@ public:
     NewGroupDialog *m_NewGroupDialog;
 
     ListOfMolecules *m_ListOfMolecules;
-    QDockWidget *m_MoleculeSettings;
+    MoleculeSettings *m_MoleculeSettings;
 
     molconv::sysPtr m_system;
 
@@ -86,6 +86,9 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
+
+    connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
+
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
@@ -121,6 +124,35 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     d->activeMolecule = temp_mol;
 
     emit new_molecule(temp_mol);
+}
+
+void MolconvWindow::removeActiveMolecule()
+{
+    d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
+
+    molconv::Molecule *activeMolecule = d->activeMolecule.get();
+    chemkit::GraphicsMoleculeItem *activeItem = 0;
+    int index;
+
+    d->m_ListOfMolecules->removeCurrentMolecule();
+
+    for (int i = 0; i < d->m_GraphicsItemVector.size(); i++)
+        if (d->m_GraphicsItemVector.at(i)->molecule() == activeMolecule)
+        {
+            index = i;
+            activeItem = d->m_GraphicsItemVector.at(i);
+        }
+
+    ui->molconv_graphicsview->deleteItem(activeItem);
+
+    d->m_GraphicsItemVector.erase(d->m_GraphicsItemVector.begin() + index);
+
+    d->m_system->removeMolecule(d->m_system->MoleculeIndex(d->activeMolecule));
+
+    ui->molconv_graphicsview->update();
+
+    d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
+    d->m_MoleculeSettings->setMolecule(d->activeMolecule);
 }
 
 int MolconvWindow::nMolecules()

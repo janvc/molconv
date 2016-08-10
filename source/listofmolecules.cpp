@@ -89,6 +89,21 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
         ui->system_tree->resizeColumnToContents(column);
 }
 
+void ListOfMolecules::removeCurrentMolecule()
+{
+    QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
+    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+    model->removeRow(index.row(), index.parent());
+}
+
+molconv::moleculePtr ListOfMolecules::currentMolecule()
+{
+    QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
+    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+
+    return model->Molecule(index);
+}
+
 void ListOfMolecules::toggleMolecule(const QModelIndex &index)
 {
     MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
