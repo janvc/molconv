@@ -55,6 +55,45 @@ void MoleculeSettings::setValues()
     double y = origin(1);
     double z = origin(2);
 
+    if (x < Xmin)
+    {
+        double nXmin = double(floor(x));
+        ui->xSlider->setMinimum(int(nXmin * factor));
+        ui->xSpinBox->setMinimum(nXmin);
+    }
+    else if (x > Xmax)
+    {
+        double nXmax = double(ceil(x));
+        ui->xSlider->setMaximum(int(nXmax * factor));
+        ui->xSpinBox->setMaximum(nXmax);
+    }
+
+    if (y < Ymin)
+    {
+        double nYmin = double(floor(y));
+        ui->ySlider->setMinimum(int(nYmin * factor));
+        ui->ySpinBox->setMinimum(nYmin);
+    }
+    else if (y > Ymax)
+    {
+        double nYmax = double(ceil(y));
+        ui->ySlider->setMaximum(int(nYmax * factor));
+        ui->ySpinBox->setMaximum(nYmax);
+    }
+
+    if (z < Zmin)
+    {
+        double nZmin = double(floor(z));
+        ui->zSlider->setMinimum(int(nZmin * factor));
+        ui->zSpinBox->setMinimum(nZmin);
+    }
+    else if (z > Zmax)
+    {
+        double nZmax = double(ceil(z));
+        ui->zSlider->setMaximum(int(nZmax * factor));
+        ui->zSpinBox->setMaximum(nZmax);
+    }
+
     ui->xSlider->setValue(int(x * factor));
     ui->ySlider->setValue(int(y * factor));
     ui->zSlider->setValue(int(z * factor));
