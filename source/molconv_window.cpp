@@ -136,7 +136,7 @@ void MolconvWindow::removeActiveMolecule()
 
     d->m_ListOfMolecules->removeCurrentMolecule();
 
-    for (int i = 0; i < d->m_GraphicsItemVector.size(); i++)
+    for (int i = 0; i < int(d->m_GraphicsItemVector.size()); i++)
         if (d->m_GraphicsItemVector.at(i)->molecule() == activeMolecule)
         {
             index = i;
@@ -262,8 +262,8 @@ void MolconvWindow::ResetView()
 {
     // determine largest distance from origin:
     double maxLength = 0;
-    for (int i = 0; i < d->m_system->nMolecules(); i++)
-        for (int j = 0; j < d->m_system->getMolecule(i)->size(); j++)
+    for (int i = 0; i < int(d->m_system->nMolecules()); i++)
+        for (int j = 0; j < int(d->m_system->getMolecule(i)->size()); j++)
         {
             double length = d->m_system->getMolecule(i)->atom(j)->position().norm();
             if (length > maxLength)

@@ -146,7 +146,7 @@ namespace molconv
         // determine the internal atomic positions:
         Eigen::Matrix3d rotMat = internalBasisVectors();
 
-        for (int i = 0; i < size(); i++)
+        for (int i = 0; i < int(size()); i++)
             d->m_intPos.push_back(rotMat.transpose() * (atom(i)->position() - internalOriginPosition()));
 
 
@@ -543,7 +543,7 @@ namespace molconv
 
         Eigen::Matrix3d rot = euler2rot(psi, theta, phi);
 
-        for (int i = 0; i < size(); i++)
+        for (int i = 0; i < int(size()); i++)
             atom(i)->setPosition(pos + rot * d->m_intPos.at(i));
     }
 

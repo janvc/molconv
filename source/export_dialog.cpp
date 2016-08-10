@@ -60,7 +60,7 @@ void ExportDialog::on_buttonBox_accepted()
     {
         if (ui->molExportList->item(i)->checkState() == Qt::Checked)
         {
-            for (int j = 0; j < theWindow->getMol(i)->size(); j++)
+            for (int j = 0; j < int(theWindow->getMol(i)->size()); j++)
             {
                 dummyMol->addAtomCopy(theWindow->getMol(i)->atom(j));
             }
