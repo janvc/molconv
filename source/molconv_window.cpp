@@ -87,6 +87,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
+    connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateActiveMolecule()));
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
 
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
@@ -223,6 +224,11 @@ void MolconvWindow::getMoleculeDialog()
 
     molconv::moleculePtr temp_mol = d->m_OpenDialog->getMol();
     add_molecule(temp_mol);
+}
+
+void MolconvWindow::DuplicateActiveMolecule()
+{
+    DuplicateMolecule(d->activeMolecule);
 }
 
 void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)

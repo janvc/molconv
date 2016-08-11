@@ -68,6 +68,7 @@ public slots:
     void addMoleculeToGroup();
     void ResetView();
     void removeActiveMolecule();
+    void DuplicateActiveMolecule();
     void updateActiveMolecule(molconv::moleculePtr &newActive);
 
 private slots:
