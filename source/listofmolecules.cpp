@@ -121,9 +121,6 @@ void ListOfMolecules::on_system_tree_clicked(const QModelIndex &index)
 {
     MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
 
-    if (model->isChecked(index))
-    {
-        molconv::moleculePtr tmp = model->Molecule(index);
-        emit newMoleculeSelected(tmp);
-    }
+    molconv::moleculePtr tmp = model->Molecule(index);
+    emit newMoleculeSelected(tmp);
 }

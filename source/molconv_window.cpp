@@ -97,6 +97,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
 
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);
@@ -128,8 +129,6 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 
 void MolconvWindow::removeActiveMolecule()
 {
-    d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
-
     molconv::Molecule *activeMolecule = d->activeMolecule.get();
     chemkit::GraphicsMoleculeItem *activeItem = 0;
     int index;
@@ -152,7 +151,9 @@ void MolconvWindow::removeActiveMolecule()
     ui->molconv_graphicsview->update();
 
     d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
-    d->m_MoleculeSettings->setMolecule(d->activeMolecule);
+
+    if (d->activeMolecule)
+        d->m_MoleculeSettings->setMolecule(d->activeMolecule);
 }
 
 int MolconvWindow::nMolecules()
@@ -274,4 +275,9 @@ void MolconvWindow::ResetView()
     double dist = maxLength / 0.4142135624 > 10.0 ? maxLength / 0.4142135624 : 10.0;
 
     ui->molconv_graphicsview->setCamera(boost::make_shared<chemkit::GraphicsCamera>(0,0,dist));
+}
+
+void MolconvWindow::updateActiveMolecule(molconv::moleculePtr &newActive)
+{
+    d->activeMolecule = newActive;
 }
