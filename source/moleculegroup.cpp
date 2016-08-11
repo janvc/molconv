@@ -18,7 +18,6 @@
  *
  */
 
-#include<QDebug>
 #include "moleculegroup.h"
 
 namespace molconv
@@ -40,7 +39,6 @@ namespace molconv
         : abstractMoleculeGroup()
         , d(new MoleculeGroupPrivate)
     {
-        qDebug("this is the default constructor of MoleculeGroup");
     }
 
     ///
@@ -53,7 +51,6 @@ namespace molconv
         : abstractMoleculeGroup(name)
         , d(new MoleculeGroupPrivate)
     {
-        qDebug("this is the second constructor of MoleculeGroup");
     }
 
     ///

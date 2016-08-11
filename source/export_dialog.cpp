@@ -18,7 +18,6 @@
  *
  */
 
-#include<QDebug>
 #include "export_dialog.h"
 #include "ui_export_dialog.h"
 
@@ -26,7 +25,6 @@ ExportDialog::ExportDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::ExportDialog)
 {
-    qDebug("this is the constructor of ExportDialog");
     ui->setupUi(this);
 
     theWindow = static_cast<MolconvWindow*>(parent);
@@ -34,7 +32,6 @@ ExportDialog::ExportDialog(QWidget *parent)
 
 ExportDialog::~ExportDialog()
 {
-    qDebug("this is the destructor of ExportDialog");
     delete ui;
 }
 

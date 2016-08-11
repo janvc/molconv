@@ -19,7 +19,6 @@
  */
 
 #include<iostream>
-#include<QDebug>
 #include<QMessageBox>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
@@ -69,8 +68,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     , d(new MolconvWindowPrivate)
     , ui(new Ui::MolconvWindow)
 {
-    qDebug("this is the constructor of MolconvWindow");
-
     ui->setupUi(this);
 
     d->m_OpenDialog = new OpenDialog(this);
@@ -108,15 +105,12 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
 MolconvWindow::~MolconvWindow()
 {
-    qDebug("this is the destructor of MolconvWindow");
     delete ui->molconv_graphicsview;
     delete ui;
 }
 
 void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
-    qDebug("entering MolconvWindow::add_molecule(temp_mol)");
-
     d->m_system->addMolecule(temp_mol);
     d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system->getMolecule(d->m_system->nMolecules() - 1).get()));
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
@@ -169,8 +163,6 @@ molconv::moleculePtr MolconvWindow::getMol(int index)
 
 void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
 {
-    qDebug("entering MolconvWindow::toggle_molecule()");
-
     size_t moleculeIndex = d->m_system->MoleculeIndex(theMolecule);
     if (state)
     {
@@ -192,27 +184,21 @@ void MolconvWindow::about()
 
 void MolconvWindow::quit()
 {
-    qDebug("entering MolconvWindow::quit()");
     qApp->quit();
 }
 
 void MolconvWindow::saveFile()
 {
-    qDebug("entering MolconvWindow::saveFile()");
 }
 
 void MolconvWindow::startOpenDialog()
 {
-    qDebug("entering MolconvWindow::startOpenDialog()");
-
     d->m_OpenDialog->setModal(true);
     d->m_OpenDialog->exec();
 }
 
 void MolconvWindow::startExportDialog()
 {
-    qDebug("entering MolconvWindow::startExportDialog()");
-
     d->m_ExportDialog->createMoleculeList();
     d->m_ExportDialog->setModal(true);
     d->m_ExportDialog->exec();
@@ -220,8 +206,6 @@ void MolconvWindow::startExportDialog()
 
 void MolconvWindow::getMoleculeDialog()
 {
-    qDebug("entering MolconvWindow::get_molecule_Dialog()");
-
     molconv::moleculePtr temp_mol = d->m_OpenDialog->getMol();
     add_molecule(temp_mol);
 }
@@ -233,8 +217,6 @@ void MolconvWindow::DuplicateActiveMolecule()
 
 void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
 {
-    qDebug("entering MolconvWindow::DuplicateMolecule()");
-
     molconv::moleculePtr newMol = boost::make_shared<molconv::Molecule>(oldMolecule);
 
     add_molecule(newMol);
@@ -242,8 +224,6 @@ void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
 
 void MolconvWindow::newGroup()
 {
-    qDebug("entering MolconvWindow::newGroup()");
-
     std::string newGroupName = d->m_NewGroupDialog->groupName();
 
     if (d->m_NewGroupDialog->isStack())
@@ -254,15 +234,12 @@ void MolconvWindow::newGroup()
 
 void MolconvWindow::startNewGroupDialog()
 {
-    qDebug("entering MolconvWindow::startNewGroupDialog()");
-
     d->m_NewGroupDialog->setModal(true);
     d->m_NewGroupDialog->exec();
 }
 
 void MolconvWindow::addMoleculeToGroup()
 {
-    qDebug("entering MolconvWindow::addMoleculeToGroup()");
 }
 
 void MolconvWindow::ResetView()

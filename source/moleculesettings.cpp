@@ -19,7 +19,6 @@
  */
 
 
-#include<QDebug>
 #include "moleculesettings.h"
 #include "listofmolecules.h"
 #include "ui_moleculesettings.h"
@@ -30,8 +29,6 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     , ui(new Ui::MoleculeSettings)
     , settingMolecule(false)
 {
-    qDebug("this is the constructor of MoleculeSettings");
-
     main_window = window;
 
     ui->setupUi(this);
@@ -43,7 +40,6 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
 
 MoleculeSettings::~MoleculeSettings()
 {
-    qDebug("this is the destructor of MoleculeSettings");
     delete ui;
 }
 

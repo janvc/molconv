@@ -26,7 +26,6 @@
 #include<Eigen/Geometry>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>
-#include<QDebug>
 #include "molecule.h"
 #include "moleculelistitem.h"
 
@@ -75,7 +74,6 @@ namespace molconv
         : chemkit::Molecule()
         , d(new MoleculePrivate)
     {
-        qDebug() << "this is the first constructor of molconv::Molecule.";
     }
 
     ///
@@ -90,7 +88,6 @@ namespace molconv
         : chemkit::Molecule(BaseMolecule)
         , d(new MoleculePrivate)
     {
-        qDebug() << "this is the second constructor of molconv::Molecule.";
         chemkit::BondPredictor::predictBonds(this);
         initIntPos();
     }
@@ -100,7 +97,6 @@ namespace molconv
         : chemkit::Molecule(*BaseMolPtr)
         , d(new MoleculePrivate)
     {
-        qDebug() << "this is the third constructor of molconv::Molecule.";
         chemkit::BondPredictor::predictBonds(this);
         initIntPos();
     }
@@ -115,7 +111,6 @@ namespace molconv
         : chemkit::Molecule(originalMolecule)
         , d(new MoleculePrivate)
     {
-        qDebug() << "this is the fourth constructor of molconv::Molecule.";
         d->m_origin = originalMolecule.internalOrigin();
         d->m_basis = originalMolecule.internalBasis();
         d->m_originFactor = originalMolecule.internalOriginFactor();
@@ -184,7 +179,6 @@ namespace molconv
     ///
     origin Molecule::internalOrigin() const
     {
-        qDebug() << "entering Molecule::internalOrigin()";
         return d->m_origin;
     }
 
@@ -196,7 +190,6 @@ namespace molconv
     ///
     basis Molecule::internalBasis() const
     {
-        qDebug() << "entering Molecule::internalBasis()";
         return d->m_basis;
     }
 
@@ -208,7 +201,6 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::internalOriginPosition() const
     {
-        qDebug() << "entering Molecule::internalOriginPosition()";
         Eigen::Vector3d originPosition;
 
         switch(internalOrigin())
@@ -243,7 +235,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
-        qDebug() << "entering Molecule::internalBasisVectors()";
         Eigen::Matrix3d basisVectors;
         Eigen::Vector3d vector1, vector2, vector3;
 
@@ -294,7 +285,6 @@ namespace molconv
     ///
     std::array<int,2> Molecule::internalOriginAtoms() const
     {
-        qDebug() << "entering Molecule::internalOriginAtoms()";
         return d->m_originAtoms;
     }
 
@@ -307,7 +297,6 @@ namespace molconv
     ///
     std::array<int,3> Molecule::internalBasisAtoms() const
     {
-        qDebug() << "entering Molecule::internalBasisAtoms()";
         return d->m_basisAtoms;
     }
 
@@ -322,7 +311,6 @@ namespace molconv
     ///
     double Molecule::internalOriginFactor() const
     {
-        qDebug() << "entering Molecule::internalOriginFactor()";
         return d->m_originFactor;
     }
 
@@ -367,7 +355,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::inertiaTensor() const
     {
-        qDebug() << "entering Molecule::inertiaTensor()";
         return calcInertiaTensor();
     }
 
@@ -379,7 +366,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::covarianceMatrix() const
     {
-        qDebug() << "entering Molecule::covarianceMatrix()";
         return calcCovarianceMatrix();
     }
 
@@ -391,7 +377,6 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::inertiaEigenvalues() const
     {
-        qDebug() << "entering Molecule::inertiaEigenvalues()";
         return calcInertiaEigenvalues();
     }
 
@@ -403,7 +388,6 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::covarianceEigenvalues() const
     {
-        qDebug() << "entering Molecule::covarianceEigenvalues()";
         return calcCovarianceEigenvalues();
     }
 
@@ -415,7 +399,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::inertiaEigenvectors() const
     {
-        qDebug() << "entering Molecule::inertiaEigenvectors()";
         return calcInertiaEigenvectors();
     }
 
@@ -427,7 +410,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::covarianceEigenvectors() const
     {
-        qDebug() << "entering Molecule::covariaceEigenvectors()";
         return calcCovarianceEigenvectors();
     }
 
@@ -439,7 +421,6 @@ namespace molconv
     ///
     void Molecule::translate(const Eigen::Vector3d &shiftVector)
     {
-        qDebug() << "entering Molecule::translate()";
         setCenter(center() + shiftVector);
     }
 
@@ -452,7 +433,6 @@ namespace molconv
     ///
     void Molecule::rotate(const Eigen::Matrix3d &rotationMatrix)
     {
-        qDebug() << "entering Molecule::rotate(matrix)";
         Eigen::Vector3d intOrigPos = internalOriginPosition();
 
         for (size_t atiter = 0; atiter < size(); atiter++)
@@ -471,7 +451,6 @@ namespace molconv
     ///
     void Molecule::rotate(const Eigen::Vector3d &axis, const double angle)
     {
-        qDebug() << "entering Molecule::rotate(axis,angle)";
         Eigen::Matrix3d rotationMatrix;
         Eigen::Vector3d rotAxis = axis;
 
@@ -490,8 +469,6 @@ namespace molconv
     ///
     void Molecule::setPhi(const double newPhi)
     {
-        qDebug("entering Molecule::setPhi()");
-
         Eigen::Matrix3d intBasis = internalBasisVectors();
         double a31 = intBasis(2, 0);
         double a32 = intBasis(2, 1);
@@ -555,7 +532,6 @@ namespace molconv
     ///
     void Molecule::setOrigin(const origin &newOrigin, const size_t atom1, const size_t atom2, const double originFactor)
     {
-        qDebug() << "entering Molecule::setOrigin()";
         switch (newOrigin)
         {
         case kCenterOnZero:
@@ -593,7 +569,6 @@ namespace molconv
     ///
     void Molecule::setBasis(const basis &newBasis, const size_t atom1, const size_t atom2, const size_t atom3)
     {
-        qDebug() << "entering Molecule::setBasis()";
         switch (newBasis)
         {
         case kIdentityVectors:
@@ -627,7 +602,6 @@ namespace molconv
     ///
     void Molecule::cleanUp()
     {
-        qDebug() << "entering Molecule::cleanUp()";
         translate(-internalOriginPosition());
         rotate(internalBasisVectors().transpose());
     }
@@ -640,7 +614,6 @@ namespace molconv
     ///
     void Molecule::addToGroup(const groupPtr newGroup)
     {
-        qDebug("entering Molecule::addToGroup()");
         d->m_group = newGroup;
     }
 
@@ -652,7 +625,6 @@ namespace molconv
     ///
     groupPtr &Molecule::group() const
     {
-        qDebug("entering Molecule::group()");
         return d->m_group;
     }
 
@@ -664,7 +636,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcInertiaTensor() const
     {
-        qDebug() << "entering Molecule::calcInertiaTensor()";
         Eigen::Matrix3d inertiaTensor;
         Eigen::Vector3d com = centerOfMass();
 
@@ -699,7 +670,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcCovarianceMatrix() const
     {
-        qDebug() << "entering Molecule::calcCovarianceMatrix()";
         Eigen::Matrix3d covarianceMatrix;
         Eigen::Vector3d cog = center();
 
@@ -728,7 +698,6 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::calcInertiaEigenvalues() const
     {
-        qDebug() << "entering Molecule::calcIneriaEigenvalues()";
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcInertiaTensor());
 
         if (solver.info() != Eigen::Success)
@@ -746,7 +715,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcInertiaEigenvectors() const
     {
-        qDebug() << "entering Molecule::calcInertiaEigenvectors()";
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcInertiaTensor());
 
         if (solver.info() != Eigen::Success)
@@ -763,7 +731,6 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::calcCovarianceEigenvalues() const
     {
-        qDebug() << "entering Molecule::calcCovarianceEigenvalues()";
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
 
         if (solver.info() != Eigen::Success)
@@ -781,7 +748,6 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::calcCovarianceEigenvectors() const
     {
-        qDebug() << "entering Molecule::calcCovarianceEigenvectors()";
         Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(calcCovarianceMatrix());
 
         if (solver.info() != Eigen::Success)

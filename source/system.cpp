@@ -22,7 +22,6 @@
 #include<stdexcept>
 #include<algorithm>
 #include<boost/make_shared.hpp>
-#include<QDebug>
 #include "system.h"
 
 
@@ -43,7 +42,6 @@ namespace molconv
     System::System()
         : d(new SystemPrivate)
     {
-        qDebug() << "this is the first constructor of molconv::System";
     }
 
     ///
@@ -61,7 +59,6 @@ namespace molconv
     ///
     size_t System::nMolecules() const
     {
-        qDebug() << "entering System::nMolecules()";
         return d->m_molecules.size();
     }
 
@@ -73,7 +70,6 @@ namespace molconv
     ///
     size_t System::nGroups() const
     {
-        qDebug("entering System::nGroups()");
         return d->m_groups.size();
     }
 
@@ -86,7 +82,6 @@ namespace molconv
     ///
     moleculePtr System::getMolecule(const size_t index) const
     {
-        qDebug() << "entering System::getMolecule()";
         if (index >= nMolecules())
             throw std::invalid_argument("index out of range.\n");
 
@@ -102,7 +97,6 @@ namespace molconv
     ///
     groupPtr System::getGroup(const size_t index) const
     {
-        qDebug("entering System::getGroup()");
         if (index >= nGroups())
             throw std::invalid_argument("index out of range.\n");
 
@@ -118,8 +112,6 @@ namespace molconv
     ///
     size_t System::MoleculeIndex(const moleculePtr theMolecule)
     {
-        qDebug("entering System::MoleculeIndex()");
-
         size_t index = 0;
 
         for (size_t i = 0; i < nMolecules(); i++)
@@ -140,8 +132,6 @@ namespace molconv
     ///
     size_t System::GroupIndex(const groupPtr &theGroup) const
     {
-        qDebug("entering System::GroupIndex()");
-
         size_t index = 0;
 
         for (size_t i = 0; i < nGroups(); i++)
@@ -161,12 +151,7 @@ namespace molconv
     ///
     void System::addMolecule(const moleculePtr newMolecule)
     {
-        qDebug() << "entering System::addMolecule()";
         d->m_molecules.push_back(newMolecule);
-
-        //QModelIndex index = createIndex(nMolecules(), 0, newMolecule.get());
-
-        //emit dataChanged(index, index);
     }
 
     ///
@@ -177,7 +162,6 @@ namespace molconv
     ///
     void System::removeMolecule(const size_t index)
     {
-        qDebug() << "entering System::removeMolecule()";
         if (index >= nMolecules())
             throw std::invalid_argument("index out of range.\n");
 
@@ -192,7 +176,6 @@ namespace molconv
     ///
     void System::addGroup(const groupPtr &newGroup)
     {
-        qDebug("entering System::addGroup()");
         d->m_groups.push_back(newGroup);
     }
 
@@ -204,8 +187,6 @@ namespace molconv
     ///
     void System::removeGroup(const size_t index)
     {
-        qDebug("entering System::removeGroup()");
-
         if (index >= nGroups())
             throw std::invalid_argument("index out of range.\n");
 

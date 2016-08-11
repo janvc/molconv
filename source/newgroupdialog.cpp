@@ -19,7 +19,6 @@
  */
 
 
-#include<QDebug>
 #include "newgroupdialog.h"
 #include "ui_newgroupdialog.h"
 
@@ -27,13 +26,11 @@ NewGroupDialog::NewGroupDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::NewGroupDialog)
 {
-    qDebug("this is the constructor of NewGroupDialog");
     ui->setupUi(this);
 }
 
 NewGroupDialog::~NewGroupDialog()
 {
-    qDebug("this is the destructor of NewGroupDialog");
     delete ui;
 }
 

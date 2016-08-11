@@ -21,7 +21,6 @@
 
 #include<algorithm>
 #include<stdexcept>
-#include<QDebug>
 #include "abstractmoleculegroup.h"
 
 
@@ -44,8 +43,6 @@ namespace molconv
     abstractMoleculeGroup::abstractMoleculeGroup()
         : d(new abstractMoleculeGroupPrivate)
     {
-        qDebug("this is the default constructor of abstractMoleculeGroup");
-
         d->m_groupname = "";
     }
 
@@ -53,8 +50,6 @@ namespace molconv
     abstractMoleculeGroup::abstractMoleculeGroup(const std::string &name)
         : d(new abstractMoleculeGroupPrivate)
     {
-        qDebug("this is the second constructor of abstractMoleculeGroup");
-
         d->m_groupname = name;
     }
 
@@ -73,7 +68,6 @@ namespace molconv
     ///
     size_t abstractMoleculeGroup::nMolecules() const
     {
-        qDebug("entering abstractMoleculeGroup::nMolecules()");
         return d->m_molecules.size();
     }
 
@@ -85,7 +79,6 @@ namespace molconv
     ///
     size_t abstractMoleculeGroup::nGroups() const
     {
-        qDebug("entering abstractMoleculeGroup::nGroups()");
         return d->m_groups.size();
     }
 
@@ -97,7 +90,6 @@ namespace molconv
     ///
     std::string abstractMoleculeGroup::name() const
     {
-        qDebug("entering abstractMoleculeGroup::name()");
         return d->m_groupname;
     }
 
@@ -111,7 +103,6 @@ namespace molconv
     ///
     double abstractMoleculeGroup::Distance(const size_t firstMolecule, const size_t secondMolecule) const
     {
-        qDebug("entering abstractMoleculeGroup::Distance()");
         return DistanceVector(firstMolecule, secondMolecule).norm();
     }
 
@@ -126,7 +117,6 @@ namespace molconv
     ///
     Eigen::Vector3d abstractMoleculeGroup::DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const
     {
-        qDebug("entering abstractMoleculeGroup::DistanceVector()");
         checkIndex(firstMolecule);
         checkIndex(secondMolecule);
 
@@ -141,7 +131,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::checkIndex(const size_t index) const
     {
-        qDebug("entering abstractMoleculeGroup::checkIndex()");
         if (index > nMolecules())
             throw std::invalid_argument("Index out of range in abstractMoleculeGroup.\n");
     }
@@ -155,7 +144,6 @@ namespace molconv
     ///
     moleculePtr abstractMoleculeGroup::getMolecule(const size_t index) const
     {
-        qDebug("entering abstractMoleculeGroup::getMolecule()");
         return d->m_molecules.at(index);
     }
 
@@ -168,7 +156,6 @@ namespace molconv
     ///
     groupPtr abstractMoleculeGroup::getGroup(const size_t index) const
     {
-        qDebug("entering abstractMoleculeGroup::getGroup()");
         return d->m_groups.at(index);
     }
 
@@ -180,7 +167,6 @@ namespace molconv
     ///
     groupPtr abstractMoleculeGroup::parent() const
     {
-        qDebug("entering abstractMoleculeGroup::parent()");
         return d->m_parentgroup;
     }
 
@@ -192,7 +178,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::setName(const std::string &newName)
     {
-        qDebug("entering abstractMoleculeGroup::setName()");
         d->m_groupname = newName;
     }
 
@@ -204,7 +189,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::addMolecule(const moleculePtr newMolecule)
     {
-        qDebug("entering abstractMoleculeGroup::addMolecule()");
         d->m_molecules.push_back(newMolecule);
     }
 
@@ -216,7 +200,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::removeMolecule(const size_t index)
     {
-        qDebug("entering abstractMoleculeGroup::removeMolecule()");
         checkIndex(index);
 
         d->m_molecules.erase(d->m_molecules.begin() + index);
@@ -230,7 +213,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::addGroup(const groupPtr &newGroup)
     {
-        qDebug("entering abstractMoleculeGroup::addGroup()");
         d->m_groups.push_back(newGroup);
     }
 
@@ -242,7 +224,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::removeGroup(const size_t index)
     {
-        qDebug("entering abstractMoleculeGroup::removeGroup()");
         checkIndex(index);
 
         d->m_groups.erase(d->m_groups.begin() + index);
@@ -256,7 +237,6 @@ namespace molconv
     ///
     void abstractMoleculeGroup::addToGroup(const groupPtr &newParentGroup)
     {
-        qDebug("entering abstractMoleculeGroup::addGroup()");
         d->m_parentgroup = newParentGroup;
     }
 

@@ -19,7 +19,6 @@
  */
 
 
-#include<QDebug>
 #include "listofmolecules.h"
 #include "ui_listofmolecules.h"
 

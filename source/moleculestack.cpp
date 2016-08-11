@@ -22,7 +22,6 @@
 #include<stdexcept>
 #include<cmath>
 #include<array>
-#include<QDebug>
 #include "moleculestack.h"
 
 
@@ -50,7 +49,6 @@ namespace molconv
         : abstractMoleculeGroup()
         , d(new MoleculeStackPrivate)
     {
-        qDebug("this is the default constructor of MoleculeStack");
     }
 
     ///
@@ -63,7 +61,6 @@ namespace molconv
         : abstractMoleculeGroup(name)
         , d(new MoleculeStackPrivate)
     {
-        qDebug("this is the second constructor of MoleculeStack");
     }
 
     ///
@@ -84,7 +81,6 @@ namespace molconv
     ///
     void MoleculeStack::addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector, const size_t atom1, const size_t atom2)
     {
-        qDebug("entering MoleculeStack::addMolecule()");
         abstractMoleculeGroup::addMolecule(newMolecule);
 
         std::array<int,2> theAtoms;
@@ -118,7 +114,6 @@ namespace molconv
     ///
     size_t MoleculeStack::ReferenceMolecule() const
     {
-        qDebug("entering MoleculeStack::ReferenceMolecule()");
         return d->referenceMolecule;
     }
 
@@ -130,7 +125,6 @@ namespace molconv
     ///
     void MoleculeStack::setReferenceMolecule(const size_t newRef)
     {
-        qDebug("entering MoleculeStack::setReferenceMolecule()");
         checkIndex(newRef);
 
         d->referenceMolecule = newRef;
@@ -145,7 +139,6 @@ namespace molconv
     ///
     parallelVector MoleculeStack::getParallelVector(const size_t index) const
     {
-        qDebug("entering MoleculeStack::getParallelVector()");
         checkIndex(index);
 
         return d->vectors.at(index);
@@ -160,7 +153,6 @@ namespace molconv
     ///
     Eigen::Vector3d MoleculeStack::getParallelVectorDirection(const size_t index) const
     {
-        qDebug("entering MoleculeStack::getParallelVectorDirection");
         Eigen::Vector3d vector;
 
         switch (getParallelVector(index))
@@ -205,7 +197,6 @@ namespace molconv
     ///
     void MoleculeStack::setParallelVector(const size_t index, const parallelVector newVector, const size_t atom1, const size_t atom2)
     {
-        qDebug("entering MoleculeStack::setParallelVector()");
         checkIndex(index);
         checkIndex(atom1);
         checkIndex(atom2);
@@ -227,7 +218,6 @@ namespace molconv
     ///
     double MoleculeStack::PlaneDistance(const size_t index) const
     {
-        qDebug("entering MoleculeStack::PlaneDistance()");
         checkIndex(index);
 
         Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
@@ -246,7 +236,6 @@ namespace molconv
     ///
     double MoleculeStack::RotationAngle(const size_t index) const
     {
-        qDebug("entering MoleculeStack::RotationAngle()");
         Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
         Eigen::Vector3d indexVector = getMolecule(index)->internalBasisVectors().col(0);
 
@@ -268,7 +257,6 @@ namespace molconv
     ///
     double MoleculeStack::LateralX(const size_t index) const
     {
-        qDebug("entering MoleculeStack::LateralX()");
         Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
 
         Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
@@ -286,7 +274,6 @@ namespace molconv
     ///
     double MoleculeStack::LateralY(const size_t index) const
     {
-        qDebug("entering MoleculeStack::LateralY()");
         Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
 
         Eigen::Vector3d yBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1);
@@ -304,7 +291,6 @@ namespace molconv
     ///
     void MoleculeStack::setPlaneDistance(const size_t index, const double newDistance)
     {
-        qDebug("entering MoleculeStack::setPlaneDistance()");
         double currentDistance = PlaneDistance(index);
 
         Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(2)
@@ -323,7 +309,6 @@ namespace molconv
     ///
     void MoleculeStack::setRotationAngle(const size_t index, const double newAngle)
     {
-        qDebug("entering MoleculeStack::setRotationAngle()");
         double shiftAngle = newAngle - RotationAngle(index);
 
         Eigen::Vector3d rotationAxis = getMolecule(index)->internalBasisVectors().col(2);
@@ -341,7 +326,6 @@ namespace molconv
     ///
     void MoleculeStack::setLateralX(const size_t index, const double newX)
     {
-        qDebug("entering MoleculeStack::setLateralX()");
         double shiftX = newX - LateralX(index);
 
         Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0) * shiftX;
@@ -359,7 +343,6 @@ namespace molconv
     ///
     void MoleculeStack::setLateralY(const size_t index, const double newY)
     {
-        qDebug("entering MoleculeStack::setLateralY()");
         double shiftY = newY - LateralY(index);
 
         Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1) * shiftY;
