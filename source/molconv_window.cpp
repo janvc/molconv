@@ -191,6 +191,37 @@ void MolconvWindow::saveFile()
 {
 }
 
+void MolconvWindow::openFileDefault(const QString &fileName)
+{
+    chemkit::MoleculeFile *molFile = new chemkit::MoleculeFile(fileName.toStdString());
+
+    if (! molFile->read())
+    {
+        std::cerr << "Could not read molecule file " << fileName.toStdString() << std::endl;
+        QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(molFile->errorString().c_str()));
+        delete molFile;
+        return;
+    }
+
+    if (molFile->moleculeCount() > 0)
+    {
+        chemkit::Molecule tempCMol = *molFile->molecule();
+        molconv::moleculePtr tempMol;
+        tempMol.reset(new molconv::Molecule(tempCMol));
+        tempMol->setOrigin(molconv::kCenterOfMass);
+        tempMol->setBasis(molconv::kInertiaVectors);
+        tempMol->setName(fileName.split("/").last().toStdString());
+        add_molecule(tempMol);
+    }
+    else
+    {
+        std::cerr << "No molecule found in file " << fileName.toStdString() << std::endl;
+        QMessageBox::critical(this, "Error", QString("No molecule found in file: %1").arg(molFile->errorString().c_str()));
+        delete molFile;
+        return;
+    }
+}
+
 void MolconvWindow::startOpenDialog()
 {
     d->m_OpenDialog->setModal(true);

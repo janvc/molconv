@@ -26,5 +26,9 @@ int main(int argc, char *argv[])
     MolconvWindow the_window;
     the_window.showMaximized();
 
+    if (app.arguments().size() > 1)
+        for (int i = 1; i < app.arguments().size(); i++)
+            the_window.openFileDefault(app.arguments()[i]);
+
     return app.exec();
 }

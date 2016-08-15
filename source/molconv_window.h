@@ -53,6 +53,7 @@ public:
     void add_molecule(molconv::moleculePtr temp_mol);
     int nMolecules();
     molconv::moleculePtr getMol(int index);
+    void openFileDefault(const QString &fileName);
 
 public slots:
     void saveFile();
