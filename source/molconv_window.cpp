@@ -34,6 +34,7 @@
 #include "moleculesettings.h"
 #include "open_dialog.h"
 #include "export_dialog.h"
+#include "setbasisdialog.h"
 #include "graphicsaxisitem.h"
 #include "aboutdialog.h"
 
@@ -49,6 +50,7 @@ public:
     OpenDialog *m_OpenDialog;
     ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
+    setBasisDialog *m_setBasisDialog;
 
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
@@ -73,6 +75,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_OpenDialog = new OpenDialog(this);
     d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
+    d->m_setBasisDialog = new setBasisDialog(this);
 
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
@@ -84,6 +87,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
+    connect(ui->actionSet_internal_basis, SIGNAL(triggered()), SLOT(startBasisDialog()));
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateActiveMolecule()));
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
 
@@ -233,6 +237,12 @@ void MolconvWindow::startExportDialog()
     d->m_ExportDialog->createMoleculeList();
     d->m_ExportDialog->setModal(true);
     d->m_ExportDialog->exec();
+}
+
+void MolconvWindow::startBasisDialog()
+{
+    d->m_setBasisDialog->prepare(d->activeMolecule);
+    d->m_setBasisDialog->exec();
 }
 
 void MolconvWindow::getMoleculeDialog()

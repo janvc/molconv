@@ -34,6 +34,7 @@ namespace molconv {
         kCenterOnZero,
         kCenterOfMass,
         kCenterOfGeometry,
+        kCenterOfCharge,
         kCenterOnAtom,
         kCenterBetweenAtoms
     };
@@ -45,6 +46,7 @@ namespace molconv {
         kIdentityVectors,
         kCovarianceVectors,
         kInertiaVectors,
+        kChargeVectors,
         kVectorsFromAtoms
     };
 
