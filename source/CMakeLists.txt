@@ -95,6 +95,10 @@ set(UI_FORMS
     aboutdialog.ui
 )
 
+set(RESOURCES
+    molconv.qrc
+)
+
 set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})
 
 if(TRANSLATIONS_FILES)

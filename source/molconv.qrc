@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/document-import.png</file>
+        <file>icons/molconv.png</file>
+    </qresource>
+</RCC>

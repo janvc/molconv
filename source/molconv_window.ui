@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>molconv</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="molconv.qrc">
+    <normaloff>:/icons/molconv.png</normaloff>:/icons/molconv.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -85,12 +89,15 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionImport_Molecule"/>
    <addaction name="actionOpen"/>
   </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset theme="document-open"/>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -101,6 +108,10 @@
    </property>
   </action>
   <action name="actionImport_Molecule">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/document-import.png</normaloff>:/icons/document-import.png</iconset>
+   </property>
    <property name="text">
     <string>Import Molecule</string>
    </property>
@@ -163,6 +174,8 @@
    <header location="global">chemkit/graphicsview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="molconv.qrc"/>
+ </resources>
  <connections/>
 </ui>
