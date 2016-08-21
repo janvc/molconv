@@ -93,10 +93,13 @@
    </attribute>
    <addaction name="actionImport_Molecule"/>
    <addaction name="actionOpen"/>
+   <addaction name="actionSet_internal_basis"/>
+   <addaction name="actionReset"/>
   </widget>
   <action name="actionOpen">
    <property name="icon">
-    <iconset theme="document-open"/>
+    <iconset theme="document-open">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Open</string>
@@ -142,6 +145,10 @@
    </property>
   </action>
   <action name="actionSet_internal_basis">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/setbasis.png</normaloff>:/icons/setbasis.png</iconset>
+   </property>
    <property name="text">
     <string>Set Internal Basis</string>
    </property>
@@ -157,8 +164,12 @@
    </property>
   </action>
   <action name="actionReset">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/centerview.png</normaloff>:/icons/centerview.png</iconset>
+   </property>
    <property name="text">
-    <string>Reset</string>
+    <string>Reset View</string>
    </property>
   </action>
   <action name="actionRemove">
