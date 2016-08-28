@@ -27,11 +27,17 @@ void setBasisDialog::prepare(molconv::moleculePtr &molecule)
         std::string currentName = molecule->atom(i)->symbol() + std::to_string(i + 1);
 
         QListWidgetItem *originItem = new QListWidgetItem(QString::fromStdString(currentName), ui->originAtomList);
-        originItem->setCheckState(Qt::Checked);
+        if (molecule->originList().at(i))
+            originItem->setCheckState(Qt::Checked);
+        else
+            originItem->setCheckState(Qt::Unchecked);
         ui->originAtomList->addItem(originItem);
 
         QListWidgetItem *basisItem = new QListWidgetItem(QString::fromStdString(currentName), ui->basisAtomList);
-        basisItem->setCheckState(Qt::Checked);
+        if (molecule->basisList().at(i))
+            basisItem->setCheckState(Qt::Checked);
+        else
+            basisItem->setCheckState(Qt::Unchecked);
         ui->basisAtomList->addItem(basisItem);
     }
 
