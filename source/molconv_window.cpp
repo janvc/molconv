@@ -80,6 +80,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
+    connect(d->m_setBasisDialog, SIGNAL(accepted()), SLOT(changeOriginBasis()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -88,6 +89,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
     connect(ui->actionSet_internal_basis, SIGNAL(triggered()), SLOT(startBasisDialog()));
+    ui->actionSet_internal_basis->setEnabled(false);
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateActiveMolecule()));
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
 
@@ -122,6 +124,8 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 
     d->m_ListOfMolecules->insertMolecule(temp_mol);
     d->activeMolecule = temp_mol;
+
+    ui->actionSet_internal_basis->setEnabled(true);
 
     emit new_molecule(temp_mol);
 }
@@ -304,4 +308,8 @@ void MolconvWindow::ResetView()
 void MolconvWindow::updateActiveMolecule(molconv::moleculePtr &newActive)
 {
     d->activeMolecule = newActive;
+}
+
+void MolconvWindow::changeOriginBasis()
+{
 }

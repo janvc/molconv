@@ -72,6 +72,7 @@ public slots:
     void removeActiveMolecule();
     void DuplicateActiveMolecule();
     void updateActiveMolecule(molconv::moleculePtr &newActive);
+    void changeOriginBasis();
 
 private slots:
 
