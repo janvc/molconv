@@ -80,7 +80,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
-    connect(d->m_setBasisDialog, SIGNAL(accepted()), SLOT(changeOriginBasis()));
+    connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -312,4 +312,25 @@ void MolconvWindow::updateActiveMolecule(molconv::moleculePtr &newActive)
 
 void MolconvWindow::changeOriginBasis()
 {
+    std::cout << d->activeMolecule->internalOriginPosition() << std::endl << std::endl;
+
+    std::cout << d->activeMolecule->internalOrigin() << std::endl << std::endl;
+    molconv::origin newOrigin = d->m_setBasisDialog->origin();
+    std::cout << newOrigin << std::endl << std::endl;
+    molconv::basis newBasis = d->m_setBasisDialog->basis();
+
+    std::array<int,2> newOriginAtoms = d->m_setBasisDialog->originAtoms();
+    std::array<int,3> newBasisAtoms = d->m_setBasisDialog->basisAtoms();
+
+    double newAtomLineScale = d->m_setBasisDialog->atomLineScale();
+
+    std::vector<bool> newOriginList = d->m_setBasisDialog->selectedOriginAtoms();
+    std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
+
+    d->activeMolecule->setOrigin(newOrigin, newOriginAtoms[0], newOriginAtoms[1], newAtomLineScale);
+    d->activeMolecule->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
+    d->activeMolecule->setOriginList(newOriginList);
+    d->activeMolecule->setBasisList(newBasisList);
+
+    std::cout << d->activeMolecule->internalOriginPosition() << std::endl;
 }

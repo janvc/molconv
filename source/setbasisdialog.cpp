@@ -32,6 +32,7 @@ setBasisDialog::setBasisDialog(QWidget *parent) :
 
     m_originAtoms.fill(0);
     m_basisAtoms.fill(0);
+    m_AtomLineScale = 0.0;
 
     ui->originAllCheckBox->setCheckState(Qt::Checked);
     ui->basisAllCheckBox->setCheckState(Qt::Checked);
@@ -76,20 +77,36 @@ void setBasisDialog::prepare(molconv::moleculePtr &molecule)
     {
     case molconv::kCenterOfMass:
         ui->originCOM->setChecked(true);
+        on_originCOM_toggled(true);
+        on_originAtomPos_toggled(false);
+        on_originAtomLine_toggled(false);
         break;
     case molconv::kCenterOfGeometry:
+        on_originCOG_toggled(true);
+        on_originAtomPos_toggled(false);
+        on_originAtomLine_toggled(false);
         ui->originCOG->setChecked(true);
         break;
     case molconv::kCenterOfCharge:
+        on_originCOC_toggled(true);
+        on_originAtomPos_toggled(false);
+        on_originAtomLine_toggled(false);
         ui->originCOC->setChecked(true);
         break;
     case molconv::kCenterOnAtom:
         ui->originAtomPos->setChecked(true);
         m_originAtoms = molecule->internalOriginAtoms();
+        ui->originAtom->setValue(m_originAtoms[0] + 1);
+        on_originCOC_toggled(false);
+        on_originAtomLine_toggled(false);
         break;
     case molconv::kCenterBetweenAtoms:
         ui->originAtomLine->setChecked(true);
+        on_originAtomPos_toggled(false);
+        on_originCOC_toggled(false);
         m_originAtoms = molecule->internalOriginAtoms();
+        ui->originALineStart->setValue(m_originAtoms[0] + 1);
+        ui->originALineEnd->setValue(m_originAtoms[1] + 1);
         break;
     }
 
@@ -97,16 +114,26 @@ void setBasisDialog::prepare(molconv::moleculePtr &molecule)
     {
     case molconv::kInertiaVectors:
         ui->basisInert->setChecked(true);
+        on_basisInert_toggled(true);
+        on_basisAtoms_toggled(false);
         break;
     case molconv::kCovarianceVectors:
         ui->basisCovar->setChecked(true);
+        on_basisCovar_toggled(true);
+        on_basisAtoms_toggled(false);
         break;
     case molconv::kChargeVectors:
         ui->basisCharge->setChecked(true);
+        on_basisCharge_toggled(true);
+        on_basisAtoms_toggled(false);
         break;
     case molconv::kVectorsFromAtoms:
+        on_basisCharge_toggled(false);
         ui->basisAtoms->setChecked(true);
         m_basisAtoms = molecule->internalBasisAtoms();
+        ui->basisAtom1->setValue(m_basisAtoms[0] + 1);
+        ui->basisAtom2->setValue(m_basisAtoms[1] + 1);
+        ui->basisAtom3->setValue(m_basisAtoms[2] + 1);
         break;
     }
 
@@ -131,6 +158,11 @@ std::array<int,2> setBasisDialog::originAtoms() const
 std::array<int,3> setBasisDialog::basisAtoms() const
 {
     return m_basisAtoms;
+}
+
+double setBasisDialog::atomLineScale() const
+{
+    return m_AtomLineScale;
 }
 
 std::vector<bool> setBasisDialog::selectedOriginAtoms() const
@@ -214,6 +246,7 @@ void setBasisDialog::on_buttonBox_accepted()
         m_origin = molconv::kCenterBetweenAtoms;
         m_originAtoms[0] = ui->originALineStart->value() - 1;
         m_originAtoms[0] = ui->originALineEnd->value() - 1;
+        m_AtomLineScale = ui->originALineScaleBox->value();
     }
 
     // set the basis from the UI elements:
@@ -254,6 +287,8 @@ void setBasisDialog::on_buttonBox_accepted()
             else
                 m_basisList.push_back(false);
         }
+
+    emit ready();
 }
 
 void setBasisDialog::on_originCOM_toggled(bool checked)

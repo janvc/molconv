@@ -45,6 +45,7 @@ public:
     molconv::basis basis() const;
     std::array<int,2> originAtoms() const;
     std::array<int,3> basisAtoms() const;
+    double atomLineScale() const;
 
     std::vector<bool> selectedOriginAtoms() const;
     std::vector<bool> selectedBasisAtoms() const;
@@ -65,6 +66,9 @@ private slots:
     void on_basisCovar_toggled(bool checked);
     void on_basisCharge_toggled(bool checked);
 
+signals:
+    void ready();
+
 private:
     molconv::moleculePtr m_molecule;
     molconv::origin m_origin;
@@ -75,6 +79,8 @@ private:
 
     std::array<int,2> m_originAtoms;
     std::array<int,3> m_basisAtoms;
+
+    double m_AtomLineScale;
 
     std::vector<bool> m_originList;
     std::vector<bool> m_basisList;
