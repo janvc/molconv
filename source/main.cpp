@@ -22,6 +22,10 @@
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName("Molconv");
+    QCoreApplication::setOrganizationDomain("molconv.org");
+    QCoreApplication::setApplicationName("molconv");
+
     QApplication app(argc, argv);
     MolconvWindow the_window;
     the_window.showMaximized();

@@ -82,7 +82,13 @@ void OpenDialog::on_filedialog_clicked()
     foreach(const std::string &format, formats)
         formatsString += QString("*.%1 ").arg(format.c_str());
 
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), 0, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
+    QSettings settings;
+    QString startImportPath = settings.value("importPath").toString();
+
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), startImportPath, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
+
+    QFileInfo info(filename);
+    settings.setValue("importPath", info.path());
 
     ui->filename->setText(filename.split("/").last());
     ui->moleculeName->setText(filename.split("/").last());
