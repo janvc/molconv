@@ -312,11 +312,7 @@ void MolconvWindow::updateActiveMolecule(molconv::moleculePtr &newActive)
 
 void MolconvWindow::changeOriginBasis()
 {
-    std::cout << d->activeMolecule->internalOriginPosition() << std::endl << std::endl;
-
-    std::cout << d->activeMolecule->internalOrigin() << std::endl << std::endl;
     molconv::origin newOrigin = d->m_setBasisDialog->origin();
-    std::cout << newOrigin << std::endl << std::endl;
     molconv::basis newBasis = d->m_setBasisDialog->basis();
 
     std::array<int,2> newOriginAtoms = d->m_setBasisDialog->originAtoms();
@@ -327,10 +323,10 @@ void MolconvWindow::changeOriginBasis()
     std::vector<bool> newOriginList = d->m_setBasisDialog->selectedOriginAtoms();
     std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
 
-    d->activeMolecule->setOrigin(newOrigin, newOriginAtoms[0], newOriginAtoms[1], newAtomLineScale);
+    d->activeMolecule->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
     d->activeMolecule->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
     d->activeMolecule->setOriginList(newOriginList);
     d->activeMolecule->setBasisList(newBasisList);
 
-    std::cout << d->activeMolecule->internalOriginPosition() << std::endl;
+    d->m_MoleculeSettings->setMolecule(d->activeMolecule);
 }

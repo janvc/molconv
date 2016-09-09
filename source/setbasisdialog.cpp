@@ -45,6 +45,8 @@ setBasisDialog::~setBasisDialog()
 
 void setBasisDialog::prepare(molconv::moleculePtr &molecule)
 {
+    setWindowTitle("Internal basis of molecule '" + QString::fromStdString(molecule->name()) + "'");
+
     ui->originAtomList->clear();
     ui->basisAtomList->clear();
 
@@ -72,6 +74,8 @@ void setBasisDialog::prepare(molconv::moleculePtr &molecule)
 
     // standard orientation is not available at the moment
     ui->basisStandard->setEnabled(false);
+
+    ui->originAtom->setMaximum(molecule->size());
 
     switch (m_origin)
     {
@@ -238,14 +242,14 @@ void setBasisDialog::on_buttonBox_accepted()
     else if (ui->originAtomPos->isChecked())
     {
         m_origin = molconv::kCenterOnAtom;
-        m_originAtoms[0] = ui->originAtom->value() - 1;
+        m_originAtoms[0] = ui->originAtom->value();
         m_originAtoms[1] = 0;
     }
     else if (ui->originAtomLine->isChecked())
     {
         m_origin = molconv::kCenterBetweenAtoms;
-        m_originAtoms[0] = ui->originALineStart->value() - 1;
-        m_originAtoms[0] = ui->originALineEnd->value() - 1;
+        m_originAtoms[0] = ui->originALineStart->value();
+        m_originAtoms[0] = ui->originALineEnd->value();
         m_AtomLineScale = ui->originALineScaleBox->value();
     }
 
@@ -260,9 +264,9 @@ void setBasisDialog::on_buttonBox_accepted()
     else if (ui->basisAtoms->isChecked())
     {
         m_basis = molconv::kVectorsFromAtoms;
-        m_basisAtoms[0] = ui->basisAtom1->value() - 1;
-        m_basisAtoms[1] = ui->basisAtom2->value() - 1;
-        m_basisAtoms[2] = ui->basisAtom3->value() - 1;
+        m_basisAtoms[0] = ui->basisAtom1->value();
+        m_basisAtoms[1] = ui->basisAtom2->value();
+        m_basisAtoms[2] = ui->basisAtom3->value();
     }
 
 

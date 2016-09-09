@@ -61,6 +61,7 @@ namespace molconv
 
         Eigen::Vector3d center() const;
         Eigen::Vector3d centerOfMass() const;
+        Eigen::Vector3d centerOfCharge() const;
 
         // info about the inertia tensor and the covariance matrix:
         Eigen::Matrix3d inertiaTensor() const;

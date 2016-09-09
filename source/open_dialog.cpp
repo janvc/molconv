@@ -128,7 +128,7 @@ molconv::moleculePtr OpenDialog::getMol()
 molconv::origin OpenDialog::getOrigin()
 {
     if(ui->zero->isChecked())
-        return molconv::kCenterOnZero;
+        return molconv::kCenterOfMass;
     else if(ui->com->isChecked())
         return molconv::kCenterOfMass;
     else if(ui->cog->isChecked())
@@ -136,13 +136,13 @@ molconv::origin OpenDialog::getOrigin()
     else if(ui->coa->isChecked())
         return molconv::kCenterOnAtom;
     else
-        return molconv::kCenterOnZero;
+        return molconv::kCenterOfMass;
 }
 
 molconv::basis OpenDialog::getBasis()
 {
     if(ui->identity->isChecked())
-        return molconv::kIdentityVectors;
+        return molconv::kInertiaVectors;
     else if(ui->covar->isChecked())
         return molconv::kCovarianceVectors;
     else if(ui->inert->isChecked())
@@ -150,7 +150,7 @@ molconv::basis OpenDialog::getBasis()
     else if(ui->atoms->isChecked())
         return molconv::kVectorsFromAtoms;
     else
-        return molconv::kIdentityVectors;
+        return molconv::kInertiaVectors;
 }
 
 void OpenDialog::on_atoms_toggled(bool checked)
