@@ -63,6 +63,9 @@ namespace molconv
         double m_phi;
         double m_theta;
         double m_psi;
+
+        std::vector<bool> m_originList;
+        std::vector<bool> m_basisList;
     };
 
     ///
@@ -89,6 +92,11 @@ namespace molconv
         , d(new MoleculePrivate)
     {
         chemkit::BondPredictor::predictBonds(this);
+        for (int i = 0; i < int(size()); i++)
+        {
+            d->m_originList.push_back(true);
+            d->m_basisList.push_back(true);
+        }
         initIntPos();
     }
 
@@ -98,6 +106,11 @@ namespace molconv
         , d(new MoleculePrivate)
     {
         chemkit::BondPredictor::predictBonds(this);
+        for (int i = 0; i < int(size()); i++)
+        {
+            d->m_originList.push_back(true);
+            d->m_basisList.push_back(true);
+        }
         initIntPos();
     }
 
@@ -116,6 +129,10 @@ namespace molconv
         d->m_originFactor = originalMolecule.internalOriginFactor();
         d->m_originAtoms = originalMolecule.internalOriginAtoms();
         d->m_basisAtoms = originalMolecule.internalBasisAtoms();
+        d->m_group = originalMolecule.group();
+        d->m_originList = originalMolecule.originList();
+        d->m_basisList = originalMolecule.basisList();
+
         initIntPos();
     }
 
@@ -205,14 +222,14 @@ namespace molconv
 
         switch(internalOrigin())
         {
-        case kCenterOnZero:
-            originPosition = Eigen::Vector3d::Zero();
-            break;
         case kCenterOfMass:
             originPosition = centerOfMass();
             break;
         case kCenterOfGeometry:
             originPosition = center();
+            break;
+        case kCenterOfCharge:
+            originPosition = centerOfCharge();
             break;
         case kCenterOnAtom:
             originPosition = atom(d->m_originAtoms[0])->position();
@@ -224,6 +241,53 @@ namespace molconv
         }
 
         return originPosition;
+    }
+
+    Eigen::Vector3d Molecule::center() const
+    {
+        Eigen::Vector3d cog = Eigen::Vector3d::Zero();
+        int Nactive = 0;
+
+        for (int i = 0; i < int(size()); i++)
+            if (originList().at(i))
+            {
+                cog += atom(i)->position();
+                Nactive++;
+            }
+
+        return cog / double(Nactive);
+    }
+
+
+    Eigen::Vector3d Molecule::centerOfMass() const
+    {
+        Eigen::Vector3d com = Eigen::Vector3d::Zero();
+        double totalMass = 0.0;
+
+        for (int i = 0; i < int(size()); i++)
+            if (originList().at(i))
+            {
+                com += atom(i)->position() * atom(i)->mass();
+                totalMass += atom(i)->mass();
+            }
+
+        return com / totalMass;
+    }
+
+    Eigen::Vector3d Molecule::centerOfCharge() const
+    {
+        Eigen::Vector3d coc = Eigen::Vector3d::Zero();
+        double totalCharge = 0.0;
+
+        for (int i = 0; i < int(size()); i++)
+            if (originList().at(i))
+            {
+                coc += atom(i)->position() * double(atom(i)->atomicNumber());
+                totalCharge += double(atom(i)->atomicNumber());
+            }
+
+        return coc / totalCharge;
+
     }
 
     ///
@@ -240,9 +304,6 @@ namespace molconv
 
         switch(internalBasis())
         {
-        case kIdentityVectors:
-            basisVectors = Eigen::Matrix3d::Identity();
-            break;
         case kCovarianceVectors:
             basisVectors.col(0) = calcCovarianceEigenvectors().col(2);
             basisVectors.col(1) = calcCovarianceEigenvectors().col(1);
@@ -534,9 +595,9 @@ namespace molconv
     {
         switch (newOrigin)
         {
-        case kCenterOnZero:
         case kCenterOfMass:
         case kCenterOfGeometry:
+        case kCenterOfCharge:
             d->m_origin = newOrigin;
             d->m_originAtoms.fill(0);
             break;
@@ -559,6 +620,8 @@ namespace molconv
             }
             break;
         }
+
+        initIntPos();
     }
 
     ///
@@ -571,7 +634,6 @@ namespace molconv
     {
         switch (newBasis)
         {
-        case kIdentityVectors:
         case kCovarianceVectors:
         case kInertiaVectors:
             d->m_basis = newBasis;
@@ -647,14 +709,17 @@ namespace molconv
 
                 for (size_t atiter = 0; atiter < size(); atiter++)
                 {
-                    double factor = 0.0;
+                    if (basisList().at(atiter))
+                    {
+                        double factor = 0.0;
 
-                    if (alpha == beta)
-                        factor = (atom(atiter)->position() - com).squaredNorm();
+                        if (alpha == beta)
+                            factor = (atom(atiter)->position() - com).squaredNorm();
 
-                    factor -= (atom(atiter)->position() - com)(alpha) * (atom(atiter)->position() - com)(beta);
+                        factor -= (atom(atiter)->position() - com)(alpha) * (atom(atiter)->position() - com)(beta);
 
-                    inertiaTensor(alpha, beta) += atom(atiter)->mass() * factor;
+                        inertiaTensor(alpha, beta) += atom(atiter)->mass() * factor;
+                    }
                 }
             }
         }
@@ -673,6 +738,11 @@ namespace molconv
         Eigen::Matrix3d covarianceMatrix;
         Eigen::Vector3d cog = center();
 
+        int Nactive = 0;
+        for (int i = 0; i < int(size()); i++)
+            if (basisList().at(i))
+                Nactive++;
+
         for (size_t alpha = 0; alpha < 3; alpha++)
         {
             for (size_t beta = 0; beta < 3; beta++)
@@ -680,11 +750,10 @@ namespace molconv
                 covarianceMatrix(alpha, beta) = 0.0;
 
                 for (size_t atiter = 0; atiter < size(); atiter++)
-                {
-                    covarianceMatrix(alpha, beta) += (atom(atiter)->position()(alpha) - cog(alpha))
-                                                   * (atom(atiter)->position()(beta)  - cog(beta));
-                }
-                covarianceMatrix(alpha, beta) /= size();
+                    if (basisList().at(atiter))
+                        covarianceMatrix(alpha, beta) += (atom(atiter)->position()(alpha) - cog(alpha))
+                                                       * (atom(atiter)->position()(beta)  - cog(beta));
+                covarianceMatrix(alpha, beta) /= double(Nactive);
             }
         }
         return covarianceMatrix;
@@ -794,6 +863,28 @@ namespace molconv
         rot(2,2) =  std::cos(theta);
 
         return rot;
+    }
+
+    std::vector<bool> Molecule::originList() const
+    {
+        return d->m_originList;
+    }
+
+    std::vector<bool> Molecule::basisList() const
+    {
+        return d->m_basisList;
+    }
+
+    void Molecule::setOriginList(const std::vector<bool> &newList)
+    {
+        if (newList.size() == size())
+            d->m_originList = newList;
+    }
+
+    void Molecule::setBasisList(const std::vector<bool> &newList)
+    {
+        if (newList.size() == size())
+            d->m_basisList = newList;
     }
 
 } // namespace molconv

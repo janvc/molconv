@@ -66,11 +66,13 @@ public slots:
     void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
     void newGroup();
     void startNewGroupDialog();
+    void startBasisDialog();
     void addMoleculeToGroup();
     void ResetView();
     void removeActiveMolecule();
     void DuplicateActiveMolecule();
     void updateActiveMolecule(molconv::moleculePtr &newActive);
+    void changeOriginBasis();
 
 private slots:
 

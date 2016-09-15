@@ -34,6 +34,7 @@
 #include "moleculesettings.h"
 #include "open_dialog.h"
 #include "export_dialog.h"
+#include "setbasisdialog.h"
 #include "graphicsaxisitem.h"
 #include "aboutdialog.h"
 
@@ -49,6 +50,7 @@ public:
     OpenDialog *m_OpenDialog;
     ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
+    setBasisDialog *m_setBasisDialog;
 
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
@@ -73,10 +75,12 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_OpenDialog = new OpenDialog(this);
     d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
+    d->m_setBasisDialog = new setBasisDialog(this);
 
 
     connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
+    connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -84,6 +88,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
+    connect(ui->actionSet_internal_basis, SIGNAL(triggered()), SLOT(startBasisDialog()));
+    ui->actionSet_internal_basis->setEnabled(false);
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateActiveMolecule()));
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
 
@@ -118,6 +124,8 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 
     d->m_ListOfMolecules->insertMolecule(temp_mol);
     d->activeMolecule = temp_mol;
+
+    ui->actionSet_internal_basis->setEnabled(true);
 
     emit new_molecule(temp_mol);
 }
@@ -235,6 +243,12 @@ void MolconvWindow::startExportDialog()
     d->m_ExportDialog->exec();
 }
 
+void MolconvWindow::startBasisDialog()
+{
+    d->m_setBasisDialog->prepare(d->activeMolecule);
+    d->m_setBasisDialog->exec();
+}
+
 void MolconvWindow::getMoleculeDialog()
 {
     molconv::moleculePtr temp_mol = d->m_OpenDialog->getMol();
@@ -294,4 +308,25 @@ void MolconvWindow::ResetView()
 void MolconvWindow::updateActiveMolecule(molconv::moleculePtr &newActive)
 {
     d->activeMolecule = newActive;
+}
+
+void MolconvWindow::changeOriginBasis()
+{
+    molconv::origin newOrigin = d->m_setBasisDialog->origin();
+    molconv::basis newBasis = d->m_setBasisDialog->basis();
+
+    std::array<int,2> newOriginAtoms = d->m_setBasisDialog->originAtoms();
+    std::array<int,3> newBasisAtoms = d->m_setBasisDialog->basisAtoms();
+
+    double newAtomLineScale = d->m_setBasisDialog->atomLineScale();
+
+    std::vector<bool> newOriginList = d->m_setBasisDialog->selectedOriginAtoms();
+    std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
+
+    d->activeMolecule->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
+    d->activeMolecule->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
+    d->activeMolecule->setOriginList(newOriginList);
+    d->activeMolecule->setBasisList(newBasisList);
+
+    d->m_MoleculeSettings->setMolecule(d->activeMolecule);
 }

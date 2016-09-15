@@ -59,6 +59,10 @@ namespace molconv
         double theta() const;
         double psi() const;
 
+        Eigen::Vector3d center() const;
+        Eigen::Vector3d centerOfMass() const;
+        Eigen::Vector3d centerOfCharge() const;
+
         // info about the inertia tensor and the covariance matrix:
         Eigen::Matrix3d inertiaTensor() const;
         Eigen::Matrix3d covarianceMatrix() const;
@@ -89,6 +93,11 @@ namespace molconv
 
         boost::shared_ptr<MoleculeListItem> listItem() const;
         void setListItem(boost::shared_ptr<MoleculeListItem> &newItem);
+
+        std::vector<bool> originList() const;
+        std::vector<bool> basisList() const;
+        void setOriginList(const std::vector<bool> &newList);
+        void setBasisList(const std::vector<bool> &newList);
 
     private:
         // private functions:

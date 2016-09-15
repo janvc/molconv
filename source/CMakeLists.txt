@@ -66,6 +66,7 @@ set(SOURCES
     moleculesettings.cpp
     open_dialog.cpp
     export_dialog.cpp
+    setbasisdialog.cpp
     graphicsaxisitem.cpp
     molecule.cpp
     system.cpp
@@ -82,6 +83,7 @@ set(MOC_HEADERS
     newgroupdialog.h
     open_dialog.h
     export_dialog.h
+    setbasisdialog.h
     aboutdialog.h
 )
 
@@ -92,6 +94,7 @@ set(UI_FORMS
     newgroupdialog.ui
     open_dialog.ui
     export_dialog.ui
+    setbasisdialog.ui
     aboutdialog.ui
 )
 

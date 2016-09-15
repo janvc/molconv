@@ -183,7 +183,7 @@
            <item>
             <layout class="QHBoxLayout" name="atom_numbers">
              <item>
-              <widget class="QSpinBox" name="atom3">
+              <widget class="QSpinBox" name="atom1">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -206,7 +206,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="atom1">
+              <widget class="QSpinBox" name="atom3">
                <property name="enabled">
                 <bool>false</bool>
                </property>
