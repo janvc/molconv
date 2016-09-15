@@ -75,20 +75,19 @@ void OpenDialog::openFile(const QString &filename)
 
 void OpenDialog::on_filedialog_clicked()
 {
-    std::vector<std::string> formats = chemkit::MoleculeFile::formats();
-    std::sort(formats.begin(), formats.end());
-
-    QString formatsString;
-    foreach(const std::string &format, formats)
-        formatsString += QString("*.%1 ").arg(format.c_str());
+    QStringList filters;
+    filters << "Molecule Files (*.cml *.mdl *.mol *.mol2 *.pdb *.sd *.sdf *.xyz)"
+            << "CML (*.cml)"
+            << "MDL Mol (*.mdl *.mol *.sd *.sdf)"
+            << "Mol2 (*.mol2)"
+            << "PDB (*.pdb)"
+            << "XYZ (*.xyz)"
+            << "All Files (*.*)";
 
     QSettings settings;
     QString startImportPath = settings.value("importPath").toString();
-
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), startImportPath, QString("Molecule Files (%1);;All Files (*.*)").arg(formatsString));
-
-    QFileInfo info(filename);
-    settings.setValue("importPath", info.path());
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open File"), startImportPath, filters.join(";;"));
+    settings.setValue("importPath", QFileInfo(filename).absolutePath());
 
     ui->filename->setText(filename.split("/").last());
     ui->moleculeName->setText(filename.split("/").last());

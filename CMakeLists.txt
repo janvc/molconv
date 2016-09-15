@@ -47,6 +47,8 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
+add_definitions(-DQT_COMPILING_QSTRING_COMPAT_CPP)
+
 # find out the git revision:
 function(git_version dir version_var)
     if (EXISTS ${dir}/.git)
