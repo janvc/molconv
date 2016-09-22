@@ -47,7 +47,6 @@ OpenDialog::~OpenDialog()
 void OpenDialog::openFile(const QString &filename)
 {
     chemkit::MoleculeFile *the_molfile;
-    std::cout << "Opening file " << filename.toStdString() << std::endl;
 
     the_molfile = new chemkit::MoleculeFile(filename.toStdString());
     if (! the_molfile->read())
@@ -61,7 +60,12 @@ void OpenDialog::openFile(const QString &filename)
 
     if (the_molfile->moleculeCount() > 0)
     {
-        chemkit::Molecule temp_mol = *the_molfile->molecule();
+        chemkit::Molecule temp_mol;
+        if (the_molfile->moleculeCount() > 1)
+            temp_mol = *the_molfile->molecule(the_molfile->moleculeCount() - 1);
+        else
+            temp_mol = *the_molfile->molecule();
+
         ui->an->setMaximum(temp_mol.atomCount());
         ui->atom1->setMaximum(temp_mol.atomCount());
         ui->atom2->setMaximum(temp_mol.atomCount());
@@ -76,8 +80,9 @@ void OpenDialog::openFile(const QString &filename)
 void OpenDialog::on_filedialog_clicked()
 {
     QStringList filters;
-    filters << "Molecule Files (*.cml *.mdl *.mol *.mol2 *.pdb *.sd *.sdf *.xyz)"
+    filters << "Molecule Files (*.cml *.log *.mdl *.mol *.mol2 *.out *.pdb *.sd *.sdf *.xyz)"
             << "CML (*.cml)"
+            << "Gaussian output (*.log *.out)"
             << "MDL Mol (*.mdl *.mol *.sd *.sdf)"
             << "Mol2 (*.mol2)"
             << "PDB (*.pdb)"
