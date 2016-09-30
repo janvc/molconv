@@ -219,14 +219,19 @@ void MolconvWindow::openFile(const QString &fileName, const bool showList)
 
     if (molFile->moleculeCount() > 0)
     {
-        if (molFile->moleculeCount() > 1 && showList)
+        if (molFile->moleculeCount())
         {
-            MultiMolDialog *mmd = new MultiMolDialog(this);
-            mmd->createMoleculeList(molFile);
-            mmd->setWindowTitle("Open '" + fileName.split("/").last() + "'");
-            mmd->exec();
+            std::vector<bool> molsToOpen(molFile->moleculeCount(), true);
 
-            std::vector<bool> molsToOpen = mmd->molecules();
+            if (showList)
+            {
+                MultiMolDialog *mmd = new MultiMolDialog(this);
+                mmd->createMoleculeList(molFile);
+                mmd->setWindowTitle("Open '" + fileName.split("/").last() + "'");
+                mmd->exec();
+                molsToOpen = mmd->molecules();
+                delete mmd;
+            }
 
             int index = 0;
             for (int i = 0; i < molsToOpen.size(); i++)
@@ -239,12 +244,15 @@ void MolconvWindow::openFile(const QString &fileName, const bool showList)
                     tempMol.reset(new molconv::Molecule(tempCMol));
                     tempMol->setOrigin(d->m_ImportDialog->getOrigin());
                     tempMol->setBasis(d->m_ImportDialog->getBasis());
-                    QString tempName = d->m_ImportDialog->getMoleculeName() + "_" + QString::number(index);
+                    QString tempName;
+                    if (d->m_ImportDialog->getMoleculeName().isEmpty())
+                        tempName = fileName.split("/").last().split(".").first() + "_" + QString::number(index);
+                    else
+                        tempName = d->m_ImportDialog->getMoleculeName() + "_" + QString::number(index);
                     tempMol->setName(tempName.toStdString());
                     add_molecule(tempMol);
                 }
             }
-            delete mmd;
         }
         else
         {
