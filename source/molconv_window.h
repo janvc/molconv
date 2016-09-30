@@ -32,7 +32,7 @@
 #include "moleculegroup.h"
 #include "moleculestack.h"
 
-#include "open_dialog.h"
+#include "import_dialog.h"
 #include "newgroupdialog.h"
 
 class ListOfMolecules;
@@ -53,13 +53,14 @@ public:
     void add_molecule(molconv::moleculePtr temp_mol);
     int nMolecules();
     molconv::moleculePtr getMol(int index);
-    void openFileDefault(const QString &fileName);
+
+    void openFile(const QString &fileName, const bool showList = false);
 
 public slots:
+    void openFile();
     void saveFile();
     void quit();
-    void getMoleculeDialog();
-    void startOpenDialog();
+    void startImportDialog();
     void startExportDialog();
     void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
     void about();

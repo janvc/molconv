@@ -45,6 +45,7 @@ namespace molconv {
         kCovarianceVectors,
         kInertiaVectors,
         kChargeVectors,
+        kStandardOrientation,
         kVectorsFromAtoms
     };
 

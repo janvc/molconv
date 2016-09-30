@@ -64,8 +64,9 @@ set(SOURCES
     newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
-    open_dialog.cpp
+    import_dialog.cpp
     export_dialog.cpp
+    multimoldialog.cpp
     setbasisdialog.cpp
     graphicsaxisitem.cpp
     molecule.cpp
@@ -81,8 +82,9 @@ set(MOC_HEADERS
     listofmolecules.h
     moleculesettings.h
     newgroupdialog.h
-    open_dialog.h
+    import_dialog.h
     export_dialog.h
+    multimoldialog.h
     setbasisdialog.h
     aboutdialog.h
 )
@@ -92,8 +94,9 @@ set(UI_FORMS
     listofmolecules.ui
     moleculesettings.ui
     newgroupdialog.ui
-    open_dialog.ui
+    import_dialog.ui
     export_dialog.ui
+    multimoldialog.ui
     setbasisdialog.ui
     aboutdialog.ui
 )

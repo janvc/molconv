@@ -18,21 +18,35 @@
  *
  */
 
-#include "molconv_window.h"
 
-int main(int argc, char *argv[])
+#ifndef MULTIMOL_DIALOG_H
+#define MULTIMOL_DIALOG_H
+
+#include <QDialog>
+#include "molecule.h"
+
+namespace Ui
 {
-    QCoreApplication::setOrganizationName("Molconv");
-    QCoreApplication::setOrganizationDomain("molconv.org");
-    QCoreApplication::setApplicationName("molconv");
-
-    QApplication app(argc, argv);
-    MolconvWindow the_window;
-    the_window.showMaximized();
-
-    if (app.arguments().size() > 1)
-        for (int i = 1; i < app.arguments().size(); i++)
-            the_window.openFile(app.arguments()[i]);
-
-    return app.exec();
+    class MultiMolDialog;
 }
+
+class MultiMolDialog : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit MultiMolDialog(QWidget *parent = 0);
+    ~MultiMolDialog();
+
+    void createMoleculeList(chemkit::MoleculeFile *file);
+    std::vector<bool> molecules() const;
+
+private slots:
+    void on_selectAllBox_stateChanged();
+    void on_MultiMolDialog_rejected();
+
+private:
+    Ui::MultiMolDialog *ui;
+};
+
+#endif // MULTIMOL_DIALOG_H

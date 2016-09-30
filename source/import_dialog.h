@@ -30,33 +30,41 @@
 #include<QtWidgets>
 #include "molecule.h"
 
+class ImportDialogPrivate;
+
 namespace Ui
 {
-    class OpenDialog;
+    class ImportDialog;
 }
 
-class OpenDialog : public QDialog
+class ImportDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    OpenDialog(QWidget *parent = 0);
-    ~OpenDialog();
-    void openFile(const QString &filename);
-    molconv::moleculePtr getMol();
+    ImportDialog(QWidget *parent = 0);
+    ~ImportDialog();
+    void openFile();
     molconv::origin getOrigin();
     molconv::basis getBasis();
-    std::string getMoleculeName();
+    QString getMoleculeName();
+    QString getFileName();
 
 private slots:
     void on_filedialog_clicked();
     void on_coa_toggled(bool checked);
     void on_atoms_toggled(bool checked);
-    void atoms_changed(int useless);
+    void atoms_changed();
+    void on_coc_toggled(bool checked);
+    void on_com_toggled(bool checked);
+    void on_cog_toggled(bool checked);
+    void on_stdori_toggled(bool checked);
+    void on_inert_toggled(bool checked);
+    void on_covar_toggled(bool checked);
 
 private:
-    Ui::OpenDialog *ui;
-    molconv::moleculePtr m_molecule;
+    ImportDialogPrivate *d;
+    Ui::ImportDialog *ui;
 };
 
 #endif // OPEN_DIALOG_H

@@ -32,11 +32,12 @@
 #include "ui_molconv_window.h"
 #include "listofmolecules.h"
 #include "moleculesettings.h"
-#include "open_dialog.h"
+#include "import_dialog.h"
 #include "export_dialog.h"
 #include "setbasisdialog.h"
 #include "graphicsaxisitem.h"
 #include "aboutdialog.h"
+#include "multimoldialog.h"
 
 
 class MolconvWindowPrivate
@@ -47,10 +48,11 @@ public:
     {
     }
 
-    OpenDialog *m_OpenDialog;
+    ImportDialog *m_ImportDialog;
     ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
     setBasisDialog *m_setBasisDialog;
+    MultiMolDialog *m_MultiMolDialog;
 
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
@@ -72,17 +74,16 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 {
     ui->setupUi(this);
 
-    d->m_OpenDialog = new OpenDialog(this);
+    d->m_ImportDialog = new ImportDialog(this);
     d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
     d->m_setBasisDialog = new setBasisDialog(this);
 
-
-    connect(d->m_OpenDialog, SIGNAL(accepted()), this, SLOT(getMoleculeDialog()));
+    connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(openFile()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
-    connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startOpenDialog()));
+    connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
@@ -199,7 +200,12 @@ void MolconvWindow::saveFile()
 {
 }
 
-void MolconvWindow::openFileDefault(const QString &fileName)
+void MolconvWindow::openFile()
+{
+    openFile(d->m_ImportDialog->getFileName(), true);
+}
+
+void MolconvWindow::openFile(const QString &fileName, const bool showList)
 {
     chemkit::MoleculeFile *molFile = new chemkit::MoleculeFile(fileName.toStdString());
 
@@ -213,13 +219,43 @@ void MolconvWindow::openFileDefault(const QString &fileName)
 
     if (molFile->moleculeCount() > 0)
     {
-        chemkit::Molecule tempCMol = *molFile->molecule();
-        molconv::moleculePtr tempMol;
-        tempMol.reset(new molconv::Molecule(tempCMol));
-        tempMol->setOrigin(molconv::kCenterOfMass);
-        tempMol->setBasis(molconv::kInertiaVectors);
-        tempMol->setName(fileName.split("/").last().toStdString());
-        add_molecule(tempMol);
+        if (molFile->moleculeCount() > 1 && showList)
+        {
+            MultiMolDialog *mmd = new MultiMolDialog(this);
+            mmd->createMoleculeList(molFile);
+            mmd->setWindowTitle("Open '" + fileName.split("/").last() + "'");
+            mmd->exec();
+
+            std::vector<bool> molsToOpen = mmd->molecules();
+
+            int index = 0;
+            for (int i = 0; i < molsToOpen.size(); i++)
+            {
+                if (molsToOpen.at(i))
+                {
+                    index++;
+                    chemkit::Molecule tempCMol = *molFile->molecule(i);
+                    molconv::moleculePtr tempMol;
+                    tempMol.reset(new molconv::Molecule(tempCMol));
+                    tempMol->setOrigin(d->m_ImportDialog->getOrigin());
+                    tempMol->setBasis(d->m_ImportDialog->getBasis());
+                    QString tempName = d->m_ImportDialog->getMoleculeName() + "_" + QString::number(index);
+                    tempMol->setName(tempName.toStdString());
+                    add_molecule(tempMol);
+                }
+            }
+            delete mmd;
+        }
+        else
+        {
+            chemkit::Molecule tempCMol = *molFile->molecule();
+            molconv::moleculePtr tempMol;
+            tempMol.reset(new molconv::Molecule(tempCMol));
+            tempMol->setOrigin(molconv::kCenterOfMass);
+            tempMol->setBasis(molconv::kInertiaVectors);
+            tempMol->setName(fileName.split("/").last().split(".").first().toStdString());
+            add_molecule(tempMol);
+        }
     }
     else
     {
@@ -230,10 +266,9 @@ void MolconvWindow::openFileDefault(const QString &fileName)
     }
 }
 
-void MolconvWindow::startOpenDialog()
+void MolconvWindow::startImportDialog()
 {
-    d->m_OpenDialog->setModal(true);
-    d->m_OpenDialog->exec();
+    d->m_ImportDialog->show();
 }
 
 void MolconvWindow::startExportDialog()
@@ -246,13 +281,7 @@ void MolconvWindow::startExportDialog()
 void MolconvWindow::startBasisDialog()
 {
     d->m_setBasisDialog->prepare(d->activeMolecule);
-    d->m_setBasisDialog->exec();
-}
-
-void MolconvWindow::getMoleculeDialog()
-{
-    molconv::moleculePtr temp_mol = d->m_OpenDialog->getMol();
-    add_molecule(temp_mol);
+    d->m_setBasisDialog->show();
 }
 
 void MolconvWindow::DuplicateActiveMolecule()

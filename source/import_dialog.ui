@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OpenDialog</class>
- <widget class="QDialog" name="OpenDialog">
+ <class>ImportDialog</class>
+ <widget class="QDialog" name="ImportDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -30,7 +30,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>386</width>
+     <width>400</width>
      <height>286</height>
     </rect>
    </property>
@@ -88,9 +88,9 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QRadioButton" name="zero">
+            <widget class="QRadioButton" name="coc">
              <property name="text">
-              <string>zero</string>
+              <string>center of charge</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -144,9 +144,9 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QRadioButton" name="identity">
+            <widget class="QRadioButton" name="stdori">
              <property name="text">
-              <string>identity matrix</string>
+              <string>Standard orientation</string>
              </property>
              <property name="checked">
               <bool>false</bool>
@@ -248,7 +248,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>OpenDialog</receiver>
+   <receiver>ImportDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -264,7 +264,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>OpenDialog</receiver>
+   <receiver>ImportDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
