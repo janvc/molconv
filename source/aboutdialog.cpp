@@ -36,7 +36,9 @@ AboutDialog::AboutDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    const QString progInfo = "This is molconv version XX, Git revision "
+    const QString progInfo = "This is molconv version "
+                           + QCoreApplication::applicationVersion()
+                           + ", Git revision "
                            + QString(SCM_REVISION);
 
     const QString compileInfo = "Compiled on "
