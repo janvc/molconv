@@ -54,6 +54,8 @@ namespace molconv
         Eigen::Matrix3d internalBasisVectors() const;
         std::array<int,2> internalOriginAtoms() const;
         std::array<int,3> internalBasisAtoms() const;
+        std::vector<bool> originList() const;
+        std::vector<bool> basisList() const;
         double internalOriginFactor() const;
         double phi() const;
         double theta() const;
@@ -65,27 +67,23 @@ namespace molconv
 
         // info about the inertia tensor and the covariance matrix:
         Eigen::Matrix3d inertiaTensor() const;
+        Eigen::Matrix3d chargeTensor() const;
         Eigen::Matrix3d covarianceMatrix() const;
         Eigen::Vector3d inertiaEigenvalues() const;
+        Eigen::Vector3d chargeEigenvalues() const;
         Eigen::Vector3d covarianceEigenvalues() const;
         Eigen::Matrix3d inertiaEigenvectors() const;
+        Eigen::Matrix3d chargeEigenvectors() const;
         Eigen::Matrix3d covarianceEigenvectors() const;
 
-        // moving the molecule:
-        void translate(const Eigen::Vector3d &shiftVector);
-        void rotate(const Eigen::Matrix3d &rotationMatrix);
-        void rotate(const Eigen::Vector3d &axis, const double angle);
-        void setPhi(const double newPhi);
-        void setTheta(const double newTheta);
-        void setPsi(const double newPsi);
-        void moveFromParas(const double x, const double y, const double z, const double phi, const double theta, const double psi);
+        void moveFromParas(const double x, const double y, const double z,
+                           const double phi, const double theta, const double psi);
 
         // changing the internal basis:
         void setOrigin(const origin &newOrigin, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);
         void setBasis(const basis &newBasis, const size_t atom1 = 0, const size_t atom2 = 0, const size_t atom3 = 0);
-
-        // clean up the coordinates
-        void cleanUp();
+        void setOriginList(const std::vector<bool> &newList);
+        void setBasisList(const std::vector<bool> &newList);
 
         // manage groups
         void addToGroup(const groupPtr newGroup);
@@ -94,17 +92,17 @@ namespace molconv
         boost::shared_ptr<MoleculeListItem> listItem() const;
         void setListItem(boost::shared_ptr<MoleculeListItem> &newItem);
 
-        std::vector<bool> originList() const;
-        std::vector<bool> basisList() const;
-        void setOriginList(const std::vector<bool> &newList);
-        void setBasisList(const std::vector<bool> &newList);
-
     private:
         // private functions:
+        void setInternalOriginPosition();
+        void setEulerAngles();
         Eigen::Matrix3d calcInertiaTensor() const;
+        Eigen::Matrix3d calcChargeTensor() const;
         Eigen::Matrix3d calcCovarianceMatrix() const;
         Eigen::Vector3d calcInertiaEigenvalues() const;
         Eigen::Matrix3d calcInertiaEigenvectors() const;
+        Eigen::Vector3d calcChargeEigenvalues() const;
+        Eigen::Matrix3d calcChargeEigenvectors() const;
         Eigen::Vector3d calcCovarianceEigenvalues() const;
         Eigen::Matrix3d calcCovarianceEigenvectors() const;
 

@@ -32,10 +32,17 @@ class ImportDialogPrivate
 public:
     ImportDialogPrivate()
     {
+        m_origin = molconv::kCenterOfGeometry;
+        m_basis = molconv::kCovarianceVectors;
+        m_originAtom = 0;
+        m_basisAtoms.fill(0);
     }
 
     molconv::origin m_origin;
     molconv::basis m_basis;
+
+    int m_originAtom;
+    std::array<int,3> m_basisAtoms;
 
     std::string m_moleculeName;
     QString m_fileName;
@@ -52,9 +59,6 @@ ImportDialog::ImportDialog(QWidget *parent)
     connect(ui->atom1,SIGNAL(valueChanged(int)),this,SLOT(atoms_changed()));
     connect(ui->atom2,SIGNAL(valueChanged(int)),this,SLOT(atoms_changed()));
     connect(ui->atom3,SIGNAL(valueChanged(int)),this,SLOT(atoms_changed()));
-
-    d->m_origin = molconv::kCenterOfMass;
-    d->m_basis = molconv::kInertiaVectors;
 }
 
 
@@ -129,14 +133,24 @@ void ImportDialog::on_coa_toggled(bool checked)
         ui->an->setEnabled(false);
 }
 
-molconv::origin ImportDialog::getOrigin()
+molconv::origin ImportDialog::getOrigin() const
 {
     return d->m_origin;
 }
 
-molconv::basis ImportDialog::getBasis()
+int ImportDialog::getOriginAtom() const
+{
+    return d->m_originAtom;
+}
+
+molconv::basis ImportDialog::getBasis() const
 {
     return d->m_basis;
+}
+
+std::array<int,3> ImportDialog::getBasisAtoms() const
+{
+    return d->m_basisAtoms;
 }
 
 void ImportDialog::on_atoms_toggled(bool checked)
@@ -163,10 +177,15 @@ void ImportDialog::atoms_changed()
     if (ui->atom1->value() == ui->atom2->value() || ui->atom2->value() == ui->atom3->value() || ui->atom1->value() == ui->atom3->value())
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     else
+    {
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+        d->m_basisAtoms[0] = ui->atom1->value();
+        d->m_basisAtoms[1] = ui->atom2->value();
+        d->m_basisAtoms[2] = ui->atom3->value();
+    }
 }
 
-QString ImportDialog::getMoleculeName()
+QString ImportDialog::getMoleculeName() const
 {
     QString moleculeName = ui->moleculeName->text();
 
@@ -176,7 +195,7 @@ QString ImportDialog::getMoleculeName()
     return moleculeName;
 }
 
-QString ImportDialog::getFileName()
+QString ImportDialog::getFileName() const
 {
     return d->m_fileName;
 }
@@ -215,4 +234,9 @@ void ImportDialog::on_covar_toggled(bool checked)
 {
     if (checked)
         d->m_basis = molconv::kCovarianceVectors;
+}
+
+void ImportDialog::on_an_valueChanged(int arg1)
+{
+    d->m_originAtom = arg1;
 }

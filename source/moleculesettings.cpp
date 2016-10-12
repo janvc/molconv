@@ -153,6 +153,8 @@ void MoleculeSettings::updateMolecule()
                 ui->phiSpinBox->value() / rad2deg,
                 ui->thetaSpinBox->value() / rad2deg,
                 ui->psiSpinBox->value() / rad2deg);
+
+    emit basisChanged();
 }
 
 molconv::moleculePtr MoleculeSettings::molecule() const

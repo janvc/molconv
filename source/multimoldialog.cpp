@@ -42,7 +42,7 @@ void MultiMolDialog::createMoleculeList(chemkit::MoleculeFile *file)
     ui->molList->clear();
     ui->selectAllBox->setCheckState(Qt::Checked);
 
-    for (int i = 0; i < file->moleculeCount(); i++)
+    for (int i = 0; i < int(file->moleculeCount()); i++)
     {
         QString name = QString::number(i + 1);
         QListWidgetItem *molItem = new QListWidgetItem(name.rightJustified(4, ' '), ui->molList);

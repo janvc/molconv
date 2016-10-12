@@ -45,10 +45,12 @@ public:
     ImportDialog(QWidget *parent = 0);
     ~ImportDialog();
     void openFile();
-    molconv::origin getOrigin();
-    molconv::basis getBasis();
-    QString getMoleculeName();
-    QString getFileName();
+    molconv::origin getOrigin() const;
+    molconv::basis getBasis() const;
+    int getOriginAtom() const;
+    std::array<int,3> getBasisAtoms() const;
+    QString getMoleculeName() const;
+    QString getFileName() const;
 
 private slots:
     void on_filedialog_clicked();
@@ -61,6 +63,7 @@ private slots:
     void on_stdori_toggled(bool checked);
     void on_inert_toggled(bool checked);
     void on_covar_toggled(bool checked);
+    void on_an_valueChanged(int arg1);
 
 private:
     ImportDialogPrivate *d;

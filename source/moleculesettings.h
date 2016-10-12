@@ -45,6 +45,9 @@ public:
 public slots:
     void setMolecule(molconv::moleculePtr &newMolecule);
 
+signals:
+    void basisChanged() const;
+
 private slots:
     void on_xSlider_valueChanged(int value);
     void on_ySlider_valueChanged(int value);
