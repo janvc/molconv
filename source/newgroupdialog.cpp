@@ -19,12 +19,26 @@
  */
 
 
+#include "molconv_window.h"
 #include "newgroupdialog.h"
 #include "ui_newgroupdialog.h"
 
-NewGroupDialog::NewGroupDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::NewGroupDialog)
+
+class NewGroupDialogPrivate
+{
+public:
+    NewGroupDialogPrivate(QWidget *parent)
+        : m_window(static_cast<MolconvWindow*>(parent))
+    {
+    }
+
+    MolconvWindow *m_window;
+};
+
+NewGroupDialog::NewGroupDialog(QWidget *parent)
+    : QDialog(parent)
+    , d(new NewGroupDialogPrivate(parent))
+    , ui(new Ui::NewGroupDialog)
 {
     ui->setupUi(this);
 }
@@ -32,6 +46,34 @@ NewGroupDialog::NewGroupDialog(QWidget *parent) :
 NewGroupDialog::~NewGroupDialog()
 {
     delete ui;
+    delete d;
+}
+
+void NewGroupDialog::createMoleculeList()
+{
+    ui->molList->clear();
+    ui->selAllCheckBox->setCheckState(Qt::Unchecked);
+
+    for (int i = 0; i < d->m_window->nMolecules(); i++)
+    {
+        QString name = QString::fromStdString(d->m_window->getMol(i)->name());
+        QListWidgetItem *molItem = new QListWidgetItem(name, ui->molList);
+        molItem->setCheckState(Qt::Unchecked);
+        ui->molList->addItem(molItem);
+    }
+}
+
+std::vector<bool> NewGroupDialog::molecules() const
+{
+    std::vector<bool> selectedMolecules;
+
+    for (int i = 0; i < ui->molList->count(); i++)
+        if (ui->molList->item(i)->checkState() == Qt::Checked)
+            selectedMolecules.push_back(true);
+        else
+            selectedMolecules.push_back(false);
+
+    return selectedMolecules;
 }
 
 std::string NewGroupDialog::groupName() const

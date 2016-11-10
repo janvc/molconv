@@ -131,6 +131,8 @@ void setBasisDialog::prepare(molconv::moleculePtr &molecule)
         on_basisCharge_toggled(true);
         on_basisAtoms_toggled(false);
         break;
+    case molconv::kStandardOrientation:
+        break;
     case molconv::kVectorsFromAtoms:
         on_basisCharge_toggled(false);
         ui->basisAtoms->setChecked(true);

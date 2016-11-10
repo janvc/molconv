@@ -53,21 +53,18 @@ namespace molconv {
      * Which molecule-specific vector is parallel in a stack
      */
     enum parallelVector {
-        kInertVSmall,
-        kInertVMedium,
-        kInertVLarge,
-        kCovarVSmall,
-        kCovarVMedium,
-        kCovarVLarge,
-        kAtoms
+        xVec,
+        yVec,
+        zVec,
+        Atoms
     };
 
     // pointer to a molecule
     class Molecule;
-    class abstractMoleculeGroup;
+    class MoleculeGroup;
     class System;
     typedef boost::shared_ptr<Molecule> moleculePtr;
-    typedef boost::shared_ptr<abstractMoleculeGroup> groupPtr;
+    typedef boost::shared_ptr<MoleculeGroup> groupPtr;
     typedef boost::shared_ptr<System> sysPtr;
 } // namespace molconv
 

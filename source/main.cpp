@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Molconv");
     QCoreApplication::setOrganizationDomain("molconv.org");
     QCoreApplication::setApplicationName("molconv");
+    QCoreApplication::setApplicationVersion("0.1");
 
     QApplication app(argc, argv);
     MolconvWindow the_window;

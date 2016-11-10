@@ -60,8 +60,8 @@ public:
     molconv::sysPtr m_system;
 
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
-    std::vector<molconv::MoleculeStack *> m_MoleculeStacks;
     std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
+    std::vector<GraphicsAxisItem *> m_GraphicsAxisVector;
 
     molconv::moleculePtr activeMolecule;
 };
@@ -104,6 +104,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
 
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
+
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);
 
@@ -119,8 +121,13 @@ MolconvWindow::~MolconvWindow()
 void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
     d->m_system->addMolecule(temp_mol);
+
     d->m_GraphicsItemVector.push_back(new chemkit::GraphicsMoleculeItem(d->m_system->getMolecule(d->m_system->nMolecules() - 1).get()));
     ui->molconv_graphicsview->addItem(d->m_GraphicsItemVector.back());
+
+    d->m_GraphicsAxisVector.push_back(new GraphicsAxisItem(temp_mol->internalOriginPosition(), temp_mol->internalBasisVectors()));
+    ui->molconv_graphicsview->addItem(d->m_GraphicsAxisVector.back());
+
     ui->molconv_graphicsview->update();
 
     d->m_ListOfMolecules->insertMolecule(temp_mol);
@@ -147,8 +154,10 @@ void MolconvWindow::removeActiveMolecule()
         }
 
     ui->molconv_graphicsview->deleteItem(activeItem);
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisVector.at(index));
 
     d->m_GraphicsItemVector.erase(d->m_GraphicsItemVector.begin() + index);
+    d->m_GraphicsAxisVector.erase(d->m_GraphicsAxisVector.begin() + index);
 
     d->m_system->removeMolecule(d->m_system->MoleculeIndex(d->activeMolecule));
 
@@ -176,11 +185,13 @@ void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state
     if (state)
     {
         d->m_GraphicsItemVector.at(moleculeIndex)->show();
+        d->m_GraphicsAxisVector.at(moleculeIndex)->show();
         ui->molconv_graphicsview->update();
     }
     else
     {
         d->m_GraphicsItemVector.at(moleculeIndex)->hide();
+        d->m_GraphicsAxisVector.at(moleculeIndex)->hide();
         ui->molconv_graphicsview->update();
     }
 }
@@ -219,50 +230,48 @@ void MolconvWindow::openFile(const QString &fileName, const bool showList)
 
     if (molFile->moleculeCount() > 0)
     {
-        if (molFile->moleculeCount())
+        std::vector<bool> molsToOpen(molFile->moleculeCount(), true);
+
+        if (molFile->moleculeCount() > 1 && showList)
         {
-            std::vector<bool> molsToOpen(molFile->moleculeCount(), true);
-
-            if (showList)
-            {
-                MultiMolDialog *mmd = new MultiMolDialog(this);
-                mmd->createMoleculeList(molFile);
-                mmd->setWindowTitle("Open '" + fileName.split("/").last() + "'");
-                mmd->exec();
-                molsToOpen = mmd->molecules();
-                delete mmd;
-            }
-
-            int index = 0;
-            for (int i = 0; i < molsToOpen.size(); i++)
-            {
-                if (molsToOpen.at(i))
-                {
-                    index++;
-                    chemkit::Molecule tempCMol = *molFile->molecule(i);
-                    molconv::moleculePtr tempMol;
-                    tempMol.reset(new molconv::Molecule(tempCMol));
-                    tempMol->setOrigin(d->m_ImportDialog->getOrigin());
-                    tempMol->setBasis(d->m_ImportDialog->getBasis());
-                    QString tempName;
-                    if (d->m_ImportDialog->getMoleculeName().isEmpty())
-                        tempName = fileName.split("/").last().split(".").first() + "_" + QString::number(index);
-                    else
-                        tempName = d->m_ImportDialog->getMoleculeName() + "_" + QString::number(index);
-                    tempMol->setName(tempName.toStdString());
-                    add_molecule(tempMol);
-                }
-            }
+            MultiMolDialog *mmd = new MultiMolDialog(this);
+            mmd->createMoleculeList(molFile);
+            mmd->setWindowTitle("Open '" + fileName.split("/").last() + "'");
+            mmd->exec();
+            molsToOpen = mmd->molecules();
+            delete mmd;
         }
-        else
+
+        int index = 0;
+        for (int i = 0; i < int(molsToOpen.size()); i++)
         {
-            chemkit::Molecule tempCMol = *molFile->molecule();
-            molconv::moleculePtr tempMol;
-            tempMol.reset(new molconv::Molecule(tempCMol));
-            tempMol->setOrigin(molconv::kCenterOfMass);
-            tempMol->setBasis(molconv::kInertiaVectors);
-            tempMol->setName(fileName.split("/").last().split(".").first().toStdString());
-            add_molecule(tempMol);
+            if (molsToOpen.at(i))
+            {
+                index++;
+                chemkit::Molecule tempCMol = *molFile->molecule(i);
+                molconv::moleculePtr tempMol;
+                tempMol.reset(new molconv::Molecule(tempCMol));
+                tempMol->setOrigin(d->m_ImportDialog->getOrigin(), d->m_ImportDialog->getOriginAtom());
+                tempMol->setBasis(d->m_ImportDialog->getBasis(),
+                                  d->m_ImportDialog->getBasisAtoms()[0],
+                                  d->m_ImportDialog->getBasisAtoms()[1],
+                                  d->m_ImportDialog->getBasisAtoms()[2]);
+                QString tempName;
+                if (d->m_ImportDialog->getMoleculeName().isEmpty())
+                {
+                    tempName = fileName.split("/").last().split(".").first();
+                    if (molsToOpen.size() > 1)
+                        tempName += "_" + QString::number(index);
+                }
+                else
+                {
+                    tempName = d->m_ImportDialog->getMoleculeName();
+                    if (molsToOpen.size() > 1)
+                        tempName += "_" + QString::number(index);
+                }
+                tempMol->setName(tempName.toStdString());
+                add_molecule(tempMol);
+            }
         }
     }
     else
@@ -307,15 +316,35 @@ void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
 void MolconvWindow::newGroup()
 {
     std::string newGroupName = d->m_NewGroupDialog->groupName();
+    std::vector<bool> members = d->m_NewGroupDialog->molecules();
 
     if (d->m_NewGroupDialog->isStack())
-        d->m_MoleculeStacks.push_back(new molconv::MoleculeStack(newGroupName));
+    {
+        d->m_MoleculeGroups.push_back(new molconv::MoleculeStack(newGroupName));
+        for (int i = 0; i < nMolecules(); i++)
+            if (members.at(i))
+            {
+                static_cast<molconv::MoleculeStack*>(d->m_MoleculeGroups.back())->addMolecule(getMol(i), molconv::zVec);
+                getMol(i)->addToGroup(d->m_MoleculeGroups.back());
+            }
+    }
     else
+    {
         d->m_MoleculeGroups.push_back(new molconv::MoleculeGroup(newGroupName));
+        for (int i = 0; i < nMolecules(); i++)
+            if (members.at(i))
+            {
+                d->m_MoleculeGroups.back()->addMolecule(getMol(i));
+                getMol(i)->addToGroup(d->m_MoleculeGroups.back());
+            }
+    }
+
+    d->m_ListOfMolecules->insertGroup(d->m_MoleculeGroups.back());
 }
 
 void MolconvWindow::startNewGroupDialog()
 {
+    d->m_NewGroupDialog->createMoleculeList();
     d->m_NewGroupDialog->setModal(true);
     d->m_NewGroupDialog->exec();
 }
@@ -366,4 +395,13 @@ void MolconvWindow::changeOriginBasis()
     d->activeMolecule->setBasisList(newBasisList);
 
     d->m_MoleculeSettings->setMolecule(d->activeMolecule);
+    updateAxes();
+}
+
+void MolconvWindow::updateAxes()
+{
+    int index = d->m_system->MoleculeIndex(d->activeMolecule);
+
+    d->m_GraphicsAxisVector.at(index)->setPosition(d->activeMolecule->internalOriginPosition());
+    d->m_GraphicsAxisVector.at(index)->setVectors(d->activeMolecule->internalBasisVectors());
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 - 2016 Jan von Cosel and Sebastian Lenz
+ * Copyright 2014-2016 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -19,36 +19,24 @@
  */
 
 
-#ifndef NEWGROUPDIALOG_H
-#define NEWGROUPDIALOG_H
+#ifndef MOLECULEITEM_H
+#define MOLECULEITEM_H
 
-#include <QDialog>
+#include<QList>
+#include<QVector>
+#include<QVariant>
+#include<QStandardItem>
+#include "molecule.h"
 
-class NewGroupDialogPrivate;
 
-namespace Ui
+class MoleculeItem : public QStandardItem
 {
-    class NewGroupDialog;
-}
-
-class NewGroupDialog : public QDialog
-{
-    Q_OBJECT
-
 public:
-    explicit NewGroupDialog(QWidget *parent = 0);
-    ~NewGroupDialog();
-
-    void createMoleculeList();
-    std::vector<bool> molecules() const;
-
-public slots:
-    std::string groupName() const;
-    bool isStack() const;
+    MoleculeItem(molconv::moleculePtr &newMol, int column);
+    molconv::moleculePtr Molecule() const;
 
 private:
-    NewGroupDialogPrivate *d;
-    Ui::NewGroupDialog *ui;
+    molconv::moleculePtr m_molecule;
 };
 
-#endif // NEWGROUPDIALOG_H
+#endif // MOLECULEITEM_H

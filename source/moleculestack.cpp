@@ -46,7 +46,7 @@ namespace molconv
     /// the default constructor of MoleculeStack
     ///
     MoleculeStack::MoleculeStack()
-        : abstractMoleculeGroup()
+        : MoleculeGroup()
         , d(new MoleculeStackPrivate)
     {
     }
@@ -58,7 +58,7 @@ namespace molconv
     /// this constructor takes the name of the stack as an argument
     ///
     MoleculeStack::MoleculeStack(const std::string &name)
-        : abstractMoleculeGroup(name)
+        : MoleculeGroup(name)
         , d(new MoleculeStackPrivate)
     {
     }
@@ -79,9 +79,10 @@ namespace molconv
     ///
     /// add a new molecule to the stack
     ///
-    void MoleculeStack::addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector, const size_t atom1, const size_t atom2)
+    void MoleculeStack::addMolecule(const moleculePtr &newMolecule, const parallelVector newVector,
+                                    const size_t atom1, const size_t atom2)
     {
-        abstractMoleculeGroup::addMolecule(newMolecule);
+        MoleculeGroup::addMolecule(newMolecule);
 
         std::array<int,2> theAtoms;
         theAtoms[0] = atom1;
@@ -91,18 +92,13 @@ namespace molconv
         d->parallelAtoms.push_back(theAtoms);
 
         // if this is NOT the first molecule, align the new molecule to the reference molecule:
-        if (nMolecules() != 1)
+        if (nMolecules() > 1)
         {
-            double distance = Distance(ReferenceMolecule(), nMolecules() - 1);
-            Eigen::Vector3d newPosition = getMolecule(ReferenceMolecule())->internalOriginPosition() + getParallelVectorDirection(ReferenceMolecule()) * distance;
-            Eigen::Vector3d translationVector = newPosition - getMolecule(nMolecules() - 1)->internalOriginPosition();
-
-            getMolecule(nMolecules() - 1)->translate(translationVector);
-
-            Eigen::Vector3d rotationAxis = getParallelVectorDirection(ReferenceMolecule()).cross(getParallelVectorDirection(nMolecules() - 1));
-            double rotAngle = acos(getParallelVectorDirection(ReferenceMolecule()).dot(getParallelVectorDirection(nMolecules() - 1)));
-
-            getMolecule(nMolecules() - 1)->rotate(rotationAxis, rotAngle);
+            double distance = Distance(RefMol(), nMolecules() - 1);
+            Eigen::Vector3d newPos = getMol(RefMol())->internalOriginPosition()
+                                   + getParallelVectorDirection(RefMol()) * distance;
+            getMol(nMolecules() - 1)->moveFromParas(newPos(0), newPos(1), newPos(2),
+                                                    getMol(RefMol())->phi(), getMol(RefMol())->theta(), getMol(RefMol())->psi());
         }
     }
 
@@ -112,7 +108,7 @@ namespace molconv
     ///
     /// return the index of the reference molecule of the stack
     ///
-    size_t MoleculeStack::ReferenceMolecule() const
+    size_t MoleculeStack::RefMol() const
     {
         return d->referenceMolecule;
     }
@@ -157,27 +153,18 @@ namespace molconv
 
         switch (getParallelVector(index))
         {
-        case kInertVSmall:
-            vector = getMolecule(index)->inertiaEigenvectors().col(0);
+        case xVec:
+            vector = getMol(index)->internalBasisVectors().col(0);
             break;
-        case kInertVMedium:
-            vector = getMolecule(index)->inertiaEigenvectors().col(1);
+        case yVec:
+            vector = getMol(index)->internalBasisVectors().col(1);
             break;
-        case kInertVLarge:
-            vector = getMolecule(index)->inertiaEigenvectors().col(2);
+        case zVec:
+            vector = getMol(index)->internalBasisVectors().col(2);
             break;
-        case kCovarVSmall:
-            vector = getMolecule(index)->covarianceEigenvectors().col(0);
-            break;
-        case kCovarVMedium:
-            vector = getMolecule(index)->covarianceEigenvectors().col(1);
-            break;
-        case kCovarVLarge:
-            vector = getMolecule(index)->covarianceEigenvectors().col(2);
-            break;
-        case kAtoms:
-            Eigen::Vector3d firstAtom = getMolecule(index)->atom(d->parallelAtoms[index][0])->position();
-            Eigen::Vector3d secondAtom = getMolecule(index)->atom(d->parallelAtoms[index][1])->position();
+        case Atoms:
+            Eigen::Vector3d firstAtom = getMol(index)->atom(d->parallelAtoms[index][0])->position();
+            Eigen::Vector3d secondAtom = getMol(index)->atom(d->parallelAtoms[index][1])->position();
             vector = secondAtom - firstAtom;
             vector.normalize();
             break;
@@ -220,9 +207,9 @@ namespace molconv
     {
         checkIndex(index);
 
-        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
+        Eigen::Vector3d distance = DistanceVector(RefMol(), index);
 
-        Eigen::Vector3d zBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(2);
+        Eigen::Vector3d zBasis = getMol(RefMol())->internalBasisVectors().col(2);
 
         return distance.dot(zBasis);
     }
@@ -236,8 +223,8 @@ namespace molconv
     ///
     double MoleculeStack::RotationAngle(const size_t index) const
     {
-        Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
-        Eigen::Vector3d indexVector = getMolecule(index)->internalBasisVectors().col(0);
+        Eigen::Vector3d xBasis = getMol(RefMol())->internalBasisVectors().col(0);
+        Eigen::Vector3d indexVector = getMol(index)->internalBasisVectors().col(0);
 
         xBasis.normalize();
         indexVector.normalize();
@@ -257,9 +244,9 @@ namespace molconv
     ///
     double MoleculeStack::LateralX(const size_t index) const
     {
-        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
+        Eigen::Vector3d distance = DistanceVector(RefMol(), index);
 
-        Eigen::Vector3d xBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0);
+        Eigen::Vector3d xBasis = getMol(RefMol())->internalBasisVectors().col(0);
 
         return distance.dot(xBasis);
     }
@@ -274,9 +261,9 @@ namespace molconv
     ///
     double MoleculeStack::LateralY(const size_t index) const
     {
-        Eigen::Vector3d distance = DistanceVector(ReferenceMolecule(), index);
+        Eigen::Vector3d distance = DistanceVector(RefMol(), index);
 
-        Eigen::Vector3d yBasis = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1);
+        Eigen::Vector3d yBasis = getMol(RefMol())->internalBasisVectors().col(1);
 
         return distance.dot(yBasis);
     }
@@ -293,10 +280,9 @@ namespace molconv
     {
         double currentDistance = PlaneDistance(index);
 
-        Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(2)
+        Eigen::Vector3d shiftVector = getMol(RefMol())->internalBasisVectors().col(2)
                                     * (newDistance - currentDistance);
 
-        getMolecule(index)->translate(shiftVector);
     }
 
     ///
@@ -311,9 +297,8 @@ namespace molconv
     {
         double shiftAngle = newAngle - RotationAngle(index);
 
-        Eigen::Vector3d rotationAxis = getMolecule(index)->internalBasisVectors().col(2);
+        Eigen::Vector3d rotationAxis = getMol(index)->internalBasisVectors().col(2);
 
-        getMolecule(index)->rotate(rotationAxis, shiftAngle);
     }
 
     ///
@@ -328,9 +313,8 @@ namespace molconv
     {
         double shiftX = newX - LateralX(index);
 
-        Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(0) * shiftX;
+        Eigen::Vector3d shiftVector = getMol(RefMol())->internalBasisVectors().col(0) * shiftX;
 
-        getMolecule(index)->translate(shiftVector);
     }
 
     ///
@@ -345,9 +329,8 @@ namespace molconv
     {
         double shiftY = newY - LateralY(index);
 
-        Eigen::Vector3d shiftVector = getMolecule(ReferenceMolecule())->internalBasisVectors().col(1) * shiftY;
+        Eigen::Vector3d shiftVector = getMol(RefMol())->internalBasisVectors().col(1) * shiftY;
 
-        getMolecule(index)->translate(shiftVector);
     }
 
 

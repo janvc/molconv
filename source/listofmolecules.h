@@ -22,9 +22,8 @@
 #define MOLECULE_LIST_H_
 
 #include<QtWidgets>
-#include "molecule.h"
-#include "abstractmoleculegroup.h"
-#include "types.h"
+#include<QStandardItemModel>
+#include "moleculegroup.h"
 
 namespace Ui
 {
@@ -42,6 +41,7 @@ class ListOfMolecules : public QDockWidget
         ~ListOfMolecules();
 
         void insertMolecule(molconv::moleculePtr &newMol);
+        void insertGroup(molconv::MoleculeGroup *newGroup);
         void removeCurrentMolecule();
         molconv::moleculePtr currentMolecule();
 
@@ -50,11 +50,12 @@ signals:
 
 private slots:
         void toggleMolecule(const QModelIndex &index);
-        void on_system_tree_clicked(const QModelIndex &index);
+        void changeSelectedItem(const QModelIndex &current);
 
 private:
         Ui::ListOfMolecules *ui;
         MolconvWindow *m_window;
+        QStandardItemModel *m_model;
 };
 
 

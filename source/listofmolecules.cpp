@@ -20,29 +20,35 @@
 
 
 #include "listofmolecules.h"
+#include "moleculeitem.h"
+#include "groupitem.h"
 #include "ui_listofmolecules.h"
 
 #include "molconv_window.h"
-#include "moleculelistmodel.h"
 
 
 ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::ListOfMolecules)
+    , m_window(window)
+    , m_model(new QStandardItemModel)
 {
     ui->setupUi(this);
-    m_window = window;
 
     QStringList headers;
     headers << tr("Show") << tr("Name") << tr("Number of atoms") << tr("Formula") << tr("Mass");
 
-    MoleculeListModel *model = new MoleculeListModel(headers);
+    ui->system_tree->setModel(m_model);
 
-    ui->system_tree->setModel(model);
-    for (int column = 0; column < model->columnCount(); column++)
+    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(toggleMolecule(QModelIndex)));
+    connect(ui->system_tree->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+                                                SLOT(changeSelectedItem(QModelIndex)));
+
+    m_model->setHorizontalHeaderLabels(headers);
+
+    for (int column = 0; column < m_model->columnCount(); column++)
         ui->system_tree->resizeColumnToContents(column);
 
-    connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(toggleMolecule(QModelIndex)));
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -52,74 +58,87 @@ ListOfMolecules::~ListOfMolecules()
 
 void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
 {
-    QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
-    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
-
-    if (!model->insertRow(index.row() + 1, index.parent()))
-        return;
-
-    for (int column = 0; column < model->columnCount(index.parent()); column++)
+    QList<QStandardItem *> items;
+    for (int i = 0; i < 5; i++)
     {
-        QModelIndex child = model->index(index.row() + 1, column, index.parent());
-
-        switch (column)
+        QStandardItem *item = new MoleculeItem(newMol, i);
+        if (i == 0)
         {
-        case 1:
-            model->setData(child, QVariant(QString::fromStdString(newMol->name())), Qt::EditRole);
-            break;
-        case 2:
-            model->setData(child, QVariant(int(newMol->size())), Qt::EditRole);
-            break;
-        case 3:
-            model->setData(child, QVariant(QString::fromStdString(newMol->formula())), Qt::EditRole);
-            break;
-        case 4:
-            model->setData(child, QVariant(newMol->mass()), Qt::EditRole);
-            break;
-        default:
-            break;
+            item->setCheckable(true);
+            item->setCheckState(Qt::Checked);
         }
+        items << item;
     }
 
-    QModelIndex child = model->index(index.row() + 1, 1, index.parent());
-    model->setMolecule(child, newMol);
+    m_model->appendRow(items);
+    for (int column = 0; column < m_model->columnCount(); column++)
+        ui->system_tree->resizeColumnToContents(column);
 
-    for (int column = 0; column < model->columnCount(); column++)
+    newMol->setListItem(static_cast<MoleculeItem *>(items.front()));
+
+    // automatically select the molecule that was last added to make it clear, which
+    // molecule is currently being edited
+    ui->system_tree->selectionModel()->select(items.front()->index(),
+                                  QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+}
+
+void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
+{
+    QList<QStandardItem *> items;
+    for (int i = 0; i < 2; i++)
+    {
+        QStandardItem *item = new GroupItem(newGroup, i);
+        if (i == 0)
+        {
+            item->setCheckable(true);
+            item->setCheckState(Qt::Checked);
+        }
+        items << item;
+    }
+    m_model->appendRow(items);
+
+    for (int i = 0; i < newGroup->nMolecules(); i++)
+    {
+        QStandardItem *current = newGroup->getMol(i)->listItem();
+        QList<QStandardItem *> rowItems = m_model->invisibleRootItem()->takeRow(current->row());
+        items.front()->appendRow(rowItems);
+    }
+
+    for (int column = 0; column < m_model->columnCount(); column++)
         ui->system_tree->resizeColumnToContents(column);
 }
 
 void ListOfMolecules::removeCurrentMolecule()
 {
     QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
-    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
-    model->removeRow(index.row(), index.parent());
+    m_model->removeRow(index.row(), index.parent());
 }
 
 molconv::moleculePtr ListOfMolecules::currentMolecule()
 {
     QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
-    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
+    MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(index));
 
-    return model->Molecule(index);
+    return currentItem->Molecule();
 }
 
 void ListOfMolecules::toggleMolecule(const QModelIndex &index)
 {
-    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
-    bool state;
+    MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(index));
 
-    if (model->isChecked(index))
+    bool state = false;
+    if (currentItem->checkState() == Qt::Checked)
         state = true;
-    else
-        state = false;
 
-    m_window->toggle_molecule(model->Molecule(index), state);
+    m_window->toggle_molecule(currentItem->Molecule(), state);
 }
 
-void ListOfMolecules::on_system_tree_clicked(const QModelIndex &index)
+void ListOfMolecules::changeSelectedItem(const QModelIndex &current)
 {
-    MoleculeListModel *model = static_cast<MoleculeListModel*>(ui->system_tree->model());
-
-    molconv::moleculePtr tmp = model->Molecule(index);
-    emit newMoleculeSelected(tmp);
+    if (current.column() > 0)
+    {
+        MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(current));
+        molconv::moleculePtr tmp = currentItem->Molecule();
+        emit newMoleculeSelected(tmp);
+    }
 }

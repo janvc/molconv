@@ -59,8 +59,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(SOURCES
     main.cpp
     molconv_window.cpp
-    moleculelistitem.cpp
-    moleculelistmodel.cpp
+    moleculeitem.cpp
+    groupitem.cpp
     newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
@@ -69,9 +69,9 @@ set(SOURCES
     multimoldialog.cpp
     setbasisdialog.cpp
     graphicsaxisitem.cpp
+    graphicsselectionitem.cpp
     molecule.cpp
     system.cpp
-    abstractmoleculegroup.cpp
     moleculegroup.cpp
     moleculestack.cpp
     aboutdialog.cpp

@@ -23,28 +23,32 @@
 #define MOLECULESTACK_H
 
 #include<boost/scoped_ptr.hpp>
-#include"abstractmoleculegroup.h"
+#include"moleculegroup.h"
 #include"types.h"
 
 namespace molconv
 {
     class MoleculeStackPrivate;
 
-    class MoleculeStack : public abstractMoleculeGroup
+    class MoleculeStack : public MoleculeGroup
     {
     public:
         MoleculeStack();
         MoleculeStack(const std::string &name);
         ~MoleculeStack();
 
-        void addMolecule(const boost::shared_ptr<Molecule> newMolecule, const parallelVector newVector, const size_t atom1 = 0, const size_t atom2 = 0);
+        void addMolecule(const moleculePtr &newMolecule,
+                         const parallelVector newVector = zVec,
+                         const size_t atom1 = 0,
+                         const size_t atom2 = 0);
 
-        size_t ReferenceMolecule() const;
+        size_t RefMol() const;
         void setReferenceMolecule(const size_t newRef);
 
         parallelVector getParallelVector(const size_t index) const;
         Eigen::Vector3d getParallelVectorDirection(const size_t index) const;
-        void setParallelVector(const size_t index, const parallelVector newVector, const size_t atom1 = 0, const size_t atom2 = 0);
+        void setParallelVector(const size_t index, const parallelVector newVector,
+                               const size_t atom1 = 0, const size_t atom2 = 0);
 
         double PlaneDistance(const size_t index) const;
         double LineDistance(const size_t index) const;
