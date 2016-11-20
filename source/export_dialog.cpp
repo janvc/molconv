@@ -26,6 +26,7 @@ ExportDialog::ExportDialog(QWidget *parent)
     , ui(new Ui::ExportDialog)
 {
     ui->setupUi(this);
+    ui->molExportList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     theWindow = static_cast<MolconvWindow*>(parent);
 }
@@ -44,7 +45,7 @@ void ExportDialog::createMoleculeList()
     {
         std::string currentName = theWindow->getMol(i)->name();
         QListWidgetItem *molItem = new QListWidgetItem(QString::fromStdString(currentName), ui->molExportList);
-        molItem->setCheckState(Qt::Unchecked);
+        molItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         ui->molExportList->addItem(molItem);
     }
 }
@@ -103,12 +104,8 @@ void ExportDialog::on_buttonBox_accepted()
     }
 }
 
-void ExportDialog::on_selectAllBox_stateChanged()
+void ExportDialog::on_selectAllBox_clicked(bool checked)
 {
-    if (ui->selectAllBox->checkState() == Qt::Checked)
-        for (int i = 0; i < ui->molExportList->count(); i++)
-            ui->molExportList->item(i)->setCheckState(Qt::Checked);
-    else
-        for (int i = 0; i < ui->molExportList->count(); i++)
-            ui->molExportList->item(i)->setCheckState(Qt::Unchecked);
+    for (int i = 0; i < ui->molExportList->count(); i++)
+        ui->molExportList->item(i)->setSelected(checked);
 }

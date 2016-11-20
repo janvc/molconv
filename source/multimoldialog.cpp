@@ -30,6 +30,7 @@ MultiMolDialog::MultiMolDialog(QWidget *parent)
     , ui(new Ui::MultiMolDialog)
 {
     ui->setupUi(this);
+    ui->molList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 MultiMolDialog::~MultiMolDialog()
@@ -40,25 +41,15 @@ MultiMolDialog::~MultiMolDialog()
 void MultiMolDialog::createMoleculeList(chemkit::MoleculeFile *file)
 {
     ui->molList->clear();
-    ui->selectAllBox->setCheckState(Qt::Checked);
+    ui->selectAllBox->setCheckState(Qt::Unchecked);
 
     for (int i = 0; i < int(file->moleculeCount()); i++)
     {
         QString name = QString::number(i + 1);
         QListWidgetItem *molItem = new QListWidgetItem(name.rightJustified(4, ' '), ui->molList);
-        molItem->setCheckState(Qt::Checked);
+        molItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
         ui->molList->addItem(molItem);
     }
-}
-
-void MultiMolDialog::on_selectAllBox_stateChanged()
-{
-    if (ui->selectAllBox->checkState() == Qt::Checked)
-        for (int i = 0; i < ui->molList->count(); i++)
-            ui->molList->item(i)->setCheckState(Qt::Checked);
-    else
-        for (int i = 0; i < ui->molList->count(); i++)
-            ui->molList->item(i)->setCheckState(Qt::Unchecked);
 }
 
 std::vector<bool> MultiMolDialog::molecules() const
@@ -66,7 +57,7 @@ std::vector<bool> MultiMolDialog::molecules() const
     std::vector<bool> isChosen;
 
     for (int i = 0; i < ui->molList->count(); i++)
-        if (ui->molList->item(i)->checkState() == Qt::Checked)
+        if (ui->molList->item(i)->isSelected())
             isChosen.push_back(true);
         else
             isChosen.push_back(false);
@@ -77,5 +68,11 @@ std::vector<bool> MultiMolDialog::molecules() const
 void MultiMolDialog::on_MultiMolDialog_rejected()
 {
     for (int i = 0; i < ui->molList->count(); i++)
-        ui->molList->item(i)->setCheckState(Qt::Unchecked);
+        ui->molList->item(i)->setSelected(false);
+}
+
+void MultiMolDialog::on_selectAllBox_clicked(bool checked)
+{
+    for (int i = 0; i < ui->molList->count(); i++)
+        ui->molList->item(i)->setSelected(checked);
 }

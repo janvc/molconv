@@ -42,8 +42,8 @@ public:
     std::vector<bool> molecules() const;
 
 private slots:
-    void on_selectAllBox_stateChanged();
     void on_MultiMolDialog_rejected();
+    void on_selectAllBox_clicked(bool checked);
 
 private:
     Ui::MultiMolDialog *ui;

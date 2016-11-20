@@ -43,8 +43,7 @@ public:
 
 private slots:
     void on_buttonBox_accepted();
-
-    void on_selectAllBox_stateChanged();
+    void on_selectAllBox_clicked(bool checked);
 
 private:
     Ui::ExportDialog *ui;
