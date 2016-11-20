@@ -30,6 +30,7 @@ class GroupItem : public QStandardItem
 public:
     GroupItem(molconv::MoleculeGroup *newGroup, int column);
     molconv::MoleculeGroup *Group() const;
+    int type() const;
 
 private:
     molconv::MoleculeGroup *m_group;

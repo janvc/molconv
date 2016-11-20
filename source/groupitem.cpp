@@ -38,3 +38,8 @@ molconv::MoleculeGroup *GroupItem::Group() const
 {
     return m_group;
 }
+
+int GroupItem::type() const
+{
+    return QStandardItem::UserType + 2;
+}

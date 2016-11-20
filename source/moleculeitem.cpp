@@ -49,3 +49,8 @@ molconv::moleculePtr MoleculeItem::Molecule() const
     return m_molecule;
 }
 
+int MoleculeItem::type() const
+{
+    return QStandardItem::UserType + 1;
+}
+

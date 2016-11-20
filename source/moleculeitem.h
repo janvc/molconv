@@ -34,6 +34,7 @@ class MoleculeItem : public QStandardItem
 public:
     MoleculeItem(molconv::moleculePtr &newMol, int column);
     molconv::moleculePtr Molecule() const;
+    int type() const;
 
 private:
     molconv::moleculePtr m_molecule;
