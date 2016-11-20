@@ -104,6 +104,22 @@ namespace molconv
     }
 
     ///
+    /// \brief MoleculeGroup::mass
+    /// \return
+    ///
+    /// calculate the total mass of the group's molecules
+    ///
+    double MoleculeGroup::mass() const
+    {
+        double totalMass = 0.0;
+
+        for (int i = 0; i < nMolecules(); i++)
+            totalMass += getMol(i)->mass();
+
+        return totalMass;
+    }
+
+    ///
     /// \brief abstractMoleculeGroup::Distance
     /// \param firstMolecule
     /// \param secondMolecule

@@ -31,6 +31,14 @@ GroupItem::GroupItem(molconv::MoleculeGroup *newGroup, int column)
     case 1:
         setText(QString::fromStdString(m_group->name()));
         break;
+    case 2:
+        setText(QString::number(m_group->nAtoms()));
+        break;
+    case 3:
+        setText("---");
+        break;
+    case 4:
+        setText(QString::number(m_group->mass()));
     }
 }
 

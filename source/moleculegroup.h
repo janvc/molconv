@@ -41,6 +41,7 @@ namespace molconv
         size_t nAtoms() const;
         size_t nGroups() const;
         std::string name() const;
+        double mass() const;
 
         double Distance(const size_t firstMolecule, const size_t secondMolecule) const;
         Eigen::Vector3d DistanceVector(const size_t firstMolecule, const size_t secondMolecule) const;

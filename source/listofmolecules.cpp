@@ -85,7 +85,7 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
 void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
 {
     QList<QStandardItem *> items;
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < 5; i++)
     {
         QStandardItem *item = new GroupItem(newGroup, i);
         if (i == 0)
@@ -103,6 +103,8 @@ void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
         QList<QStandardItem *> rowItems = m_model->invisibleRootItem()->takeRow(current->row());
         items.front()->appendRow(rowItems);
     }
+
+    ui->system_tree->expand(items.front()->index());
 
     for (int column = 0; column < m_model->columnCount(); column++)
         ui->system_tree->resizeColumnToContents(column);
@@ -124,21 +126,47 @@ molconv::moleculePtr ListOfMolecules::currentMolecule()
 
 void ListOfMolecules::toggleMolecule(const QModelIndex &index)
 {
-    MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(index));
-
     bool state = false;
-    if (currentItem->checkState() == Qt::Checked)
+    if (m_model->itemFromIndex(index)->checkState() == Qt::Checked)
         state = true;
 
-    m_window->toggle_molecule(currentItem->Molecule(), state);
+    // find out if the item that was clicked is a molecule or a group:
+    if (m_model->itemFromIndex(index)->type() == QStandardItem::UserType + 1)       // molecule
+    {
+        MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(index));
+        m_window->toggle_molecule(currentItem->Molecule(), state);
+    }
+    else if (m_model->itemFromIndex(index)->type() == QStandardItem::UserType + 2)  // group
+    {
+        GroupItem *currentItem = static_cast<GroupItem *>(m_model->itemFromIndex(index));
+        molconv::MoleculeGroup *currentGroup = currentItem->Group();
+
+        for (int i = 0; i < currentGroup->nMolecules(); i++)
+        {
+            m_window->toggle_molecule(currentGroup->getMol(i), state);
+            if (state)
+                currentItem->child(i)->setCheckState(Qt::Checked);
+            else
+                currentItem->child(i)->setCheckState(Qt::Unchecked);
+        }
+    }
 }
 
 void ListOfMolecules::changeSelectedItem(const QModelIndex &current)
 {
     if (current.column() > 0)
     {
-        MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(current));
-        molconv::moleculePtr tmp = currentItem->Molecule();
-        emit newMoleculeSelected(tmp);
+        if (m_model->itemFromIndex(current)->type() == QStandardItem::UserType + 1)         // molecule
+        {
+            MoleculeItem *currentItem = static_cast<MoleculeItem *>(m_model->itemFromIndex(current));
+            molconv::moleculePtr tmp = currentItem->Molecule();
+            emit newMoleculeSelected(tmp);
+        }
+        else if (m_model->itemFromIndex(current)->type() == QStandardItem::UserType + 2)    // group
+        {
+            GroupItem *currentItem = static_cast<GroupItem *>(m_model->itemFromIndex(current));
+            molconv::MoleculeGroup *tmp = currentItem->Group();
+            emit newGroupSelected(tmp);
+        }
     }
 }

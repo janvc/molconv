@@ -46,6 +46,9 @@ public slots:
     std::string groupName() const;
     bool isStack() const;
 
+private slots:
+    void on_selAllCheckBox_clicked(bool checked);
+
 private:
     NewGroupDialogPrivate *d;
     Ui::NewGroupDialog *ui;

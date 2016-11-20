@@ -41,6 +41,7 @@ NewGroupDialog::NewGroupDialog(QWidget *parent)
     , ui(new Ui::NewGroupDialog)
 {
     ui->setupUi(this);
+    ui->molList->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 NewGroupDialog::~NewGroupDialog()
@@ -58,7 +59,7 @@ void NewGroupDialog::createMoleculeList()
     {
         QString name = QString::fromStdString(d->m_window->getMol(i)->name());
         QListWidgetItem *molItem = new QListWidgetItem(name, ui->molList);
-        molItem->setCheckState(Qt::Unchecked);
+        molItem->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         ui->molList->addItem(molItem);
     }
 }
@@ -68,7 +69,7 @@ std::vector<bool> NewGroupDialog::molecules() const
     std::vector<bool> selectedMolecules;
 
     for (int i = 0; i < ui->molList->count(); i++)
-        if (ui->molList->item(i)->checkState() == Qt::Checked)
+        if (ui->molList->item(i)->isSelected())
             selectedMolecules.push_back(true);
         else
             selectedMolecules.push_back(false);
@@ -87,4 +88,10 @@ bool NewGroupDialog::isStack() const
         return true;
     else
         return false;
+}
+
+void NewGroupDialog::on_selAllCheckBox_clicked(bool checked)
+{
+    for (int i = 0; i < ui->molList->count(); i++)
+        ui->molList->item(i)->setSelected(checked);
 }

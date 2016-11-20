@@ -30,6 +30,10 @@ namespace Ui
     class MoleculeSettings;
 }
 
+namespace molconv
+{
+    class MoleculeGroup;
+}
 class MolconvWindow;
 
 class MoleculeSettings : public QDockWidget
@@ -44,6 +48,7 @@ public:
 
 public slots:
     void setMolecule(molconv::moleculePtr &newMolecule);
+    void setGroup(molconv::MoleculeGroup *newGroup);
 
 signals:
     void basisChanged() const;

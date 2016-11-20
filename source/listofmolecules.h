@@ -47,6 +47,7 @@ class ListOfMolecules : public QDockWidget
 
 signals:
         void newMoleculeSelected(molconv::moleculePtr &newMol);
+        void newGroupSelected(molconv::MoleculeGroup *newGroup);
 
 private slots:
         void toggleMolecule(const QModelIndex &index);
