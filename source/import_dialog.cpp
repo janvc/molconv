@@ -99,9 +99,10 @@ void ImportDialog::openFile()
 void ImportDialog::on_filedialog_clicked()
 {
     QStringList filters;
-    filters << "Molecule Files (*.cml *.log *.mdl *.mol *.mol2 *.out *.pdb *.sd *.sdf *.xyz)"
+    filters << "Molecule Files (*.cml *.fchk *.log *.mdl *.mol *.mol2 *.out *.pdb *.sd *.sdf *.xyz)"
             << "CML (*.cml)"
             << "Gaussian output (*.log *.out)"
+            << "Gaussian formatted checkpoint (*.fchk)"
             << "MDL Mol (*.mdl *.mol *.sd *.sdf)"
             << "Mol2 (*.mol2)"
             << "PDB (*.pdb)"
