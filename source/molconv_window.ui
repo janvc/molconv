@@ -55,6 +55,8 @@
     <addaction name="actionProperties"/>
     <addaction name="actionAdd_To_Group"/>
     <addaction name="actionRemove"/>
+    <addaction name="actionReset_Coordinates"/>
+    <addaction name="actionZero_Coordinates"/>
    </widget>
    <widget class="QMenu" name="menuGroup">
     <property name="title">
@@ -95,6 +97,8 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSet_internal_basis"/>
    <addaction name="actionReset"/>
+   <addaction name="actionReset_Coordinates"/>
+   <addaction name="actionZero_Coordinates"/>
   </widget>
   <action name="actionOpen">
    <property name="enabled">
@@ -178,6 +182,24 @@
   <action name="actionRemove">
    <property name="text">
     <string>Remove Active</string>
+   </property>
+  </action>
+  <action name="actionReset_Coordinates">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/reset_coords.png</normaloff>:/icons/reset_coords.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset Coordinates</string>
+   </property>
+  </action>
+  <action name="actionZero_Coordinates">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/zero_coords.png</normaloff>:/icons/zero_coords.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zero Coordinates</string>
    </property>
   </action>
  </widget>

@@ -4,5 +4,7 @@
         <file>icons/molconv.png</file>
         <file>icons/setbasis.png</file>
         <file>icons/centerview.png</file>
+        <file>icons/reset_coords.png</file>
+        <file>icons/zero_coords.png</file>
     </qresource>
 </RCC>

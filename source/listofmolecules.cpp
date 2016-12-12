@@ -35,6 +35,8 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 {
     ui->setupUi(this);
 
+    setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+
     QStringList headers;
     headers << tr("Show") << tr("Name") << tr("Number of atoms") << tr("Formula") << tr("Mass");
 
@@ -88,6 +90,7 @@ void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
     for (int i = 0; i < 5; i++)
     {
         QStandardItem *item = new GroupItem(newGroup, i);
+        item->setBackground(QBrush(QColor(255,128,128)));
         if (i == 0)
         {
             item->setCheckable(true);

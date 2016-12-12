@@ -77,6 +77,8 @@ public slots:
     void updateAxes();
 
 private slots:
+    void resetCoords();
+    void zeroCoords();
 
 signals:
     void new_molecule(molconv::moleculePtr &newMolecule);

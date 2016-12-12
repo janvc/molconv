@@ -42,6 +42,7 @@ namespace molconv
             m_originFactor = 0.0;
             m_originAtoms.fill(0);
             m_basisAtoms.fill(0);
+            m_originalBasis.fill(0.0);
             m_listItem = 0;
             m_phi = 0;
             m_theta = 0;
@@ -68,6 +69,8 @@ namespace molconv
 
         std::vector<bool> m_originList;
         std::vector<bool> m_basisList;
+
+        std::array<double,6> m_originalBasis;
     };
 
     ///
@@ -284,6 +287,17 @@ namespace molconv
     double Molecule::psi() const
     {
         return d->m_psi;
+    }
+
+    ///
+    /// \brief Molecule::origBasis
+    /// \return
+    ///
+    /// return the original values of the molecule's internal orientation
+    ///
+    std::array<double,6> Molecule::origBasis() const
+    {
+        return d->m_originalBasis;
     }
 
     ///
@@ -932,6 +946,13 @@ namespace molconv
         // remove any internal coordinates that might already exist:
         d->m_intPos.clear();
 
+        // set the original values of the internal basis
+        d->m_originalBasis[0] = internalOriginPosition()(0);
+        d->m_originalBasis[1] = internalOriginPosition()(1);
+        d->m_originalBasis[2] = internalOriginPosition()(2);
+        d->m_originalBasis[3] = d->m_phi;
+        d->m_originalBasis[4] = d->m_theta;
+        d->m_originalBasis[5] = d->m_psi;
 
         // determine the internal atomic positions:
         Eigen::Matrix3d rotMat = internalBasisVectors();

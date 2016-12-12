@@ -61,6 +61,7 @@ namespace molconv
         double phi() const;
         double theta() const;
         double psi() const;
+        std::array<double,6> origBasis() const;
 
         Eigen::Vector3d center() const;
         Eigen::Vector3d centerOfMass() const;

@@ -45,6 +45,7 @@ public:
     ~MoleculeSettings();
 
     molconv::moleculePtr molecule() const;
+    void moveMolecule(const double x, const double y, const double z, const double phi, const double theta, const double psi);
 
 public slots:
     void setMolecule(molconv::moleculePtr &newMolecule);

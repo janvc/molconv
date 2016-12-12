@@ -95,6 +95,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
 
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
+    connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
+    connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -405,4 +407,15 @@ void MolconvWindow::updateAxes()
 
     d->m_GraphicsAxisVector.at(index)->setPosition(d->activeMolecule->internalOriginPosition());
     d->m_GraphicsAxisVector.at(index)->setVectors(d->activeMolecule->internalBasisVectors());
+}
+
+void MolconvWindow::resetCoords()
+{
+    std::array<double,6> oB = d->activeMolecule->origBasis();
+    d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
+}
+
+void MolconvWindow::zeroCoords()
+{
+    d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }

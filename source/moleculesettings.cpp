@@ -34,6 +34,8 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
 
     ui->setupUi(this);
 
+    setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+
     setBoundaries();
 
     connect(main_window, SIGNAL(new_molecule(molconv::moleculePtr&)), SLOT(setMolecule(molconv::moleculePtr&)));
@@ -161,6 +163,16 @@ void MoleculeSettings::updateMolecule()
 molconv::moleculePtr MoleculeSettings::molecule() const
 {
     return m_molecule;
+}
+
+void MoleculeSettings::moveMolecule(const double x, const double y, const double z, const double phi, const double theta, const double psi)
+{
+    ui->xSpinBox->setValue(x);
+    ui->ySpinBox->setValue(y);
+    ui->zSpinBox->setValue(z);
+    ui->phiSpinBox->setValue(phi * rad2deg);
+    ui->thetaSpinBox->setValue(theta * rad2deg);
+    ui->psiSpinBox->setValue(psi * rad2deg);
 }
 
 void MoleculeSettings::setMolecule(molconv::moleculePtr &newMolecule)
