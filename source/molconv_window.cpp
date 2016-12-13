@@ -38,6 +38,7 @@
 #include "graphicsaxisitem.h"
 #include "aboutdialog.h"
 #include "multimoldialog.h"
+#include "moleculeinfo.h"
 
 
 class MolconvWindowPrivate
@@ -56,6 +57,7 @@ public:
 
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
+    MoleculeInfo *m_MoleculeInfo;
 
     molconv::sysPtr m_system;
 
@@ -100,14 +102,18 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
+    d->m_MoleculeInfo = new MoleculeInfo(this);
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
+    addDockWidget(Qt::RightDockWidgetArea, d->m_MoleculeInfo);
 
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeInfo, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
 
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), d->m_MoleculeInfo, SLOT(updateAtomPos()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);
