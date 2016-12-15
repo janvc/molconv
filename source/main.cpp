@@ -29,7 +29,20 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     MolconvWindow the_window;
-    the_window.showMaximized();
+
+    QSettings settings;
+
+    if (settings.value("startMaximized").toBool())
+        the_window.showMaximized();
+    else
+    {
+        int windowWidth = settings.contains("winW") ? settings.value("winW").toInt() : 640;
+        int windowHeight = settings.contains("winH") ? settings.value("winH").toInt() : 480;
+        int xPos = settings.contains("xPos") ? settings.value("xPos").toInt() : 0;
+        int yPos = settings.contains("yPos") ? settings.value("yPos").toInt() : 0;
+        the_window.setGeometry(xPos, yPos, windowWidth, windowHeight);
+        the_window.show();
+    }
 
     if (app.arguments().size() > 1)
         for (int i = 1; i < app.arguments().size(); i++)

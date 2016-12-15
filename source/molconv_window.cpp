@@ -86,6 +86,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
+    connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
 
@@ -207,6 +208,13 @@ void MolconvWindow::about()
 
 void MolconvWindow::quit()
 {
+    QSettings settings;
+    settings.setValue("startMaximized", QVariant(isMaximized()));
+    settings.setValue("winW", width());
+    settings.setValue("winH", height());
+    settings.setValue("xPos", x());
+    settings.setValue("yPos", y());
+
     qApp->quit();
 }
 
