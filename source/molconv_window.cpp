@@ -20,6 +20,7 @@
 
 #include<iostream>
 #include<QMessageBox>
+#include<Eigen/Eigenvalues>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
@@ -97,6 +98,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
     connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
     connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
+    connect(ui->actionAlign, SIGNAL(triggered()), SLOT(minimizeRMSD()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -418,4 +420,107 @@ void MolconvWindow::resetCoords()
 void MolconvWindow::zeroCoords()
 {
     d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
+void MolconvWindow::minimizeRMSD()
+{
+    molconv::moleculePtr refMol = d->m_system->getMolecule(0);
+    molconv::moleculePtr otherMol = d->m_system->getMolecule(1);
+
+    if (refMol->size() != otherMol->size())
+        return;
+
+    int Natoms = refMol->size();
+
+    Eigen::MatrixXd Xr = Eigen::MatrixXd::Zero(3,Natoms);
+    Eigen::MatrixXd Xo = Eigen::MatrixXd::Zero(3,Natoms);
+
+    for (int i = 0; i < Natoms; i++)
+    {
+        Xr.col(i) = refMol->atom(i)->position();
+        Xo.col(i) = otherMol->atom(i)->position();
+    }
+
+    Eigen::Vector3d Cr = Eigen::Vector3d::Zero();
+    Eigen::Vector3d Co = Eigen::Vector3d::Zero();
+    for (int i = 0; i < Natoms; i++)
+    {
+        Cr += Xr.col(i);
+        Co += Xo.col(i);
+    }
+    Cr /= double(Natoms);
+    Co /= double(Natoms);
+
+    std::cout << "center of reference molecule:\n";
+    std::cout << Cr << std::endl;
+    std::cout << "center of other molecule:\n";
+    std::cout << Co << std::endl;
+
+
+    for (int i = 0; i < Natoms; i++)
+    {
+        Xr.col(i) -= Cr;
+        Xo.col(i) -= Co;
+    }
+
+    double rmsd0 = 0.0;
+    for (int i = 0; i < Natoms; i++)
+        for (int j = 0; j < 3; j++)
+            rmsd0 += std::abs(double(Xo(j,i)) - double(Xr(j,i))) * std::abs(double(Xo(j,i)) - double(Xr(j,i)));
+
+    std::cout << "RMSD before: " << rmsd0 << std::endl;
+
+    Eigen::Matrix3d corr = Xo * Xr.transpose();
+
+    std::cout << "correlation matrix:\n";
+    std::cout << corr << std::endl;
+
+    Eigen::Matrix4d F = Eigen::Matrix4d::Zero();
+    F(0,0) =  corr(0,0) + corr(1,1) + corr(2,2);
+    F(1,1) =  corr(0,0) - corr(1,1) - corr(2,2);
+    F(2,2) = -corr(0,0) + corr(1,1) - corr(2,2);
+    F(3,3) = -corr(0,0) - corr(1,1) + corr(2,2);
+    F(0,1) =  corr(1,2) - corr(2,1);
+    F(0,2) =  corr(2,0) - corr(0,2);
+    F(0,3) =  corr(0,1) - corr(1,0);
+    F(1,2) =  corr(0,1) + corr(1,0);
+    F(1,3) =  corr(0,2) + corr(2,0);
+    F(2,3) =  corr(1,2) + corr(2,1);
+    F(1,0) = F(0,1);
+    F(2,0) = F(0,2);
+    F(3,0) = F(0,3);
+    F(2,1) = F(1,2);
+    F(3,1) = F(1,3);
+    F(3,2) = F(2,3);
+
+    std::cout << "quaternion matrix:\n";
+    std::cout << F << std::endl;
+
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix4d> Feig(F);
+
+    Eigen::Vector4d Feval = Feig.eigenvalues();
+    Eigen::Matrix4d Fevec = Feig.eigenvectors();
+
+    std::cout << "eigenvalues:\n";
+    std::cout << Feval << std::endl;
+    std::cout << "eigenvectors:\n";
+    std::cout << Fevec << std::endl;
+
+    Eigen::Vector4d lQuart = std::abs(double(Feval(0))) > std::abs(double(Feval(3))) ? Fevec.block(0, 0, 4, 1) : Fevec.block(0, 3, 4, 1);
+
+    Eigen::Matrix3d rotmat = Eigen::Matrix3d::Zero();
+    rotmat(0,0) = lQuart(0) * lQuart(0) + lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) + lQuart(3) * lQuart(3);
+    rotmat(1,1) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
+    rotmat(2,2) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) + lQuart(3) * lQuart(3);
+    rotmat(0,1) = 2.0 * (lQuart(1) * lQuart(2) - lQuart(0) * lQuart(3));
+    rotmat(0,2) = 2.0 * (lQuart(1) * lQuart(3) + lQuart(0) * lQuart(2));
+    rotmat(1,2) = 2.0 * (lQuart(2) * lQuart(3) - lQuart(0) * lQuart(1));
+    rotmat(1,0) = 2.0 * (lQuart(1) * lQuart(2) + lQuart(0) * lQuart(3));
+    rotmat(2,0) = 2.0 * (lQuart(1) * lQuart(3) - lQuart(0) * lQuart(2));
+    rotmat(2,1) = 2.0 * (lQuart(2) * lQuart(3) + lQuart(0) * lQuart(1));
+
+    std::cout << "rotation matrix:\n";
+    std::cout << rotmat << std::endl;
+    std::cout << "metric of rotmat:\n";
+    std::cout << rotmat.transpose() * rotmat << std::endl;
 }
