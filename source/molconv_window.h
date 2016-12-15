@@ -75,6 +75,7 @@ public slots:
     void updateActiveMolecule(molconv::moleculePtr &newActive);
     void changeOriginBasis();
     void updateAxes();
+    void writeMolconvFile();
 
 private slots:
     void resetCoords();

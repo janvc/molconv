@@ -31,9 +31,10 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 # We are using Qt5 for the GUI
-find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools REQUIRED)
+find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools Xml REQUIRED)
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5OpenGL_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
 
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIRS})
@@ -124,4 +125,4 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g3 -ggdb -O0 -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Wextra")
 
 add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
-target_link_libraries(molconv Qt5::Widgets Qt5::OpenGL ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})
+target_link_libraries(molconv Qt5::Widgets Qt5::OpenGL Qt5::Xml ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})

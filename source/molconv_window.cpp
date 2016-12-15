@@ -20,6 +20,7 @@
 
 #include<iostream>
 #include<QMessageBox>
+#include<QDomDocument>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
@@ -97,6 +98,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
     connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
     connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
+
+    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(writeMolconvFile()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -418,4 +421,24 @@ void MolconvWindow::resetCoords()
 void MolconvWindow::zeroCoords()
 {
     d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+}
+
+void MolconvWindow::writeMolconvFile()
+{
+    QDomDocument testDoc;
+    QDomElement root = testDoc.createElement("System");
+    testDoc.appendChild(root);
+
+    for (int i = 0; i < 5; i++)
+    {
+        QDomElement node = testDoc.createElement("Book");
+        node.setAttribute("Name", " My Book " + QString::number(i));
+        node.setAttribute("ID", QString::number(i));
+        root.appendChild(node);
+    }
+    QFile file("test.mcv");
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream stream(&file);
+    stream << testDoc.toString();
+    file.close();
 }
