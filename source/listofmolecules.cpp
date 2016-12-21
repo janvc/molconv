@@ -82,6 +82,7 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
     // molecule is currently being edited
     ui->system_tree->selectionModel()->select(items.front()->index(),
                                   QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    ui->system_tree->setCurrentIndex(items.front()->index());
 }
 
 void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)

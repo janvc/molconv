@@ -83,21 +83,27 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
+    connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
+
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
-    connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
-
     connect(ui->actionSet_internal_basis, SIGNAL(triggered()), SLOT(startBasisDialog()));
-    ui->actionSet_internal_basis->setEnabled(false);
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateActiveMolecule()));
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
-
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
     connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
     connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
+
+    ui->actionSet_internal_basis->setEnabled(false);
+    ui->actionDuplicate->setEnabled(false);
+    ui->actionRemove->setEnabled(false);
+    ui->actionZero_Coordinates->setEnabled(false);
+    ui->actionReset_Coordinates->setEnabled(false);
+    ui->actionProperties->setEnabled(false);
+    ui->actionAdd_To_Group->setEnabled(false);
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -138,6 +144,12 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     d->activeMolecule = temp_mol;
 
     ui->actionSet_internal_basis->setEnabled(true);
+    ui->actionDuplicate->setEnabled(true);
+    ui->actionRemove->setEnabled(true);
+    ui->actionZero_Coordinates->setEnabled(true);
+    ui->actionReset_Coordinates->setEnabled(true);
+    ui->actionProperties->setEnabled(true);
+    ui->actionAdd_To_Group->setEnabled(true);
 
     emit new_molecule(temp_mol);
 }
@@ -167,7 +179,21 @@ void MolconvWindow::removeActiveMolecule()
 
     ui->molconv_graphicsview->update();
 
-    d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
+    if (d->m_system->nMolecules() > 0)
+        d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
+    else
+    {
+        d->activeMolecule = 0;
+
+        // disable all the actions that need a molecule to operate on:
+        ui->actionSet_internal_basis->setEnabled(false);
+        ui->actionDuplicate->setEnabled(false);
+        ui->actionRemove->setEnabled(false);
+        ui->actionZero_Coordinates->setEnabled(false);
+        ui->actionReset_Coordinates->setEnabled(false);
+        ui->actionProperties->setEnabled(false);
+        ui->actionAdd_To_Group->setEnabled(false);
+    }
 
     if (d->activeMolecule)
         d->m_MoleculeSettings->setMolecule(d->activeMolecule);
