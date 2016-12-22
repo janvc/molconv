@@ -56,7 +56,7 @@ void ExportDialog::on_buttonBox_accepted()
     molconv::moleculePtr dummyMol(new molconv::Molecule);
     for (int i = 0; i < ui->molExportList->count(); i++)
     {
-        if (ui->molExportList->item(i)->checkState() == Qt::Checked)
+        if (ui->molExportList->item(i)->isSelected())
         {
             for (int j = 0; j < int(theWindow->getMol(i)->size()); j++)
             {
