@@ -301,6 +301,17 @@ namespace molconv
     }
 
     ///
+    /// \brief Molecule::internalPositions
+    /// \return
+    ///
+    /// return the internal positions of the atoms
+    ///
+    std::vector<Eigen::Vector3d> Molecule::internalPositions() const
+    {
+        return d->m_intPos;
+    }
+
+    ///
     /// \brief Molecule::center
     /// \return
     ///

@@ -84,6 +84,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
+    connect(ui->actionSave, SIGNAL(triggered()), SLOT(writeMolconvFile()));
+
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
@@ -99,7 +101,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
     connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
 
-    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(writeMolconvFile()));
+//    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(writeMolconvFile()));
 
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -426,15 +428,44 @@ void MolconvWindow::zeroCoords()
 void MolconvWindow::writeMolconvFile()
 {
     QDomDocument testDoc;
-    QDomElement root = testDoc.createElement("System");
-    testDoc.appendChild(root);
+    QDomElement system = testDoc.createElement("System");
+    testDoc.appendChild(system);
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < d->m_system->nMolecules(); i++)
     {
-        QDomElement node = testDoc.createElement("Book");
-        node.setAttribute("Name", " My Book " + QString::number(i));
-        node.setAttribute("ID", QString::number(i));
-        root.appendChild(node);
+        QDomElement molecule = testDoc.createElement("Molecule");
+        molecule.setAttribute("Name", QString::fromStdString(d->m_system->getMolecule(i)->name()));
+
+        QDomElement origin = testDoc.createElement("Origin");
+        origin.setAttribute("Type", QString::number(d->m_system->getMolecule(i)->internalOrigin()));
+        origin.setAttribute("vecX", QString::number(d->m_system->getMolecule(i)->internalOriginPosition()(0), 'e', 16));
+        origin.setAttribute("vecY", QString::number(d->m_system->getMolecule(i)->internalOriginPosition()(1), 'e', 16));
+        origin.setAttribute("vecZ", QString::number(d->m_system->getMolecule(i)->internalOriginPosition()(2), 'e', 16));
+        molecule.appendChild(origin);
+
+        QDomElement basis = testDoc.createElement("Basis");
+        basis.setAttribute("Type", QString::number(d->m_system->getMolecule(i)->internalBasis()));
+        basis.setAttribute("matXX", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(0, 0), 'e', 16));
+        basis.setAttribute("matXY", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(0, 1), 'e', 16));
+        basis.setAttribute("matXZ", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(0, 2), 'e', 16));
+        basis.setAttribute("matYX", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(1, 0), 'e', 16));
+        basis.setAttribute("matYY", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(1, 1), 'e', 16));
+        basis.setAttribute("matYZ", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(1, 2), 'e', 16));
+        basis.setAttribute("matZX", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(2, 0), 'e', 16));
+        basis.setAttribute("matZY", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(2, 1), 'e', 16));
+        basis.setAttribute("matZZ", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(2, 2), 'e', 16));
+        molecule.appendChild(basis);
+
+        for (int j = 0; j < d->m_system->getMolecule(i)->size(); j++)
+        {
+            QDomElement atom = testDoc.createElement("Atom");
+            atom.setAttribute("Ele", QString::fromStdString(d->m_system->getMolecule(i)->atom(j)->element().symbol()));
+            atom.setAttribute("X", QString::number(d->m_system->getMolecule(i)->internalPositions()[j](0), 'e', 16));
+            atom.setAttribute("Y", QString::number(d->m_system->getMolecule(i)->internalPositions()[j](1), 'e', 16));
+            atom.setAttribute("Z", QString::number(d->m_system->getMolecule(i)->internalPositions()[j](2), 'e', 16));
+            molecule.appendChild(atom);
+        }
+        system.appendChild(molecule);
     }
     QFile file("test.mcv");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
