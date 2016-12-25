@@ -89,8 +89,8 @@ namespace molconv
         void setBasisList(const std::vector<bool> &newList);
 
         // manage groups
-        void addToGroup(MoleculeGroup *newGroup);
-        MoleculeGroup *group() const;
+        void addToGroup(groupPtr newGroup);
+        groupPtr group() const;
 
         MoleculeItem *listItem() const;
         void setListItem(MoleculeItem *newItem);

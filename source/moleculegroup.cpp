@@ -29,6 +29,12 @@ namespace molconv
     class MoleculeGroupPrivate
     {
     public:
+        MoleculeGroupPrivate()
+        {
+            m_groupname = "";
+            m_parentgroup = 0;
+        }
+
         std::string m_groupname;
         std::vector<boost::shared_ptr<Molecule> > m_molecules;
         std::vector<groupPtr> m_groups;
@@ -43,7 +49,6 @@ namespace molconv
     MoleculeGroup::MoleculeGroup()
         : d(new MoleculeGroupPrivate)
     {
-        d->m_groupname = "";
     }
 
 

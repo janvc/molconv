@@ -62,7 +62,7 @@ namespace molconv
         std::array<int,2> m_originAtoms;
         std::array<int,3> m_basisAtoms;
 
-        MoleculeGroup *m_group;
+        groupPtr m_group;
         std::vector<Eigen::Vector3d> m_intPos;
 
         MoleculeItem *m_listItem;
@@ -610,7 +610,7 @@ namespace molconv
     ///
     /// This method adds a poiner to the new group, that the molecule now belongs to
     ///
-    void Molecule::addToGroup(MoleculeGroup *newGroup)
+    void Molecule::addToGroup(groupPtr newGroup)
     {
         d->m_group = newGroup;
     }
@@ -621,7 +621,7 @@ namespace molconv
     ///
     /// This method returns the group that this molecule belongs to
     ///
-    MoleculeGroup *Molecule::group() const
+    groupPtr Molecule::group() const
     {
         return d->m_group;
     }

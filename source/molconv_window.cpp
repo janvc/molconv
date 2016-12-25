@@ -326,28 +326,49 @@ void MolconvWindow::newGroup()
     std::string newGroupName = d->m_NewGroupDialog->groupName();
     std::vector<bool> members = d->m_NewGroupDialog->molecules();
 
+    // check if we have nested groups i.e. the molecules we are adding to this group are
+    // already members of THE SAME existing group. That group will then be the parent of
+    // this group.
+    std::vector<molconv::groupPtr> groups;
+    for (int i = 0; i < nMolecules(); i++)
+        if (members.at(i))
+            groups.push_back(getMol(i)->group());
+
+    for (int i = 0; i < groups.size(); i++)
+        if (groups[i] != groups[0])
+        {
+            QMessageBox::critical(this, "Error", "All molecules must be part of the same group");
+            return;
+        }
+
     if (d->m_NewGroupDialog->isStack())
     {
-        d->m_MoleculeGroups.push_back(new molconv::MoleculeStack(newGroupName));
+        molconv::groupPtr newStack(new molconv::MoleculeStack(newGroupName));
+
         for (int i = 0; i < nMolecules(); i++)
             if (members.at(i))
             {
-                static_cast<molconv::MoleculeStack*>(d->m_MoleculeGroups.back())->addMolecule(getMol(i), molconv::zVec);
-                getMol(i)->addToGroup(d->m_MoleculeGroups.back());
+                static_cast<molconv::MoleculeStack*>(newStack.get())->addMolecule(getMol(i), molconv::zVec);
+                getMol(i)->addToGroup(newStack);
             }
+        newStack->addToGroup(groups[0]);
+        d->m_system->addGroup(newStack);
+        d->m_ListOfMolecules->insertGroup(newStack.get());
     }
     else
     {
-        d->m_MoleculeGroups.push_back(new molconv::MoleculeGroup(newGroupName));
+        molconv::groupPtr newGroup(new molconv::MoleculeGroup(newGroupName));
+
         for (int i = 0; i < nMolecules(); i++)
             if (members.at(i))
             {
-                d->m_MoleculeGroups.back()->addMolecule(getMol(i));
-                getMol(i)->addToGroup(d->m_MoleculeGroups.back());
+                newGroup->addMolecule(getMol(i));
+                getMol(i)->addToGroup(newGroup);
             }
+        newGroup->addToGroup(groups[0]);
+        d->m_system->addGroup(newGroup);
+        d->m_ListOfMolecules->insertGroup(newGroup.get());
     }
-
-    d->m_ListOfMolecules->insertGroup(d->m_MoleculeGroups.back());
 }
 
 void MolconvWindow::startNewGroupDialog()
