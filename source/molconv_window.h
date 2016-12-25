@@ -76,6 +76,7 @@ public slots:
     void changeOriginBasis();
     void updateAxes();
     void writeMolconvFile();
+    void readMolconvFile();
 
 private slots:
     void resetCoords();

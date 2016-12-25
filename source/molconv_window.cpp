@@ -452,13 +452,32 @@ void MolconvWindow::writeMolconvFile()
     QDomElement system = testDoc.createElement("System");
     testDoc.appendChild(system);
 
-    for (int i = 0; i < d->m_system->nMolecules(); i++)
+    for (int i = 0; i < int(d->m_system->nMolecules()); i++)
     {
         QDomElement molecule = testDoc.createElement("Molecule");
         molecule.setAttribute("Name", QString::fromStdString(d->m_system->getMolecule(i)->name()));
 
         QDomElement origin = testDoc.createElement("Origin");
         origin.setAttribute("Type", QString::number(d->m_system->getMolecule(i)->internalOrigin()));
+        origin.setAttribute("Factor", QString::number(d->m_system->getMolecule(i)->internalOriginFactor()));
+
+        QString atomString = QString::number(d->m_system->getMolecule(i)->internalOriginAtoms()[0]);
+        atomString += ",";
+        atomString += QString::number(d->m_system->getMolecule(i)->internalOriginAtoms()[1]);
+        origin.setAttribute("Atoms", atomString);
+
+        QString originList;
+        for (int k = 0; k < int(d->m_system->getMolecule(i)->size() - 1); k++)
+            if (d->m_system->getMolecule(i)->originList()[k])
+                originList += "T,";
+            else
+                originList += "F,";
+        if (d->m_system->getMolecule(i)->originList()[d->m_system->getMolecule(i)->size() - 1])
+            originList += "T";
+        else
+            originList += "F";
+        origin.setAttribute("originList", originList);
+
         origin.setAttribute("vecX", QString::number(d->m_system->getMolecule(i)->internalOriginPosition()(0), 'e', 16));
         origin.setAttribute("vecY", QString::number(d->m_system->getMolecule(i)->internalOriginPosition()(1), 'e', 16));
         origin.setAttribute("vecZ", QString::number(d->m_system->getMolecule(i)->internalOriginPosition()(2), 'e', 16));
@@ -466,18 +485,32 @@ void MolconvWindow::writeMolconvFile()
 
         QDomElement basis = testDoc.createElement("Basis");
         basis.setAttribute("Type", QString::number(d->m_system->getMolecule(i)->internalBasis()));
-        basis.setAttribute("matXX", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(0, 0), 'e', 16));
-        basis.setAttribute("matXY", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(0, 1), 'e', 16));
-        basis.setAttribute("matXZ", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(0, 2), 'e', 16));
-        basis.setAttribute("matYX", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(1, 0), 'e', 16));
-        basis.setAttribute("matYY", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(1, 1), 'e', 16));
-        basis.setAttribute("matYZ", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(1, 2), 'e', 16));
-        basis.setAttribute("matZX", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(2, 0), 'e', 16));
-        basis.setAttribute("matZY", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(2, 1), 'e', 16));
-        basis.setAttribute("matZZ", QString::number(d->m_system->getMolecule(i)->internalBasisVectors()(2, 2), 'e', 16));
+
+        atomString = QString::number(d->m_system->getMolecule(i)->internalBasisAtoms()[0]);
+        atomString += ",";
+        atomString += QString::number(d->m_system->getMolecule(i)->internalBasisAtoms()[1]);
+        atomString += ",";
+        atomString += QString::number(d->m_system->getMolecule(i)->internalBasisAtoms()[2]);
+        basis.setAttribute("Atoms", atomString);
+
+        QString basisList;
+        for (int k = 0; k < int(d->m_system->getMolecule(i)->size() - 1); k++)
+            if (d->m_system->getMolecule(i)->basisList()[k])
+                basisList += "T,";
+            else
+                basisList += "F,";
+        if (d->m_system->getMolecule(i)->basisList()[d->m_system->getMolecule(i)->size() - 1])
+            basisList += "T";
+        else
+            basisList += "F";
+        basis.setAttribute("basisList", basisList);
+
+        basis.setAttribute("phi", QString::number(d->m_system->getMolecule(i)->phi(), 'e', 16));
+        basis.setAttribute("theta", QString::number(d->m_system->getMolecule(i)->theta(), 'e', 16));
+        basis.setAttribute("psi", QString::number(d->m_system->getMolecule(i)->psi(), 'e', 16));
         molecule.appendChild(basis);
 
-        for (int j = 0; j < d->m_system->getMolecule(i)->size(); j++)
+        for (int j = 0; j < int(d->m_system->getMolecule(i)->size()); j++)
         {
             QDomElement atom = testDoc.createElement("Atom");
             atom.setAttribute("Ele", QString::fromStdString(d->m_system->getMolecule(i)->atom(j)->element().symbol()));
@@ -488,9 +521,37 @@ void MolconvWindow::writeMolconvFile()
         }
         system.appendChild(molecule);
     }
+
+    for (int i = 0; i < int(d->m_system->nGroups()); i++)
+    {
+        QDomElement group = testDoc.createElement("Group");
+        group.setAttribute("Name", QString::fromStdString(d->m_system->getGroup(i)->name()));
+        group.setAttribute("Parent", QString::number(d->m_system->GroupIndex(d->m_system->getGroup(i)->parent())));
+
+        QString memberString;
+        for (int j = 0; j < int(d->m_system->getGroup(i)->nMolecules() - 1); j++)
+        {
+            memberString += QString::number(d->m_system->MoleculeIndex(d->m_system->getGroup(i)->getMol(j)));
+            memberString += ",";
+        }
+        memberString += QString::number(d->m_system->MoleculeIndex(d->m_system->getGroup(i)->getMol(d->m_system->getGroup(i)->nMolecules() - 1)));
+        group.setAttribute("Members", memberString);
+
+        system.appendChild(group);
+    }
+
     QFile file("test.mcv");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream stream(&file);
     stream << testDoc.toString();
     file.close();
+}
+
+void MolconvWindow::readMolconvFile()
+{
+    QFile file("test.mcv");
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    QDomDocument testDoc;
+    testDoc.setContent(&file);
 }
