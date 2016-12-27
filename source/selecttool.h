@@ -18,30 +18,29 @@
  *
  */
 
-#ifndef GRAPHICSSELECTIONITEM_H
-#define GRAPHICSSELECTIONITEM_H
+#ifndef SELECTTOOL_H
+#define SELECTTOOL_H
 
 #ifndef Q_MOC_RUN
-    #include <chemkit/graphicsitem.h>
+    #include <chemkit/graphicstool.h>
 #endif
 
-#include "types.h"
+class SelectToolPrivate;
+class MolconvWindow;
 
-class GraphicsSelectionItemPrivate;
-
-class GraphicsSelectionItem : public chemkit::GraphicsItem
+class SelectTool : public chemkit::GraphicsTool
 {
 public:
-    GraphicsSelectionItem();
-    ~GraphicsSelectionItem();
+    SelectTool(MolconvWindow *newWindow);
+    ~SelectTool();
 
-    void addPosition(const Eigen::Vector3d &newPosition);
-    void clear();
-
-    void paint(chemkit::GraphicsPainter *painter);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event);
 
 private:
-    boost::shared_ptr<GraphicsSelectionItemPrivate> d;
+    boost::shared_ptr<SelectToolPrivate> d;
 };
 
-#endif // GRAPHICSSELECTIONITEM_H
+#endif // SELECTTOOL_H

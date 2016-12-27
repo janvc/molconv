@@ -76,10 +76,19 @@
     </property>
     <addaction name="actionReset"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionNavigate"/>
+    <addaction name="actionSelect"/>
+    <addaction name="actionSettings"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuMolecule"/>
    <addaction name="menuGroup"/>
    <addaction name="menuView"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -99,6 +108,8 @@
    <addaction name="actionReset"/>
    <addaction name="actionReset_Coordinates"/>
    <addaction name="actionZero_Coordinates"/>
+   <addaction name="actionNavigate"/>
+   <addaction name="actionSelect"/>
   </widget>
   <action name="actionOpen">
    <property name="enabled">
@@ -200,6 +211,32 @@
    </property>
    <property name="text">
     <string>Zero Coordinates</string>
+   </property>
+  </action>
+  <action name="actionNavigate">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/navigate.png</normaloff>:/icons/navigate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Navigate</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="icon">
+    <iconset resource="molconv.qrc">
+     <normaloff>:/icons/select.png</normaloff>:/icons/select.png</iconset>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Settings</string>
    </property>
   </action>
  </widget>

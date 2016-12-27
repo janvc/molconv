@@ -18,30 +18,28 @@
  *
  */
 
-#ifndef GRAPHICSSELECTIONITEM_H
-#define GRAPHICSSELECTIONITEM_H
+#ifndef NAVIGATETOOL_H
+#define NAVIGATETOOL_H
 
 #ifndef Q_MOC_RUN
-    #include <chemkit/graphicsitem.h>
+    #include <chemkit/graphicstool.h>
 #endif
 
-#include "types.h"
+class NavigateToolPrivate;
 
-class GraphicsSelectionItemPrivate;
-
-class GraphicsSelectionItem : public chemkit::GraphicsItem
+class NavigateTool : public chemkit::GraphicsTool
 {
 public:
-    GraphicsSelectionItem();
-    ~GraphicsSelectionItem();
+    NavigateTool();
+    ~NavigateTool();
 
-    void addPosition(const Eigen::Vector3d &newPosition);
-    void clear();
-
-    void paint(chemkit::GraphicsPainter *painter);
+    virtual void mousePressEvent(QMouseEvent *event);
+    virtual void mouseMoveEvent(QMouseEvent *event);
+    virtual void mouseReleaseEvent(QMouseEvent *event);
+    virtual void wheelEvent(QWheelEvent *event);
 
 private:
-    boost::shared_ptr<GraphicsSelectionItemPrivate> d;
+    boost::shared_ptr<NavigateToolPrivate> d;
 };
 
-#endif // GRAPHICSSELECTIONITEM_H
+#endif // NAVIGATETOOL_H

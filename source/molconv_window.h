@@ -56,6 +56,9 @@ public:
 
     void openFile(const QString &fileName, const bool showList = false);
 
+    void selectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
+    void deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
+
 public slots:
     void openFile();
     void saveFile();
@@ -75,15 +78,21 @@ public slots:
     void updateActiveMolecule(molconv::moleculePtr &newActive);
     void changeOriginBasis();
     void updateAxes();
+    void useNavigateTool();
+    void useSelectTool();
 
 private slots:
     void resetCoords();
     void zeroCoords();
+    void updateSelection();
 
 signals:
     void new_molecule(molconv::moleculePtr &newMolecule);
 
 private:
+    void selectAtom(chemkit::Atom *theAtom);
+    void deselectAtom(chemkit::Atom *theAtom);
+
     MolconvWindowPrivate *d;
     Ui::MolconvWindow *ui;
 };

@@ -36,8 +36,11 @@
 #include "export_dialog.h"
 #include "setbasisdialog.h"
 #include "graphicsaxisitem.h"
+#include "graphicsselectionitem.h"
 #include "aboutdialog.h"
 #include "multimoldialog.h"
+#include "navigatetool.h"
+#include "selecttool.h"
 
 
 class MolconvWindowPrivate
@@ -62,8 +65,13 @@ public:
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
     std::vector<GraphicsAxisItem *> m_GraphicsAxisVector;
+    std::vector<chemkit::Atom *> m_SelectedAtoms;
 
+    GraphicsSelectionItem *m_Selection;
     molconv::moleculePtr activeMolecule;
+
+    boost::shared_ptr<NavigateTool> m_navigatetool;
+    boost::shared_ptr<SelectTool> m_selecttool;
 };
 
 
@@ -96,6 +104,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
     connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
     connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
+    connect(ui->actionNavigate, SIGNAL(triggered()), SLOT(useNavigateTool()));
+    connect(ui->actionSelect, SIGNAL(triggered()), SLOT(useSelectTool()));
 
     ui->actionSet_internal_basis->setEnabled(false);
     ui->actionDuplicate->setEnabled(false);
@@ -115,9 +125,17 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
 
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateSelection()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);
+
+    d->m_Selection = new GraphicsSelectionItem;
+    ui->molconv_graphicsview->addItem(d->m_Selection);
+
+    d->m_navigatetool = boost::make_shared<NavigateTool>();
+    d->m_selecttool = boost::make_shared<SelectTool>(this);
+    ui->molconv_graphicsview->setTool(d->m_navigatetool);
 
     ui->molconv_graphicsview->update();
 }
@@ -226,6 +244,15 @@ void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state
     }
 }
 
+void MolconvWindow::updateSelection()
+{
+    d->m_Selection->clear();
+    for (int i = 0; i < int(d->m_SelectedAtoms.size()); i++)
+        d->m_Selection->addPosition(d->m_SelectedAtoms[i]->position());
+
+    ui->molconv_graphicsview->update();
+}
+
 void MolconvWindow::about()
 {
     AboutDialog *ad = new AboutDialog;
@@ -318,6 +345,50 @@ void MolconvWindow::openFile(const QString &fileName, const bool showList)
         delete molFile;
         return;
     }
+}
+
+void MolconvWindow::selectAtom(chemkit::Atom *theAtom, bool wholeMolecule)
+{
+    if (wholeMolecule)
+        for (int i = 0; i < int(theAtom->molecule()->size()); i++)
+            selectAtom(theAtom->molecule()->atom(i));
+    else
+        selectAtom(theAtom);
+
+    updateSelection();
+}
+
+void MolconvWindow::selectAtom(chemkit::Atom *theAtom)
+{
+    bool selected = false;
+    for (int i = 0; i < int(d->m_SelectedAtoms.size()); i++)
+         if (d->m_SelectedAtoms[i] == theAtom)
+         selected = true;
+
+    if (!selected)
+        d->m_SelectedAtoms.push_back(theAtom);
+}
+
+void MolconvWindow::deselectAtom(chemkit::Atom *theAtom)
+{
+    int index = -1;
+    for (int i = 0; i < int(d->m_SelectedAtoms.size()); i++)
+        if (d->m_SelectedAtoms[i] == theAtom)
+            index = i;
+
+    if (index >= 0)
+        d->m_SelectedAtoms.erase(d->m_SelectedAtoms.begin() + index);
+}
+
+void MolconvWindow::deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule)
+{
+    if (wholeMolecule)
+        for (int i = 0; i < int(theAtom->molecule()->size()); i++)
+            deselectAtom(theAtom->molecule()->atom(i));
+    else
+        deselectAtom(theAtom);
+
+    updateSelection();
 }
 
 void MolconvWindow::startImportDialog()
@@ -441,6 +512,16 @@ void MolconvWindow::updateAxes()
 
     d->m_GraphicsAxisVector.at(index)->setPosition(d->activeMolecule->internalOriginPosition());
     d->m_GraphicsAxisVector.at(index)->setVectors(d->activeMolecule->internalBasisVectors());
+}
+
+void MolconvWindow::useNavigateTool()
+{
+    ui->molconv_graphicsview->setTool(d->m_navigatetool);
+}
+
+void MolconvWindow::useSelectTool()
+{
+    ui->molconv_graphicsview->setTool(d->m_selecttool);
 }
 
 void MolconvWindow::resetCoords()

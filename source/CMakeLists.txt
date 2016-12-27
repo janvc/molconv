@@ -75,6 +75,8 @@ set(SOURCES
     moleculegroup.cpp
     moleculestack.cpp
     aboutdialog.cpp
+    navigatetool.cpp
+    selecttool.cpp
 )
 
 set(MOC_HEADERS
