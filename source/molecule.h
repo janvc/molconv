@@ -94,6 +94,9 @@ namespace molconv
         MoleculeItem *listItem() const;
         void setListItem(MoleculeItem *newItem);
 
+        static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
+        static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
+
     private:
         // private functions:
         void setInternalOriginPosition();
@@ -109,7 +112,6 @@ namespace molconv
         Eigen::Matrix3d calcCovarianceEigenvectors() const;
 
         void initIntPos();
-        Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi) const;
 
         boost::scoped_ptr<MoleculePrivate> d;
     };

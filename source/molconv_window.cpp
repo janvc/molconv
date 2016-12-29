@@ -19,6 +19,8 @@
  */
 
 #include<iostream>
+#include<iomanip>
+#include<cmath>
 #include<QMessageBox>
 #include<Eigen/Eigenvalues>
 #ifndef Q_MOC_RUN
@@ -203,6 +205,7 @@ void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state
 
 void MolconvWindow::about()
 {
+    minimizeRMSD();
     AboutDialog *ad = new AboutDialog;
     ad->exec();
 }
@@ -427,46 +430,37 @@ void MolconvWindow::minimizeRMSD()
     molconv::moleculePtr refMol = d->m_system->getMolecule(0);
     molconv::moleculePtr otherMol = d->m_system->getMolecule(1);
 
+    std::cout << "reference molecule: " << refMol->name() << std::endl;
+    std::cout << "other molecule: " << otherMol->name() << std::endl;
+
     if (refMol->size() != otherMol->size())
         return;
 
     int Natoms = refMol->size();
 
+    Eigen::Vector3d center = refMol->center();
+    Eigen::Vector3d shift = center - otherMol->center();
+    Eigen::Vector3d oldOrigin = otherMol->internalOriginPosition();
+    Eigen::Vector3d newOrigin = oldOrigin + shift;
+    std::cout << std::setprecision(20) << "center\n" << center << "\nshift\n" << shift
+              << "\nold Origin\n" << oldOrigin << "\nnew Origin\n" << newOrigin << std::endl;
+    updateActiveMolecule(otherMol);
+    d->m_MoleculeSettings->setMolecule(otherMol);
+    d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), 0.0, 0.0, 0.0);
+
     Eigen::MatrixXd Xr = Eigen::MatrixXd::Zero(3,Natoms);
     Eigen::MatrixXd Xo = Eigen::MatrixXd::Zero(3,Natoms);
-
     for (int i = 0; i < Natoms; i++)
     {
-        Xr.col(i) = refMol->atom(i)->position();
-        Xo.col(i) = otherMol->atom(i)->position();
-    }
-
-    Eigen::Vector3d Cr = Eigen::Vector3d::Zero();
-    Eigen::Vector3d Co = Eigen::Vector3d::Zero();
-    for (int i = 0; i < Natoms; i++)
-    {
-        Cr += Xr.col(i);
-        Co += Xo.col(i);
-    }
-    Cr /= double(Natoms);
-    Co /= double(Natoms);
-
-    std::cout << "center of reference molecule:\n";
-    std::cout << Cr << std::endl;
-    std::cout << "center of other molecule:\n";
-    std::cout << Co << std::endl;
-
-
-    for (int i = 0; i < Natoms; i++)
-    {
-        Xr.col(i) -= Cr;
-        Xo.col(i) -= Co;
+        Xr.col(i) = refMol->atom(i)->position() - center;
+        Xo.col(i) = otherMol->atom(i)->position() - center;
     }
 
     double rmsd0 = 0.0;
     for (int i = 0; i < Natoms; i++)
         for (int j = 0; j < 3; j++)
             rmsd0 += std::abs(double(Xo(j,i)) - double(Xr(j,i))) * std::abs(double(Xo(j,i)) - double(Xr(j,i)));
+    rmsd0 /= double(Natoms);
 
     std::cout << "RMSD before: " << rmsd0 << std::endl;
 
@@ -508,8 +502,10 @@ void MolconvWindow::minimizeRMSD()
 
     Eigen::Vector4d lQuart = std::abs(double(Feval(0))) > std::abs(double(Feval(3))) ? Fevec.block(0, 0, 4, 1) : Fevec.block(0, 3, 4, 1);
 
+    std::cout << "best eigen-quaternion\n";
+    std::cout << lQuart << std::endl;
     Eigen::Matrix3d rotmat = Eigen::Matrix3d::Zero();
-    rotmat(0,0) = lQuart(0) * lQuart(0) + lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) + lQuart(3) * lQuart(3);
+    rotmat(0,0) = lQuart(0) * lQuart(0) + lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
     rotmat(1,1) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
     rotmat(2,2) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) + lQuart(3) * lQuart(3);
     rotmat(0,1) = 2.0 * (lQuart(1) * lQuart(2) - lQuart(0) * lQuart(3));
@@ -523,4 +519,23 @@ void MolconvWindow::minimizeRMSD()
     std::cout << rotmat << std::endl;
     std::cout << "metric of rotmat:\n";
     std::cout << rotmat.transpose() * rotmat << std::endl;
+
+    std::array<double,3> newEulers = molconv::Molecule::rot2euler(rotmat);
+    double newPhi = newEulers[2];
+    double newTheta = newEulers[1];
+    double newPsi = newEulers[0];
+
+    std::cout << "new euler angles\n" << newPhi * 180.0 / M_PI << std::endl << newTheta * 180.0 / M_PI << std::endl << newPsi * 180.0 / M_PI << std::endl;
+
+    d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), newPhi, newTheta, newPsi);
+
+    double rmsd1 = 0.0;
+    for (int i = 0; i < Natoms; i++)
+        for (int j = 0; j < 3; j++)
+            rmsd1 += std::abs(double(otherMol->atom(i)->position()(j)) - double(refMol->atom(i)->position()(j)))
+                    * std::abs(double(otherMol->atom(i)->position()(j)) - double(refMol->atom(i)->position()(j)));
+    rmsd1 /= double(Natoms);
+
+    std::cout << "RMSD after: " << rmsd1 << std::endl;
+    updateAxes();
 }
