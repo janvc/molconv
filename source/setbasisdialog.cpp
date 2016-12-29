@@ -223,12 +223,14 @@ void setBasisDialog::on_basisAtoms_toggled(bool checked)
 
 void setBasisDialog::on_originALineScaleSlider_valueChanged(int value)
 {
-    ui->originALineScaleBox->setValue(double(value / 10000));
+    double realValue = double(value) / 1000.0;
+    ui->originALineScaleBox->setValue(realValue);
 }
 
 void setBasisDialog::on_originALineScaleBox_valueChanged(double value)
 {
-    ui->originALineScaleSlider->setValue(int(value * 10000));
+    int intValue = int(value * 1000.0);
+    ui->originALineScaleSlider->setValue(intValue);
 }
 
 void setBasisDialog::on_buttonBox_accepted()
@@ -251,7 +253,7 @@ void setBasisDialog::on_buttonBox_accepted()
     {
         m_origin = molconv::kCenterBetweenAtoms;
         m_originAtoms[0] = ui->originALineStart->value();
-        m_originAtoms[0] = ui->originALineEnd->value();
+        m_originAtoms[1] = ui->originALineEnd->value();
         m_AtomLineScale = ui->originALineScaleBox->value();
     }
 
