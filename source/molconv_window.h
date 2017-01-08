@@ -54,6 +54,8 @@ public:
     int nMolecules();
     molconv::moleculePtr getMol(int index);
 
+    molconv::moleculePtr activeMolecule();
+
     void openFile(const QString &fileName, const bool showList = false);
 
 public slots:
@@ -75,7 +77,8 @@ public slots:
     void updateActiveMolecule(molconv::moleculePtr &newActive);
     void changeOriginBasis();
     void updateAxes();
-    void minimizeRMSD();
+    void alignMolecules(std::vector<molconv::moleculePtr> &molecules);
+    void minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculePtr otherMol);
 
 private slots:
     void resetCoords();

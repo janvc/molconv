@@ -6,5 +6,7 @@
         <file>icons/centerview.png</file>
         <file>icons/reset_coords.png</file>
         <file>icons/zero_coords.png</file>
+        <file>icons/item-active.png</file>
+        <file>icons/item-inactive.png</file>
     </qresource>
 </RCC>

@@ -78,6 +78,8 @@ namespace molconv
         Eigen::Matrix3d chargeEigenvectors() const;
         Eigen::Matrix3d covarianceEigenvectors() const;
 
+        double rmsd(const molconv::moleculePtr &otherMol) const;
+
         void moveFromParas(const double x, const double y, const double z,
                            const double phi, const double theta, const double psi);
 

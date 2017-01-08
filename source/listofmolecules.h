@@ -31,32 +31,36 @@ namespace Ui
 }
 
 class MolconvWindow;
+class ListOfMoleculesPrivate;
 
 class ListOfMolecules : public QDockWidget
 {
     Q_OBJECT
 
-    public:
-        ListOfMolecules(MolconvWindow *window);
-        ~ListOfMolecules();
+public:
+    ListOfMolecules(MolconvWindow *window);
+    ~ListOfMolecules();
 
-        void insertMolecule(molconv::moleculePtr &newMol);
-        void insertGroup(molconv::MoleculeGroup *newGroup);
-        void removeCurrentMolecule();
-        molconv::moleculePtr currentMolecule();
+    void insertMolecule(molconv::moleculePtr &newMol);
+    void insertGroup(molconv::MoleculeGroup *newGroup);
+    void removeCurrentMolecule();
+    molconv::moleculePtr currentMolecule();
+
+public slots:
+    void alignMolecules();
 
 signals:
-        void newMoleculeSelected(molconv::moleculePtr &newMol);
-        void newGroupSelected(molconv::MoleculeGroup *newGroup);
+    void newMoleculeSelected(molconv::moleculePtr &newMol);
+    void newGroupSelected(molconv::MoleculeGroup *newGroup);
 
 private slots:
-        void toggleMolecule(const QModelIndex &index);
-        void changeSelectedItem(const QModelIndex &current);
+    void toggleMolecule(const QModelIndex &index);
+    void changeSelectedItem(const QModelIndex &current);
+    void startContextMenu(const QPoint &point);
 
 private:
-        Ui::ListOfMolecules *ui;
-        MolconvWindow *m_window;
-        QStandardItemModel *m_model;
+    ListOfMoleculesPrivate *d;
+    Ui::ListOfMolecules *ui;
 };
 
 

@@ -81,36 +81,33 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
     d->m_setBasisDialog = new setBasisDialog(this);
+    d->m_ListOfMolecules = new ListOfMolecules(this);
+    d->m_MoleculeSettings = new MoleculeSettings(this);
 
-    connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(openFile()));
-    connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
-    connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
+    addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
+    addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
+
+    ui->actionSet_internal_basis->setEnabled(false);
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
-
     connect(ui->actionSet_internal_basis, SIGNAL(triggered()), SLOT(startBasisDialog()));
-    ui->actionSet_internal_basis->setEnabled(false);
     connect(ui->actionDuplicate, SIGNAL(triggered()), SLOT(DuplicateActiveMolecule()));
     connect(ui->actionRemove, SIGNAL(triggered()), SLOT(removeActiveMolecule()));
-
     connect(ui->actionReset, SIGNAL(triggered()), SLOT(ResetView()));
     connect(ui->actionZero_Coordinates, SIGNAL(triggered()), SLOT(zeroCoords()));
     connect(ui->actionReset_Coordinates, SIGNAL(triggered()), SLOT(resetCoords()));
-    connect(ui->actionAlign, SIGNAL(triggered()), SLOT(minimizeRMSD()));
+    connect(ui->actionAlign, SIGNAL(triggered()), d->m_ListOfMolecules, SLOT(alignMolecules()));
 
-    d->m_ListOfMolecules = new ListOfMolecules(this);
-    d->m_MoleculeSettings = new MoleculeSettings(this);
-    addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
-    addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
-
+    connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(openFile()));
+    connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
+    connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
-
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
@@ -186,6 +183,11 @@ molconv::moleculePtr MolconvWindow::getMol(int index)
     return d->m_system->getMolecule(index);
 }
 
+molconv::moleculePtr MolconvWindow::activeMolecule()
+{
+    return d->activeMolecule;
+}
+
 void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
 {
     size_t moleculeIndex = d->m_system->MoleculeIndex(theMolecule);
@@ -205,7 +207,6 @@ void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state
 
 void MolconvWindow::about()
 {
-    minimizeRMSD();
     AboutDialog *ad = new AboutDialog;
     ad->exec();
 }
@@ -425,25 +426,28 @@ void MolconvWindow::zeroCoords()
     d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
-void MolconvWindow::minimizeRMSD()
+void MolconvWindow::alignMolecules(std::vector<molconv::moleculePtr> &molecules)
 {
-    molconv::moleculePtr refMol = d->m_system->getMolecule(0);
-    molconv::moleculePtr otherMol = d->m_system->getMolecule(1);
+    molconv::moleculePtr refMol = d->activeMolecule;
 
-    std::cout << "reference molecule: " << refMol->name() << std::endl;
-    std::cout << "other molecule: " << otherMol->name() << std::endl;
+    for (int i = 0; i < int(molecules.size()); i++)
+        minimizeRMSD(refMol, molecules[i]);
+}
 
+void MolconvWindow::minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculePtr otherMol)
+{
     if (refMol->size() != otherMol->size())
+    {
+        QMessageBox::critical(this, tr("Alignment impossible"), tr("Only molecules with equal number of atoms can be aligned."));
         return;
+    }
 
     int Natoms = refMol->size();
 
     Eigen::Vector3d center = refMol->center();
     Eigen::Vector3d shift = center - otherMol->center();
-    Eigen::Vector3d oldOrigin = otherMol->internalOriginPosition();
-    Eigen::Vector3d newOrigin = oldOrigin + shift;
-    std::cout << std::setprecision(20) << "center\n" << center << "\nshift\n" << shift
-              << "\nold Origin\n" << oldOrigin << "\nnew Origin\n" << newOrigin << std::endl;
+    Eigen::Vector3d newOrigin = otherMol->internalOriginPosition() + shift;
+
     updateActiveMolecule(otherMol);
     d->m_MoleculeSettings->setMolecule(otherMol);
     d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), 0.0, 0.0, 0.0);
@@ -456,19 +460,9 @@ void MolconvWindow::minimizeRMSD()
         Xo.col(i) = otherMol->atom(i)->position() - center;
     }
 
-    double rmsd0 = 0.0;
-    for (int i = 0; i < Natoms; i++)
-        for (int j = 0; j < 3; j++)
-            rmsd0 += std::abs(double(Xo(j,i)) - double(Xr(j,i))) * std::abs(double(Xo(j,i)) - double(Xr(j,i)));
-    rmsd0 /= double(Natoms);
-
-    std::cout << "RMSD before: " << rmsd0 << std::endl;
-
     Eigen::Matrix3d corr = Xo * Xr.transpose();
 
-    std::cout << "correlation matrix:\n";
-    std::cout << corr << std::endl;
-
+    // construct the quaternion matrix
     Eigen::Matrix4d F = Eigen::Matrix4d::Zero();
     F(0,0) =  corr(0,0) + corr(1,1) + corr(2,2);
     F(1,1) =  corr(0,0) - corr(1,1) - corr(2,2);
@@ -487,23 +481,13 @@ void MolconvWindow::minimizeRMSD()
     F(3,1) = F(1,3);
     F(3,2) = F(2,3);
 
-    std::cout << "quaternion matrix:\n";
-    std::cout << F << std::endl;
-
     Eigen::SelfAdjointEigenSolver<Eigen::Matrix4d> Feig(F);
-
     Eigen::Vector4d Feval = Feig.eigenvalues();
     Eigen::Matrix4d Fevec = Feig.eigenvectors();
 
-    std::cout << "eigenvalues:\n";
-    std::cout << Feval << std::endl;
-    std::cout << "eigenvectors:\n";
-    std::cout << Fevec << std::endl;
-
+    // the optimal rotation corresponds to either the first or the last eigenvector, depending on which eigenvalue is larger
     Eigen::Vector4d lQuart = std::abs(double(Feval(0))) > std::abs(double(Feval(3))) ? Fevec.block(0, 0, 4, 1) : Fevec.block(0, 3, 4, 1);
 
-    std::cout << "best eigen-quaternion\n";
-    std::cout << lQuart << std::endl;
     Eigen::Matrix3d rotmat = Eigen::Matrix3d::Zero();
     rotmat(0,0) = lQuart(0) * lQuart(0) + lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
     rotmat(1,1) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
@@ -515,27 +499,12 @@ void MolconvWindow::minimizeRMSD()
     rotmat(2,0) = 2.0 * (lQuart(1) * lQuart(3) - lQuart(0) * lQuart(2));
     rotmat(2,1) = 2.0 * (lQuart(2) * lQuart(3) + lQuart(0) * lQuart(1));
 
-    std::cout << "rotation matrix:\n";
-    std::cout << rotmat << std::endl;
-    std::cout << "metric of rotmat:\n";
-    std::cout << rotmat.transpose() * rotmat << std::endl;
-
     std::array<double,3> newEulers = molconv::Molecule::rot2euler(rotmat);
     double newPhi = newEulers[2];
     double newTheta = newEulers[1];
     double newPsi = newEulers[0];
 
-    std::cout << "new euler angles\n" << newPhi * 180.0 / M_PI << std::endl << newTheta * 180.0 / M_PI << std::endl << newPsi * 180.0 / M_PI << std::endl;
-
     d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), newPhi, newTheta, newPsi);
 
-    double rmsd1 = 0.0;
-    for (int i = 0; i < Natoms; i++)
-        for (int j = 0; j < 3; j++)
-            rmsd1 += std::abs(double(otherMol->atom(i)->position()(j)) - double(refMol->atom(i)->position()(j)))
-                    * std::abs(double(otherMol->atom(i)->position()(j)) - double(refMol->atom(i)->position()(j)));
-    rmsd1 /= double(Natoms);
-
-    std::cout << "RMSD after: " << rmsd1 << std::endl;
     updateAxes();
 }
