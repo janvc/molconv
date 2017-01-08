@@ -57,6 +57,7 @@
     <addaction name="actionRemove"/>
     <addaction name="actionReset_Coordinates"/>
     <addaction name="actionZero_Coordinates"/>
+    <addaction name="actionAlign"/>
    </widget>
    <widget class="QMenu" name="menuGroup">
     <property name="title">
@@ -200,6 +201,11 @@
    </property>
    <property name="text">
     <string>Zero Coordinates</string>
+   </property>
+  </action>
+  <action name="actionAlign">
+   <property name="text">
+    <string>Align</string>
    </property>
   </action>
  </widget>

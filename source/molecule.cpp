@@ -467,6 +467,42 @@ namespace molconv
     }
 
     ///
+    /// \brief Molecule::rmsd
+    /// \param otherMol
+    /// \return
+    ///
+    /// calculate the RMSD between this molecule and the molecule given as
+    /// otherMol
+    ///
+    /// the RMSD value is calculated as
+    ///
+    ///            -------------------------
+    ///           /  _N_                    |
+    ///          / 1 \                     2
+    /// RMSD =  / --- >  | r'       -  r  |
+    ///       \/   N /      i(xyz)      i(xyz)
+    ///              ---
+    ///              i=1
+    ///
+    double Molecule::rmsd(const moleculePtr &otherMol) const
+    {
+        if (size() != otherMol->size())
+            return -1.0;
+
+        double rmsd = 0.0;
+
+        for (int i = 0; i < int(size()); i++)
+            for (int j = 0; j < 3; j++)
+                rmsd += std::abs(double(otherMol->atom(i)->position()(j)) - double(atom(i)->position()(j)))
+                      * std::abs(double(otherMol->atom(i)->position()(j)) - double(atom(i)->position()(j)));
+
+        rmsd /= double(size());
+        rmsd = std::sqrt(rmsd);
+
+        return rmsd;
+    }
+
+    ///
     /// \brief moveFromParas
     /// \param x
     /// \param y
@@ -712,29 +748,11 @@ namespace molconv
             basisVectors.col(1) *= -1.0;
 
         // determine the initial values of the euler angles:
-        double theta = std::acos(double(basisVectors(2,2)));
-        double psi, phi;
+        std::array<double,3> eulers = rot2euler(basisVectors);
 
-        if (theta == 0.0 || theta == M_PI)
-        {
-            psi = std::acos(double(basisVectors(0,0)));
-            phi = 0.0;
-        }
-        else
-        {
-            phi = std::atan2(double(basisVectors(0,2)),  double(basisVectors(1,2)));
-            psi = std::atan2(double(basisVectors(2,0)), -double(basisVectors(2,1)));
-        }
-
-        if (phi < 0.0)
-            phi += 2.0 * M_PI;
-
-        if (psi < 0.0)
-            psi += 2.0 * M_PI;
-
-        d->m_phi = phi;
-        d->m_psi = psi;
-        d->m_theta = theta;
+        d->m_phi = eulers[2];
+        d->m_psi = eulers[0];
+        d->m_theta = eulers[1];
     }
 
     ///
@@ -961,7 +979,7 @@ namespace molconv
             d->m_intPos.push_back(rotMat.transpose() * (atom(i)->position() - internalOriginPosition()));
     }
 
-    Eigen::Matrix3d Molecule::euler2rot(const double psi, const double theta, const double phi) const
+    Eigen::Matrix3d Molecule::euler2rot(const double psi, const double theta, const double phi)
     {
         Eigen::Matrix3d rot;
 
@@ -976,6 +994,59 @@ namespace molconv
         rot(2,2) =  std::cos(theta);
 
         return rot;
+    }
+
+    ///
+    /// \brief Molecule::rot2euler
+    /// \param rot
+    /// \return
+    ///
+    /// Calculate the euler angles from a given rotation matrix.
+    /// The angles are returned in the order <psi, theta, phi>.
+    ///
+    std::array<double,3> Molecule::rot2euler(Eigen::Matrix3d rot)
+    {
+        std::array<double,3> angles;
+
+        // check if the rotation matrix is numerically close to the form
+        //
+        //    x   x   0    In this case, theta = 0 (+1) or pi (-1)
+        //    x   x   0    and the angles psi and phi are not uniquely
+        //    0   0  +-1   determined
+        //
+        // The (3,3) element is a better indicator for this condition because it goes
+        // very close to +-1 while the other elements are still quite large (1e-7)
+        if ((1.0 - std::abs(double(rot(2,2)))) < 1.0e-10)
+        {
+            angles[1] = double(rot(2,2)) > 0.0 ? 0.0 : M_PI;
+            angles[2] = 0.0;
+
+            // check, in which part of the [0, 2 pi] intervall we are, so
+            // that the signs of the transformation matrix elements
+            // can be reproduced correctly later
+            if (double(rot(0,0)) >= 0.0 && double(rot(0,1)) >= 0.0)     // 0 - pi/2
+                angles[0] = std::acos(double(rot(0,0)));
+            else if (double(rot(0,0)) < 0.0 && double(rot(0,1)) >= 0.0) // pi/2 - pi
+                angles[0] = std::acos(double(rot(0,0)));
+            else if (double(rot(0,0)) < 0.0 && double(rot(0,1)) < 0.0)  // pi - 3/2 pi
+                angles[0] = 2.0 * M_PI - std::acos(double(rot(0,0)));
+            else if (double(rot(0,0)) >= 0.0 && double(rot(0,1)) < 0.0) // 3/2 pi - 2 pi (=0)
+                angles[0] = -std::acos(double(rot(0,0)));
+        }
+        else
+        {
+            angles[1] = std::acos(double(rot(2,2)));
+            angles[2] = std::atan2(double(rot(0,2)),  double(rot(1,2)));
+            angles[0] = std::atan2(double(rot(2,0)), -double(rot(2,1)));
+        }
+
+        if (angles[2] < 0.0)
+            angles[2] += 2.0 * M_PI;
+
+        if (angles[0] < 0.0)
+            angles[0] += 2.0 * M_PI;
+
+        return angles;
     }
 
 } // namespace molconv
