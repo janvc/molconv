@@ -578,6 +578,8 @@ namespace molconv
     {
         if (newList.size() == size())
             d->m_originList = newList;
+
+        initIntPos();
     }
 
     ///
@@ -591,6 +593,8 @@ namespace molconv
     {
         if (newList.size() == size())
             d->m_basisList = newList;
+
+        initIntPos();
     }
 
     ///

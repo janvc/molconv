@@ -58,6 +58,7 @@ public:
 
     void selectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
     void deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
+    std::vector<chemkit::Atom *> selection() const;
 
 public slots:
     void openFile();

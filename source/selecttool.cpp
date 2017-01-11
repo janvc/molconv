@@ -74,16 +74,20 @@ void SelectTool::mousePressEvent(QMouseEvent *event)
         chemkit::Atom *atom = const_cast<chemkit::Atom *>(atomItem->atom());
 
         if (d->m_state == SelectToolPrivate::Selecting)
+        {
             if (event->modifiers() & Qt::ShiftModifier)
                 d->m_window->selectAtom(atom, true);
             else
                 d->m_window->selectAtom(atom, false);
+        }
 
         if (d->m_state == SelectToolPrivate::Deselecting)
+        {
             if (event->modifiers() & Qt::ShiftModifier)
                 d->m_window->deselectAtom(atom, true);
             else
                 d->m_window->deselectAtom(atom, false);
+        }
     }
 
     d->m_rectItem = new QGraphicsRectItem(event->x(), event->y(), 0, 0);
@@ -111,16 +115,20 @@ void SelectTool::mouseReleaseEvent(QMouseEvent *event)
                 chemkit::GraphicsAtomItem *atomItem = static_cast<chemkit::GraphicsAtomItem *>(item);
                 chemkit::Atom *atom = const_cast<chemkit::Atom *>(atomItem->atom());
                 if (d->m_state == SelectToolPrivate::Selecting)
+                {
                     if (event->modifiers() & Qt::ShiftModifier)
                         d->m_window->selectAtom(atom, true);
                     else
                         d->m_window->selectAtom(atom, false);
+                }
 
                 if (d->m_state == SelectToolPrivate::Deselecting)
+                {
                     if (event->modifiers() & Qt::ShiftModifier)
                         d->m_window->deselectAtom(atom, true);
                     else
                         d->m_window->deselectAtom(atom, false);
+                }
             }
         }
 

@@ -135,7 +135,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     d->m_navigatetool = boost::make_shared<NavigateTool>();
     d->m_selecttool = boost::make_shared<SelectTool>(this);
-    ui->molconv_graphicsview->setTool(d->m_navigatetool);
+    useNavigateTool();
 
     ui->molconv_graphicsview->update();
 }
@@ -391,6 +391,11 @@ void MolconvWindow::deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule)
     updateSelection();
 }
 
+std::vector<chemkit::Atom *> MolconvWindow::selection() const
+{
+    return d->m_SelectedAtoms;
+}
+
 void MolconvWindow::startImportDialog()
 {
     d->m_ImportDialog->show();
@@ -497,10 +502,11 @@ void MolconvWindow::changeOriginBasis()
     std::vector<bool> newOriginList = d->m_setBasisDialog->selectedOriginAtoms();
     std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
 
-    d->activeMolecule->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
-    d->activeMolecule->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
     d->activeMolecule->setOriginList(newOriginList);
     d->activeMolecule->setBasisList(newBasisList);
+    d->activeMolecule->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
+    d->activeMolecule->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
+
 
     d->m_MoleculeSettings->setMolecule(d->activeMolecule);
     updateAxes();
@@ -512,15 +518,21 @@ void MolconvWindow::updateAxes()
 
     d->m_GraphicsAxisVector.at(index)->setPosition(d->activeMolecule->internalOriginPosition());
     d->m_GraphicsAxisVector.at(index)->setVectors(d->activeMolecule->internalBasisVectors());
+
+    ui->molconv_graphicsview->update();
 }
 
 void MolconvWindow::useNavigateTool()
 {
+    ui->actionSelect->setChecked(false);
+    ui->actionNavigate->setChecked(true);
     ui->molconv_graphicsview->setTool(d->m_navigatetool);
 }
 
 void MolconvWindow::useSelectTool()
 {
+    ui->actionNavigate->setChecked(false);
+    ui->actionSelect->setChecked(true);
     ui->molconv_graphicsview->setTool(d->m_selecttool);
 }
 

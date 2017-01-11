@@ -332,3 +332,53 @@ void setBasisDialog::on_basisCharge_toggled(bool checked)
     ui->basisAtomList->setEnabled(checked);
     ui->basisAllCheckBox->setEnabled(checked);
 }
+
+void setBasisDialog::on_originUseSelection_clicked()
+{
+    std::vector<chemkit::Atom *> selectedAtoms = m_window->selection();
+
+    for (int i = 0; i < ui->originAtomList->count(); i++)
+    {
+        chemkit::Atom *testAtom = m_molecule->atom(i);
+        if (std::find(selectedAtoms.begin(), selectedAtoms.end(), testAtom) != selectedAtoms.end())
+            ui->originAtomList->item(i)->setCheckState(Qt::Checked);
+        else
+            ui->originAtomList->item(i)->setCheckState(Qt::Unchecked);
+    }
+}
+
+void setBasisDialog::on_basisUseSelection_clicked()
+{
+    std::vector<chemkit::Atom *> selectedAtoms = m_window->selection();
+
+    for (int i = 0; i < ui->basisAtomList->count(); i++)
+    {
+        chemkit::Atom *testAtom = m_molecule->atom(i);
+        if (std::find(selectedAtoms.begin(), selectedAtoms.end(), testAtom) != selectedAtoms.end())
+            ui->basisAtomList->item(i)->setCheckState(Qt::Checked);
+        else
+            ui->basisAtomList->item(i)->setCheckState(Qt::Unchecked);
+    }
+}
+
+void setBasisDialog::on_useBasisButton_clicked()
+{
+    for (int i = 0; i < ui->originAtomList->count(); i++)
+    {
+        if (ui->basisAtomList->item(i)->checkState() == Qt::Checked)
+            ui->originAtomList->item(i)->setCheckState(Qt::Checked);
+        else
+            ui->originAtomList->item(i)->setCheckState(Qt::Unchecked);
+    }
+}
+
+void setBasisDialog::on_useOriginButton_clicked()
+{
+    for (int i = 0; i < ui->basisAtomList->count(); i++)
+    {
+        if (ui->originAtomList->item(i)->checkState() == Qt::Checked)
+            ui->basisAtomList->item(i)->setCheckState(Qt::Checked);
+        else
+            ui->basisAtomList->item(i)->setCheckState(Qt::Unchecked);
+    }
+}
