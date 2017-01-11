@@ -65,6 +65,10 @@ private slots:
     void on_basisInert_toggled(bool checked);
     void on_basisCovar_toggled(bool checked);
     void on_basisCharge_toggled(bool checked);
+    void on_originUseSelection_clicked();
+    void on_basisUseSelection_clicked();
+    void on_useBasisButton_clicked();
+    void on_useOriginButton_clicked();
 
 signals:
     void ready();

@@ -8,5 +8,7 @@
         <file>icons/zero_coords.png</file>
         <file>icons/item-active.png</file>
         <file>icons/item-inactive.png</file>
+        <file>icons/select.png</file>
+        <file>icons/navigate.png</file>
     </qresource>
 </RCC>
