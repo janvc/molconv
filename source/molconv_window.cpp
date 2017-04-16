@@ -85,6 +85,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
     connect(ui->actionSave, SIGNAL(triggered()), SLOT(writeMolconvFile()));
+    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(readMolconvFile()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -554,4 +555,97 @@ void MolconvWindow::readMolconvFile()
 
     QDomDocument testDoc;
     testDoc.setContent(&file);
+    file.close();
+
+    QDomElement systemElement = testDoc.documentElement();
+
+    QDomNode moleculeNode = systemElement.firstChild();
+
+    while (! moleculeNode.isNull())
+    {
+        QDomElement moleculeElement = moleculeNode.toElement();
+        if (! moleculeElement.isNull())
+        {
+            molconv::moleculePtr currentMolecule(new molconv::Molecule);
+
+            currentMolecule->setName(moleculeElement.attribute("Name").toStdString());
+
+            // create the origin and the basis to transform the atoms to their global positions
+            // since only the internal positions are saved in the molconv file:
+            QDomElement originElement = moleculeElement.elementsByTagName("Origin").at(0).toElement();
+
+            molconv::origin Origin = static_cast<molconv::origin>(originElement.attribute("Type").toInt());
+            double vecx = originElement.attribute("vecX").toDouble();
+            double vecy = originElement.attribute("vecY").toDouble();
+            double vecz = originElement.attribute("vecZ").toDouble();
+            QString originAtomString = originElement.attribute("Atoms");
+            QString originListString = originElement.attribute("originList");
+            double originFactor = originElement.attribute("Factor").toDouble();
+
+            Eigen::Vector3d originVec(vecx, vecy, vecz);
+            int oA1, oA2;
+            oA1 = originAtomString.split(",").at(0).toInt();
+            oA2 = originAtomString.split(",").at(1).toInt();
+            std::vector<bool> originList;
+            for (int i = 0; i < originListString.split(",").length(); i++)
+                if (originListString.split(",").at(i) == "T")
+                    originList.push_back(true);
+                else
+                    originList.push_back(false);
+
+            currentMolecule->setOrigin(Origin, oA1, oA2, originFactor);
+            currentMolecule->setOriginList(originList);
+
+            QDomElement basisElement = moleculeElement.elementsByTagName("Basis").at(0).toElement();
+
+            molconv::basis Basis = static_cast<molconv::basis>(basisElement.attribute("Type").toInt());
+            double phi = basisElement.attribute("phi").toDouble();
+            double theta = basisElement.attribute("theta").toDouble();
+            double psi = basisElement.attribute("psi").toDouble();
+            QString basisAtomString = basisElement.attribute("Atoms");
+            QString basisListString = basisElement.attribute("basisList");
+
+            int bA1, bA2, bA3;
+            bA1 = basisAtomString.split(",").at(0).toInt();
+            bA2 = basisAtomString.split(",").at(1).toInt();
+            bA3 = basisAtomString.split(",").at(2).toInt();
+            std::vector<bool> basisList;
+            for (int i = 0; i < basisListString.split(",").length(); i++)
+                if (basisListString.split(",").at(i) == "T")
+                    basisList.push_back(true);
+                else
+                    basisList.push_back(false);
+
+            currentMolecule->setBasis(Basis, bA1, bA2, bA3);
+            currentMolecule->setBasisList(basisList);
+
+            QDomNode atomNode = basisElement.nextSibling();
+
+            while (! atomNode.isNull())
+            {
+                QDomElement atomElement = atomNode.toElement();
+                if (! atomElement.isNull())
+                {
+                    double x = atomElement.attribute("X").toDouble();
+                    double y = atomElement.attribute("Y").toDouble();
+                    double z = atomElement.attribute("Z").toDouble();
+                    std::string element = atomElement.attribute("Ele").toStdString();
+
+                    Eigen::Vector3d intPos(x, y, z);
+
+                    chemkit::Atom *currentAtom = currentMolecule->addAtom(chemkit::Element(element));
+
+
+                    currentAtom->setPosition(x, y, z);
+                }
+                atomNode = atomNode.nextSibling();
+            }
+            add_molecule(currentMolecule);
+        }
+        moleculeNode = moleculeNode.nextSibling();
+    }
+
+    std::cout << d->m_system->nMolecules() <<  std::endl;
+
+
 }
