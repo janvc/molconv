@@ -31,32 +31,32 @@ namespace molconv {
      * Center of a molecule
      */
     enum origin {
-        kCenterOfMass,
-        kCenterOfGeometry,
-        kCenterOfCharge,
-        kCenterOnAtom,
-        kCenterBetweenAtoms
+        kCenterOfMass = 0,
+        kCenterOfGeometry = 1,
+        kCenterOfCharge = 2,
+        kCenterOnAtom = 3,
+        kCenterBetweenAtoms = 4
     };
 
     /*
      * Which vectors to use for new internal basis
      */
     enum basis {
-        kCovarianceVectors,
-        kInertiaVectors,
-        kChargeVectors,
-        kStandardOrientation,
-        kVectorsFromAtoms
+        kCovarianceVectors = 0,
+        kInertiaVectors = 1,
+        kChargeVectors = 2,
+        kStandardOrientation = 3,
+        kVectorsFromAtoms = 4
     };
 
     /*
      * Which molecule-specific vector is parallel in a stack
      */
     enum parallelVector {
-        xVec,
-        yVec,
-        zVec,
-        Atoms
+        xVec = 0,
+        yVec = 1,
+        zVec = 2,
+        Atoms = 3
     };
 
     // pointer to a molecule

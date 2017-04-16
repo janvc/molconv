@@ -62,6 +62,7 @@ namespace molconv
         double theta() const;
         double psi() const;
         std::array<double,6> origBasis() const;
+        std::vector<Eigen::Vector3d> internalPositions() const;
 
         Eigen::Vector3d center() const;
         Eigen::Vector3d centerOfMass() const;
@@ -90,8 +91,8 @@ namespace molconv
         void setBasisList(const std::vector<bool> &newList);
 
         // manage groups
-        void addToGroup(MoleculeGroup *newGroup);
-        MoleculeGroup *group() const;
+        void addToGroup(groupPtr newGroup);
+        groupPtr group() const;
 
         MoleculeItem *listItem() const;
         void setListItem(MoleculeItem *newItem);

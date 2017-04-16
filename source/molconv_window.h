@@ -85,6 +85,8 @@ public slots:
     void minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculePtr otherMol);
     void useNavigateTool();
     void useSelectTool();
+    void writeMolconvFile();
+    void readMolconvFile();
 
 private slots:
     void resetCoords();
