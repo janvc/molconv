@@ -28,6 +28,7 @@
     #include<chemkit/moleculefile.h>
     #include<chemkit/graphicsmoleculeitem.h>
     #include<chemkit/graphicscamera.h>
+    #include<chemkit/bondpredictor.h>
     #include<boost/make_shared.hpp>
 #endif
 
@@ -127,12 +128,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(openFile()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
-
-    d->m_ListOfMolecules = new ListOfMolecules(this);
-    d->m_MoleculeSettings = new MoleculeSettings(this);
-    addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
-    addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
-
 
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
@@ -816,9 +811,6 @@ void MolconvWindow::readMolconvFile()
                 else
                     originList.push_back(false);
 
-            currentMolecule->setOrigin(Origin, oA1, oA2, originFactor);
-            currentMolecule->setOriginList(originList);
-
             QDomElement basisElement = moleculeElement.elementsByTagName("Basis").at(0).toElement();
 
             molconv::basis Basis = static_cast<molconv::basis>(basisElement.attribute("Type").toInt());
@@ -839,8 +831,7 @@ void MolconvWindow::readMolconvFile()
                 else
                     basisList.push_back(false);
 
-            currentMolecule->setBasis(Basis, bA1, bA2, bA3);
-            currentMolecule->setBasisList(basisList);
+            Eigen::MatrixXd trafo(molconv::Molecule::euler2rot(psi, theta, phi));
 
             QDomNode atomNode = basisElement.nextSibling();
 
@@ -855,18 +846,24 @@ void MolconvWindow::readMolconvFile()
                     std::string element = atomElement.attribute("Ele").toStdString();
 
                     Eigen::Vector3d intPos(x, y, z);
+                    Eigen::Vector3d globalPos(originVec + trafo * intPos);
 
                     chemkit::Atom *currentAtom = currentMolecule->addAtom(chemkit::Element(element));
 
 
-                    currentAtom->setPosition(x, y, z);
+                    currentAtom->setPosition(globalPos);
                 }
                 atomNode = atomNode.nextSibling();
             }
+
+            currentMolecule->setOrigin(Origin, oA1, oA2, originFactor);
+            currentMolecule->setOriginList(originList);
+            currentMolecule->setBasis(Basis, bA1, bA2, bA3);
+            currentMolecule->setBasisList(basisList);
+
+            chemkit::BondPredictor::predictBonds(currentMolecule.get());
             add_molecule(currentMolecule);
         }
         moleculeNode = moleculeNode.nextSibling();
     }
-
-    std::cout << d->m_system->nMolecules() <<  std::endl;
 }

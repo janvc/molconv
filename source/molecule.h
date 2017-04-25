@@ -100,6 +100,8 @@ namespace molconv
         static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
         static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
 
+        chemkit::Atom *addAtom(const chemkit::Element &element);
+
     private:
         // private functions:
         void setInternalOriginPosition();

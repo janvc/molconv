@@ -1064,4 +1064,12 @@ namespace molconv
         return angles;
     }
 
+    chemkit::Atom *Molecule::addAtom(const chemkit::Element &element)
+    {
+        d->m_originList.push_back(true);
+        d->m_basisList.push_back(true);
+
+        return chemkit::Molecule::addAtom(element);
+    }
+
 } // namespace molconv
