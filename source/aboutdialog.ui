@@ -94,6 +94,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QLabel" name="boostInfo">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item row="1" column="0" colspan="2">
@@ -117,8 +124,6 @@
     </widget>
    </item>
   </layout>
-  <zorder>label</zorder>
-  <zorder>pushButton</zorder>
  </widget>
  <resources>
   <include location="molconv.qrc"/>

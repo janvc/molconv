@@ -26,6 +26,7 @@
 
 #include <string>
 #include <eigen3/Eigen/src/Core/util/Macros.h>
+#include <boost/version.hpp>
 #include "config.h"
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
@@ -56,11 +57,16 @@ AboutDialog::AboutDialog(QWidget *parent) :
                             + QString::number(EIGEN_MAJOR_VERSION) + "."
                             + QString::number(EIGEN_MINOR_VERSION);
 
+    const QString boostInfo = "and Boost version " + QString::number(BOOST_VERSION / 100000) + "."
+                            + QString::number(BOOST_VERSION / 100 % 1000) + "."
+                            + QString::number(BOOST_VERSION % 100);
+
     ui->progname->setText(progInfo);
     ui->authors->setText("Copyright 2014 - 2016 by Jan von Cosel and Sebastian Lenz");
     ui->compileInfo->setText(compileInfo);
     ui->qtInfo->setText(qtInfo);
     ui->eigenInfo->setText(eigenInfo);
+    ui->boostInfo->setText(boostInfo);
 }
 
 AboutDialog::~AboutDialog()

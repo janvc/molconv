@@ -108,8 +108,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
 
-    connect(ui->actionSave, SIGNAL(triggered()), SLOT(writeMolconvFile()));
-    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(readMolconvFile()));
+    connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
+    connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
 
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -125,7 +125,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAlign, SIGNAL(triggered()), d->m_ListOfMolecules, SLOT(alignMolecules()));
     connect(ui->actionNavigate, SIGNAL(triggered()), SLOT(useNavigateTool()));
     connect(ui->actionSelect, SIGNAL(triggered()), SLOT(useSelectTool()));
-    connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(openFile()));
+    connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(importFile()));
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
@@ -269,7 +269,7 @@ void MolconvWindow::updateSelection()
 
 void MolconvWindow::about()
 {
-    AboutDialog *ad = new AboutDialog;
+    AboutDialog *ad = new AboutDialog(this);
     ad->exec();
 }
 
@@ -287,14 +287,50 @@ void MolconvWindow::quit()
 
 void MolconvWindow::saveFile()
 {
+    QSettings settings;
+    QString startSavePath = settings.value("savePath").toString();
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), startSavePath, tr("Molconv files (*.mcv)"));
+
+    if (!fileName.isEmpty())
+    {
+        settings.setValue("savePath", QFileInfo(fileName).absolutePath());
+
+        if (fileName.split(".").last() != QString("mcv"))
+            fileName += QString(".mcv");
+
+        writeMolconvFile(fileName);
+    }
+}
+
+void MolconvWindow::importFile()
+{
+    importFile(d->m_ImportDialog->getFileName(), true);
 }
 
 void MolconvWindow::openFile()
 {
-    openFile(d->m_ImportDialog->getFileName(), true);
+    QSettings settings;
+    QString startOpenPath = settings.value("openPath").toString();
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), startOpenPath, tr("Molconv files (*.mcv)"));
+
+    if (!fileName.isEmpty())
+    {
+        settings.setValue("openPath", QFileInfo(fileName).absolutePath());
+        readMolconvFile(fileName);
+    }
 }
 
-void MolconvWindow::openFile(const QString &fileName, const bool showList)
+void MolconvWindow::openFile(const QString &fileName)
+{
+    if (fileName.split(".").last() == "mcv")
+        readMolconvFile(fileName);
+    else
+        importFile(fileName);
+}
+
+void MolconvWindow::importFile(const QString &fileName, const bool showList)
 {
     chemkit::MoleculeFile *molFile = new chemkit::MoleculeFile(fileName.toStdString());
 
@@ -665,7 +701,7 @@ void MolconvWindow::minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculeP
     updateAxes();
 }
 
-void MolconvWindow::writeMolconvFile()
+void MolconvWindow::writeMolconvFile(const QString &fileName)
 {
     QDomDocument testDoc;
     QDomElement system = testDoc.createElement("System");
@@ -759,16 +795,16 @@ void MolconvWindow::writeMolconvFile()
         system.appendChild(group);
     }
 
-    QFile file("test.mcv");
+    QFile file(fileName);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream stream(&file);
     stream << testDoc.toString();
     file.close();
 }
 
-void MolconvWindow::readMolconvFile()
+void MolconvWindow::readMolconvFile(const QString &fileName)
 {
-    QFile file("test.mcv");
+    QFile file(fileName);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     QDomDocument testDoc;

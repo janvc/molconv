@@ -56,14 +56,19 @@ public:
 
     molconv::moleculePtr activeMolecule();
 
-    void openFile(const QString &fileName, const bool showList = false);
+    void importFile(const QString &fileName, const bool showList = false);
+
+    void readMolconvFile(const QString &fileName);
+    void writeMolconvFile(const QString &fileName);
 
     void selectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
     void deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
     std::vector<chemkit::Atom *> selection() const;
 
 public slots:
+    void importFile();
     void openFile();
+    void openFile(const QString &fileName);
     void saveFile();
     void quit();
     void startImportDialog();
@@ -85,8 +90,6 @@ public slots:
     void minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculePtr otherMol);
     void useNavigateTool();
     void useSelectTool();
-    void writeMolconvFile();
-    void readMolconvFile();
 
 private slots:
     void resetCoords();
