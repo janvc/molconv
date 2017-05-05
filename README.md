@@ -8,7 +8,7 @@ Copyright and Warranty
 
 Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
 
-molconv if free software: you can redistribute it and/or modify
+molconv is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
