@@ -3,7 +3,7 @@ molconv
 
 convert and edit molecular structure files
 
-Copyright and Warrenty
+Copyright and Warranty
 ----------------------
 
 Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
