@@ -73,6 +73,7 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 ListOfMolecules::~ListOfMolecules()
 {
     delete ui;
+    delete d;
 }
 
 void ListOfMolecules::startContextMenu(const QPoint &point)

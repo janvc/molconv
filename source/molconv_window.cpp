@@ -152,6 +152,7 @@ MolconvWindow::~MolconvWindow()
 {
     delete ui->molconv_graphicsview;
     delete ui;
+    delete d;
 }
 
 void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
@@ -387,6 +388,7 @@ void MolconvWindow::importFile(const QString &fileName, const bool showList)
                 add_molecule(tempMol);
             }
         }
+        delete molFile;
     }
     else
     {

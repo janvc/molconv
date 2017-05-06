@@ -26,10 +26,6 @@ include_directories(${Boost_INCLUDE_DIRS})
 find_package(Chemkit COMPONENTS io graphics gui REQUIRED)
 include_directories(${CHEMKIT_INCLUDE_DIRS})
 
-# Eigen3 is required
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
-
 # We are using Qt5 for the GUI
 find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools Xml REQUIRED)
 include_directories(${Qt5Widgets_INCLUDE_DIRS})

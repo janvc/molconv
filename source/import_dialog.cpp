@@ -65,6 +65,7 @@ ImportDialog::ImportDialog(QWidget *parent)
 ImportDialog::~ImportDialog()
 {
     delete ui;
+    delete d;
 }
 
 void ImportDialog::openFile()
@@ -94,6 +95,7 @@ void ImportDialog::openFile()
         ui->basis->setEnabled(true);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     }
+    delete the_molfile;
 }
 
 void ImportDialog::on_filedialog_clicked()
