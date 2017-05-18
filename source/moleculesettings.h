@@ -53,6 +53,7 @@ public slots:
 
 signals:
     void basisChanged() const;
+    void editingFinished() const;
 
 private slots:
     void on_xSlider_valueChanged(int value);
@@ -69,6 +70,20 @@ private slots:
     void on_phiSpinBox_valueChanged(double value);
     void on_thetaSpinBox_valueChanged(double value);
     void on_psiSpinBox_valueChanged(double value);
+
+    void on_xSlider_sliderReleased();
+    void on_ySlider_sliderReleased();
+    void on_zSlider_sliderReleased();
+    void on_phiSlider_sliderReleased();
+    void on_thetaSlider_sliderReleased();
+    void on_psiSlider_sliderReleased();
+
+    void on_xSpinBox_editingFinished();
+    void on_ySpinBox_editingFinished();
+    void on_zSpinBox_editingFinished();
+    void on_phiSpinBox_editingFinished();
+    void on_thetaSpinBox_editingFinished();
+    void on_psiSpinBox_editingFinished();
 
 private:
     void setValues();

@@ -113,7 +113,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
 
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
-    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), d->m_MoleculeInfo, SLOT(updateAtomPos()));
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), d->m_MoleculeInfo, SLOT(updateLive()));
+    connect(d->m_MoleculeSettings, SIGNAL(editingFinished()), d->m_MoleculeInfo, SLOT(updateMan()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);

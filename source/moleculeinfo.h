@@ -40,16 +40,20 @@ public:
 
 public slots:
     void setMolecule(molconv::moleculePtr &newMol);
-    void updateAtomPos();
+    void updateLive();
+    void updateMan();
 
 private slots:
-    void on_nDigits_valueChanged(int arg1);
+    void on_nDigits_valueChanged(int nDigits);
+    void on_doLiveUpdate_toggled(bool checked);
 
 private:
+    void update();
     Ui::MoleculeInfo *ui;
     MolconvWindow *m_window;
     molconv::moleculePtr m_molecule;
-    int aP_prec;
+    int m_aP_prec;
+    bool m_updateLive;
 };
 
 #endif // MOLECULEINFO_H
