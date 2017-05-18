@@ -46,6 +46,7 @@
 #include "multimoldialog.h"
 #include "navigatetool.h"
 #include "selecttool.h"
+#include "moleculeinfo.h"
 
 
 class MolconvWindowPrivate
@@ -64,6 +65,7 @@ public:
 
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
+    MoleculeInfo *m_MoleculeInfo;
 
     molconv::sysPtr m_system;
 
@@ -93,9 +95,11 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_setBasisDialog = new setBasisDialog(this);
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
+    d->m_MoleculeInfo = new MoleculeInfo(this);
 
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
+    addDockWidget(Qt::RightDockWidgetArea, d->m_MoleculeInfo);
 
     ui->actionSet_internal_basis->setEnabled(false);
     ui->actionDuplicate->setEnabled(false);
@@ -110,7 +114,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
-
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
     connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
@@ -125,15 +128,22 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAlign, SIGNAL(triggered()), d->m_ListOfMolecules, SLOT(alignMolecules()));
     connect(ui->actionNavigate, SIGNAL(triggered()), SLOT(useNavigateTool()));
     connect(ui->actionSelect, SIGNAL(triggered()), SLOT(useSelectTool()));
+
     connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(importFile()));
+
     connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
+
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeInfo, SLOT(setMolecule(molconv::moleculePtr&)));
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
+
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateSelection()));
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), d->m_MoleculeInfo, SLOT(updateLive()));
+    connect(d->m_MoleculeSettings, SIGNAL(editingFinished()), d->m_MoleculeInfo, SLOT(updateMan()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
     ui->molconv_graphicsview->addItem(axes);

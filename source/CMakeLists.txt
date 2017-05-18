@@ -74,6 +74,7 @@ set(SOURCES
     aboutdialog.cpp
     navigatetool.cpp
     selecttool.cpp
+    moleculeinfo.cpp
 )
 
 set(MOC_HEADERS
@@ -86,6 +87,7 @@ set(MOC_HEADERS
     multimoldialog.h
     setbasisdialog.h
     aboutdialog.h
+    moleculeinfo.h
 )
 
 set(UI_FORMS
@@ -98,6 +100,7 @@ set(UI_FORMS
     multimoldialog.ui
     setbasisdialog.ui
     aboutdialog.ui
+    moleculeinfo.ui
 )
 
 set(RESOURCES
