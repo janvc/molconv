@@ -39,13 +39,13 @@ namespace molconv
         ~System();
         size_t nMolecules() const;
         size_t nGroups() const;
-        moleculePtr getMolecule(const size_t index) const;
+        moleculePtr getMolecule(const unsigned long index) const;
         groupPtr getGroup(const size_t index) const;
         size_t MoleculeIndex(const moleculePtr theMolecule);
         size_t GroupIndex(const groupPtr &theGroup) const;
 
         void addMolecule(const moleculePtr newMolecule);
-        void removeMolecule(const size_t index);
+        void removeMolecule(const unsigned long key);
         void addGroup(const groupPtr &newGroup);
         void removeGroup(const size_t index);
 

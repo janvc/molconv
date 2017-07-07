@@ -102,6 +102,8 @@ namespace molconv
 
         chemkit::Atom *addAtom(const chemkit::Element &element);
 
+        unsigned long molId() const;
+
     private:
         // private functions:
         void setInternalOriginPosition();

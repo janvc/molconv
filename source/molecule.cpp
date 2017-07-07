@@ -47,6 +47,12 @@ namespace molconv
             m_phi = 0;
             m_theta = 0;
             m_psi = 0;
+
+            // generate the molecule's id:
+            std::srand(std::time(0));
+            int s1 = std::rand();
+            int s2 = std::rand();
+            m_id = (unsigned long) s1 << 32 | s2;
         }
 
         origin m_origin;
@@ -71,6 +77,8 @@ namespace molconv
         std::vector<bool> m_basisList;
 
         std::array<double,6> m_originalBasis;
+
+        unsigned long m_id;
     };
 
     ///
@@ -1070,6 +1078,11 @@ namespace molconv
         d->m_basisList.push_back(true);
 
         return chemkit::Molecule::addAtom(element);
+    }
+
+    unsigned long Molecule::molId() const
+    {
+        return d->m_id;
     }
 
 } // namespace molconv

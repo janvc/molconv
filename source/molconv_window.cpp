@@ -18,6 +18,7 @@
  *
  */
 
+#include<random>
 #include<iostream>
 #include<iomanip>
 #include<cmath>
@@ -67,7 +68,7 @@ public:
     MoleculeSettings *m_MoleculeSettings;
     MoleculeInfo *m_MoleculeInfo;
 
-    molconv::sysPtr m_system;
+    boost::scoped_ptr<molconv::System> m_system;
 
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::vector<chemkit::GraphicsMoleculeItem *> m_GraphicsItemVector;
