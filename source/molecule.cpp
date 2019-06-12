@@ -23,6 +23,7 @@
 #include<array>
 #include<stdexcept>
 #include<iomanip>
+#include<random>
 #include<Eigen/Geometry>
 #include<Eigen/Eigenvalues>
 #include<chemkit/bondpredictor.h>

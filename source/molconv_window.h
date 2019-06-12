@@ -52,7 +52,7 @@ public:
     ~MolconvWindow();
     void add_molecule(molconv::moleculePtr temp_mol);
     int nMolecules();
-    molconv::moleculePtr getMol(int index);
+    molconv::moleculePtr getMol(const unsigned long key);
 
     molconv::moleculePtr activeMolecule();
 

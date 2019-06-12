@@ -63,7 +63,7 @@ namespace molconv {
     class Molecule;
     class MoleculeGroup;
     class System;
-    typedef boost::weak_ptr<Molecule> moleculePtr;
+    typedef boost::shared_ptr<Molecule> moleculePtr;
     typedef boost::shared_ptr<MoleculeGroup> groupPtr;
 //    typedef boost::shared_ptr<System> sysPtr;
 } // namespace molconv

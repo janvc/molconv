@@ -30,7 +30,7 @@ namespace molconv
     class SystemPrivate
     {
     public:
-        std::map<unsigned long, boost::shared_ptr<Molecule> > m_molecules;
+        std::map<unsigned long, moleculePtr> m_molecules;
         std::vector<groupPtr> m_groups;
     };
 
@@ -81,12 +81,8 @@ namespace molconv
     /// returns a shared pointer to the molecule at \p index
     ///
     moleculePtr System::getMolecule(const unsigned long index) const
-    {/*
-        if (index >= nMolecules())
-            throw std::invalid_argument("index out of range.\n");*/
-
-        moleculePtr p(d->m_molecules.at(index));
-        return p;
+    {
+        return d->m_molecules.at(index);
     }
 
     ///
@@ -153,7 +149,6 @@ namespace molconv
     void System::addMolecule(const moleculePtr newMolecule)
     {
         d->m_molecules.insert(std::make_pair(newMolecule->molId(), newMolecule));
-        //d->m_molecules.push_back(newMolecule);
     }
 
     ///
@@ -163,11 +158,7 @@ namespace molconv
     /// removes the molecule at index \p index
     ///
     void System::removeMolecule(const unsigned long key)
-    {/*
-        if (index >= nMolecules())
-            throw std::invalid_argument("index out of range.\n");
-
-        d->m_molecules.erase(d->m_molecules.begin() + index);*/
+    {
         d->m_molecules.erase(key);
     }
 
