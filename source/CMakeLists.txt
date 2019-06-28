@@ -16,42 +16,8 @@
 # You should have recieved a copy of the GNU General Public License
 # along with molconv. If not, see <http://www.gnu.org/licenses/>.
 #
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
-# Boost libraries are required
-find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
-# Chemkit libraries are required
-find_package(Chemkit COMPONENTS io graphics gui REQUIRED)
-include_directories(${CHEMKIT_INCLUDE_DIRS})
-
-# We are using Qt5 for the GUI
-find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools Xml REQUIRED)
-include_directories(${Qt5Widgets_INCLUDE_DIRS})
-include_directories(${Qt5OpenGL_INCLUDE_DIRS})
-include_directories(${Qt5Xml_INCLUDE_DIRS})
-
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIRS})
-
-FIND_PACKAGE(Qt5LinguistTools)
-IF(UPDATE_TRANSLATIONS)
-    IF(NOT Qt5_LUPDATE_EXECUTABLE)
-        MESSAGE(WARNING "Qt's lupdate not found.")
-    ENDIF()
-ENDIF()
-IF(NOT Qt5_LRELEASE_EXECUTABLE)
-    MESSAGE(WARNING "Qt's lrelease not found.")
-ENDIF()
-
-set(CMAKE_AUTOMOC ON)
-# AUTOUIC confusingly doesn't work
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(SOURCES
     main.cpp
