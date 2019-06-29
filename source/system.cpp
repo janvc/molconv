@@ -187,4 +187,16 @@ namespace molconv
         d->m_groups.erase(d->m_groups.begin() + index);
     }
 
+    std::vector<unsigned long> System::getMolIDs() const
+    {
+        std::vector<unsigned long> result;
+
+        for (auto const& element : d->m_molecules)
+        {
+            result.push_back(element.first);
+        }
+
+        return result;
+    }
+
 } // namespace molconv

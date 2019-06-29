@@ -71,7 +71,6 @@ public:
 
     boost::scoped_ptr<molconv::System> m_system;
 
-    std::vector<unsigned long> m_IDList;
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::map<unsigned long, chemkit::GraphicsMoleculeItem *> m_GraphicsItemMap;
     std::map<unsigned long, GraphicsAxisItem *> m_GraphicsAxisMap;
@@ -172,7 +171,6 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
     d->m_system->addMolecule(temp_mol);
     unsigned long id = temp_mol->molId();
-    d->m_IDList.push_back(id);
 
     chemkit::GraphicsMoleculeItem *item = new chemkit::GraphicsMoleculeItem(temp_mol.get());
     d->m_GraphicsItemMap.insert(std::make_pair(id, item));
@@ -203,6 +201,9 @@ void MolconvWindow::removeActiveMolecule()
 {
     unsigned long id = d->activeMolecule->molId();
 
+    // remove active molecule from the list
+    d->m_ListOfMolecules->removeCurrentMolecule();
+
     // remove active molecule's graphics item
     ui->molconv_graphicsview->deleteItem(d->m_GraphicsItemMap.at(id));
     d->m_GraphicsItemMap.erase(id);
@@ -212,8 +213,6 @@ void MolconvWindow::removeActiveMolecule()
     d->m_GraphicsAxisMap.erase(id);
 
     d->m_system->removeMolecule(id);
-
-    d->m_IDList.erase(std::remove(d->m_IDList.begin(), d->m_IDList.end(), id), d->m_IDList.end());
 
     ui->molconv_graphicsview->update();
 
@@ -554,7 +553,7 @@ void MolconvWindow::ResetView()
 {
     // determine largest distance of any atom from the global origin:
     double maxLength = 0;
-    for (unsigned long id : d->m_IDList)
+    for (unsigned long id : d->m_system->getMolIDs())
     {
         molconv::moleculePtr mol =  d->m_system->getMolecule(id);
 
@@ -603,7 +602,7 @@ void MolconvWindow::changeOriginBasis()
 
 void MolconvWindow::updateAxes()
 {
-    int index = d->activeMolecule->molId();
+    unsigned long index = d->activeMolecule->molId();
 
     d->m_GraphicsAxisMap.at(index)->setPosition(d->activeMolecule->internalOriginPosition());
     d->m_GraphicsAxisMap.at(index)->setVectors(d->activeMolecule->internalBasisVectors());
@@ -725,7 +724,7 @@ void MolconvWindow::writeMolconvFile(const QString &fileName)
     QDomElement system = testDoc.createElement("System");
     testDoc.appendChild(system);
 
-    for (unsigned long id : d->m_IDList)
+    for (unsigned long id : d->m_system->getMolIDs())
     {
         QDomElement molecule = testDoc.createElement("Molecule");
         molecule.setAttribute("Name", QString::fromStdString(d->m_system->getMolecule(id)->name()));

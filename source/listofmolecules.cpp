@@ -118,8 +118,8 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
             item->setCheckable(true);
             item->setCheckState(Qt::Checked);
 
-            if (d->m_window->activeMolecule())
-                d->m_window->activeMolecule()->listItem()->setIcon(QIcon(":/icons/item-inactive.png"));
+//            if (d->m_window->activeMolecule())
+//                d->m_window->activeMolecule()->listItem()->setIcon(QIcon(":/icons/item-inactive.png"));
 
             item->setIcon(QIcon(":/icons/item-active.png"));
         }
@@ -130,7 +130,7 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
     for (int column = 0; column < d->m_model->columnCount(); column++)
         ui->system_tree->resizeColumnToContents(column);
 
-    newMol->setListItem(static_cast<MoleculeItem *>(items.front()));
+//    newMol->setListItem(static_cast<MoleculeItem *>(items.front()));
 
     // automatically select the molecule that was last added to make it clear, which
     // molecule is currently being edited
@@ -175,25 +175,25 @@ void ListOfMolecules::removeCurrentMolecule()
     d->m_model->removeRow(index.row(), index.parent());
 }
 
-molconv::moleculePtr ListOfMolecules::currentMolecule()
+unsigned long ListOfMolecules::currentmolID()
 {
     QModelIndex index = ui->system_tree->selectionModel()->currentIndex();
     MoleculeItem *currentItem = static_cast<MoleculeItem *>(d->m_model->itemFromIndex(index));
 
-    return currentItem->Molecule();
+    return currentItem->molID();
 }
 
 void ListOfMolecules::toggleMolecule(const QModelIndex &index)
 {
-    bool state = false;
+    bool isVisible = false;
     if (d->m_model->itemFromIndex(index)->checkState() == Qt::Checked)
-        state = true;
+        isVisible = true;
 
     // find out if the item that was clicked is a molecule or a group:
     if (d->m_model->itemFromIndex(index)->type() == QStandardItem::UserType + 1)       // molecule
     {
         MoleculeItem *currentItem = static_cast<MoleculeItem *>(d->m_model->itemFromIndex(index));
-        d->m_window->toggle_molecule(currentItem->Molecule(), state);
+        d->m_window->toggle_molecule(currentItem->Molecule(), isVisible);
     }
     else if (d->m_model->itemFromIndex(index)->type() == QStandardItem::UserType + 2)  // group
     {
@@ -202,8 +202,8 @@ void ListOfMolecules::toggleMolecule(const QModelIndex &index)
 
         for (int i = 0; i < currentGroup->nMolecules(); i++)
         {
-            d->m_window->toggle_molecule(currentGroup->getMol(i), state);
-            if (state)
+            d->m_window->toggle_molecule(currentGroup->getMol(i), isVisible);
+            if (isVisible)
                 currentItem->child(i)->setCheckState(Qt::Checked);
             else
                 currentItem->child(i)->setCheckState(Qt::Unchecked);

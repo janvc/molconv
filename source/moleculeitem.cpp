@@ -25,28 +25,28 @@
 MoleculeItem::MoleculeItem(molconv::moleculePtr &newMol, int column)
     : QStandardItem()
 {
-    m_molecule = newMol;
+    m_molID = newMol->molId();
 
     switch (column)
     {
     case 1:
-        setText(QString::fromStdString(m_molecule->name()));
+        setText(QString::fromStdString(newMol->name()));
         break;
     case 2:
-        setText(QString::number(m_molecule->size()));
+        setText(QString::number(newMol->size()));
         break;
     case 3:
-        setText(QString::fromStdString(m_molecule->formula()));
+        setText(QString::fromStdString(newMol->formula()));
         break;
     case 4:
-        setText(QString::number(m_molecule->mass()));
+        setText(QString::number(newMol->mass()));
         break;
     }
 }
 
-molconv::moleculePtr MoleculeItem::Molecule() const
+unsigned long MoleculeItem::molID() const
 {
-    return m_molecule;
+    return m_molID;
 }
 
 int MoleculeItem::type() const

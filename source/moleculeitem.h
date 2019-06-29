@@ -33,11 +33,11 @@ class MoleculeItem : public QStandardItem
 {
 public:
     MoleculeItem(molconv::moleculePtr &newMol, int column);
-    molconv::moleculePtr Molecule() const;
+    unsigned long molID() const;
     int type() const;
 
 private:
-    molconv::moleculePtr m_molecule;
+    unsigned long m_molID;
 };
 
 #endif // MOLECULEITEM_H

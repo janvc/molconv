@@ -44,7 +44,7 @@ public:
     void insertMolecule(molconv::moleculePtr &newMol);
     void insertGroup(molconv::MoleculeGroup *newGroup);
     void removeCurrentMolecule();
-    molconv::moleculePtr currentMolecule();
+    unsigned long currentmolID();
 
 public slots:
     void alignMolecules();

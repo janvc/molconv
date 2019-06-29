@@ -43,6 +43,7 @@ namespace molconv
         groupPtr getGroup(const size_t index) const;
         size_t MoleculeIndex(const moleculePtr theMolecule);
         size_t GroupIndex(const groupPtr &theGroup) const;
+        std::vector<unsigned long> getMolIDs() const;
 
         void addMolecule(const moleculePtr newMolecule);
         void removeMolecule(const unsigned long key);
