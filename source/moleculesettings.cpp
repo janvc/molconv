@@ -30,7 +30,7 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     , ui(new Ui::MoleculeSettings)
     , settingMolecule(false)
 {
-    main_window = window;
+    m_mainWindow = window;
 
     ui->setupUi(this);
 
@@ -38,7 +38,7 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
 
     setBoundaries();
 
-    connect(main_window, SIGNAL(new_molecule(molconv::moleculePtr&)), SLOT(setMolecule(molconv::moleculePtr&)));
+    connect(m_mainWindow, SIGNAL(new_molecule(unsigned long)), SLOT(setMolecule(unsigned long)));
 }
 
 MoleculeSettings::~MoleculeSettings()
@@ -48,7 +48,7 @@ MoleculeSettings::~MoleculeSettings()
 
 void MoleculeSettings::setValues()
 {
-    Eigen::Vector3d origin = m_molecule->internalOriginPosition();
+    Eigen::Vector3d origin = m_mainWindow->getMol(m_molID)->internalOriginPosition();
 
     double x = origin(0);
     double y = origin(1);
@@ -101,13 +101,13 @@ void MoleculeSettings::setValues()
     ui->ySpinBox->setValue(y);
     ui->zSpinBox->setValue(z);
 
-    ui->phiSlider->setValue(int(m_molecule->phi() * rad2deg * factor));
-    ui->thetaSlider->setValue(int(m_molecule->theta() * rad2deg * factor));
-    ui->psiSlider->setValue(int(m_molecule->psi() * rad2deg * factor));
+    ui->phiSlider->setValue(int(m_mainWindow->getMol(m_molID)->phi() * rad2deg * factor));
+    ui->thetaSlider->setValue(int(m_mainWindow->getMol(m_molID)->theta() * rad2deg * factor));
+    ui->psiSlider->setValue(int(m_mainWindow->getMol(m_molID)->psi() * rad2deg * factor));
 
-    ui->phiSpinBox->setValue(m_molecule->phi() * rad2deg);
-    ui->thetaSpinBox->setValue(m_molecule->theta() * rad2deg);
-    ui->psiSpinBox->setValue(m_molecule->psi() * rad2deg);
+    ui->phiSpinBox->setValue(m_mainWindow->getMol(m_molID)->phi() * rad2deg);
+    ui->thetaSpinBox->setValue(m_mainWindow->getMol(m_molID)->theta() * rad2deg);
+    ui->psiSpinBox->setValue(m_mainWindow->getMol(m_molID)->psi() * rad2deg);
 }
 
 void MoleculeSettings::setBoundaries()
@@ -149,7 +149,7 @@ void MoleculeSettings::setBoundaries()
 
 void MoleculeSettings::updateMolecule()
 {
-    m_molecule->moveFromParas(
+    m_mainWindow->getMol(m_molID)->moveFromParas(
                 ui->xSpinBox->value(),
                 ui->ySpinBox->value(),
                 ui->zSpinBox->value(),
@@ -160,9 +160,9 @@ void MoleculeSettings::updateMolecule()
     emit basisChanged();
 }
 
-molconv::moleculePtr MoleculeSettings::molecule() const
+unsigned long MoleculeSettings::molID() const
 {
-    return m_molecule;
+    return m_molID;
 }
 
 void MoleculeSettings::moveMolecule(const double x, const double y, const double z, const double phi, const double theta, const double psi)
@@ -175,11 +175,11 @@ void MoleculeSettings::moveMolecule(const double x, const double y, const double
     ui->psiSpinBox->setValue(psi * rad2deg);
 }
 
-void MoleculeSettings::setMolecule(molconv::moleculePtr &newMolecule)
+void MoleculeSettings::setMolecule(const unsigned long newMolID)
 {
     settingMolecule = true;
 
-    m_molecule = newMolecule;
+    m_molID = newMolID;
 
     ui->xSlider->setEnabled(true);
     ui->ySlider->setEnabled(true);

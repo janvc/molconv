@@ -30,8 +30,6 @@ MoleculeInfo::MoleculeInfo(MolconvWindow *window) :
     ui->setupUi(this);
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
-    connect(m_window, SIGNAL(new_molecule(molconv::moleculePtr&)), SLOT(setMolecule(molconv::moleculePtr&)));
-
     QSettings settings;
 
     if (settings.value("updateInfoLive").toBool())
@@ -51,9 +49,9 @@ MoleculeInfo::~MoleculeInfo()
     delete ui;
 }
 
-void MoleculeInfo::setMolecule(molconv::moleculePtr &newMol)
+void MoleculeInfo::setMolecule(const unsigned long newMol)
 {
-    m_molecule = newMol;
+    m_molID = newMol;
 
     update();
 }
@@ -63,7 +61,7 @@ void MoleculeInfo::on_nDigits_valueChanged(int nDigits)
     QSettings settings;
     settings.setValue("infoDigits", nDigits);
     m_aP_prec = nDigits;
-    if (m_molecule)
+    if (m_molID)
         update();
 }
 
@@ -84,16 +82,18 @@ void MoleculeInfo::update()
     ui->atomPositions->clear();
     QString atomicPositions;
 
-    atomicPositions.append(QString::number(m_molecule->size()));
+    molconv::moleculePtr tmpMol = m_window->getMol(m_molID);
+
+    atomicPositions.append(QString::number(tmpMol->size()));
     atomicPositions.append("\n\n");
 
-    for (int i = 0; i < int(m_molecule->size()); i++)
+    for (int i = 0; i < int(tmpMol->size()); i++)
     {
-        atomicPositions.append(QString::fromStdString(m_molecule->atom(i)->symbol()));
+        atomicPositions.append(QString::fromStdString(tmpMol->atom(i)->symbol()));
         atomicPositions.append(QString("%1").arg(i + 1, -5));
-        atomicPositions.append(QString("%1").arg(m_molecule->atom(i)->position()(0), m_aP_prec + 4, 'f', m_aP_prec));
-        atomicPositions.append(QString("%1").arg(m_molecule->atom(i)->position()(1), m_aP_prec + 7, 'f', m_aP_prec));
-        atomicPositions.append(QString("%1").arg(m_molecule->atom(i)->position()(2), m_aP_prec + 7, 'f', m_aP_prec));
+        atomicPositions.append(QString("%1").arg(tmpMol->atom(i)->position()(0), m_aP_prec + 4, 'f', m_aP_prec));
+        atomicPositions.append(QString("%1").arg(tmpMol->atom(i)->position()(1), m_aP_prec + 7, 'f', m_aP_prec));
+        atomicPositions.append(QString("%1").arg(tmpMol->atom(i)->position()(2), m_aP_prec + 7, 'f', m_aP_prec));
         atomicPositions.append("\n");
     }
 
@@ -102,60 +102,60 @@ void MoleculeInfo::update()
     ui->basisProp->clear();
     QString basis;
     basis.append(QString("Origin:\n"));
-    basis.append(QString("%1\n").arg(m_molecule->internalOriginPosition()(0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->internalOriginPosition()(1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->internalOriginPosition()(2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->internalOriginPosition()(0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->internalOriginPosition()(1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->internalOriginPosition()(2), m_aP_prec + 4, 'f', m_aP_prec));
 
     basis.append(QString("Basis:\n"));
-    basis.append(QString("%1").arg(m_molecule->internalBasisVectors()(0,0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->internalBasisVectors()(0,1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->internalBasisVectors()(0,2), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->internalBasisVectors()(1,0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->internalBasisVectors()(1,1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->internalBasisVectors()(1,2), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->internalBasisVectors()(2,0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->internalBasisVectors()(2,1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->internalBasisVectors()(2,2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(0,0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(0,1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->internalBasisVectors()(0,2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(1,0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(1,1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->internalBasisVectors()(1,2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(2,0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(2,1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->internalBasisVectors()(2,2), m_aP_prec + 4, 'f', m_aP_prec));
 
     basis.append(QString("center of geometry:\n"));
-    basis.append(QString("%1\n").arg(m_molecule->center()(0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->center()(1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->center()(2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->center()(0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->center()(1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->center()(2), m_aP_prec + 4, 'f', m_aP_prec));
 
     basis.append(QString("center of mass:\n"));
-    basis.append(QString("%1\n").arg(m_molecule->centerOfMass()(0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->centerOfMass()(1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->centerOfMass()(2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->centerOfMass()(0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->centerOfMass()(1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->centerOfMass()(2), m_aP_prec + 4, 'f', m_aP_prec));
 
     basis.append(QString("inertia tensor:\n"));
-    basis.append(QString("%1").arg(m_molecule->inertiaTensor()(0,0), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->inertiaTensor()(0,1), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->inertiaTensor()(0,2), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->inertiaTensor()(1,0), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->inertiaTensor()(1,1), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->inertiaTensor()(1,2), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->inertiaTensor()(2,0), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->inertiaTensor()(2,1), m_aP_prec + 10, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->inertiaTensor()(2,2), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->inertiaTensor()(0,0), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->inertiaTensor()(0,1), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->inertiaTensor()(0,2), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->inertiaTensor()(1,0), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->inertiaTensor()(1,1), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->inertiaTensor()(1,2), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->inertiaTensor()(2,0), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->inertiaTensor()(2,1), m_aP_prec + 10, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->inertiaTensor()(2,2), m_aP_prec + 10, 'f', m_aP_prec));
 
     basis.append(QString("covariance matrix:\n"));
-    basis.append(QString("%1").arg(m_molecule->covarianceMatrix()(0,0), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->covarianceMatrix()(0,1), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->covarianceMatrix()(0,2), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->covarianceMatrix()(1,0), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->covarianceMatrix()(1,1), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->covarianceMatrix()(1,2), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->covarianceMatrix()(2,0), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(m_molecule->covarianceMatrix()(2,1), m_aP_prec + 6, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(m_molecule->covarianceMatrix()(2,2), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->covarianceMatrix()(0,0), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->covarianceMatrix()(0,1), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->covarianceMatrix()(0,2), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->covarianceMatrix()(1,0), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->covarianceMatrix()(1,1), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->covarianceMatrix()(1,2), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->covarianceMatrix()(2,0), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->covarianceMatrix()(2,1), m_aP_prec + 6, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->covarianceMatrix()(2,2), m_aP_prec + 6, 'f', m_aP_prec));
 
     ui->basisProp->insertPlainText(basis);
 }
 
-void MoleculeInfo::on_doLiveUpdate_toggled(bool checked)
+void MoleculeInfo::on_doLiveUpdate_toggled(bool isChecked)
 {
-    m_updateLive = checked;
+    m_updateLive = isChecked;
 
     QSettings settings;
-    settings.setValue("updateInfoLive", checked);
+    settings.setValue("updateInfoLive", isChecked);
 }

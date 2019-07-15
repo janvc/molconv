@@ -77,7 +77,7 @@ public:
     std::vector<chemkit::Atom *> m_SelectedAtoms;
 
     GraphicsSelectionItem *m_Selection;
-    molconv::moleculePtr activeMolecule;
+    unsigned long m_activeMolID;
 
     boost::shared_ptr<NavigateTool> m_navigatetool;
     boost::shared_ptr<SelectTool> m_selecttool;
@@ -137,9 +137,9 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
-    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeSettings, SLOT(setMolecule(molconv::moleculePtr&)));
-    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), SLOT(updateActiveMolecule(molconv::moleculePtr&)));
-    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(molconv::moleculePtr&)), d->m_MoleculeInfo, SLOT(setMolecule(molconv::moleculePtr&)));
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(unsigned long)), SLOT(updateActiveMolecule(unsigned long)));
+    connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
 
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
@@ -170,20 +170,19 @@ MolconvWindow::~MolconvWindow()
 void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
     d->m_system->addMolecule(temp_mol);
-    unsigned long id = temp_mol->molId();
+    d->m_activeMolID = temp_mol->molId();
 
     chemkit::GraphicsMoleculeItem *item = new chemkit::GraphicsMoleculeItem(temp_mol.get());
-    d->m_GraphicsItemMap.insert(std::make_pair(id, item));
+    d->m_GraphicsItemMap.insert(std::make_pair(d->m_activeMolID, item));
     ui->molconv_graphicsview->addItem(item);
 
     GraphicsAxisItem *axis = new GraphicsAxisItem(temp_mol->internalOriginPosition(), temp_mol->internalBasisVectors());
-    d->m_GraphicsAxisMap.insert(std::make_pair(id, axis));
+    d->m_GraphicsAxisMap.insert(std::make_pair(d->m_activeMolID, axis));
     ui->molconv_graphicsview->addItem(axis);
 
     ui->molconv_graphicsview->update();
 
     d->m_ListOfMolecules->insertMolecule(temp_mol);
-    d->activeMolecule = temp_mol;
 
     ui->actionSet_internal_basis->setEnabled(true);
     ui->actionDuplicate->setEnabled(true);
@@ -194,33 +193,32 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     ui->actionAdd_To_Group->setEnabled(true);
     ui->actionAlign->setEnabled(true);
 
-    emit new_molecule(temp_mol);
+    emit new_molecule(d->m_activeMolID);
 }
 
 void MolconvWindow::removeActiveMolecule()
 {
-    unsigned long id = d->activeMolecule->molId();
 
     // remove active molecule from the list
     d->m_ListOfMolecules->removeCurrentMolecule();
 
     // remove active molecule's graphics item
-    ui->molconv_graphicsview->deleteItem(d->m_GraphicsItemMap.at(id));
-    d->m_GraphicsItemMap.erase(id);
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsItemMap.at(d->m_activeMolID));
+    d->m_GraphicsItemMap.erase(d->m_activeMolID);
 
     // remove active molecule's axis item
-    ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(id));
-    d->m_GraphicsAxisMap.erase(id);
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(d->m_activeMolID));
+    d->m_GraphicsAxisMap.erase(d->m_activeMolID);
 
-    d->m_system->removeMolecule(id);
+    d->m_system->removeMolecule(d->m_activeMolID);
 
     ui->molconv_graphicsview->update();
 
     if (d->m_system->nMolecules() > 0)
-        d->activeMolecule = d->m_ListOfMolecules->currentMolecule();
+        d->m_activeMolID = d->m_ListOfMolecules->currentmolID();
     else
     {
-        d->activeMolecule = 0;
+        d->m_activeMolID = 0;
 
         // disable all the actions that need a molecule to operate on:
         ui->actionSet_internal_basis->setEnabled(false);
@@ -232,8 +230,8 @@ void MolconvWindow::removeActiveMolecule()
         ui->actionAdd_To_Group->setEnabled(false);
     }
 
-    if (d->activeMolecule)
-        d->m_MoleculeSettings->setMolecule(d->activeMolecule);
+    if (d->m_activeMolID)
+        d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
 }
 
 int MolconvWindow::nMolecules()
@@ -246,25 +244,23 @@ molconv::moleculePtr MolconvWindow::getMol(const unsigned long key)
     return d->m_system->getMolecule(key);
 }
 
-molconv::moleculePtr MolconvWindow::activeMolecule()
+unsigned long MolconvWindow::activeMolID()
 {
-    return d->activeMolecule;
+    return d->m_activeMolID;
 }
 
-void MolconvWindow::toggle_molecule(molconv::moleculePtr theMolecule, bool state)
+void MolconvWindow::toggle_molecule(const unsigned long molID, bool state)
 {
-    unsigned long id = theMolecule->molId();
-
     if (state)
     {
-        d->m_GraphicsItemMap.at(id)->show();
-        d->m_GraphicsAxisMap.at(id)->show();
+        d->m_GraphicsItemMap.at(molID)->show();
+        d->m_GraphicsAxisMap.at(molID)->show();
         ui->molconv_graphicsview->update();
     }
     else
     {
-        d->m_GraphicsItemMap.at(id)->hide();
-        d->m_GraphicsAxisMap.at(id)->hide();
+        d->m_GraphicsItemMap.at(molID)->hide();
+        d->m_GraphicsAxisMap.at(molID)->hide();
         ui->molconv_graphicsview->update();
     }
 }
@@ -472,18 +468,18 @@ void MolconvWindow::startExportDialog()
 
 void MolconvWindow::startBasisDialog()
 {
-    d->m_setBasisDialog->prepare(d->activeMolecule);
+    d->m_setBasisDialog->prepare(d->m_activeMolID);
     d->m_setBasisDialog->show();
 }
 
 void MolconvWindow::DuplicateActiveMolecule()
 {
-    DuplicateMolecule(d->activeMolecule);
+    DuplicateMolecule(d->m_activeMolID);
 }
 
-void MolconvWindow::DuplicateMolecule(const molconv::moleculePtr oldMolecule)
+void MolconvWindow::DuplicateMolecule(const unsigned long oldMolID)
 {
-    molconv::moleculePtr newMol = boost::make_shared<molconv::Molecule>(oldMolecule);
+    molconv::moleculePtr newMol = boost::make_shared<molconv::Molecule>(d->m_system->getMolecule(oldMolID));
 
     add_molecule(newMol);
 }
@@ -573,9 +569,9 @@ void MolconvWindow::ResetView()
     ui->molconv_graphicsview->setCamera(boost::make_shared<chemkit::GraphicsCamera>(0,0,dist));
 }
 
-void MolconvWindow::updateActiveMolecule(molconv::moleculePtr &newActive)
+void MolconvWindow::updateActiveMolecule(const unsigned long &newActiveID)
 {
-    d->activeMolecule = newActive;
+    d->m_activeMolID = newActiveID;
 }
 
 void MolconvWindow::changeOriginBasis()
@@ -591,21 +587,22 @@ void MolconvWindow::changeOriginBasis()
     std::vector<bool> newOriginList = d->m_setBasisDialog->selectedOriginAtoms();
     std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
 
-    d->activeMolecule->setOriginList(newOriginList);
-    d->activeMolecule->setBasisList(newBasisList);
-    d->activeMolecule->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
-    d->activeMolecule->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
+    molconv::moleculePtr tmpMolPtr = d->m_system->getMolecule(d->m_activeMolID);
+    tmpMolPtr->setOriginList(newOriginList);
+    tmpMolPtr->setBasisList(newBasisList);
+    tmpMolPtr->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
+    tmpMolPtr->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
 
-    d->m_MoleculeSettings->setMolecule(d->activeMolecule);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
     updateAxes();
 }
 
 void MolconvWindow::updateAxes()
 {
-    unsigned long index = d->activeMolecule->molId();
+    molconv::moleculePtr tmpMolPtr = d->m_system->getMolecule(d->m_activeMolID);
 
-    d->m_GraphicsAxisMap.at(index)->setPosition(d->activeMolecule->internalOriginPosition());
-    d->m_GraphicsAxisMap.at(index)->setVectors(d->activeMolecule->internalBasisVectors());
+    d->m_GraphicsAxisMap.at(d->m_activeMolID)->setPosition(tmpMolPtr->internalOriginPosition());
+    d->m_GraphicsAxisMap.at(d->m_activeMolID)->setVectors(tmpMolPtr->internalBasisVectors());
 
     ui->molconv_graphicsview->update();
 }
@@ -626,7 +623,7 @@ void MolconvWindow::useSelectTool()
 
 void MolconvWindow::resetCoords()
 {
-    std::array<double,6> oB = d->activeMolecule->origBasis();
+    std::array<double,6> oB = d->m_system->getMolecule(d->m_activeMolID)->origBasis();
     d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 
@@ -635,16 +632,22 @@ void MolconvWindow::zeroCoords()
     d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
-void MolconvWindow::alignMolecules(std::vector<molconv::moleculePtr> &molecules)
+void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
 {
-    molconv::moleculePtr refMol = d->activeMolecule;
+    unsigned long refMolID = d->m_activeMolID;
 
     for (int i = 0; i < int(molecules.size()); i++)
-        minimizeRMSD(refMol, molecules[i]);
+    {
+        if (i != refMolID)
+            minimizeRMSD(refMolID, molecules[i]);
+    }
 }
 
-void MolconvWindow::minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculePtr otherMol)
+void MolconvWindow::minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID)
 {
+    molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
+    molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
+
     if (refMol->size() != otherMol->size())
     {
         QMessageBox::critical(this, tr("Alignment impossible"), tr("Only molecules with equal number of atoms can be aligned."));
@@ -657,8 +660,8 @@ void MolconvWindow::minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculeP
     Eigen::Vector3d shift = center - otherMol->center();
     Eigen::Vector3d newOrigin = otherMol->internalOriginPosition() + shift;
 
-    updateActiveMolecule(otherMol);
-    d->m_MoleculeSettings->setMolecule(otherMol);
+    updateActiveMolecule(otherMolID);
+    d->m_MoleculeSettings->setMolecule(otherMolID);
     d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), 0.0, 0.0, 0.0);
 
     Eigen::MatrixXd Xr = Eigen::MatrixXd::Zero(3,Natoms);

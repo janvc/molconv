@@ -50,7 +50,7 @@ public slots:
     void alignMolecules();
 
 signals:
-    void newMoleculeSelected(molconv::moleculePtr &newMol);
+    void newMoleculeSelected(unsigned long newMolID);
     void newGroupSelected(molconv::MoleculeGroup *newGroup);
 
 private slots:

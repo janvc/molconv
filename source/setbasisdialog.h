@@ -39,7 +39,7 @@ public:
     explicit setBasisDialog(QWidget *parent = 0);
     ~setBasisDialog();
 
-    void prepare(molconv::moleculePtr &molecule);
+    void prepare(unsigned long molID);
 
     molconv::origin origin() const;
     molconv::basis basis() const;
@@ -74,12 +74,12 @@ signals:
     void ready();
 
 private:
-    molconv::moleculePtr m_molecule;
+    unsigned long m_molID;
     molconv::origin m_origin;
     molconv::basis m_basis;
 
     Ui::setBasisDialog *ui;
-    MolconvWindow *m_window;
+    MolconvWindow *m_mainWindow;
 
     std::array<int,2> m_originAtoms;
     std::array<int,3> m_basisAtoms;

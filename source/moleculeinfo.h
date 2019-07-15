@@ -39,19 +39,19 @@ public:
     ~MoleculeInfo();
 
 public slots:
-    void setMolecule(molconv::moleculePtr &newMol);
+    void setMolecule(const unsigned long newMol);
     void updateLive();
     void updateMan();
 
 private slots:
     void on_nDigits_valueChanged(int nDigits);
-    void on_doLiveUpdate_toggled(bool checked);
+    void on_doLiveUpdate_toggled(bool isChecked);
 
 private:
     void update();
     Ui::MoleculeInfo *ui;
     MolconvWindow *m_window;
-    molconv::moleculePtr m_molecule;
+    unsigned long m_molID;
     int m_aP_prec;
     bool m_updateLive;
 };

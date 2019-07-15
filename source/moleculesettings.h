@@ -44,11 +44,11 @@ public:
     MoleculeSettings(MolconvWindow *window);
     ~MoleculeSettings();
 
-    molconv::moleculePtr molecule() const;
+    unsigned long molID() const;
     void moveMolecule(const double x, const double y, const double z, const double phi, const double theta, const double psi);
 
 public slots:
-    void setMolecule(molconv::moleculePtr &newMolecule);
+    void setMolecule(const unsigned long newMolID);
     void setGroup(molconv::MoleculeGroup *newGroup);
 
 signals:
@@ -91,8 +91,8 @@ private:
     void updateMolecule();
 
     Ui::MoleculeSettings *ui;
-    MolconvWindow *main_window;
-    molconv::moleculePtr m_molecule;
+    MolconvWindow *m_mainWindow;
+    unsigned long m_molID;
 
     bool settingMolecule;
 

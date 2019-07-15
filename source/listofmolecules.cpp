@@ -95,16 +95,15 @@ void ListOfMolecules::alignMolecules()
 {
     QModelIndexList indexList = ui->system_tree->selectionModel()->selectedRows();
 
-    std::vector<molconv::moleculePtr> molecules;
+    std::vector<unsigned long> indices;
 
     for (int i = 0; i < indexList.size(); i++)
     {
-        molconv::moleculePtr mol = static_cast<MoleculeItem*>(d->m_model->itemFromIndex(indexList[i]))->Molecule();
-        if (mol != d->m_window->activeMolecule())
-            molecules.push_back(mol);
+        MoleculeItem *item = static_cast<MoleculeItem*>(d->m_model->itemFromIndex(indexList[i]));
+        indices.push_back(item->molID());
     }
 
-    d->m_window->alignMolecules(molecules);
+    d->m_window->alignMolecules(indices);
 }
 
 void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
@@ -193,21 +192,21 @@ void ListOfMolecules::toggleMolecule(const QModelIndex &index)
     if (d->m_model->itemFromIndex(index)->type() == QStandardItem::UserType + 1)       // molecule
     {
         MoleculeItem *currentItem = static_cast<MoleculeItem *>(d->m_model->itemFromIndex(index));
-        d->m_window->toggle_molecule(currentItem->Molecule(), isVisible);
+        d->m_window->toggle_molecule(currentItem->molID(), isVisible);
     }
     else if (d->m_model->itemFromIndex(index)->type() == QStandardItem::UserType + 2)  // group
     {
-        GroupItem *currentItem = static_cast<GroupItem *>(d->m_model->itemFromIndex(index));
-        molconv::MoleculeGroup *currentGroup = currentItem->Group();
+//        GroupItem *currentItem = static_cast<GroupItem *>(d->m_model->itemFromIndex(index));
+//        molconv::MoleculeGroup *currentGroup = currentItem->Group();
 
-        for (int i = 0; i < currentGroup->nMolecules(); i++)
-        {
-            d->m_window->toggle_molecule(currentGroup->getMol(i), isVisible);
-            if (isVisible)
-                currentItem->child(i)->setCheckState(Qt::Checked);
-            else
-                currentItem->child(i)->setCheckState(Qt::Unchecked);
-        }
+//        for (int i = 0; i < currentGroup->nMolecules(); i++)
+//        {
+//            d->m_window->toggle_molecule(currentGroup->getMol(i), isVisible);
+//            if (isVisible)
+//                currentItem->child(i)->setCheckState(Qt::Checked);
+//            else
+//                currentItem->child(i)->setCheckState(Qt::Unchecked);
+//        }
     }
 }
 
@@ -219,13 +218,13 @@ void ListOfMolecules::changeSelectedItem(const QModelIndex &current)
         {
             MoleculeItem *currentItem = static_cast<MoleculeItem *>(d->m_model->itemFromIndex(current));
 
-            molconv::moleculePtr tmp = currentItem->Molecule();
-            molconv::moleculePtr active = d->m_window->activeMolecule();
+            unsigned long tmp = currentItem->molID();
+            unsigned long active = d->m_window->activeMolID();
 
             if (tmp != active)
             {
-                tmp->listItem()->setIcon(QIcon(":/icons/item-active.png"));
-                active->listItem()->setIcon(QIcon(":/icons/item-inactive.png"));
+                d->m_window->getMol(tmp)->listItem()->setIcon(QIcon(":/icons/item-active.png"));
+                d->m_window->getMol(active)->listItem()->setIcon(QIcon(":/icons/item-inactive.png"));
             }
 
             emit newMoleculeSelected(tmp);

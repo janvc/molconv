@@ -28,7 +28,7 @@ setBasisDialog::setBasisDialog(QWidget *parent) :
     ui(new Ui::setBasisDialog)
 {
     ui->setupUi(this);
-    m_window = static_cast<MolconvWindow*>(parent);
+    m_mainWindow = static_cast<MolconvWindow*>(parent);
 
     m_originAtoms.fill(0);
     m_basisAtoms.fill(0);
@@ -43,8 +43,10 @@ setBasisDialog::~setBasisDialog()
     delete ui;
 }
 
-void setBasisDialog::prepare(molconv::moleculePtr &molecule)
+void setBasisDialog::prepare(unsigned long molID)
 {
+    molconv::moleculePtr molecule = m_mainWindow->getMol(molID);
+
     setWindowTitle("Internal basis of molecule '" + QString::fromStdString(molecule->name()) + "'");
 
     ui->originAtomList->clear();
@@ -142,8 +144,6 @@ void setBasisDialog::prepare(molconv::moleculePtr &molecule)
         ui->basisAtom3->setValue(m_basisAtoms[2] + 1);
         break;
     }
-
-    m_molecule = molecule;
 }
 
 molconv::origin setBasisDialog::origin() const
@@ -278,8 +278,10 @@ void setBasisDialog::on_buttonBox_accepted()
     m_originList.clear();
     m_basisList.clear();
 
+    int nAtoms = m_mainWindow->getMol(m_molID)->size();
+
     if (ui->originAtomList->isEnabled())
-        for (int i = 0; i < int(m_molecule->size()); i++)
+        for (int i = 0; i < nAtoms; i++)
         {
             if (ui->originAtomList->item(i)->checkState() ==  Qt::Checked)
                 m_originList.push_back(true);
@@ -288,7 +290,7 @@ void setBasisDialog::on_buttonBox_accepted()
         }
 
     if (ui->basisAtomList->isEnabled())
-        for (int i = 0; i < int(m_molecule->size()); i++)
+        for (int i = 0; i < nAtoms; i++)
         {
             if (ui->basisAtomList->item(i)->checkState() ==  Qt::Checked)
                 m_basisList.push_back(true);
@@ -337,11 +339,11 @@ void setBasisDialog::on_basisCharge_toggled(bool checked)
 
 void setBasisDialog::on_originUseSelection_clicked()
 {
-    std::vector<chemkit::Atom *> selectedAtoms = m_window->selection();
+    std::vector<chemkit::Atom *> selectedAtoms = m_mainWindow->selection();
 
     for (int i = 0; i < ui->originAtomList->count(); i++)
     {
-        chemkit::Atom *testAtom = m_molecule->atom(i);
+        chemkit::Atom *testAtom = m_mainWindow->getMol(m_molID)->atom(i);
         if (std::find(selectedAtoms.begin(), selectedAtoms.end(), testAtom) != selectedAtoms.end())
             ui->originAtomList->item(i)->setCheckState(Qt::Checked);
         else
@@ -351,11 +353,11 @@ void setBasisDialog::on_originUseSelection_clicked()
 
 void setBasisDialog::on_basisUseSelection_clicked()
 {
-    std::vector<chemkit::Atom *> selectedAtoms = m_window->selection();
+    std::vector<chemkit::Atom *> selectedAtoms = m_mainWindow->selection();
 
     for (int i = 0; i < ui->basisAtomList->count(); i++)
     {
-        chemkit::Atom *testAtom = m_molecule->atom(i);
+        chemkit::Atom *testAtom = m_mainWindow->getMol(m_molID)->atom(i);
         if (std::find(selectedAtoms.begin(), selectedAtoms.end(), testAtom) != selectedAtoms.end())
             ui->basisAtomList->item(i)->setCheckState(Qt::Checked);
         else

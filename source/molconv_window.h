@@ -54,7 +54,7 @@ public:
     int nMolecules();
     molconv::moleculePtr getMol(const unsigned long key);
 
-    molconv::moleculePtr activeMolecule();
+    unsigned long activeMolID();
 
     void importFile(const QString &fileName, const bool showList = false);
 
@@ -73,9 +73,9 @@ public slots:
     void quit();
     void startImportDialog();
     void startExportDialog();
-    void toggle_molecule(molconv::moleculePtr theMolecule, bool state);
+    void toggle_molecule(const unsigned long molID, bool state);
     void about();
-    void DuplicateMolecule(const molconv::moleculePtr oldMolecule);
+    void DuplicateMolecule(const unsigned long oldMolID);
     void newGroup();
     void startNewGroupDialog();
     void startBasisDialog();
@@ -83,11 +83,11 @@ public slots:
     void ResetView();
     void removeActiveMolecule();
     void DuplicateActiveMolecule();
-    void updateActiveMolecule(molconv::moleculePtr &newActive);
+    void updateActiveMolecule(const unsigned long &newActiveID);
     void changeOriginBasis();
     void updateAxes();
-    void alignMolecules(std::vector<molconv::moleculePtr> &molecules);
-    void minimizeRMSD(molconv::moleculePtr refMol, molconv::moleculePtr otherMol);
+    void alignMolecules(std::vector<unsigned long> &molecules);
+    void minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID);
     void useNavigateTool();
     void useSelectTool();
 
@@ -97,7 +97,7 @@ private slots:
     void updateSelection();
 
 signals:
-    void new_molecule(molconv::moleculePtr &newMolecule);
+    void new_molecule(unsigned long newMolID);
 
 private:
     void selectAtom(chemkit::Atom *theAtom);
