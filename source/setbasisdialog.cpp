@@ -45,6 +45,7 @@ setBasisDialog::~setBasisDialog()
 
 void setBasisDialog::prepare(unsigned long molID)
 {
+    m_molID = molID;
     molconv::moleculePtr molecule = m_mainWindow->getMol(molID);
 
     setWindowTitle("Internal basis of molecule '" + QString::fromStdString(molecule->name()) + "'");
