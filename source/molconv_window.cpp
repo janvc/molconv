@@ -114,6 +114,9 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
 
+    connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
+    connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
+
     connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
@@ -158,6 +161,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     useNavigateTool();
 
     ui->molconv_graphicsview->update();
+
+    d->m_activeMolID = 0;
 }
 
 MolconvWindow::~MolconvWindow()

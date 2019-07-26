@@ -37,8 +37,6 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     setBoundaries();
-
-    connect(m_mainWindow, SIGNAL(new_molecule(unsigned long)), SLOT(setMolecule(unsigned long)));
 }
 
 MoleculeSettings::~MoleculeSettings()
