@@ -57,6 +57,7 @@ private slots:
     void toggleMolecule(const QModelIndex &index);
     void changeSelectedItem(const QModelIndex &current);
     void startContextMenu(const QPoint &point);
+    void updateActiveItem(const unsigned long newActiveMolID);
 
 private:
     ListOfMoleculesPrivate *d;

@@ -94,9 +94,6 @@ namespace molconv
         void addToGroup(groupPtr newGroup);
         groupPtr group() const;
 
-        MoleculeItem *listItem() const;
-        void setListItem(MoleculeItem *newItem);
-
         static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
         static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
 

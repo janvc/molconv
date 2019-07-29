@@ -44,7 +44,6 @@ namespace molconv
             m_originAtoms.fill(0);
             m_basisAtoms.fill(0);
             m_originalBasis.fill(0.0);
-            m_listItem = 0;
             m_phi = 0;
             m_theta = 0;
             m_psi = 0;
@@ -146,7 +145,6 @@ namespace molconv
         d->m_group = originalMolecule.group();
         d->m_originList = originalMolecule.originList();
         d->m_basisList = originalMolecule.basisList();
-        d->m_listItem = originalMolecule.listItem();
 
         initIntPos();
     }
@@ -673,28 +671,6 @@ namespace molconv
     groupPtr Molecule::group() const
     {
         return d->m_group;
-    }
-
-    ///
-    /// \brief Molecule::listItem
-    /// \return
-    ///
-    /// return the List Item corresponding to this molecule
-    ///
-    MoleculeItem *Molecule::listItem() const
-    {
-        return d->m_listItem;
-    }
-
-    ///
-    /// \brief Molecule::setListItem
-    /// \param newItem
-    ///
-    /// set this molecule's List Item to \p newItem
-    ///
-    void Molecule::setListItem(MoleculeItem *newItem)
-    {
-        d->m_listItem = newItem;
     }
 
     ///
