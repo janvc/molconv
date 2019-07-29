@@ -18,10 +18,18 @@
  *
  */
 
+#include <iostream>
 
 #include "test_molconv_window.h"
 
 void TestMolconvWindow::initTestCase()
 {
-    MolconvWindow *win = new MolconvWindow(0);
+    win = new MolconvWindow(0);
 }
+
+void TestMolconvWindow::testFoo()
+{
+    std::cout << win->nMolecules() << std::endl;
+}
+
+QTEST_MAIN(TestMolconvWindow)

@@ -31,8 +31,11 @@ class TestMolconvWindow : public QObject
     Q_OBJECT
 
 private slots:
-    initTestCase();
+    void initTestCase();
+    void testFoo();
 
+private:
+    MolconvWindow *win;
 };
 
 #endif // TEST_MOLCONV_WINDOW_H
