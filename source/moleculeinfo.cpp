@@ -27,6 +27,7 @@ MoleculeInfo::MoleculeInfo(MolconvWindow *window) :
     ui(new Ui::MoleculeInfo)
 {
     m_window = window;
+    m_molID = 0;
     ui->setupUi(this);
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
