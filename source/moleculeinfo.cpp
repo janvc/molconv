@@ -33,10 +33,8 @@ MoleculeInfo::MoleculeInfo(MolconvWindow *window) :
 
     QSettings settings;
 
-    if (settings.value("updateInfoLive").toBool())
-        m_updateLive = true;
-    else
-        m_updateLive = false;
+    m_updateLive = settings.value("updateInfoLive").toBool();
+    ui->doLiveUpdate->setChecked(m_updateLive);
 
     int digits = settings.contains("infoDigits") ? settings.value("infoDigits").toInt() : 3;
     ui->nDigits->setValue(digits);
