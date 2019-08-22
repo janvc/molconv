@@ -60,7 +60,6 @@ public:
     }
 
     ImportDialog *m_ImportDialog;
-    ExportDialog *m_ExportDialog;
     NewGroupDialog *m_NewGroupDialog;
     setBasisDialog *m_setBasisDialog;
     MultiMolDialog *m_MultiMolDialog;
@@ -92,7 +91,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->setupUi(this);
 
     d->m_ImportDialog = new ImportDialog(this);
-    d->m_ExportDialog = new ExportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
     d->m_setBasisDialog = new setBasisDialog(this);
     d->m_ListOfMolecules = new ListOfMolecules(this);
@@ -247,6 +245,11 @@ int MolconvWindow::nMolecules()
 molconv::moleculePtr MolconvWindow::getMol(const unsigned long key)
 {
     return d->m_system->getMolecule(key);
+}
+
+std::vector<unsigned long> MolconvWindow::getMolIDs()
+{
+    return d->m_system->getMolIDs();
 }
 
 unsigned long MolconvWindow::activeMolID()
@@ -466,9 +469,11 @@ void MolconvWindow::startImportDialog()
 
 void MolconvWindow::startExportDialog()
 {
-    d->m_ExportDialog->createMoleculeList();
-    d->m_ExportDialog->setModal(true);
-    d->m_ExportDialog->exec();
+    ExportDialog *ed = new ExportDialog(this);
+    ed->createMoleculeList(d->m_system->getMolIDs());
+    ed->setModal(true);
+    ed->exec();
+    delete ed;
 }
 
 void MolconvWindow::startBasisDialog()
@@ -641,10 +646,10 @@ void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
 {
     unsigned long refMolID = d->m_activeMolID;
 
-    for (int i = 0; i < int(molecules.size()); i++)
+    for (auto i : molecules)
     {
         if (i != refMolID)
-            minimizeRMSD(refMolID, molecules[i]);
+            minimizeRMSD(refMolID, i);
     }
 }
 

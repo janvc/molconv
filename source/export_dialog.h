@@ -38,7 +38,7 @@ public:
     explicit ExportDialog(QWidget *parent = 0);
     ~ExportDialog();
 
-    void createMoleculeList();
+    void createMoleculeList(const std::vector<unsigned long> &ids);
     void writeFile(const QString &filename, const molconv::moleculePtr &theMolecule) const;
 
 private slots:

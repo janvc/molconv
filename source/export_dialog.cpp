@@ -27,6 +27,7 @@ ExportDialog::ExportDialog(QWidget *parent)
 {
     ui->setupUi(this);
     ui->molExportList->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    ui->selectAllBox->setCheckState(Qt::Unchecked);
 
     theWindow = static_cast<MolconvWindow*>(parent);
 }
@@ -36,12 +37,12 @@ ExportDialog::~ExportDialog()
     delete ui;
 }
 
-void ExportDialog::createMoleculeList()
+void ExportDialog::createMoleculeList(const std::vector<unsigned long> &ids)
 {
     ui->molExportList->clear();
     ui->selectAllBox->setCheckState(Qt::Unchecked);
 
-    for (int i = 0; i < theWindow->nMolecules(); i++)
+    for (auto i : ids)
     {
         std::string currentName = theWindow->getMol(i)->name();
         QListWidgetItem *molItem = new QListWidgetItem(QString::fromStdString(currentName), ui->molExportList);
@@ -53,14 +54,15 @@ void ExportDialog::createMoleculeList()
 void ExportDialog::on_buttonBox_accepted()
 {
     // create a dummy molecule containing the atoms of all selected molecules:
+    std::vector<unsigned long> mols = theWindow->getMolIDs();
     molconv::moleculePtr dummyMol(new molconv::Molecule);
     for (int i = 0; i < ui->molExportList->count(); i++)
     {
         if (ui->molExportList->item(i)->isSelected())
         {
-            for (int j = 0; j < int(theWindow->getMol(i)->size()); j++)
+            for (int j = 0; j < int(theWindow->getMol(mols[i])->size()); j++)
             {
-                dummyMol->addAtomCopy(theWindow->getMol(i)->atom(j));
+                dummyMol->addAtomCopy(theWindow->getMol(mols[i])->atom(j));
             }
         }
     }

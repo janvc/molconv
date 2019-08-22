@@ -53,6 +53,7 @@ public:
     void add_molecule(molconv::moleculePtr temp_mol);
     int nMolecules();
     molconv::moleculePtr getMol(const unsigned long key);
+    std::vector<unsigned long> getMolIDs();
 
     unsigned long activeMolID();
 
