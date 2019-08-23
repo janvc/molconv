@@ -49,7 +49,6 @@ namespace molconv
             m_psi = 0;
 
             // generate the molecule's id:
-            std::srand(std::time(0));
             int s1 = std::rand();
             int s2 = std::rand();
             m_id = (unsigned long) s1 << 32 | s2;
@@ -1060,6 +1059,11 @@ namespace molconv
     unsigned long Molecule::molId() const
     {
         return d->m_id;
+    }
+
+    void Molecule::initRand()
+    {
+        std::srand(std::time(0));
     }
 
 } // namespace molconv

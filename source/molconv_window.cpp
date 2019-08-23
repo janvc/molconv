@@ -161,6 +161,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->molconv_graphicsview->update();
 
     d->m_activeMolID = 0;
+
+    molconv::Molecule::initRand();
 }
 
 MolconvWindow::~MolconvWindow()
