@@ -21,6 +21,8 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project(molconv)
 
+include(CTest)
+
 # Do not allow in-source builds:
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed.")
@@ -42,10 +44,48 @@ foreach(LANGUAGE ${LANGUAGES})
     "${CMake_BINARY_DIR}${CMAKE_DATA_DIR}/i18n")
 endforeach(LANGUAGE ${LANGUAGES})
 
+# Boost libraries are required
+find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
+# Chemkit libraries are required
+find_package(Chemkit COMPONENTS io graphics gui REQUIRED)
+include_directories(${CHEMKIT_INCLUDE_DIRS})
+
+# We are using Qt5 for the GUI
+find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools Xml Test REQUIRED)
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5OpenGL_INCLUDE_DIRS})
+include_directories(${Qt5Xml_INCLUDE_DIRS})
+include_directories(${Qt5Test_INCLUDE_DIRS})
+
+find_package(OpenGL REQUIRED)
+include_directories(${OPENGL_INCLUDE_DIRS})
+
+FIND_PACKAGE(Qt5LinguistTools)
+IF(UPDATE_TRANSLATIONS)
+    IF(NOT Qt5_LUPDATE_EXECUTABLE)
+        MESSAGE(WARNING "Qt's lupdate not found.")
+    ENDIF()
+ENDIF()
+IF(NOT Qt5_LRELEASE_EXECUTABLE)
+    MESSAGE(WARNING "Qt's lrelease not found.")
+ENDIF()
+
+set(CMAKE_AUTOMOC ON)
+# AUTOUIC confusingly doesn't work
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 # debugging output only for debug builds
 if(NOT CMAKE_BUILD_TYPE MATCHES "Debug")
     add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
+
+set(molconv_DIR "${CMAKE_BINARY_DIR}")
 
 add_definitions(-DQT_COMPILING_QSTRING_COMPAT_CPP)
 
@@ -62,7 +102,13 @@ endfunction()
 
 git_version(${CMAKE_SOURCE_DIR} SCM_REVISION)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g3 -ggdb -Og")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+
 add_subdirectory(source)
 
 # prevent the generated files from being deleted during make clean
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM true)
+
+add_subdirectory(tests)
