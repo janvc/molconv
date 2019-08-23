@@ -203,19 +203,20 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 
 void MolconvWindow::removeActiveMolecule()
 {
+    unsigned long molToRemove = d->m_activeMolID;
 
     // remove active molecule from the list
     d->m_ListOfMolecules->removeCurrentMolecule();
 
     // remove active molecule's graphics item
-    ui->molconv_graphicsview->deleteItem(d->m_GraphicsItemMap.at(d->m_activeMolID));
-    d->m_GraphicsItemMap.erase(d->m_activeMolID);
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsItemMap.at(molToRemove));
+    d->m_GraphicsItemMap.erase(molToRemove);
 
     // remove active molecule's axis item
-    ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(d->m_activeMolID));
-    d->m_GraphicsAxisMap.erase(d->m_activeMolID);
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(molToRemove));
+    d->m_GraphicsAxisMap.erase(molToRemove);
 
-    d->m_system->removeMolecule(d->m_activeMolID);
+    d->m_system->removeMolecule(molToRemove);
 
     ui->molconv_graphicsview->update();
 
