@@ -24,8 +24,6 @@
 
 void TestMolecule::initTestCase()
 {
-//    molconv::Molecule mol;
-
     mol.addAtom("C");
     mol.addAtom("H");
     mol.addAtom("H");
@@ -38,16 +36,19 @@ void TestMolecule::initTestCase()
     mol.atom(4)->setPosition(1.0, -1.0, -1.0);
 }
 
-void TestMolecule::testFoo()
+void TestMolecule::test_size()
 {
-//    molconv::Molecule mol;
+    unsigned long expected = 5;
 
-    QVERIFY(mol.size() == 5);
+    QCOMPARE(mol.size(), expected);
 }
 
-void TestMolecule::testFoo2()
+void TestMolecule::test_center()
 {
-    std::cout << mol.center() << std::endl;
+    Eigen::Vector3d c = mol.center();
+    Eigen::Vector3d d = Eigen::Vector3d::Zero();
+
+    QCOMPARE(c, d);
 }
 
 QTEST_APPLESS_MAIN(TestMolecule)

@@ -87,9 +87,5 @@ endif(TRANSLATIONS_FILES)
 qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
 qt5_add_resources(RCC_SOURCES ${RESOURCES})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG "-g3 -ggdb -Og")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-
 add_executable(molconv ${SOURCES} ${UI_SOURCES} ${RCC_SOURCES} ${QM_FILES})
 target_link_libraries(molconv Qt5::Widgets Qt5::OpenGL Qt5::Xml ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES} ${OPENGL_LIBRARIES})

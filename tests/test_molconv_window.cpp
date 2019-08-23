@@ -18,7 +18,6 @@
  *
  */
 
-#include <iostream>
 
 #include "test_molconv_window.h"
 
@@ -27,9 +26,23 @@ void TestMolconvWindow::initTestCase()
     win = new MolconvWindow(0);
 }
 
-void TestMolconvWindow::testFoo()
+void TestMolconvWindow::test_add_molecule()
 {
-    std::cout << win->nMolecules() << std::endl;
+    molconv::moleculePtr mol(new molconv::Molecule);
+
+    mol->addAtom("C");
+    mol->addAtom("H");
+    mol->addAtom("H");
+    mol->addAtom("H");
+    mol->addAtom("H");
+    mol->atom(1)->setPosition(1.0, 1.0, 1.0);
+    mol->atom(2)->setPosition(-1.0, -1.0, 1.0);
+    mol->atom(3)->setPosition(-1.0, 1.0, -1.0);
+    mol->atom(4)->setPosition(1.0, -1.0, -1.0);
+
+    win->add_molecule(mol);
+
+    QCOMPARE(win->nMolecules(), 1);
 }
 
 QTEST_MAIN(TestMolconvWindow)

@@ -102,6 +102,10 @@ endfunction()
 
 git_version(${CMAKE_SOURCE_DIR} SCM_REVISION)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g3 -ggdb -Og")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+
 add_subdirectory(source)
 
 # prevent the generated files from being deleted during make clean

@@ -32,7 +32,8 @@ class TestMolconvWindow : public QObject
 
 private slots:
     void initTestCase();
-    void testFoo();
+
+    void test_add_molecule();
 
 private:
     MolconvWindow *win;

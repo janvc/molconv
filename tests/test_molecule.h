@@ -32,8 +32,9 @@ class TestMolecule : public QObject
 
 private slots:
     void initTestCase();
-    void testFoo();
-    void testFoo2();
+
+    void test_size();
+    void test_center();
 
 private:
     molconv::Molecule mol;
