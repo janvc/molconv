@@ -1,6 +1,12 @@
-perform tests for the following functions:
+additional functionality:
+=========================
 
-- alignment
-- SetBasisDialog
-- Duplicate
-- SetOrigin
+- import multiple molecules at once.
+    - ListView for file names and molecule names
+    - retain current widgets for origin, basis etc.
+    - batch processing
+- show a warning when closing the window (save file?)
+
+known problems:
+==============
+
