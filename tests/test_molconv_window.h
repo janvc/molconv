@@ -34,9 +34,9 @@ private slots:
     void initTestCase();
 
     void test_add_molecule();
-
-private:
-    MolconvWindow *win;
+    void test_fresh_window_is_not_modified();
+    void test_new_molecule_sets_window_modified();
+    void test_opening_molconv_file_does_not_modify_window();
 };
 
 #endif // TEST_MOLCONV_WINDOW_H

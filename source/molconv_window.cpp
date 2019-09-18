@@ -115,6 +115,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
+    connect(this, SIGNAL(new_molecule(unsigned long)), this, SLOT(wasModified()));
 
     connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
@@ -164,6 +165,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_activeMolID = 0;
 
     molconv::Molecule::initRand();
+    setWindowTitle(tr("untitled[*] - molconv"));
 }
 
 MolconvWindow::~MolconvWindow()
@@ -294,6 +296,28 @@ void MolconvWindow::about()
 
 void MolconvWindow::quit()
 {
+
+
+    if (isWindowModified())
+    {
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, tr("Molconv"), tr("You have unsaved changes"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
+        msgBox->setDefaultButton(QMessageBox::Save);
+
+        int choice = msgBox->exec();
+
+        if (choice == QMessageBox::Save)
+        {
+            delete msgBox;
+            saveFile();
+        }
+        else if (choice == QMessageBox::Cancel)
+        {
+            delete msgBox;
+            return;
+        }
+        delete msgBox;
+    }
+
     QSettings settings;
     settings.setValue("startMaximized", QVariant(isMaximized()));
     settings.setValue("winW", width());
@@ -633,6 +657,11 @@ void MolconvWindow::useSelectTool()
     ui->actionNavigate->setChecked(false);
     ui->actionSelect->setChecked(true);
     ui->molconv_graphicsview->setTool(d->m_selecttool);
+}
+
+void MolconvWindow::wasModified()
+{
+    setWindowModified(true);
 }
 
 void MolconvWindow::resetCoords()

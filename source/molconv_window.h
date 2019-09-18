@@ -91,6 +91,7 @@ public slots:
     void minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID);
     void useNavigateTool();
     void useSelectTool();
+    void wasModified();
 
 private slots:
     void resetCoords();

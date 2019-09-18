@@ -23,11 +23,11 @@
 
 void TestMolconvWindow::initTestCase()
 {
-    win = new MolconvWindow(0);
 }
 
 void TestMolconvWindow::test_add_molecule()
 {
+    MolconvWindow *win = new MolconvWindow(0);
     molconv::moleculePtr mol(new molconv::Molecule);
 
     mol->addAtom("C");
@@ -43,6 +43,39 @@ void TestMolconvWindow::test_add_molecule()
     win->add_molecule(mol);
 
     QCOMPARE(win->nMolecules(), 1);
+}
+
+void TestMolconvWindow::test_fresh_window_is_not_modified()
+{
+    MolconvWindow *win = new MolconvWindow(0);
+    QVERIFY(!win->isWindowModified());
+}
+
+void TestMolconvWindow::test_new_molecule_sets_window_modified()
+{
+    MolconvWindow *win = new MolconvWindow(0);
+    molconv::moleculePtr mol(new molconv::Molecule);
+
+    mol->addAtom("C");
+    mol->addAtom("H");
+    mol->addAtom("H");
+    mol->addAtom("H");
+    mol->addAtom("H");
+    mol->atom(1)->setPosition(1.0, 1.0, 1.0);
+    mol->atom(2)->setPosition(-1.0, -1.0, 1.0);
+    mol->atom(3)->setPosition(-1.0, 1.0, -1.0);
+    mol->atom(4)->setPosition(1.0, -1.0, -1.0);
+
+    win->add_molecule(mol);
+
+    QVERIFY(win->isWindowModified());
+}
+
+void TestMolconvWindow::test_opening_molconv_file_does_not_modify_window()
+{
+    MolconvWindow *win = new MolconvWindow(0);
+    win->readMolconvFile("../../molconv/molecules/example.mcv");
+    QVERIFY(!win->isWindowModified());
 }
 
 QTEST_MAIN(TestMolconvWindow)
