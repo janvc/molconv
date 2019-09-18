@@ -109,6 +109,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->actionProperties->setEnabled(false);
     ui->actionAdd_To_Group->setEnabled(false);
     ui->actionAlign->setEnabled(false);
+    ui->actionNew_Molecule_Group->setEnabled(false);
 
     connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
 
