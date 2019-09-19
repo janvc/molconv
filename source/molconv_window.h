@@ -66,12 +66,14 @@ public:
     void deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
     std::vector<chemkit::Atom *> selection() const;
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 public slots:
     void importFile();
     void openFile();
     void openFile(const QString &fileName);
     void saveFile();
-    void quit();
     void startImportDialog();
     void startExportDialog();
     void toggle_molecule(const unsigned long molID, bool state);
@@ -104,6 +106,7 @@ signals:
 private:
     void selectAtom(chemkit::Atom *theAtom);
     void deselectAtom(chemkit::Atom *theAtom);
+    bool maybeSave();
 
     MolconvWindowPrivate *d;
     Ui::MolconvWindow *ui;

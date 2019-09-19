@@ -111,8 +111,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->actionAlign->setEnabled(false);
     ui->actionNew_Molecule_Group->setEnabled(false);
 
-    connect(qApp, SIGNAL(aboutToQuit()), SLOT(quit()));
-
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
     connect(this, SIGNAL(new_molecule(unsigned long)), this, SLOT(wasModified()));
@@ -121,7 +119,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
-    connect(ui->actionQuit, SIGNAL(triggered()), SLOT(quit()));
+    connect(ui->actionQuit, SIGNAL(triggered()), SLOT(close()));
     connect(ui->actionAbout, SIGNAL(triggered()), SLOT(about()));
     connect(ui->actionNew_Molecule_Group, SIGNAL(triggered()), SLOT(startNewGroupDialog()));
     connect(ui->actionSet_internal_basis, SIGNAL(triggered()), SLOT(startBasisDialog()));
@@ -294,13 +292,15 @@ void MolconvWindow::about()
     ad->exec();
 }
 
-void MolconvWindow::quit()
+bool MolconvWindow::maybeSave()
 {
-
-
     if (isWindowModified())
     {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning, tr("Molconv"), tr("You have unsaved changes"), QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, this);
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Warning,
+                                              tr("Molconv"),
+                                              tr("You have unsaved changes"),
+                                              QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                                              this);
         msgBox->setDefaultButton(QMessageBox::Save);
 
         int choice = msgBox->exec();
@@ -309,23 +309,36 @@ void MolconvWindow::quit()
         {
             delete msgBox;
             saveFile();
+            return true;
         }
         else if (choice == QMessageBox::Cancel)
         {
             delete msgBox;
-            return;
+            return false;
         }
         delete msgBox;
     }
 
-    QSettings settings;
-    settings.setValue("startMaximized", QVariant(isMaximized()));
-    settings.setValue("winW", width());
-    settings.setValue("winH", height());
-    settings.setValue("xPos", x());
-    settings.setValue("yPos", y());
+    return true;
+}
 
-    qApp->quit();
+void MolconvWindow::closeEvent(QCloseEvent *event)
+{
+    if (maybeSave())
+    {
+        QSettings settings;
+        settings.setValue("startMaximized", QVariant(isMaximized()));
+        settings.setValue("winW", width());
+        settings.setValue("winH", height());
+        settings.setValue("xPos", x());
+        settings.setValue("yPos", y());
+
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
 }
 
 void MolconvWindow::saveFile()
