@@ -59,7 +59,7 @@ public:
 
     void importFile(const QString &fileName, const bool showList = false);
 
-    void readMolconvFile(const QString &fileName);
+    bool readMolconvFile(const QString &fileName);
     void writeMolconvFile(const QString &fileName);
 
     void selectAtom(chemkit::Atom *theAtom, bool wholeMolecule);

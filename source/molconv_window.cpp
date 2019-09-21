@@ -380,10 +380,20 @@ void MolconvWindow::openFile()
 
 void MolconvWindow::openFile(const QString &fileName)
 {
+    bool result;
     if (fileName.split(".").last() == "mcv")
-        readMolconvFile(fileName);
+    {
+        result = readMolconvFile(fileName);
+    }
     else
+    {
         importFile(fileName);
+    }
+
+    if (!result)
+    {
+        QMessageBox::critical(this, "Error", QString("Error opening file: %1").arg(fileName));
+    }
 }
 
 void MolconvWindow::importFile(const QString &fileName, const bool showList)
@@ -878,10 +888,17 @@ void MolconvWindow::writeMolconvFile(const QString &fileName)
     file.close();
 }
 
-void MolconvWindow::readMolconvFile(const QString &fileName)
+bool MolconvWindow::readMolconvFile(const QString &fileName)
 {
     QFile file(fileName);
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if (!file.exists())
+    {
+        return false;
+    }
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return false;
+    }
 
     QDomDocument testDoc;
     testDoc.setContent(&file);
@@ -978,4 +995,5 @@ void MolconvWindow::readMolconvFile(const QString &fileName)
         }
         moleculeNode = moleculeNode.nextSibling();
     }
+    return true;
 }
