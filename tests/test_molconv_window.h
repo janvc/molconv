@@ -37,6 +37,8 @@ private slots:
     void test_fresh_window_is_not_modified();
     void test_new_molecule_sets_window_modified();
     void test_opening_molconv_file_does_not_modify_window();
+    void test_saving_molconv_file_sets_window_not_modified();
+    void test_adding_molecule_to_open_molconv_file_sets_window_modified();
 };
 
 #endif // TEST_MOLCONV_WINDOW_H
