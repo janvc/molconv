@@ -52,12 +52,10 @@ void TestMolconvWindow::test_fresh_window_is_not_modified()
     QVERIFY(!win->isWindowModified());
 }
 
-void TestMolconvWindow::test_new_molecule_sets_window_modified()
+void TestMolconvWindow::test_importing_molecule_sets_window_modified()
 {
     MolconvWindow *win = new MolconvWindow(0);
-    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
-
-    win->add_molecule(mol);
+    win->importFile("../../molconv/molecules/methane_C1.xyz", false);
 
     QVERIFY(win->isWindowModified());
 }
@@ -73,9 +71,7 @@ void TestMolconvWindow::test_saving_molconv_file_sets_window_not_modified()
 {
     MolconvWindow *win = new MolconvWindow(0);
 
-    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
-    win->add_molecule(mol);
-
+    win->importFile("../../molconv/molecules/methane_C1.xyz", false);
     win->writeMolconvFile("../../molconv/molecules/test.mcv");
     QVERIFY(!win->isWindowModified());
 }
@@ -85,10 +81,7 @@ void TestMolconvWindow::test_adding_molecule_to_open_molconv_file_sets_window_mo
 
     MolconvWindow *win = new MolconvWindow(0);
     win->readMolconvFile("../../molconv/molecules/example.mcv");
-
-    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
-
-    win->add_molecule(mol);
+    win->importFile("../../molconv/molecules/methane_C1.xyz", false);
 
     QVERIFY(win->isWindowModified());
 }

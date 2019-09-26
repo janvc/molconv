@@ -113,7 +113,6 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
-    connect(this, SIGNAL(new_molecule(unsigned long)), this, SLOT(wasModified()));
 
     connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
@@ -454,6 +453,7 @@ void MolconvWindow::importFile(const QString &fileName, const bool showList)
             }
         }
         delete molFile;
+        wasModified();
     }
     else
     {
@@ -886,6 +886,8 @@ void MolconvWindow::writeMolconvFile(const QString &fileName)
     QTextStream stream(&file);
     stream << testDoc.toString();
     file.close();
+    setWindowTitle(fileName.split("/").last() + "[*] - molconv");
+    setWindowModified(false);
 }
 
 bool MolconvWindow::readMolconvFile(const QString &fileName)
@@ -995,5 +997,6 @@ bool MolconvWindow::readMolconvFile(const QString &fileName)
         }
         moleculeNode = moleculeNode.nextSibling();
     }
+    setWindowTitle(fileName.split("/").last() + "[*] - molconv");
     return true;
 }
