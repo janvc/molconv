@@ -23,22 +23,23 @@
 
 void TestMolconvWindow::initTestCase()
 {
+    m_cmol = boost::shared_ptr<chemkit::Molecule>(new chemkit::Molecule);
+
+    m_cmol->addAtom("C");
+    m_cmol->addAtom("H");
+    m_cmol->addAtom("H");
+    m_cmol->addAtom("H");
+    m_cmol->addAtom("H");
+    m_cmol->atom(1)->setPosition(1.0, 1.0, 1.0);
+    m_cmol->atom(2)->setPosition(-1.0, -1.0, 1.0);
+    m_cmol->atom(3)->setPosition(-1.0, 1.0, -1.0);
+    m_cmol->atom(4)->setPosition(1.0, -1.0, -1.0);
 }
 
 void TestMolconvWindow::test_add_molecule()
 {
     MolconvWindow *win = new MolconvWindow(0);
-    molconv::moleculePtr mol(new molconv::Molecule);
-
-    mol->addAtom("C");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->atom(1)->setPosition(1.0, 1.0, 1.0);
-    mol->atom(2)->setPosition(-1.0, -1.0, 1.0);
-    mol->atom(3)->setPosition(-1.0, 1.0, -1.0);
-    mol->atom(4)->setPosition(1.0, -1.0, -1.0);
+    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
 
     win->add_molecule(mol);
 
@@ -54,17 +55,7 @@ void TestMolconvWindow::test_fresh_window_is_not_modified()
 void TestMolconvWindow::test_new_molecule_sets_window_modified()
 {
     MolconvWindow *win = new MolconvWindow(0);
-    molconv::moleculePtr mol(new molconv::Molecule);
-
-    mol->addAtom("C");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->atom(1)->setPosition(1.0, 1.0, 1.0);
-    mol->atom(2)->setPosition(-1.0, -1.0, 1.0);
-    mol->atom(3)->setPosition(-1.0, 1.0, -1.0);
-    mol->atom(4)->setPosition(1.0, -1.0, -1.0);
+    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
 
     win->add_molecule(mol);
 
@@ -81,18 +72,8 @@ void TestMolconvWindow::test_opening_molconv_file_does_not_modify_window()
 void TestMolconvWindow::test_saving_molconv_file_sets_window_not_modified()
 {
     MolconvWindow *win = new MolconvWindow(0);
-    molconv::moleculePtr mol(new molconv::Molecule);
 
-    mol->addAtom("C");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->atom(1)->setPosition(1.0, 1.0, 1.0);
-    mol->atom(2)->setPosition(-1.0, -1.0, 1.0);
-    mol->atom(3)->setPosition(-1.0, 1.0, -1.0);
-    mol->atom(4)->setPosition(1.0, -1.0, -1.0);
-
+    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
     win->add_molecule(mol);
 
     win->writeMolconvFile("../../molconv/molecules/test.mcv");
@@ -105,17 +86,7 @@ void TestMolconvWindow::test_adding_molecule_to_open_molconv_file_sets_window_mo
     MolconvWindow *win = new MolconvWindow(0);
     win->readMolconvFile("../../molconv/molecules/example.mcv");
 
-    molconv::moleculePtr mol(new molconv::Molecule);
-
-    mol->addAtom("C");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->addAtom("H");
-    mol->atom(1)->setPosition(1.0, 1.0, 1.0);
-    mol->atom(2)->setPosition(-1.0, -1.0, 1.0);
-    mol->atom(3)->setPosition(-1.0, 1.0, -1.0);
-    mol->atom(4)->setPosition(1.0, -1.0, -1.0);
+    molconv::moleculePtr mol(new molconv::Molecule(m_cmol));
 
     win->add_molecule(mol);
 

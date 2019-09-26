@@ -39,6 +39,9 @@ private slots:
     void test_opening_molconv_file_does_not_modify_window();
     void test_saving_molconv_file_sets_window_not_modified();
     void test_adding_molecule_to_open_molconv_file_sets_window_modified();
+
+private:
+    boost::shared_ptr<chemkit::Molecule> m_cmol;
 };
 
 #endif // TEST_MOLCONV_WINDOW_H
