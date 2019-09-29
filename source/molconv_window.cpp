@@ -80,6 +80,8 @@ public:
 
     boost::shared_ptr<NavigateTool> m_navigatetool;
     boost::shared_ptr<SelectTool> m_selecttool;
+
+    QString m_currentFile;
 };
 
 
@@ -114,7 +116,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
 
-    connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
+    connect(ui->actionSave_As, SIGNAL(triggered()), SLOT(saveFileAs()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -160,6 +162,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->molconv_graphicsview->update();
 
     d->m_activeMolID = 0;
+    d->m_currentFile = QString();
 
     molconv::Molecule::initRand();
     setWindowTitle(tr("untitled[*] - molconv"));
@@ -307,7 +310,7 @@ bool MolconvWindow::maybeSave()
         if (choice == QMessageBox::Save)
         {
             delete msgBox;
-            saveFile();
+            saveFileAs();
             return true;
         }
         else if (choice == QMessageBox::Cancel)
@@ -340,7 +343,19 @@ void MolconvWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+
 void MolconvWindow::saveFile()
+{
+    if (d->m_currentFile.isEmpty())
+    {
+        saveFileAs();
+    }
+    else
+    {
+        writeMolconvFile(d->m_currentFile);
+    }
+}
+void MolconvWindow::saveFileAs()
 {
     QSettings settings;
     QString startSavePath = settings.value("savePath").toString();
@@ -886,6 +901,7 @@ void MolconvWindow::writeMolconvFile(const QString &fileName)
     QTextStream stream(&file);
     stream << testDoc.toString();
     file.close();
+    d->m_currentFile = fileName;
     setWindowTitle(fileName.split("/").last() + "[*] - molconv");
     setWindowModified(false);
 }
@@ -997,6 +1013,7 @@ bool MolconvWindow::readMolconvFile(const QString &fileName)
         }
         moleculeNode = moleculeNode.nextSibling();
     }
+    d->m_currentFile = fileName;
     setWindowTitle(fileName.split("/").last() + "[*] - molconv");
     return true;
 }

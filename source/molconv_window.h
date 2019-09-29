@@ -73,7 +73,7 @@ public slots:
     void importFile();
     void openFile();
     void openFile(const QString &fileName);
-    void saveFile();
+    void saveFileAs();
     void startImportDialog();
     void startExportDialog();
     void toggle_molecule(const unsigned long molID, bool state);
