@@ -117,6 +117,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(this, SIGNAL(new_molecule(unsigned long)), d->m_MoleculeSettings, SLOT(setMolecule(unsigned long)));
 
     connect(ui->actionSave_As, SIGNAL(triggered()), SLOT(saveFileAs()));
+    connect(ui->actionSave, SIGNAL(triggered()), SLOT(saveFile()));
     connect(ui->actionOpen, SIGNAL(triggered()), SLOT(openFile()));
     connect(ui->actionImport_Molecule, SIGNAL(triggered()), SLOT(startImportDialog()));
     connect(ui->actionExport_Molecule, SIGNAL(triggered()), SLOT(startExportDialog()));
@@ -700,6 +701,7 @@ void MolconvWindow::useSelectTool()
 void MolconvWindow::wasModified()
 {
     setWindowModified(true);
+    ui->actionSave->setEnabled(true);
 }
 
 void MolconvWindow::resetCoords()
@@ -904,6 +906,7 @@ void MolconvWindow::writeMolconvFile(const QString &fileName)
     d->m_currentFile = fileName;
     setWindowTitle(fileName.split("/").last() + "[*] - molconv");
     setWindowModified(false);
+    ui->actionSave->setEnabled(false);
 }
 
 bool MolconvWindow::readMolconvFile(const QString &fileName)
