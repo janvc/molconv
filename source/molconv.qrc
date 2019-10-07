@@ -10,5 +10,6 @@
         <file>icons/item-inactive.png</file>
         <file>icons/select.png</file>
         <file>icons/navigate.png</file>
+        <file>icons/document-export.png</file>
     </qresource>
 </RCC>

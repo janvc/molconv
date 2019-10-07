@@ -91,6 +91,7 @@ public slots:
     void changeOriginBasis();
     void updateAxes();
     void alignMolecules(std::vector<unsigned long> &molecules);
+    void calculateRMSD(const unsigned long refMolID, const unsigned long otherMolID);
     void minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID);
     void useNavigateTool();
     void useSelectTool();

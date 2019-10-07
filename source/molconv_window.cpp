@@ -148,6 +148,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateSelection()));
     connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), d->m_MoleculeInfo, SLOT(updateLive()));
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(wasModified()));
     connect(d->m_MoleculeSettings, SIGNAL(editingFinished()), d->m_MoleculeInfo, SLOT(updateMan()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
@@ -395,7 +396,7 @@ void MolconvWindow::openFile()
 
 void MolconvWindow::openFile(const QString &fileName)
 {
-    bool result;
+    bool result = false;
     if (fileName.split(".").last() == "mcv")
     {
         result = readMolconvFile(fileName);
@@ -665,6 +666,21 @@ void MolconvWindow::changeOriginBasis()
     std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
 
     molconv::moleculePtr tmpMolPtr = d->m_system->getMolecule(d->m_activeMolID);
+
+    // determine if the new basis is different from the old one:
+    if (
+            newOrigin != tmpMolPtr->internalOrigin()
+         || newBasis != tmpMolPtr->internalBasis()
+         || newAtomLineScale != tmpMolPtr->internalOriginFactor()
+         || ! std::equal(newOriginAtoms.begin(), newOriginAtoms.end(), tmpMolPtr->internalOriginAtoms().begin())
+         || ! std::equal(newBasisAtoms.begin(), newBasisAtoms.end(), tmpMolPtr->internalBasisAtoms().begin())
+         || ! std::equal(newOriginList.begin(), newOriginList.end(), tmpMolPtr->originList().begin())
+         || ! std::equal(newBasisList.begin(), newBasisList.end(), tmpMolPtr->basisList().begin())
+            )
+    {
+        wasModified();
+    }
+
     tmpMolPtr->setOriginList(newOriginList);
     tmpMolPtr->setBasisList(newBasisList);
     tmpMolPtr->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
@@ -724,6 +740,23 @@ void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
         if (i != refMolID)
             minimizeRMSD(refMolID, i);
     }
+}
+
+void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned long otherMolID)
+{
+    molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
+    molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
+
+    double rmsd = refMol->rmsd(otherMol);
+
+    QString message = tr("The RMSD between\n'")
+            + QString::fromStdString(refMol->name())
+            + tr("'\nand\n'")
+            + QString::fromStdString(otherMol->name())
+            + tr("'\nis ")
+            + QString::number(rmsd) + QString::fromUtf8(" \u00C5");
+
+    QMessageBox::information(this, tr("RMSD"), message);
 }
 
 void MolconvWindow::minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID)

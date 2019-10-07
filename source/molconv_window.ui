@@ -34,7 +34,7 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -193,7 +193,7 @@
   <action name="actionExport_Molecule">
    <property name="icon">
     <iconset resource="molconv.qrc">
-     <normaloff>:/icons/document-import.png</normaloff>:/icons/document-import.png</iconset>
+     <normaloff>:/icons/document-export.png</normaloff>:/icons/document-export.png</iconset>
    </property>
    <property name="text">
     <string>Export Molecule</string>

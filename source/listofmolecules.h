@@ -48,6 +48,7 @@ public:
 
 public slots:
     void alignMolecules();
+    void calculateRMSD();
 
 signals:
     void newMoleculeSelected(unsigned long newMolID);

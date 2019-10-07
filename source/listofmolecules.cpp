@@ -39,6 +39,7 @@ public:
     QStandardItemModel *m_model;
     QMenu *m_contextMenu;
     QAction *m_actionAlign;
+    QAction *m_actionRMSD;
 };
 
 
@@ -61,6 +62,8 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
 
     d->m_contextMenu = new QMenu(ui->system_tree);
     d->m_actionAlign = new QAction("Align Molecules", this);
+    d->m_actionRMSD = new QAction("Calculate RMSD", this);
+    d->m_contextMenu->addAction(d->m_actionRMSD);
     d->m_contextMenu->addAction(d->m_actionAlign);
 
     connect(d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(toggleMolecule(QModelIndex)));
@@ -68,6 +71,7 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
                                                 SLOT(changeSelectedItem(QModelIndex)));
     connect(ui->system_tree, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(startContextMenu(const QPoint &)));
     connect(d->m_actionAlign, SIGNAL(triggered()), SLOT(alignMolecules()));
+    connect(d->m_actionRMSD, SIGNAL(triggered()), SLOT(calculateRMSD()));
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -82,10 +86,20 @@ void ListOfMolecules::startContextMenu(const QPoint &point)
 
     if (index.isValid())
     {
-        if (ui->system_tree->selectionModel()->selectedRows().count() > 1)
+        int nSelected = ui->system_tree->selectionModel()->selectedRows().count();
+        d->m_actionRMSD->setEnabled(false);
+        if (nSelected > 1)
+        {
             d->m_actionAlign->setEnabled(true);
+            if (nSelected == 2)
+            {
+                d->m_actionRMSD->setEnabled(true);
+            }
+        }
         else
+        {
             d->m_actionAlign->setEnabled(false);
+        }
 
         d->m_contextMenu->exec(ui->system_tree->mapToGlobal(point));
     }
@@ -104,6 +118,16 @@ void ListOfMolecules::alignMolecules()
     }
 
     d->m_window->alignMolecules(indices);
+}
+
+void ListOfMolecules::calculateRMSD()
+{
+    QModelIndexList indexList = ui->system_tree->selectionModel()->selectedRows();
+
+    unsigned long ref = static_cast<MoleculeItem*>(d->m_model->itemFromIndex(indexList[0]))->molID();
+    unsigned long other = static_cast<MoleculeItem*>(d->m_model->itemFromIndex(indexList[1]))->molID();
+
+    d->m_window->calculateRMSD(ref, other);
 }
 
 void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
