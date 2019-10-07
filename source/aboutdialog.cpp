@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
+ * Copyright 2014 - 2019 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -62,7 +62,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
                             + QString::number(BOOST_VERSION % 100);
 
     ui->progname->setText(progInfo);
-    ui->authors->setText("Copyright 2014 - 2016 by Jan von Cosel and Sebastian Lenz");
+    ui->authors->setText("Copyright 2014 - 2019 by Jan von Cosel and Sebastian Lenz");
     ui->compileInfo->setText(compileInfo);
     ui->qtInfo->setText(qtInfo);
     ui->eigenInfo->setText(eigenInfo);

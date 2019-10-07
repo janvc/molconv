@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
+ * Copyright 2014 - 2019 Jan von Cosel & Sebastian Lenz
  *
  * This file is part of molconv.
  *
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Molconv");
     QCoreApplication::setOrganizationDomain("molconv.org");
     QCoreApplication::setApplicationName("molconv");
-    QCoreApplication::setApplicationVersion("0.1");
+    QCoreApplication::setApplicationVersion("1.0.0");
 
     QApplication app(argc, argv);
     MolconvWindow the_window;

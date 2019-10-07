@@ -1,5 +1,5 @@
 #
-# Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
+# Copyright 2014 - 2019 Jan von Cosel & Sebastian Lenz
 #
 # This file is part of molconv.
 #
@@ -20,6 +20,11 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 project(molconv)
+
+set(molconv_VERSION_MAJOR 1)
+set(molconv_VERSION_MINOR 0)
+set(molconv_VERSION_PATCH 0)
+set(molconv_VERSION "${molconv_VERSION_MAJOR}.${molconv_VERSION_MINOR}.${molconv_VERSION_PATCH}")
 
 include(CTest)
 

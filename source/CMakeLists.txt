@@ -1,5 +1,5 @@
 #
-# Copyright 2014 - 2016 Jan von Cosel & Sebastian Lenz
+# Copyright 2014 - 2019 Jan von Cosel & Sebastian Lenz
 #
 # This file is part of molconv.
 #
