@@ -206,6 +206,16 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     emit new_molecule(d->m_activeMolID);
 }
 
+void MolconvWindow::removeSelectedMolecules()
+{
+
+}
+
+void MolconvWindow::removeMolecule(const unsigned long id)
+{
+
+}
+
 void MolconvWindow::removeActiveMolecule()
 {
     unsigned long molToRemove = d->m_activeMolID;

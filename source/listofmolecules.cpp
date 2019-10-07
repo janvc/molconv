@@ -39,6 +39,7 @@ public:
     QStandardItemModel *m_model;
     QMenu *m_contextMenu;
     QAction *m_actionAlign;
+//    QAction *m_actionRemove;
     QAction *m_actionRMSD;
 };
 
@@ -63,6 +64,8 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     d->m_contextMenu = new QMenu(ui->system_tree);
     d->m_actionAlign = new QAction("Align Molecules", this);
     d->m_actionRMSD = new QAction("Calculate RMSD", this);
+//    d->m_actionRemove = new QAction("Remove selected Molecules", this);
+//    d->m_contextMenu->addAction(d->m_actionRemove);
     d->m_contextMenu->addAction(d->m_actionRMSD);
     d->m_contextMenu->addAction(d->m_actionAlign);
 
@@ -103,6 +106,21 @@ void ListOfMolecules::startContextMenu(const QPoint &point)
 
         d->m_contextMenu->exec(ui->system_tree->mapToGlobal(point));
     }
+}
+
+std::vector<unsigned long> ListOfMolecules::getSelectedMoleculeIDs()
+{
+    QModelIndexList indexList = ui->system_tree->selectionModel()->selectedRows();
+
+    std::vector<unsigned long> indices;
+
+    for (int i = 0; i < indexList.size(); i++)
+    {
+        MoleculeItem *item = static_cast<MoleculeItem*>(d->m_model->itemFromIndex(indexList[i]));
+        indices.push_back(item->molID());
+    }
+
+    return indices;
 }
 
 void ListOfMolecules::alignMolecules()

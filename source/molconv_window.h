@@ -85,7 +85,9 @@ public slots:
     void startBasisDialog();
     void addMoleculeToGroup();
     void ResetView();
+    void removeSelectedMolecules();
     void removeActiveMolecule();
+    void removeMolecule(const unsigned long id);
     void DuplicateActiveMolecule();
     void updateActiveMolecule(const unsigned long &newActiveID);
     void changeOriginBasis();
