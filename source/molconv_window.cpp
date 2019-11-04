@@ -208,12 +208,48 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 
 void MolconvWindow::removeSelectedMolecules()
 {
+    std::vector<unsigned long> molsToRemove = d->m_ListOfMolecules->selectedMoleculeIDs();
 
+    for (unsigned long id : molsToRemove)
+    {
+        removeMolecule(id);
+    }
 }
 
 void MolconvWindow::removeMolecule(const unsigned long id)
 {
+    d->m_ListOfMolecules->removeRow(id);
 
+    // remove molecule's graphics item
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsItemMap.at(id));
+    d->m_GraphicsItemMap.erase(id);
+
+    // remove molecule's axis item
+    ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(id));
+    d->m_GraphicsAxisMap.erase(id);
+
+    d->m_system->removeMolecule(id);
+
+    ui->molconv_graphicsview->update();
+
+    if (d->m_system->nMolecules() > 0)
+        d->m_activeMolID = d->m_ListOfMolecules->currentmolID();
+    else
+    {
+        d->m_activeMolID = 0;
+
+        // disable all the actions that need a molecule to operate on:
+        ui->actionSet_internal_basis->setEnabled(false);
+        ui->actionDuplicate->setEnabled(false);
+        ui->actionRemove->setEnabled(false);
+        ui->actionZero_Coordinates->setEnabled(false);
+        ui->actionReset_Coordinates->setEnabled(false);
+        ui->actionProperties->setEnabled(false);
+        ui->actionAdd_To_Group->setEnabled(false);
+    }
+
+    if (d->m_activeMolID)
+        d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
 }
 
 void MolconvWindow::removeActiveMolecule()

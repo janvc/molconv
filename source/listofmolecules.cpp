@@ -39,7 +39,7 @@ public:
     QStandardItemModel *m_model;
     QMenu *m_contextMenu;
     QAction *m_actionAlign;
-//    QAction *m_actionRemove;
+    QAction *m_actionRemove;
     QAction *m_actionRMSD;
 };
 
@@ -64,8 +64,8 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     d->m_contextMenu = new QMenu(ui->system_tree);
     d->m_actionAlign = new QAction("Align Molecules", this);
     d->m_actionRMSD = new QAction("Calculate RMSD", this);
-//    d->m_actionRemove = new QAction("Remove selected Molecules", this);
-//    d->m_contextMenu->addAction(d->m_actionRemove);
+    d->m_actionRemove = new QAction("Remove selected Molecules", this);
+    d->m_contextMenu->addAction(d->m_actionRemove);
     d->m_contextMenu->addAction(d->m_actionRMSD);
     d->m_contextMenu->addAction(d->m_actionAlign);
 
@@ -75,6 +75,7 @@ ListOfMolecules::ListOfMolecules(MolconvWindow *window)
     connect(ui->system_tree, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(startContextMenu(const QPoint &)));
     connect(d->m_actionAlign, SIGNAL(triggered()), SLOT(alignMolecules()));
     connect(d->m_actionRMSD, SIGNAL(triggered()), SLOT(calculateRMSD()));
+    connect(d->m_actionRemove, SIGNAL(triggered()), window, SLOT(removeSelectedMolecules()));
 }
 
 ListOfMolecules::~ListOfMolecules()
@@ -108,7 +109,7 @@ void ListOfMolecules::startContextMenu(const QPoint &point)
     }
 }
 
-std::vector<unsigned long> ListOfMolecules::getSelectedMoleculeIDs()
+std::vector<unsigned long> ListOfMolecules::selectedMoleculeIDs()
 {
     QModelIndexList indexList = ui->system_tree->selectionModel()->selectedRows();
 
@@ -121,6 +122,19 @@ std::vector<unsigned long> ListOfMolecules::getSelectedMoleculeIDs()
     }
 
     return indices;
+}
+
+void ListOfMolecules::removeRow(const unsigned long id)
+{
+    for (int r = 0; r < d->m_model->rowCount(); r++)
+    {
+        MoleculeItem *item = static_cast<MoleculeItem *>(d->m_model->item(r));
+        if (item->molID() == id)
+        {
+            QModelIndex index = item->index();
+            d->m_model->removeRow(index.row(), index.parent());
+        }
+    }
 }
 
 void ListOfMolecules::alignMolecules()
