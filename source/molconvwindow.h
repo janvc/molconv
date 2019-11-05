@@ -32,7 +32,7 @@
 #include "moleculegroup.h"
 #include "moleculestack.h"
 
-#include "import_dialog.h"
+#include "importdialog.h"
 #include "newgroupdialog.h"
 
 class ListOfMolecules;

@@ -24,7 +24,7 @@
 
 #include <QDialog>
 
-#include "molconv_window.h"
+#include "molconvwindow.h"
 
 namespace Ui
 {

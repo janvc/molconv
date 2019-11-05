@@ -18,36 +18,30 @@
  *
  */
 
-#ifndef EXPORT_DIALOG_H
-#define EXPORT_DIALOG_H
 
-#include <QDialog>
-#include "molecule.h"
-#include "molconv_window.h"
+#ifndef TEST_MOLCONV_WINDOW_H
+#define TEST_MOLCONV_WINDOW_H
 
-namespace Ui
-{
-    class ExportDialog;
-}
+#include <QTest>
 
-class ExportDialog : public QDialog
+#include "source/molconvwindow.h"
+
+class TestMolconvWindow : public QObject
 {
     Q_OBJECT
 
-public:
-    explicit ExportDialog(QWidget *parent = 0);
-    ~ExportDialog();
-
-    void createMoleculeList(const std::vector<unsigned long> &ids);
-    void writeFile(const QString &filename, const molconv::moleculePtr &theMolecule) const;
-
 private slots:
-    void on_buttonBox_accepted();
-    void on_selectAllBox_clicked(bool checked);
+    void initTestCase();
+
+    void test_add_molecule();
+    void test_fresh_window_is_not_modified();
+    void test_importing_molecule_sets_window_modified();
+    void test_opening_molconv_file_does_not_modify_window();
+    void test_saving_molconv_file_sets_window_not_modified();
+    void test_adding_molecule_to_open_molconv_file_sets_window_modified();
 
 private:
-    Ui::ExportDialog *ui;
-    MolconvWindow *theWindow;
+    boost::shared_ptr<chemkit::Molecule> m_cmol;
 };
 
-#endif // EXPORT_DIALOG_H
+#endif // TEST_MOLCONV_WINDOW_H

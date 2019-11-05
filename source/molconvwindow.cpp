@@ -35,12 +35,12 @@
 #endif
 
 #include "types.h"
-#include "molconv_window.h"
-#include "ui_molconv_window.h"
+#include "molconvwindow.h"
+#include "ui_molconvwindow.h"
 #include "listofmolecules.h"
 #include "moleculesettings.h"
-#include "import_dialog.h"
-#include "export_dialog.h"
+#include "importdialog.h"
+#include "exportdialog.h"
 #include "setbasisdialog.h"
 #include "graphicsaxisitem.h"
 #include "graphicsselectionitem.h"

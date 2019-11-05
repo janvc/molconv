@@ -21,14 +21,14 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 
 set(SOURCES
     main.cpp
-    molconv_window.cpp
+    molconvwindow.cpp
     moleculeitem.cpp
     groupitem.cpp
     newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
-    import_dialog.cpp
-    export_dialog.cpp
+    importdialog.cpp
+    exportdialog.cpp
     multimoldialog.cpp
     setbasisdialog.cpp
     graphicsaxisitem.cpp
@@ -44,12 +44,12 @@ set(SOURCES
 )
 
 set(MOC_HEADERS
-    molconv_window.h
+    molconvwindow.h
     listofmolecules.h
     moleculesettings.h
     newgroupdialog.h
-    import_dialog.h
-    export_dialog.h
+    importdialog.h
+    exportdialog.h
     multimoldialog.h
     setbasisdialog.h
     aboutdialog.h
@@ -57,12 +57,12 @@ set(MOC_HEADERS
 )
 
 set(UI_FORMS
-    molconv_window.ui
+    molconvwindow.ui
     listofmolecules.ui
     moleculesettings.ui
     newgroupdialog.ui
-    import_dialog.ui
-    export_dialog.ui
+    importdialog.ui
+    exportdialog.ui
     multimoldialog.ui
     setbasisdialog.ui
     aboutdialog.ui

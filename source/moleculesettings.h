@@ -23,7 +23,7 @@
 
 #include <QDockWidget>
 
-#include "molconv_window.h"
+#include "molconvwindow.h"
 
 namespace Ui
 {

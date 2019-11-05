@@ -22,7 +22,7 @@
 #include "listofmolecules.h"
 #include "moleculeitem.h"
 #include "groupitem.h"
-#include "molconv_window.h"
+#include "molconvwindow.h"
 #include "ui_listofmolecules.h"
 
 

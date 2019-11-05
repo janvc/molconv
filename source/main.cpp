@@ -18,7 +18,7 @@
  *
  */
 
-#include "molconv_window.h"
+#include "molconvwindow.h"
 
 int main(int argc, char *argv[])
 {

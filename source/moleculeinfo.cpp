@@ -18,7 +18,7 @@
  *
  */
 
-#include "molconv_window.h"
+#include "molconvwindow.h"
 #include "moleculeinfo.h"
 #include "ui_moleculeinfo.h"
 

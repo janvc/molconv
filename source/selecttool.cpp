@@ -22,7 +22,7 @@
 #include <chemkit/graphicsview.h>
 #include <chemkit/graphicsoverlay.h>
 #include "selecttool.h"
-#include "molconv_window.h"
+#include "molconvwindow.h"
 
 class SelectToolPrivate
 {

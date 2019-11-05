@@ -26,15 +26,15 @@ set(test_molecule_SRCS
     test_molecule.cpp
 )
 
-set(test_molconv_window_SRCS
+set(test_molconvwindow_SRCS
     ../source/molecule.cpp
     ../source/system.cpp
-    ../source/import_dialog.cpp
-    ../source/export_dialog.cpp
+    ../source/importdialog.cpp
+    ../source/exportdialog.cpp
     ../source/newgroupdialog.cpp
     ../source/setbasisdialog.cpp
     ../source/listofmolecules.cpp
-    ../source/molconv_window.cpp
+    ../source/molconvwindow.cpp
     ../source/moleculesettings.cpp
     ../source/moleculeinfo.cpp
     ../source/moleculeitem.cpp
@@ -47,16 +47,16 @@ set(test_molconv_window_SRCS
     ../source/aboutdialog.cpp
     ../source/navigatetool.cpp
     ../source/selecttool.cpp
-    test_molconv_window.cpp
+    test_molconvwindow.cpp
 )
 
 set(MOC_HEADERS
-    molconv_window.h
+    molconvwindow.h
 )
 
 set(UI_FORMS
-    ../source/import_dialog.ui
-    ../source/export_dialog.ui
+    ../source/importdialog.ui
+    ../source/exportdialog.ui
     ../source/newgroupdialog.ui
     ../source/setbasisdialog.ui
     ../source/listofmolecules.ui
@@ -64,7 +64,7 @@ set(UI_FORMS
     ../source/moleculeinfo.ui
     ../source/multimoldialog.ui
     ../source/aboutdialog.ui
-    ../source/molconv_window.ui
+    ../source/molconvwindow.ui
 )
 
 set(RESOURCES
@@ -75,12 +75,12 @@ qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
 qt5_add_resources(RCC_SOURCES ${RESOURCES})
 
 add_executable(test_molecule ${test_molecule_SRCS})
-add_executable(test_molconv_window ${test_molconv_window_SRCS} ${UI_SOURCES})
+add_executable(test_molconvwindow ${test_molconvwindow_SRCS} ${UI_SOURCES})
 
 target_link_libraries(test_molecule Qt5::Test ${CHEMKIT_LIBRARIES})
-target_link_libraries(test_molconv_window Qt5::Widgets Qt5::Xml Qt5::Test ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(test_molconvwindow Qt5::Widgets Qt5::Xml Qt5::Test ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_test(NAME test_molecule COMMAND test_molecule)
-add_test(NAME test_molconv_window COMMAND test_molconv_window)
+add_test(NAME test_molconvwindow COMMAND test_molconvwindow)
 
 
