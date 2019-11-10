@@ -21,5 +21,18 @@ export LD_LIBRARY_PATH=${PWD}:${LD_LIBRARY_PATH}
 ./molconv "$@"
 EOF
 
-zip < molconv > molconv_simple.zip
+cat <<\EOF > molconv/README
+This package of molconv has been built and tested on Ubuntu 18.04 LTS.
+To run molconv, you need to install the packages
+
+ libqt5gui5
+ libqt5opengl5
+ libqt5xml5
+
+Then just run ./start_molconv.sh
+EOF
+
+chmod +x molconv/start_molconv.sh
+
+zip -r molconv.zip molconv/
 
