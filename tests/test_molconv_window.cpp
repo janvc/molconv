@@ -52,6 +52,15 @@ void TestMolconvWindow::test_fresh_window_is_not_modified()
     QVERIFY(!win->isWindowModified());
 }
 
+void TestMolconvWindow::test_fresh_window_is_untitled()
+{
+    MolconvWindow *win = new MolconvWindow(0);
+    QString test = win->windowTitle();
+    QString expectedTitle = tr("untitled[*] - molconv");
+
+    QCOMPARE(test, expectedTitle);
+}
+
 void TestMolconvWindow::test_importing_molecule_sets_window_modified()
 {
     MolconvWindow *win = new MolconvWindow(0);
@@ -67,6 +76,16 @@ void TestMolconvWindow::test_opening_molconv_file_does_not_modify_window()
     QVERIFY(!win->isWindowModified());
 }
 
+void TestMolconvWindow::test_opening_molconv_file_sets_window_title()
+{
+    MolconvWindow *win = new MolconvWindow(0);
+    win->readMolconvFile("../../molconv/molecules/example.mcv");
+    QString test = win->windowTitle();
+    QString expectedTitle = tr("example.mcv[*] - molconv");
+
+    QCOMPARE(test, expectedTitle);
+}
+
 void TestMolconvWindow::test_saving_molconv_file_sets_window_not_modified()
 {
     MolconvWindow *win = new MolconvWindow(0);
@@ -74,6 +93,17 @@ void TestMolconvWindow::test_saving_molconv_file_sets_window_not_modified()
     win->importFile("../../molconv/molecules/methane_C1.xyz", false);
     win->writeMolconvFile("../../molconv/molecules/test.mcv");
     QVERIFY(!win->isWindowModified());
+}
+
+void TestMolconvWindow::test_saving_molconv_file_sets_window_title()
+{
+    MolconvWindow *win = new MolconvWindow(0);
+    win->importFile("../../molconv/molecules/methane_C1.xyz", false);
+    win->writeMolconvFile("../../molconv/molecules/test.mcv");
+    QString test = win->windowTitle();
+    QString expectedTitle = tr("test.mcv[*] - molconv");
+
+    QCOMPARE(test, expectedTitle);
 }
 
 void TestMolconvWindow::test_adding_molecule_to_open_molconv_file_sets_window_modified()

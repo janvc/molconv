@@ -44,6 +44,7 @@ public:
     void insertMolecule(molconv::moleculePtr &newMol);
     void insertGroup(molconv::MoleculeGroup *newGroup);
     void removeCurrentMolecule();
+    std::vector<unsigned long> getSelectedMoleculeIDs();
     unsigned long currentmolID();
 
 public slots:
