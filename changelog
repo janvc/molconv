@@ -1,0 +1,11 @@
+version 1.0.1, 24.11.2019
+
+- added a bash script to create a compressed archive for easy distribution on
+  linux
+- set a proper title for the "Import Molecule" dialog
+- a descriptive warning is displayed when trying to calculate the RMSD for two
+  molecules with different number of atoms
+
+version 1.0.0, 7.10.2019
+
+- initial release
