@@ -23,7 +23,7 @@ project(molconv)
 
 set(molconv_VERSION_MAJOR 1)
 set(molconv_VERSION_MINOR 0)
-set(molconv_VERSION_PATCH 0)
+set(molconv_VERSION_PATCH 1)
 set(molconv_VERSION "${molconv_VERSION_MAJOR}.${molconv_VERSION_MINOR}.${molconv_VERSION_PATCH}")
 
 include(CTest)
