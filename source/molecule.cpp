@@ -484,42 +484,6 @@ namespace molconv
     }
 
     ///
-    /// \brief Molecule::rmsd
-    /// \param otherMol
-    /// \return
-    ///
-    /// calculate the RMSD between this molecule and the molecule given as
-    /// otherMol
-    ///
-    /// the RMSD value is calculated as
-    ///
-    ///            -------------------------
-    ///           /  _N_                    |
-    ///          / 1 \                     2
-    /// RMSD =  / --- >  | r'       -  r  |
-    ///       \/   N /      i(xyz)      i(xyz)
-    ///              ---
-    ///              i=1
-    ///
-    double Molecule::rmsd(const moleculePtr &otherMol) const
-    {
-        if (size() != otherMol->size())
-            return -1.0;
-
-        double rmsd = 0.0;
-
-        for (int i = 0; i < int(size()); i++)
-            for (int j = 0; j < 3; j++)
-                rmsd += std::abs(double(otherMol->atom(i)->position()(j)) - double(atom(i)->position()(j)))
-                      * std::abs(double(otherMol->atom(i)->position()(j)) - double(atom(i)->position()(j)));
-
-        rmsd /= double(size());
-        rmsd = std::sqrt(rmsd);
-
-        return rmsd;
-    }
-
-    ///
     /// \brief moveFromParas
     /// \param x
     /// \param y

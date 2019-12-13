@@ -21,6 +21,7 @@
 
 #include<stdexcept>
 #include<algorithm>
+#include<Eigen/Eigenvalues>
 #include<boost/make_shared.hpp>
 #include "system.h"
 
@@ -197,6 +198,136 @@ namespace molconv
         }
 
         return result;
+    }
+
+    ///
+    /// \brief System::calculateRMSDbetween
+    /// \param refMol
+    /// \param otherMol
+    /// \return
+    ///
+    /// calculate the RMSD between the reference molecule and the other molecule
+    ///
+    /// the RMSD value is calculated as
+    ///
+    ///            -------------------------
+    ///           /  _N_                    |
+    ///          / 1 \                     2
+    /// RMSD =  / --- >  | r'       -  r  |
+    ///       \/   N /      i(xyz)      i(xyz)
+    ///              ---
+    ///              i=1
+    ///
+    double System::calculateRMSDbetween(const unsigned long refMol, const unsigned long otherMol) const
+    {
+        moleculePtr refMolPtr = getMolecule(refMol);
+        moleculePtr otherMolPtr = getMolecule(otherMol);
+
+        if (refMolPtr->size() != otherMolPtr->size())
+        {
+            return -1.0;
+        }
+
+        double rmsd = 0.0;
+
+        for (int i = 0; i < int(refMolPtr->size()); i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                rmsd += std::abs(double(otherMolPtr->atom(i)->position()(j))
+                                 - double(refMolPtr->atom(i)->position()(j)))
+                      * std::abs(double(otherMolPtr->atom(i)->position()(j))
+                                 - double(refMolPtr->atom(i)->position()(j)));
+            }
+        }
+        rmsd /= double(refMolPtr->size());
+        rmsd = std::sqrt(rmsd);
+
+        return rmsd;
+    }
+
+    ///
+    /// \brief System::alignMolecules
+    /// \param refMol
+    /// \param otherMol
+    /// \return
+    ///
+    /// move the molecule \p otherMol to minimize the RMSD with \p refMol
+    /// using the quaternion algorithm given in J. Comp. Chem. 25, 15 (2004)
+    ///
+    bool System::alignMolecules(const unsigned long refMol, const unsigned long otherMol) const
+    {
+        molconv::moleculePtr refMolPtr = getMolecule(refMol);
+        molconv::moleculePtr otherMolPtr = getMolecule(otherMol);
+
+        if (refMolPtr->size() != otherMolPtr->size())
+        {
+            return false;
+        }
+
+        int Natoms = refMolPtr->size();
+
+        Eigen::Vector3d center = refMolPtr->center();
+        Eigen::Vector3d shift = center - otherMolPtr->center();
+        Eigen::Vector3d newOrigin = otherMolPtr->internalOriginPosition() + shift;
+
+        otherMolPtr->moveFromParas(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), 0.0, 0.0, 0.0);
+
+        Eigen::MatrixXd Xr = Eigen::MatrixXd::Zero(3,Natoms);
+        Eigen::MatrixXd Xo = Eigen::MatrixXd::Zero(3,Natoms);
+        for (int i = 0; i < Natoms; i++)
+        {
+            Xr.col(i) = refMolPtr->atom(i)->position() - center;
+            Xo.col(i) = otherMolPtr->atom(i)->position() - center;
+        }
+
+        Eigen::Matrix3d corr = Xo * Xr.transpose();
+
+        // construct the quaternion matrix
+        Eigen::Matrix4d F = Eigen::Matrix4d::Zero();
+        F(0,0) =  corr(0,0) + corr(1,1) + corr(2,2);
+        F(1,1) =  corr(0,0) - corr(1,1) - corr(2,2);
+        F(2,2) = -corr(0,0) + corr(1,1) - corr(2,2);
+        F(3,3) = -corr(0,0) - corr(1,1) + corr(2,2);
+        F(0,1) =  corr(1,2) - corr(2,1);
+        F(0,2) =  corr(2,0) - corr(0,2);
+        F(0,3) =  corr(0,1) - corr(1,0);
+        F(1,2) =  corr(0,1) + corr(1,0);
+        F(1,3) =  corr(0,2) + corr(2,0);
+        F(2,3) =  corr(1,2) + corr(2,1);
+        F(1,0) = F(0,1);
+        F(2,0) = F(0,2);
+        F(3,0) = F(0,3);
+        F(2,1) = F(1,2);
+        F(3,1) = F(1,3);
+        F(3,2) = F(2,3);
+
+        Eigen::SelfAdjointEigenSolver<Eigen::Matrix4d> Feig(F);
+        Eigen::Vector4d Feval = Feig.eigenvalues();
+        Eigen::Matrix4d Fevec = Feig.eigenvectors();
+
+        // the optimal rotation corresponds to either the first or the last eigenvector, depending on which eigenvalue is larger
+        Eigen::Vector4d lQuart = std::abs(double(Feval(0))) > std::abs(double(Feval(3))) ? Fevec.block(0, 0, 4, 1) : Fevec.block(0, 3, 4, 1);
+
+        Eigen::Matrix3d rotmat = Eigen::Matrix3d::Zero();
+        rotmat(0,0) = lQuart(0) * lQuart(0) + lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
+        rotmat(1,1) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
+        rotmat(2,2) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) + lQuart(3) * lQuart(3);
+        rotmat(0,1) = 2.0 * (lQuart(1) * lQuart(2) - lQuart(0) * lQuart(3));
+        rotmat(0,2) = 2.0 * (lQuart(1) * lQuart(3) + lQuart(0) * lQuart(2));
+        rotmat(1,2) = 2.0 * (lQuart(2) * lQuart(3) - lQuart(0) * lQuart(1));
+        rotmat(1,0) = 2.0 * (lQuart(1) * lQuart(2) + lQuart(0) * lQuart(3));
+        rotmat(2,0) = 2.0 * (lQuart(1) * lQuart(3) - lQuart(0) * lQuart(2));
+        rotmat(2,1) = 2.0 * (lQuart(2) * lQuart(3) + lQuart(0) * lQuart(1));
+
+        std::array<double,3> newEulers = molconv::Molecule::rot2euler(rotmat);
+        double newPhi = newEulers[2];
+        double newTheta = newEulers[1];
+        double newPsi = newEulers[0];
+
+        otherMolPtr->moveFromParas(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), newPhi, newTheta, newPsi);
+
+        return true;
     }
 
 } // namespace molconv

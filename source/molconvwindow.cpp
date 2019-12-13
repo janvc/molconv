@@ -24,7 +24,6 @@
 #include<map>
 #include<algorithm>
 #include<QMessageBox>
-#include<Eigen/Eigenvalues>
 #include<QDomDocument>
 #ifndef Q_MOC_RUN
     #include<chemkit/moleculefile.h>
@@ -793,7 +792,7 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
     molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
     molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
 
-    double rmsd = refMol->rmsd(otherMol);
+    double rmsd = d->m_system->calculateRMSDbetween(refMolID, otherMolID);
 
     if (rmsd > 0.0)
     {
@@ -814,80 +813,18 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
 
 void MolconvWindow::minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID)
 {
-    molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
-    molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
+    bool success = d->m_system->alignMolecules(refMolID, otherMolID);
 
-    if (refMol->size() != otherMol->size())
+    if (! success)
     {
         QMessageBox::critical(this, tr("Alignment impossible"), tr("Only molecules with equal number of atoms can be aligned."));
         return;
     }
 
-    int Natoms = refMol->size();
-
-    Eigen::Vector3d center = refMol->center();
-    Eigen::Vector3d shift = center - otherMol->center();
-    Eigen::Vector3d newOrigin = otherMol->internalOriginPosition() + shift;
-
-    updateActiveMolecule(otherMolID);
-    d->m_MoleculeSettings->setMolecule(otherMolID);
-    d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), 0.0, 0.0, 0.0);
-
-    Eigen::MatrixXd Xr = Eigen::MatrixXd::Zero(3,Natoms);
-    Eigen::MatrixXd Xo = Eigen::MatrixXd::Zero(3,Natoms);
-    for (int i = 0; i < Natoms; i++)
-    {
-        Xr.col(i) = refMol->atom(i)->position() - center;
-        Xo.col(i) = otherMol->atom(i)->position() - center;
-    }
-
-    Eigen::Matrix3d corr = Xo * Xr.transpose();
-
-    // construct the quaternion matrix
-    Eigen::Matrix4d F = Eigen::Matrix4d::Zero();
-    F(0,0) =  corr(0,0) + corr(1,1) + corr(2,2);
-    F(1,1) =  corr(0,0) - corr(1,1) - corr(2,2);
-    F(2,2) = -corr(0,0) + corr(1,1) - corr(2,2);
-    F(3,3) = -corr(0,0) - corr(1,1) + corr(2,2);
-    F(0,1) =  corr(1,2) - corr(2,1);
-    F(0,2) =  corr(2,0) - corr(0,2);
-    F(0,3) =  corr(0,1) - corr(1,0);
-    F(1,2) =  corr(0,1) + corr(1,0);
-    F(1,3) =  corr(0,2) + corr(2,0);
-    F(2,3) =  corr(1,2) + corr(2,1);
-    F(1,0) = F(0,1);
-    F(2,0) = F(0,2);
-    F(3,0) = F(0,3);
-    F(2,1) = F(1,2);
-    F(3,1) = F(1,3);
-    F(3,2) = F(2,3);
-
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix4d> Feig(F);
-    Eigen::Vector4d Feval = Feig.eigenvalues();
-    Eigen::Matrix4d Fevec = Feig.eigenvectors();
-
-    // the optimal rotation corresponds to either the first or the last eigenvector, depending on which eigenvalue is larger
-    Eigen::Vector4d lQuart = std::abs(double(Feval(0))) > std::abs(double(Feval(3))) ? Fevec.block(0, 0, 4, 1) : Fevec.block(0, 3, 4, 1);
-
-    Eigen::Matrix3d rotmat = Eigen::Matrix3d::Zero();
-    rotmat(0,0) = lQuart(0) * lQuart(0) + lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
-    rotmat(1,1) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) + lQuart(2) * lQuart(2) - lQuart(3) * lQuart(3);
-    rotmat(2,2) = lQuart(0) * lQuart(0) - lQuart(1) * lQuart(1) - lQuart(2) * lQuart(2) + lQuart(3) * lQuart(3);
-    rotmat(0,1) = 2.0 * (lQuart(1) * lQuart(2) - lQuart(0) * lQuart(3));
-    rotmat(0,2) = 2.0 * (lQuart(1) * lQuart(3) + lQuart(0) * lQuart(2));
-    rotmat(1,2) = 2.0 * (lQuart(2) * lQuart(3) - lQuart(0) * lQuart(1));
-    rotmat(1,0) = 2.0 * (lQuart(1) * lQuart(2) + lQuart(0) * lQuart(3));
-    rotmat(2,0) = 2.0 * (lQuart(1) * lQuart(3) - lQuart(0) * lQuart(2));
-    rotmat(2,1) = 2.0 * (lQuart(2) * lQuart(3) + lQuart(0) * lQuart(1));
-
-    std::array<double,3> newEulers = molconv::Molecule::rot2euler(rotmat);
-    double newPhi = newEulers[2];
-    double newTheta = newEulers[1];
-    double newPsi = newEulers[0];
-
-    d->m_MoleculeSettings->moveMolecule(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), newPhi, newTheta, newPsi);
-
     updateAxes();
+    updateSelection();
+    d->m_MoleculeInfo->updateLive();
+    wasModified();
 }
 
 void MolconvWindow::writeMolconvFile(const QString &fileName)

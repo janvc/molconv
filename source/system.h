@@ -49,6 +49,8 @@ namespace molconv
         void removeMolecule(const unsigned long key);
         void addGroup(const groupPtr &newGroup);
         void removeGroup(const size_t index);
+        double calculateRMSDbetween(const unsigned long refMol, const unsigned long otherMol) const;
+        bool alignMolecules(const unsigned long refMol, const unsigned long otherMol) const;
 
     private:
         boost::scoped_ptr<SystemPrivate> d;
