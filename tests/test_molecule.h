@@ -24,7 +24,7 @@
 
 #include <QTest>
 
-#include "source/molecule.h"
+#include "molecule.h"
 
 class TestMolecule : public QObject
 {

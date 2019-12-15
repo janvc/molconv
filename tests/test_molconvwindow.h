@@ -24,7 +24,7 @@
 
 #include <QTest>
 
-#include "source/molconvwindow.h"
+#include "molconvwindow.h"
 
 class TestMolconvWindow : public QObject
 {

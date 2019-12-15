@@ -17,29 +17,11 @@
 # along with molconv. If not, see <http://www.gnu.org/licenses/>.
 #
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
-set(MOLCONV_INCLUDE_DIRS
-    ${MOLCONV_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
 include_directories(${MOLCONV_INCLUDE_DIRS})
 
-set(SOURCES
-    main.cpp
+set(molecule_SOURCES
+    molecule.cpp
 )
 
-set(RESOURCES
-    molconv.qrc
-)
-
-qt5_add_resources(RCC_SOURCES ${RESOURCES})
-
-add_subdirectory(molecule)
-add_subdirectory(system)
-add_subdirectory(gui)
-add_subdirectory(mainwindow)
-
-add_executable(molconv ${SOURCES} ${RCC_SOURCES} ${QM_FILES})
-target_link_libraries(molconv molconv-mainwindow molconv-gui molconv-system molconv-molecule ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+add_library(molconv-molecule SHARED ${molecule_SOURCES})
 

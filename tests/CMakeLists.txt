@@ -18,53 +18,18 @@
 #
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/../source/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
-include_directories(${molconv_SOURCE_DIR})
+set(MOLCONV_INCLUDE_DIRS
+    ${MOLCONV_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+include_directories(${MOLCONV_INCLUDE_DIRS})
 
 set(test_molecule_SRCS
-    ../source/molecule.cpp
     test_molecule.cpp
 )
 
 set(test_molconvwindow_SRCS
-    ../source/molecule.cpp
-    ../source/system.cpp
-    ../source/importdialog.cpp
-    ../source/exportdialog.cpp
-    ../source/newgroupdialog.cpp
-    ../source/setbasisdialog.cpp
-    ../source/listofmolecules.cpp
-    ../source/molconvwindow.cpp
-    ../source/moleculesettings.cpp
-    ../source/moleculeinfo.cpp
-    ../source/moleculeitem.cpp
-    ../source/groupitem.cpp
-    ../source/moleculegroup.cpp
-    ../source/graphicsaxisitem.cpp
-    ../source/graphicsselectionitem.cpp
-    ../source/multimoldialog.cpp
-    ../source/moleculestack.cpp
-    ../source/aboutdialog.cpp
-    ../source/navigatetool.cpp
-    ../source/selecttool.cpp
     test_molconvwindow.cpp
-)
-
-set(MOC_HEADERS
-    molconvwindow.h
-)
-
-set(UI_FORMS
-    ../source/importdialog.ui
-    ../source/exportdialog.ui
-    ../source/newgroupdialog.ui
-    ../source/setbasisdialog.ui
-    ../source/listofmolecules.ui
-    ../source/moleculesettings.ui
-    ../source/moleculeinfo.ui
-    ../source/multimoldialog.ui
-    ../source/aboutdialog.ui
-    ../source/molconvwindow.ui
 )
 
 set(RESOURCES
@@ -75,10 +40,10 @@ qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
 qt5_add_resources(RCC_SOURCES ${RESOURCES})
 
 add_executable(test_molecule ${test_molecule_SRCS})
-add_executable(test_molconvwindow ${test_molconvwindow_SRCS} ${UI_SOURCES})
+add_executable(test_molconvwindow ${test_molconvwindow_SRCS})
 
-target_link_libraries(test_molecule Qt5::Test ${CHEMKIT_LIBRARIES})
-target_link_libraries(test_molconvwindow Qt5::Widgets Qt5::Xml Qt5::Test ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(test_molecule molconv-molecule molconv-system Qt5::Test ${CHEMKIT_LIBRARIES})
+target_link_libraries(test_molconvwindow molconv-mainwindow molconv-gui molconv-system molconv-molecule Qt5::Test ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_test(NAME test_molecule COMMAND test_molecule)
 add_test(NAME test_molconvwindow COMMAND test_molconvwindow)
