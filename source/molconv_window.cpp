@@ -757,9 +757,15 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
     molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
     molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
 
+    if (refMol->size() != otherMol->size())
+    {
+        QMessageBox::warning(this, tr("RMSD"), tr("The RMSD can only be calculated for molecules with equal number of atoms."));
+        return;
+    }
+
     double rmsd = refMol->rmsd(otherMol);
 
-    if (rmsd > 0.0)
+    if (rmsd >= 0.0)
     {
         QString message = tr("The RMSD between\n'")
                 + QString::fromStdString(refMol->name())
@@ -772,7 +778,7 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
     }
     else
     {
-        QMessageBox::warning(this, tr("RMSD"), tr("The RMSD can only be calculated for molecules with equal number of atoms."));
+        QMessageBox::warning(this, tr("RMSD"), tr("Something went terribly wrong during the RMSD calculation."));
     }
 }
 
