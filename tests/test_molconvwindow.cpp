@@ -19,7 +19,7 @@
  */
 
 
-#include "test_molconv_window.h"
+#include "test_molconvwindow.h"
 
 void TestMolconvWindow::initTestCase()
 {

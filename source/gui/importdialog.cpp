@@ -23,8 +23,8 @@
     #include<chemkit/moleculefile.h>
     #include<boost/make_shared.hpp>
 #endif
-#include "import_dialog.h"
-#include "ui_import_dialog.h"
+#include "importdialog.h"
+#include "ui_importdialog.h"
 
 
 class ImportDialogPrivate

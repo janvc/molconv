@@ -18,8 +18,8 @@
  *
  */
 
-#include "export_dialog.h"
-#include "ui_export_dialog.h"
+#include "exportdialog.h"
+#include "ui_exportdialog.h"
 
 ExportDialog::ExportDialog(QWidget *parent)
     : QDialog(parent)

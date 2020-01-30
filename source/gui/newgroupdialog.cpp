@@ -19,7 +19,7 @@
  */
 
 
-#include "molconv_window.h"
+#include "molconvwindow.h"
 #include "newgroupdialog.h"
 #include "ui_newgroupdialog.h"
 

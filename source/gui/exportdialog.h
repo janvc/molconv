@@ -23,7 +23,7 @@
 
 #include <QDialog>
 #include "molecule.h"
-#include "molconv_window.h"
+#include "molconvwindow.h"
 
 namespace Ui
 {

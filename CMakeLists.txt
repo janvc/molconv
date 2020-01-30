@@ -35,6 +35,10 @@ endif()
 
 set(CMAKE_MODULE_PATH ${molconv_SOURCE_DIR}/cmake)
 
+set(MOLCONV_INCLUDE_DIRS
+    ${molconv_SOURCE_DIR}/include
+)
+
 # Update/build translations
 set (FILES_TO_TRANSLATE )
 option (UPDATE_TRANSLATIONS "Update source translation translations/*.ts")
@@ -82,6 +86,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
