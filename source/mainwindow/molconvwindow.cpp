@@ -813,9 +813,24 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
 
 void MolconvWindow::minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID)
 {
-    bool success = d->m_system->alignMolecules(refMolID, otherMolID);
+    molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
+    molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
 
-    if (! success)
+    bool success = d->m_system->alignMolecules(refMolID, otherMolID);
+    double rmsd = d->m_system->calculateRMSDbetween(refMolID, otherMolID);
+
+    if (success)
+    {
+        QString message = tr("The molecules\n'")
+                + QString::fromStdString(refMol->name())
+                + tr("'\nand\n'")
+                + QString::fromStdString(otherMol->name())
+                + tr("'\nwere aligned with a residual\nRMSD of ")
+                + QString::number(rmsd) + QString::fromUtf8(" \u00C5");
+
+        QMessageBox::information(this, tr("RMSD"), message);
+    }
+    else
     {
         QMessageBox::critical(this, tr("Alignment impossible"), tr("Only molecules with equal number of atoms can be aligned."));
         return;
