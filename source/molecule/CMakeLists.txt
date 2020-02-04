@@ -20,6 +20,10 @@
 include_directories(${MOLCONV_INCLUDE_DIRS})
 
 set(molecule_SOURCES
+    moleculeorigin.cpp
+    moleculeorigingeometriccenter.cpp
+    moleculebasis.cpp
+    moleculebasiscovariancematrix.cpp
     molecule.cpp
 )
 
