@@ -14,7 +14,7 @@
    <string>molconv</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="molconv.qrc">
+   <iconset resource="../molconv.qrc">
     <normaloff>:/icons/molconv.png</normaloff>:/icons/molconv.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -34,7 +34,7 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -141,7 +141,7 @@
   </action>
   <action name="actionImport_Molecule">
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/document-import.png</normaloff>:/icons/document-import.png</iconset>
    </property>
    <property name="text">
@@ -178,7 +178,7 @@
   </action>
   <action name="actionSet_internal_basis">
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/setbasis.png</normaloff>:/icons/setbasis.png</iconset>
    </property>
    <property name="text">
@@ -192,7 +192,7 @@
   </action>
   <action name="actionExport_Molecule">
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/document-export.png</normaloff>:/icons/document-export.png</iconset>
    </property>
    <property name="text">
@@ -204,7 +204,7 @@
   </action>
   <action name="actionReset">
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/centerview.png</normaloff>:/icons/centerview.png</iconset>
    </property>
    <property name="text">
@@ -218,7 +218,7 @@
   </action>
   <action name="actionReset_Coordinates">
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/reset_coords.png</normaloff>:/icons/reset_coords.png</iconset>
    </property>
    <property name="text">
@@ -227,7 +227,7 @@
   </action>
   <action name="actionZero_Coordinates">
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/zero_coords.png</normaloff>:/icons/zero_coords.png</iconset>
    </property>
    <property name="text">
@@ -244,7 +244,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/navigate.png</normaloff>:/icons/navigate.png</iconset>
    </property>
    <property name="text">
@@ -259,7 +259,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="molconv.qrc">
+    <iconset resource="../molconv.qrc">
      <normaloff>:/icons/select.png</normaloff>:/icons/select.png</iconset>
    </property>
    <property name="text">
@@ -270,9 +270,6 @@
    </property>
   </action>
   <action name="actionSettings">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Settings</string>
    </property>
@@ -316,7 +313,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="molconv.qrc"/>
+  <include location="../molconv.qrc"/>
  </resources>
  <connections/>
 </ui>

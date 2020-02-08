@@ -35,6 +35,7 @@ set(gui_SOURCES
     navigatetool.cpp
     selecttool.cpp
     moleculeinfo.cpp
+    settingsdialog.cpp
 )
 
 set(MOC_HEADERS
@@ -47,6 +48,7 @@ set(MOC_HEADERS
     setbasisdialog.h
     aboutdialog.h
     moleculeinfo.h
+    settingsdialog.h
 )
 
 set(UI_FORMS
@@ -59,6 +61,7 @@ set(UI_FORMS
     setbasisdialog.ui
     aboutdialog.ui
     moleculeinfo.ui
+    settingsdialog.ui
 )
 
 set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})

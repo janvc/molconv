@@ -83,6 +83,7 @@ public slots:
     void newGroup();
     void startNewGroupDialog();
     void startBasisDialog();
+    void startSettingsDialog();
     void addMoleculeToGroup();
     void ResetView();
     void removeSelectedMolecules();
@@ -98,6 +99,7 @@ public slots:
     void useNavigateTool();
     void useSelectTool();
     void wasModified();
+    void displayHydrogens(bool checked);
 
 private slots:
     void resetCoords();

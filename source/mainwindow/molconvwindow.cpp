@@ -48,6 +48,7 @@
 #include "navigatetool.h"
 #include "selecttool.h"
 #include "moleculeinfo.h"
+#include "settingsdialog.h"
 
 
 class MolconvWindowPrivate
@@ -62,6 +63,7 @@ public:
     NewGroupDialog *m_NewGroupDialog;
     setBasisDialog *m_setBasisDialog;
     MultiMolDialog *m_MultiMolDialog;
+    SettingsDialog *m_SettingsDialog;
 
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
@@ -97,6 +99,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
     d->m_MoleculeInfo = new MoleculeInfo(this);
+    d->m_SettingsDialog = new SettingsDialog(this);
 
     addDockWidget(Qt::BottomDockWidgetArea, d->m_ListOfMolecules);
     addDockWidget(Qt::LeftDockWidgetArea, d->m_MoleculeSettings);
@@ -132,6 +135,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(ui->actionAlign, SIGNAL(triggered()), d->m_ListOfMolecules, SLOT(alignMolecules()));
     connect(ui->actionNavigate, SIGNAL(triggered()), SLOT(useNavigateTool()));
     connect(ui->actionSelect, SIGNAL(triggered()), SLOT(useSelectTool()));
+    connect(ui->actionSettings, SIGNAL(triggered()), SLOT(startSettingsDialog()));
 
     connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(importFile()));
 
@@ -595,6 +599,11 @@ void MolconvWindow::startBasisDialog()
     d->m_setBasisDialog->show();
 }
 
+void MolconvWindow::startSettingsDialog()
+{
+    d->m_SettingsDialog->show();
+}
+
 void MolconvWindow::DuplicateActiveMolecule()
 {
     DuplicateMolecule(d->m_activeMolID);
@@ -763,6 +772,14 @@ void MolconvWindow::wasModified()
 {
     setWindowModified(true);
     ui->actionSave->setEnabled(true);
+}
+
+void MolconvWindow::displayHydrogens(bool checked)
+{
+    for (auto const& x : d->m_GraphicsItemMap)
+    {
+        x.second->setHydrogensVisible(checked);
+    }
 }
 
 void MolconvWindow::resetCoords()
