@@ -36,6 +36,8 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
 
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
+    connect(this, SIGNAL(guiValueChanged()), SLOT(updateGuiValues()));
+
     setBoundaries();
 }
 
@@ -48,49 +50,58 @@ void MoleculeSettings::setValues()
 {
     Eigen::Vector3d origin = m_mainWindow->getMol(m_molID)->internalOriginPosition();
 
-    double x = origin(0);
-    double y = origin(1);
-    double z = origin(2);
+    x = origin(0);
+    y = origin(1);
+    z = origin(2);
 
-    if (x < Xmin)
+    phi = m_mainWindow->getMol(m_molID)->phi();
+    theta = m_mainWindow->getMol(m_molID)->theta();
+    psi = m_mainWindow->getMol(m_molID)->psi();
+
+    if (x < xMin)
     {
         double nXmin = double(floor(x));
         ui->xSlider->setMinimum(int(nXmin * factor));
         ui->xSpinBox->setMinimum(nXmin);
     }
-    else if (x > Xmax)
+    else if (x > xMax)
     {
         double nXmax = double(ceil(x));
         ui->xSlider->setMaximum(int(nXmax * factor));
         ui->xSpinBox->setMaximum(nXmax);
     }
 
-    if (y < Ymin)
+    if (y < yMin)
     {
         double nYmin = double(floor(y));
         ui->ySlider->setMinimum(int(nYmin * factor));
         ui->ySpinBox->setMinimum(nYmin);
     }
-    else if (y > Ymax)
+    else if (y > yMax)
     {
         double nYmax = double(ceil(y));
         ui->ySlider->setMaximum(int(nYmax * factor));
         ui->ySpinBox->setMaximum(nYmax);
     }
 
-    if (z < Zmin)
+    if (z < zMin)
     {
         double nZmin = double(floor(z));
         ui->zSlider->setMinimum(int(nZmin * factor));
         ui->zSpinBox->setMinimum(nZmin);
     }
-    else if (z > Zmax)
+    else if (z > zMax)
     {
         double nZmax = double(ceil(z));
         ui->zSlider->setMaximum(int(nZmax * factor));
         ui->zSpinBox->setMaximum(nZmax);
     }
 
+    updateGuiValues();
+}
+
+void MoleculeSettings::updateGuiValues()
+{
     ui->xSlider->setValue(int(x * factor));
     ui->ySlider->setValue(int(y * factor));
     ui->zSlider->setValue(int(z * factor));
@@ -99,29 +110,29 @@ void MoleculeSettings::setValues()
     ui->ySpinBox->setValue(y);
     ui->zSpinBox->setValue(z);
 
-    ui->phiSlider->setValue(int(m_mainWindow->getMol(m_molID)->phi() * rad2deg * factor));
-    ui->thetaSlider->setValue(int(m_mainWindow->getMol(m_molID)->theta() * rad2deg * factor));
-    ui->psiSlider->setValue(int(m_mainWindow->getMol(m_molID)->psi() * rad2deg * factor));
+    ui->phiSlider->setValue(int(phi * rad2deg * factor));
+    ui->thetaSlider->setValue(int(theta * rad2deg * factor));
+    ui->psiSlider->setValue(int(psi * rad2deg * factor));
 
-    ui->phiSpinBox->setValue(m_mainWindow->getMol(m_molID)->phi() * rad2deg);
-    ui->thetaSpinBox->setValue(m_mainWindow->getMol(m_molID)->theta() * rad2deg);
-    ui->psiSpinBox->setValue(m_mainWindow->getMol(m_molID)->psi() * rad2deg);
+    ui->phiSpinBox->setValue(phi * rad2deg);
+    ui->thetaSpinBox->setValue(theta * rad2deg);
+    ui->psiSpinBox->setValue(psi * rad2deg);
 }
 
 void MoleculeSettings::setBoundaries()
 {
-    ui->xSlider->setMinimum(int(Xmin * factor));
-    ui->ySlider->setMinimum(int(Ymin * factor));
-    ui->zSlider->setMinimum(int(Zmin * factor));
-    ui->xSlider->setMaximum(int(Xmax * factor));
-    ui->ySlider->setMaximum(int(Ymax * factor));
-    ui->zSlider->setMaximum(int(Zmax * factor));
-    ui->xSpinBox->setMinimum(Xmin);
-    ui->ySpinBox->setMinimum(Ymin);
-    ui->zSpinBox->setMinimum(Zmin);
-    ui->xSpinBox->setMaximum(Xmax);
-    ui->ySpinBox->setMaximum(Ymax);
-    ui->zSpinBox->setMaximum(Zmax);
+    ui->xSlider->setMinimum(int(xMin * factor));
+    ui->ySlider->setMinimum(int(yMin * factor));
+    ui->zSlider->setMinimum(int(zMin * factor));
+    ui->xSlider->setMaximum(int(xMax * factor));
+    ui->ySlider->setMaximum(int(yMax * factor));
+    ui->zSlider->setMaximum(int(zMax * factor));
+    ui->xSpinBox->setMinimum(xMin);
+    ui->ySpinBox->setMinimum(yMin);
+    ui->zSpinBox->setMinimum(zMin);
+    ui->xSpinBox->setMaximum(xMax);
+    ui->ySpinBox->setMaximum(yMax);
+    ui->zSpinBox->setMaximum(zMax);
 
     ui->xSpinBox->setSingleStep(0.001);
     ui->ySpinBox->setSingleStep(0.001);
@@ -215,150 +226,72 @@ void MoleculeSettings::setGroup(molconv::MoleculeGroup *newGroup)
 
 void MoleculeSettings::on_xSlider_valueChanged(int value)
 {
-    double realValue = double(value) / factor;
-    ui->xSpinBox->setValue(realValue);
+    x = double(value) / factor;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_ySlider_valueChanged(int value)
 {
-    double realValue = double(value) / factor;
-    ui->ySpinBox->setValue(realValue);
+    y = double(value) / factor;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_zSlider_valueChanged(int value)
 {
-    double realValue = double(value) / factor;
-    ui->zSpinBox->setValue(realValue);
+    z = double(value) / factor;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_xSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * factor);
-    ui->xSlider->setValue(intValue);
-
-    if (!settingMolecule)
-        updateMolecule();
+    x = value;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_ySpinBox_valueChanged(double value)
 {
-    int intValue = int(value * factor);
-    ui->ySlider->setValue(intValue);
-
-    if (!settingMolecule)
-        updateMolecule();
+    y = value;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_zSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * factor);
-    ui->zSlider->setValue(intValue);
-
-    if (!settingMolecule)
-        updateMolecule();
+    z = value;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_phiSlider_valueChanged(int value)
 {
-    double realValue = double(value) / factor;
-    ui->phiSpinBox->setValue(realValue);
+    phi = double(value) / factor;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_thetaSlider_valueChanged(int value)
 {
-    double realValue = double(value) / factor;
-    ui->thetaSpinBox->setValue(realValue);
+    theta = double(value) / factor;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_psiSlider_valueChanged(int value)
 {
-    double realValue = double(value) / factor;
-    ui->psiSpinBox->setValue(realValue);
+    psi = double(value) / factor;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_phiSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * factor);
-    ui->phiSlider->setValue(intValue);
-
-    if (!settingMolecule)
-        updateMolecule();
+    phi = value;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_thetaSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * factor);
-    ui->thetaSlider->setValue(intValue);
-
-    if (!settingMolecule)
-        updateMolecule();
+    theta = value;
+    emit valueChanged();
 }
 
 void MoleculeSettings::on_psiSpinBox_valueChanged(double value)
 {
-    int intValue = int(value * factor);
-    ui->psiSlider->setValue(intValue);
-
-    if (!settingMolecule)
-        updateMolecule();
-}
-
-void MoleculeSettings::on_xSlider_sliderReleased()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_ySlider_sliderReleased()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_zSlider_sliderReleased()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_phiSlider_sliderReleased()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_thetaSlider_sliderReleased()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_psiSlider_sliderReleased()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_xSpinBox_editingFinished()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_ySpinBox_editingFinished()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_zSpinBox_editingFinished()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_phiSpinBox_editingFinished()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_thetaSpinBox_editingFinished()
-{
-    emit editingFinished();
-}
-
-void MoleculeSettings::on_psiSpinBox_editingFinished()
-{
-    emit editingFinished();
+    psi = value;
+    emit valueChanged();
 }

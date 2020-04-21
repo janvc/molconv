@@ -52,10 +52,12 @@ public slots:
     void setGroup(molconv::MoleculeGroup *newGroup);
 
 signals:
+    void guiValueChanged() const;
     void basisChanged() const;
     void editingFinished() const;
 
 private slots:
+    void updateGuiValues();
     void on_xSlider_valueChanged(int value);
     void on_ySlider_valueChanged(int value);
     void on_zSlider_valueChanged(int value);
@@ -71,20 +73,6 @@ private slots:
     void on_thetaSpinBox_valueChanged(double value);
     void on_psiSpinBox_valueChanged(double value);
 
-    void on_xSlider_sliderReleased();
-    void on_ySlider_sliderReleased();
-    void on_zSlider_sliderReleased();
-    void on_phiSlider_sliderReleased();
-    void on_thetaSlider_sliderReleased();
-    void on_psiSlider_sliderReleased();
-
-    void on_xSpinBox_editingFinished();
-    void on_ySpinBox_editingFinished();
-    void on_zSpinBox_editingFinished();
-    void on_phiSpinBox_editingFinished();
-    void on_thetaSpinBox_editingFinished();
-    void on_psiSpinBox_editingFinished();
-
 private:
     void setValues();
     void setBoundaries();
@@ -96,13 +84,21 @@ private:
 
     bool settingMolecule;
 
+    // current molecule position/orientation:
+    double x;
+    double y;
+    double z;
+    double phi;
+    double theta;
+    double psi;
+
     // parameters for the molecule movement:
-    double Xmin = -10.0;
-    double Ymin = -10.0;
-    double Zmin = -10.0;
-    double Xmax =  10.0;
-    double Ymax =  10.0;
-    double Zmax =  10.0;
+    double xMin = -10.0;
+    double yMin = -10.0;
+    double zMin = -10.0;
+    double xMax =  10.0;
+    double yMax =  10.0;
+    double zMax =  10.0;
 
     // conversion factor from the int representation of the
     // sliders to the floating point representation of the spinboxes
