@@ -74,9 +74,10 @@ private slots:
     void on_psiSpinBox_valueChanged(double value);
 
 private:
-    void setValues();
-    void setBoundaries();
-    void updateMolecule();
+    void setValuesFromMolecule();
+    void setGuiBoundaries();
+    void setDefaultBoundaries();
+//    void updateMolecule();
 
     Ui::MoleculeSettings *ui;
     MolconvWindow *m_mainWindow;

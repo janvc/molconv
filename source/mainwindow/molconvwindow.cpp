@@ -768,12 +768,16 @@ void MolconvWindow::wasModified()
 void MolconvWindow::resetCoords()
 {
     std::array<double,6> oB = d->m_system->getMolecule(d->m_activeMolID)->origBasis();
-    d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
+    d->m_system->getMolecule(d->m_activeMolID)->moveFromParas(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
+//    d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 
 void MolconvWindow::zeroCoords()
 {
-    d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    d->m_system->getMolecule(d->m_activeMolID)->moveFromParas(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
+//    d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
 void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
