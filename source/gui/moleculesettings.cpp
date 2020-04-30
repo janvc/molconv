@@ -19,6 +19,7 @@
  */
 
 
+#include <iostream>
 #include "moleculesettings.h"
 #include "listofmolecules.h"
 #include "moleculegroup.h"
@@ -37,6 +38,9 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
     connect(this, SIGNAL(guiValueChanged()), SLOT(updateGuiValues()));
+    connect(ui->xSpinBox, SIGNAL(editingFinished()), SLOT(printEditingFinished()));
+    connect(ui->xSpinBox, SIGNAL(clicked()), SLOT(printClicked()));
+    connect(ui->xSpinBox, SIGNAL(released()), SLOT(printReleased()));
 
     setDefaultBoundaries();
 }
@@ -106,8 +110,11 @@ void MoleculeSettings::updateGuiValues()
     ui->thetaSpinBox->setValue(theta * rad2deg);
     ui->psiSpinBox->setValue(psi * rad2deg);
 
-    m_mainWindow->getMol(m_molID)->moveFromParas(x, y, z, phi, theta, psi);
-    emit basisChanged();
+    if (!settingMolecule)
+    {
+        m_mainWindow->getMol(m_molID)->moveFromParas(x, y, z, phi, theta, psi);
+        emit basisChanged();
+    }
 }
 
 
@@ -292,4 +299,19 @@ void MoleculeSettings::on_psiSpinBox_valueChanged(double value)
 {
     psi = value / rad2deg;
     emit guiValueChanged();
+}
+
+void MoleculeSettings::printEditingFinished() const
+{
+    std::cout << "signal received: editingFinished\n";
+}
+
+void MoleculeSettings::printClicked() const
+{
+    std::cout << "signal received: clicked\n";
+}
+
+void MoleculeSettings::printReleased() const
+{
+    std::cout << "signal received: released\n";
 }

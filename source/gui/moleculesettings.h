@@ -73,6 +73,10 @@ private slots:
     void on_thetaSpinBox_valueChanged(double value);
     void on_psiSpinBox_valueChanged(double value);
 
+    void printEditingFinished() const;
+    void printClicked() const;
+    void printReleased() const;
+
 private:
     void setValuesFromMolecule();
     void setGuiBoundaries();
