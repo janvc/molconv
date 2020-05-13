@@ -73,21 +73,17 @@ private slots:
     void on_thetaSpinBox_valueChanged(double value);
     void on_psiSpinBox_valueChanged(double value);
 
-    void printEditingFinished() const;
-    void printClicked() const;
-    void printReleased() const;
-
 private:
     void setValuesFromMolecule();
     void setGuiBoundaries();
     void setDefaultBoundaries();
-//    void updateMolecule();
 
     Ui::MoleculeSettings *ui;
     MolconvWindow *m_mainWindow;
     unsigned long m_molID;
 
     bool settingMolecule;
+    bool updatingGui;
 
     // current molecule position/orientation:
     double x;

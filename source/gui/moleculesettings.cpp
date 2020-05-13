@@ -30,17 +30,13 @@ MoleculeSettings::MoleculeSettings(MolconvWindow *window)
     : QDockWidget(window)
     , ui(new Ui::MoleculeSettings)
     , settingMolecule(false)
+    , updatingGui(false)
 {
     m_mainWindow = window;
 
     ui->setupUi(this);
 
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-
-    connect(this, SIGNAL(guiValueChanged()), SLOT(updateGuiValues()));
-    connect(ui->xSpinBox, SIGNAL(editingFinished()), SLOT(printEditingFinished()));
-    connect(ui->xSpinBox, SIGNAL(clicked()), SLOT(printClicked()));
-    connect(ui->xSpinBox, SIGNAL(released()), SLOT(printReleased()));
 
     setDefaultBoundaries();
 }
@@ -167,27 +163,10 @@ void MoleculeSettings::setDefaultBoundaries()
     setGuiBoundaries();
 }
 
-//void MoleculeSettings::updateMolecule()
-//{
-//    m_mainWindow->getMol(m_molID)->moveFromParas(x, y, z, phi, theta, psi);
-
-//    emit basisChanged();
-//}
-
 unsigned long MoleculeSettings::molID() const
 {
     return m_molID;
 }
-
-//void MoleculeSettings::moveMolecule(const double x, const double y, const double z, const double phi, const double theta, const double psi)
-//{
-//    ui->xSpinBox->setValue(x);
-//    ui->ySpinBox->setValue(y);
-//    ui->zSpinBox->setValue(z);
-//    ui->phiSpinBox->setValue(phi * rad2deg);
-//    ui->thetaSpinBox->setValue(theta * rad2deg);
-//    ui->psiSpinBox->setValue(psi * rad2deg);
-//}
 
 void MoleculeSettings::setMolecule(const unsigned long newMolID)
 {
@@ -231,87 +210,132 @@ void MoleculeSettings::setGroup(molconv::MoleculeGroup *newGroup)
 
 void MoleculeSettings::on_xSlider_valueChanged(int value)
 {
-    x = double(value) / factor;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        x = double(value) / factor;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_ySlider_valueChanged(int value)
 {
-    y = double(value) / factor;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        y = double(value) / factor;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_zSlider_valueChanged(int value)
 {
-    z = double(value) / factor;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        z = double(value) / factor;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_xSpinBox_valueChanged(double value)
 {
-    x = value;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        x = value;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_ySpinBox_valueChanged(double value)
 {
-    y = value;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        y = value;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_zSpinBox_valueChanged(double value)
 {
-    z = value;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        z = value;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_phiSlider_valueChanged(int value)
 {
-    phi = double(value) / (rad2deg * factor);
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        phi = double(value) / (rad2deg * factor);
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_thetaSlider_valueChanged(int value)
 {
-    theta = double(value) / (rad2deg * factor);
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        theta = double(value) / (rad2deg * factor);
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_psiSlider_valueChanged(int value)
 {
-    psi = double(value) / (rad2deg * factor);
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        psi = double(value) / (rad2deg * factor);
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_phiSpinBox_valueChanged(double value)
 {
-    phi = value / rad2deg;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        phi = value / rad2deg;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_thetaSpinBox_valueChanged(double value)
 {
-    theta = value / rad2deg;
-    emit guiValueChanged();
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        theta = value / rad2deg;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
 
 void MoleculeSettings::on_psiSpinBox_valueChanged(double value)
 {
-    psi = value / rad2deg;
-    emit guiValueChanged();
-}
-
-void MoleculeSettings::printEditingFinished() const
-{
-    std::cout << "signal received: editingFinished\n";
-}
-
-void MoleculeSettings::printClicked() const
-{
-    std::cout << "signal received: clicked\n";
-}
-
-void MoleculeSettings::printReleased() const
-{
-    std::cout << "signal received: released\n";
+    if (!updatingGui)
+    {
+        updatingGui = true;
+        psi = value / rad2deg;
+        updateGuiValues();
+        updatingGui = false;
+    }
 }
