@@ -68,10 +68,18 @@ private slots:
     void on_phiSlider_valueChanged(int value);
     void on_thetaSlider_valueChanged(int value);
     void on_psiSlider_valueChanged(int value);
-
     void on_phiSpinBox_valueChanged(double value);
     void on_thetaSpinBox_valueChanged(double value);
     void on_psiSpinBox_valueChanged(double value);
+
+    void on_xSlider_sliderReleased();
+    void on_ySlider_sliderReleased();
+    void on_zSlider_sliderReleased();
+    void on_phiSlider_sliderReleased();
+    void on_thetaSlider_sliderReleased();
+    void on_psiSlider_sliderReleased();
+
+    void on_xSpinBox_editingFinished();
 
 private:
     void setValuesFromMolecule();

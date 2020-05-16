@@ -339,3 +339,38 @@ void MoleculeSettings::on_psiSpinBox_valueChanged(double value)
         updatingGui = false;
     }
 }
+
+void MoleculeSettings::on_xSlider_sliderReleased()
+{
+    emit editingFinished();
+}
+
+void MoleculeSettings::on_ySlider_sliderReleased()
+{
+    emit editingFinished();
+}
+
+void MoleculeSettings::on_zSlider_sliderReleased()
+{
+    emit editingFinished();
+}
+
+void MoleculeSettings::on_phiSlider_sliderReleased()
+{
+    emit editingFinished();
+}
+
+void MoleculeSettings::on_thetaSlider_sliderReleased()
+{
+    emit editingFinished();
+}
+
+void MoleculeSettings::on_psiSlider_sliderReleased()
+{
+    emit editingFinished();
+}
+
+void MoleculeSettings::on_xSpinBox_editingFinished()
+{
+    emit editingFinished();
+}
