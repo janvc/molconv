@@ -374,3 +374,34 @@ void MoleculeSettings::on_xSpinBox_editingFinished()
 {
     emit editingFinished();
 }
+
+
+void MoleculeSettings::on_ySpinBox_editingFinished()
+{
+    emit editingFinished();
+}
+
+
+void MoleculeSettings::on_zSpinBox_editingFinished()
+{
+    emit editingFinished();
+}
+
+
+void MoleculeSettings::on_phiSpinBox_editingFinished()
+{
+    emit editingFinished();
+}
+
+
+void MoleculeSettings::on_thetaSpinBox_editingFinished()
+{
+    emit editingFinished();
+}
+
+
+void MoleculeSettings::on_psiSpinBox_editingFinished()
+{
+    emit editingFinished();
+}
+

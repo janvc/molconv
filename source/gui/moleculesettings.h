@@ -80,6 +80,11 @@ private slots:
     void on_psiSlider_sliderReleased();
 
     void on_xSpinBox_editingFinished();
+    void on_ySpinBox_editingFinished();
+    void on_zSpinBox_editingFinished();
+    void on_phiSpinBox_editingFinished();
+    void on_thetaSpinBox_editingFinished();
+    void on_psiSpinBox_editingFinished();
 
 private:
     void setValuesFromMolecule();
