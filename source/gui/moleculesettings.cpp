@@ -19,7 +19,6 @@
  */
 
 
-#include <iostream>
 #include "moleculesettings.h"
 #include "listofmolecules.h"
 #include "moleculegroup.h"
