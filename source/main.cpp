@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     MolconvWindow the_window;
 
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
 
     if (settings.value("startMaximized").toBool())
         the_window.showMaximized();

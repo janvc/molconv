@@ -375,7 +375,7 @@ void MolconvWindow::closeEvent(QCloseEvent *event)
 {
     if (maybeSave())
     {
-        QSettings settings;
+        QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
         settings.setValue("startMaximized", QVariant(isMaximized()));
         settings.setValue("winW", width());
         settings.setValue("winH", height());
@@ -404,7 +404,7 @@ void MolconvWindow::saveFile()
 }
 void MolconvWindow::saveFileAs()
 {
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startSavePath = settings.value("savePath").toString();
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), startSavePath, tr("Molconv files (*.mcv)"));
@@ -427,7 +427,7 @@ void MolconvWindow::importFile()
 
 void MolconvWindow::openFile()
 {
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startOpenPath = settings.value("openPath").toString();
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), startOpenPath, tr("Molconv files (*.mcv)"));
