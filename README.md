@@ -7,7 +7,7 @@ systems to perform electronic structure calculations.
 Copyright and Warranty
 ----------------------
 
-Copyright 2014 - 2019 Jan von Cosel & Sebastian Lenz
+Copyright 2014 - 2020 Jan von Cosel & Sebastian Lenz
 
 molconv is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
