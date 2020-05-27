@@ -22,14 +22,22 @@
 #ifndef MOLECULEORIGIN_H
 #define MOLECULEORIGIN_H
 
+#include <Eigen/Core>
+#include "types.h"
+
 namespace molconv {
 
 class MoleculeOrigin
 {
 public:
-    MoleculeOrigin();
+    MoleculeOrigin(moleculePtr molecule);
 
+    moleculePtr molecule();
     virtual Eigen::Vector3d position() const;
+
+protected:
+    moleculePtr m_molecule;
+    Eigen::Vector3d m_position;
 };
 
 }

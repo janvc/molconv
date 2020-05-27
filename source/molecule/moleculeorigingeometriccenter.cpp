@@ -23,9 +23,42 @@
 
 namespace molconv {
 
-MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter()
-    : MoleculeOrigin()
+MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(moleculePtr molecule)
+    : MoleculeOrigin(molecule)
 {
+    // initialize the list of atoms contributing to the geometric center
+    for (int i = 0; i < int(molecule->size()); i++)
+    {
+        m_originList.push_back(true);
+    }
+
+    calculatePosition();
+}
+
+void MoleculeOriginGeometricCenter::calculatePosition()
+{
+    Eigen::Vector3d cog = Eigen::Vector3d::Zero();
+    int Nactive = 0;
+    for (int i = 0; i < int(molecule->size()); i++)
+    {
+        if (m_originList.at(i))
+        {
+            cog += molecule->atom(i)->position();
+            Nactive++;
+        }
+    }
+
+    m_position = cog / double(Nactive);
+}
+
+Eigen::Vector3d MoleculeOriginGeometricCenter::position()
+{
+    return m_position;
+}
+
+std::vector<bool> MoleculeOriginGeometricCenter::originList() const
+{
+    return m_originList;
 }
 
 }

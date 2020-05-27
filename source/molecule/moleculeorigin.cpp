@@ -23,8 +23,14 @@
 
 namespace molconv {
 
-MoleculeOrigin::MoleculeOrigin()
+MoleculeOrigin::MoleculeOrigin(moleculePtr molecule)
 {
+    m_molecule = molecule;
+}
+
+moleculePtr MoleculeOrigin::molecule()
+{
+    return m_molecule;
 }
 
 }

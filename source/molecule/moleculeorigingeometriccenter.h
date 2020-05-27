@@ -29,9 +29,13 @@ namespace molconv {
 class MoleculeOriginGeometricCenter : public MoleculeOrigin
 {
 public:
-    MoleculeOriginGeometricCenter();
+    MoleculeOriginGeometricCenter(moleculePtr molecule);
 
     Eigen::Vector3d position() const;
+    std::vector<bool> originList() const;
+protected:
+    void calculatePosition();
+    std::vector<bool> m_originList;
 };
 
 }
