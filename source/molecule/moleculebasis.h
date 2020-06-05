@@ -22,6 +22,8 @@
 #ifndef MOLECULEBASIS_H
 #define MOLECULEBASIS_H
 
+#include <Eigen/Core>
+
 namespace molconv {
 
 class MoleculeBasis

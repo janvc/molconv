@@ -35,7 +35,12 @@ namespace molconv
     class System
     {
     public:
-        System();
+        static boost::shared_ptr<System> get()
+        {
+            static boost::shared_ptr<System> instance(new System);
+            return instance;
+        }
+        void init();
         ~System();
         size_t nMolecules() const;
         size_t nGroups() const;
@@ -53,6 +58,9 @@ namespace molconv
         bool alignMolecules(const unsigned long refMol, const unsigned long otherMol) const;
 
     private:
+        System(){}
+        System(const System&);
+        System& operator=(const System&);
         boost::scoped_ptr<SystemPrivate> d;
     };
 

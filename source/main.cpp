@@ -18,6 +18,7 @@
  *
  */
 
+#include "system.h"
 #include "molconvwindow.h"
 
 int main(int argc, char *argv[])
@@ -28,6 +29,7 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationVersion("1.0.1");
 
     QApplication app(argc, argv);
+    molconv::System::get().init();
     MolconvWindow the_window;
 
     QSettings settings;

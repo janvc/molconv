@@ -40,16 +40,11 @@ namespace molconv
     ///
     /// The default constructor of the System class
     ///
-    System::System()
-        : d(new SystemPrivate)
+    void System::init()
     {
+        d.reset(new SystemPrivate);
     }
 
-    ///
-    /// \brief System::~System
-    ///
-    /// The default destructor of the System class
-    ///
     System::~System() {}
 
     ///

@@ -18,29 +18,26 @@
  *
  */
 
+#ifndef MOLCONVFILE_H
+#define MOLCONVFILE_H
 
-#ifndef MOLECULEORIGINGEOMETRICCENTER_H
-#define MOLECULEORIGINGEOMETRICCENTER_H
 
 #include <vector>
-#include "moleculeorigin.h"
+#include "molecule.h"
+#include "system.h"
 
-namespace molconv {
-
-class MoleculeOriginGeometricCenter : public MoleculeOrigin
+class MolconvFile
 {
 public:
-    MoleculeOriginGeometricCenter(moleculePtr molecule);
+    MolconvFile();
 
-    Eigen::Vector3d position() const;
-    std::vector<bool> originList() const;
-protected:
-    void calculatePosition();
-    std::vector<bool> m_originList;
+    bool write(const QString &fileName);
+    bool read(const QString &fileName);
+
+    std::vector<molconv::moleculePtr> molecules();
+private:
+    boost::shared_ptr<molconv::System> m_system;
+    std::vector<molconv::moleculePtr> m_molecules;
 };
 
-}
-
-
-#endif // MOLECULEORIGINGEOMETRICCENTER_H
-
+#endif // MOLCONVFILE_H
