@@ -26,7 +26,9 @@ set(molconv_VERSION_MINOR 0)
 set(molconv_VERSION_PATCH 1)
 set(molconv_VERSION "${molconv_VERSION_MAJOR}.${molconv_VERSION_MINOR}.${molconv_VERSION_PATCH}")
 
-include(CTest)
+if(not WIN32)
+    include(CTest)
+endif()
 
 # Do not allow in-source builds:
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
@@ -54,12 +56,18 @@ foreach(LANGUAGE ${LANGUAGES})
 endforeach(LANGUAGE ${LANGUAGES})
 
 # Boost libraries are required
+if(WIN32)
+  set(Boost_USE_STATIC_LIBS ON)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+endif()
 find_package(Boost COMPONENTS system iostreams filesystem program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
 
 # Chemkit libraries are required
 find_package(Chemkit COMPONENTS io graphics gui REQUIRED)
 include_directories(${CHEMKIT_INCLUDE_DIRS})
+link_directories(${CHEMKIT_LIBRARY_DIR})
 
 # We are using Qt5 for the GUI
 find_package(Qt5 COMPONENTS Widgets OpenGL LinguistTools Xml Test REQUIRED)
@@ -111,8 +119,10 @@ function(git_version dir version_var)
 endfunction()
 
 git_version(${CMAKE_SOURCE_DIR} SCM_REVISION)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} -Wall")
+if(not WIN32)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
+endif()
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -ggdb -Og")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
@@ -121,4 +131,6 @@ add_subdirectory(source)
 # prevent the generated files from being deleted during make clean
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM true)
 
-add_subdirectory(tests)
+if(not WIN32)
+    add_subdirectory(tests)
+endif()

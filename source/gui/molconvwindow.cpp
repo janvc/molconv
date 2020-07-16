@@ -337,6 +337,8 @@ void MolconvWindow::updateSelection()
 
 void MolconvWindow::about()
 {
+    //molconv::moleculePtr newMol(new molconv::Molecule);
+
     AboutDialog *ad = new AboutDialog(this);
     ad->exec();
 }
@@ -427,6 +429,7 @@ void MolconvWindow::importFile()
 
 void MolconvWindow::openFile()
 {
+    std::cout << "++++++++++++++++++++++++++++ MolconvWindow::openFile()" << std::endl;
     QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startOpenPath = settings.value("openPath").toString();
 

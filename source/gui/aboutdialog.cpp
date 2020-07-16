@@ -25,8 +25,15 @@
 #define EIGEN_DEVICE_FUNC
 
 #include <string>
-#include <eigen3/Eigen/src/Core/util/Macros.h>
+#ifdef WIN32
+	#include <Eigen/src/Core/util/Macros.h>
+#else
+	#include <eigen3/Eigen/src/Core/util/Macros.h>
+#endif
 #include <boost/version.hpp>
+#ifndef Q_MOC_RUN
+    #include<chemkit/molecule.h>
+#endif
 #include "config.h"
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
@@ -44,11 +51,11 @@ AboutDialog::AboutDialog(QWidget *parent) :
 
     const QString compileInfo = "Compiled on "
                               + QString(__DATE__) + " "
-                              + QString(__TIME__)
-                              + " using gcc version "
+                              + QString(__TIME__);
+/*                               + " using gcc version "
                               + QString::number(__GNUC__) + "."
                               + QString::number(__GNUC_MINOR__) + "."
-                              + QString::number(__GNUC_PATCHLEVEL__);
+                              + QString::number(__GNUC_PATCHLEVEL__); */
 
     const QString qtInfo = "using Qt version " + QString(QT_VERSION_STR);
 
@@ -67,6 +74,8 @@ AboutDialog::AboutDialog(QWidget *parent) :
     ui->qtInfo->setText(qtInfo);
     ui->eigenInfo->setText(eigenInfo);
     ui->boostInfo->setText(boostInfo);
+
+    chemkit::Molecule *mol(new chemkit::Molecule);
 }
 
 AboutDialog::~AboutDialog()

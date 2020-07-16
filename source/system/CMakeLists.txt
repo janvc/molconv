@@ -18,7 +18,6 @@
 #
 
 include_directories(${MOLCONV_INCLUDE_DIRS})
-message("testtest " ${MOLCONV_INCLUDE_DIRS})
 
 set(system_SOURCES
     system.cpp
@@ -27,4 +26,5 @@ set(system_SOURCES
 )
 
 add_library(molconv-system SHARED ${system_SOURCES})
+target_link_libraries(molconv-system molconv-molecule ${CHEMKIT_LIBRARIES})
 

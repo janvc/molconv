@@ -35,6 +35,7 @@ set(gui_SOURCES
     navigatetool.cpp
     selecttool.cpp
     moleculeinfo.cpp
+    molconvwindow.cpp
 )
 
 set(MOC_HEADERS
@@ -47,6 +48,7 @@ set(MOC_HEADERS
     setbasisdialog.h
     aboutdialog.h
     moleculeinfo.h
+    molconvwindow.h
 )
 
 set(UI_FORMS
@@ -59,6 +61,7 @@ set(UI_FORMS
     setbasisdialog.ui
     aboutdialog.ui
     moleculeinfo.ui
+    molconvwindow.ui
 )
 
 set(FILES_TO_TRANSLATE ${FILES_TO_TRANSLATE} ${HEADERS} ${SOURCES} ${UI_FORMS} ${RESOURCES})
@@ -75,5 +78,5 @@ endif(TRANSLATIONS_FILES)
 qt5_wrap_ui(UI_SOURCES ${UI_FORMS})
 
 add_library(molconv-gui SHARED ${gui_SOURCES} ${UI_SOURCES})
-target_link_libraries(molconv-gui Qt5::Widgets Qt5::OpenGL Qt5::Xml ${OPENGL_LIBRARIES})
+target_link_libraries(molconv-gui Qt5::Widgets Qt5::OpenGL Qt5::Xml ${OPENGL_LIBRARIES} molconv-molecule molconv-system ${Chemkit_LIBRARIES})
 

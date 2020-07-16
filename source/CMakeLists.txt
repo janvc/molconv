@@ -24,6 +24,7 @@ set(MOLCONV_INCLUDE_DIRS
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 include_directories(${MOLCONV_INCLUDE_DIRS})
+link_directories(${LIBRARY_OUTPUT_PATH})
 
 set(SOURCES
     main.cpp
@@ -38,8 +39,7 @@ qt5_add_resources(RCC_SOURCES ${RESOURCES})
 add_subdirectory(molecule)
 add_subdirectory(system)
 add_subdirectory(gui)
-add_subdirectory(mainwindow)
 
 add_executable(molconv ${SOURCES} ${RCC_SOURCES} ${QM_FILES})
-target_link_libraries(molconv molconv-mainwindow molconv-gui molconv-system molconv-molecule ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(molconv molconv-gui molconv-system molconv-molecule ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
 

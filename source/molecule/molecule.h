@@ -21,7 +21,9 @@
 
 #ifndef MOLECULE_H_
 #define MOLECULE_H_
-
+#ifdef 	WIN32
+	#define _USE_MATH_DEFINES
+#endif
 #ifndef Q_MOC_RUN
     #include<chemkit/molecule.h>
     #include<chemkit/atom.h>

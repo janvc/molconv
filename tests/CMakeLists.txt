@@ -43,7 +43,7 @@ add_executable(test_molecule ${test_molecule_SRCS})
 add_executable(test_molconvwindow ${test_molconvwindow_SRCS})
 
 target_link_libraries(test_molecule molconv-molecule molconv-system Qt5::Test ${CHEMKIT_LIBRARIES})
-target_link_libraries(test_molconvwindow molconv-mainwindow molconv-gui molconv-system molconv-molecule Qt5::Test ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(test_molconvwindow molconv-gui molconv-system molconv-molecule Qt5::Test ${CHEMKIT_LIBRARIES} ${Boost_LIBRARIES})
 
 add_test(NAME test_molecule COMMAND test_molecule)
 add_test(NAME test_molconvwindow COMMAND test_molconvwindow)

@@ -24,4 +24,5 @@ set(molecule_SOURCES
 )
 
 add_library(molconv-molecule SHARED ${molecule_SOURCES})
+target_link_libraries(molconv-molecule ${CHEMKIT_LIBRARIES})
 
