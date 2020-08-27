@@ -55,7 +55,6 @@ class MolconvWindowPrivate
 {
 public:
     MolconvWindowPrivate()
-        : m_system(molconv::System::get())
     {
     }
 
@@ -67,8 +66,6 @@ public:
     ListOfMolecules *m_ListOfMolecules;
     MoleculeSettings *m_MoleculeSettings;
     MoleculeInfo *m_MoleculeInfo;
-
-    boost::shared_ptr<molconv::System> m_system;
 
     std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::map<unsigned long, chemkit::GraphicsMoleculeItem *> m_GraphicsItemMap;
@@ -179,7 +176,9 @@ MolconvWindow::~MolconvWindow()
 
 void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
 {
-    d->m_system->addMolecule(temp_mol);
+    molconv::System& system = molconv::System::get();
+
+    system.addMolecule(temp_mol);
     d->m_activeMolID = temp_mol->molId();
 
     chemkit::GraphicsMoleculeItem *item = new chemkit::GraphicsMoleculeItem(temp_mol.get());
@@ -218,6 +217,8 @@ void MolconvWindow::removeSelectedMolecules()
 
 void MolconvWindow::removeMolecule(const unsigned long id)
 {
+    molconv::System& system = molconv::System::get();
+
     d->m_ListOfMolecules->removeRow(id);
 
     // remove molecule's graphics item
@@ -228,11 +229,11 @@ void MolconvWindow::removeMolecule(const unsigned long id)
     ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(id));
     d->m_GraphicsAxisMap.erase(id);
 
-    d->m_system->removeMolecule(id);
+    system.removeMolecule(id);
 
     ui->molconv_graphicsview->update();
 
-    if (d->m_system->nMolecules() > 0)
+    if (system.nMolecules() > 0)
         d->m_activeMolID = d->m_ListOfMolecules->currentmolID();
     else
     {
@@ -254,6 +255,8 @@ void MolconvWindow::removeMolecule(const unsigned long id)
 
 void MolconvWindow::removeActiveMolecule()
 {
+    molconv::System& system = molconv::System::get();
+
     unsigned long molToRemove = d->m_activeMolID;
 
     // remove active molecule from the list
@@ -267,11 +270,11 @@ void MolconvWindow::removeActiveMolecule()
     ui->molconv_graphicsview->deleteItem(d->m_GraphicsAxisMap.at(molToRemove));
     d->m_GraphicsAxisMap.erase(molToRemove);
 
-    d->m_system->removeMolecule(molToRemove);
+    system.removeMolecule(molToRemove);
 
     ui->molconv_graphicsview->update();
 
-    if (d->m_system->nMolecules() > 0)
+    if (system.nMolecules() > 0)
         d->m_activeMolID = d->m_ListOfMolecules->currentmolID();
     else
     {
@@ -293,17 +296,17 @@ void MolconvWindow::removeActiveMolecule()
 
 int MolconvWindow::nMolecules()
 {
-    return d->m_system->nMolecules();
+    return molconv::System::get().nMolecules();
 }
 
 molconv::moleculePtr MolconvWindow::getMol(const unsigned long key)
 {
-    return d->m_system->getMolecule(key);
+    return molconv::System::get().getMolecule(key);
 }
 
 std::vector<unsigned long> MolconvWindow::getMolIDs()
 {
-    return d->m_system->getMolIDs();
+    return molconv::System::get().getMolIDs();
 }
 
 unsigned long MolconvWindow::activeMolID()
@@ -584,7 +587,7 @@ void MolconvWindow::startImportDialog()
 void MolconvWindow::startExportDialog()
 {
     ExportDialog *ed = new ExportDialog(this);
-    ed->createMoleculeList(d->m_system->getMolIDs());
+    ed->createMoleculeList(getMolIDs());
     ed->setModal(true);
     ed->exec();
     delete ed;
@@ -603,13 +606,15 @@ void MolconvWindow::DuplicateActiveMolecule()
 
 void MolconvWindow::DuplicateMolecule(const unsigned long oldMolID)
 {
-    molconv::moleculePtr newMol = boost::make_shared<molconv::Molecule>(d->m_system->getMolecule(oldMolID));
+    molconv::moleculePtr newMol = boost::make_shared<molconv::Molecule>(getMol(oldMolID));
 
     add_molecule(newMol);
 }
 
 void MolconvWindow::newGroup()
 {
+    molconv::System& system = molconv::System::get();
+
     std::string newGroupName = d->m_NewGroupDialog->groupName();
     std::vector<bool> members = d->m_NewGroupDialog->molecules();
 
@@ -639,7 +644,7 @@ void MolconvWindow::newGroup()
                 getMol(i)->addToGroup(newStack);
             }
         newStack->addToGroup(groups[0]);
-        d->m_system->addGroup(newStack);
+        system.addGroup(newStack);
         d->m_ListOfMolecules->insertGroup(newStack.get());
     }
     else
@@ -653,7 +658,7 @@ void MolconvWindow::newGroup()
                 getMol(i)->addToGroup(newGroup);
             }
         newGroup->addToGroup(groups[0]);
-        d->m_system->addGroup(newGroup);
+        system.addGroup(newGroup);
         d->m_ListOfMolecules->insertGroup(newGroup.get());
     }
 }
@@ -673,9 +678,9 @@ void MolconvWindow::ResetView()
 {
     // determine largest distance of any atom from the global origin:
     double maxLength = 0;
-    for (unsigned long id : d->m_system->getMolIDs())
+    for (unsigned long id : getMolIDs())
     {
-        molconv::moleculePtr mol =  d->m_system->getMolecule(id);
+        molconv::moleculePtr mol = getMol(id);
 
         for (int j = 0; j < int(mol->size()); j++)
         {
@@ -711,7 +716,7 @@ void MolconvWindow::changeOriginBasis()
     std::vector<bool> newOriginList = d->m_setBasisDialog->selectedOriginAtoms();
     std::vector<bool> newBasisList = d->m_setBasisDialog->selectedBasisAtoms();
 
-    molconv::moleculePtr tmpMolPtr = d->m_system->getMolecule(d->m_activeMolID);
+    molconv::moleculePtr tmpMolPtr = getMol(d->m_activeMolID);
 
     // determine if the new basis is different from the old one:
     if (
@@ -738,7 +743,7 @@ void MolconvWindow::changeOriginBasis()
 
 void MolconvWindow::updateAxes()
 {
-    molconv::moleculePtr tmpMolPtr = d->m_system->getMolecule(d->m_activeMolID);
+    molconv::moleculePtr tmpMolPtr = getMol(d->m_activeMolID);
 
     d->m_GraphicsAxisMap.at(d->m_activeMolID)->setPosition(tmpMolPtr->internalOriginPosition());
     d->m_GraphicsAxisMap.at(d->m_activeMolID)->setVectors(tmpMolPtr->internalBasisVectors());
@@ -768,7 +773,7 @@ void MolconvWindow::wasModified()
 
 void MolconvWindow::resetCoords()
 {
-    std::array<double,6> oB = d->m_system->getMolecule(d->m_activeMolID)->origBasis();
+    std::array<double,6> oB = getMol(d->m_activeMolID)->origBasis();
     d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 
@@ -790,10 +795,10 @@ void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
 
 void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned long otherMolID)
 {
-    molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
-    molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
+    molconv::moleculePtr refMol = getMol(refMolID);
+    molconv::moleculePtr otherMol = getMol(otherMolID);
 
-    double rmsd = d->m_system->calculateRMSDbetween(refMolID, otherMolID);
+    double rmsd = molconv::System::get().calculateRMSDbetween(refMolID, otherMolID);
 
     if (rmsd > 0.0)
     {
@@ -814,11 +819,11 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
 
 void MolconvWindow::minimizeRMSD(const unsigned long refMolID, const unsigned long otherMolID)
 {
-    molconv::moleculePtr refMol = d->m_system->getMolecule(refMolID);
-    molconv::moleculePtr otherMol = d->m_system->getMolecule(otherMolID);
+    molconv::moleculePtr refMol = getMol(refMolID);
+    molconv::moleculePtr otherMol = getMol(otherMolID);
 
-    bool success = d->m_system->alignMolecules(refMolID, otherMolID);
-    double rmsd = d->m_system->calculateRMSDbetween(refMolID, otherMolID);
+    bool success = molconv::System::get().alignMolecules(refMolID, otherMolID);
+    double rmsd = molconv::System::get().calculateRMSDbetween(refMolID, otherMolID);
 
     if (success)
     {
@@ -845,103 +850,6 @@ void MolconvWindow::minimizeRMSD(const unsigned long refMolID, const unsigned lo
 
 void MolconvWindow::writeMolconvFile(const QString &fileName)
 {
-//    QDomDocument testDoc;
-//    QDomElement system = testDoc.createElement("System");
-//    testDoc.appendChild(system);
-
-//    for (unsigned long id : d->m_system->getMolIDs())
-//    {
-//        QDomElement molecule = testDoc.createElement("Molecule");
-//        molecule.setAttribute("Name", QString::fromStdString(d->m_system->getMolecule(id)->name()));
-
-//        QDomElement origin = testDoc.createElement("Origin");
-//        origin.setAttribute("Type", QString::number(d->m_system->getMolecule(id)->internalOrigin()));
-//        origin.setAttribute("Factor", QString::number(d->m_system->getMolecule(id)->internalOriginFactor()));
-
-//        QString atomString = QString::number(d->m_system->getMolecule(id)->internalOriginAtoms()[0]);
-//        atomString += ",";
-//        atomString += QString::number(d->m_system->getMolecule(id)->internalOriginAtoms()[1]);
-//        origin.setAttribute("Atoms", atomString);
-
-//        QString originList;
-//        for (int k = 0; k < int(d->m_system->getMolecule(id)->size() - 1); k++)
-//            if (d->m_system->getMolecule(id)->originList()[k])
-//                originList += "T,";
-//            else
-//                originList += "F,";
-//        if (d->m_system->getMolecule(id)->originList()[d->m_system->getMolecule(id)->size() - 1])
-//            originList += "T";
-//        else
-//            originList += "F";
-//        origin.setAttribute("originList", originList);
-
-//        origin.setAttribute("vecX", QString::number(d->m_system->getMolecule(id)->internalOriginPosition()(0), 'e', 16));
-//        origin.setAttribute("vecY", QString::number(d->m_system->getMolecule(id)->internalOriginPosition()(1), 'e', 16));
-//        origin.setAttribute("vecZ", QString::number(d->m_system->getMolecule(id)->internalOriginPosition()(2), 'e', 16));
-//        molecule.appendChild(origin);
-
-//        QDomElement basis = testDoc.createElement("Basis");
-//        basis.setAttribute("Type", QString::number(d->m_system->getMolecule(id)->internalBasis()));
-
-//        atomString = QString::number(d->m_system->getMolecule(id)->internalBasisAtoms()[0]);
-//        atomString += ",";
-//        atomString += QString::number(d->m_system->getMolecule(id)->internalBasisAtoms()[1]);
-//        atomString += ",";
-//        atomString += QString::number(d->m_system->getMolecule(id)->internalBasisAtoms()[2]);
-//        basis.setAttribute("Atoms", atomString);
-
-//        QString basisList;
-//        for (int k = 0; k < int(d->m_system->getMolecule(id)->size() - 1); k++)
-//            if (d->m_system->getMolecule(id)->basisList()[k])
-//                basisList += "T,";
-//            else
-//                basisList += "F,";
-//        if (d->m_system->getMolecule(id)->basisList()[d->m_system->getMolecule(id)->size() - 1])
-//            basisList += "T";
-//        else
-//            basisList += "F";
-//        basis.setAttribute("basisList", basisList);
-
-//        basis.setAttribute("phi", QString::number(d->m_system->getMolecule(id)->phi(), 'e', 16));
-//        basis.setAttribute("theta", QString::number(d->m_system->getMolecule(id)->theta(), 'e', 16));
-//        basis.setAttribute("psi", QString::number(d->m_system->getMolecule(id)->psi(), 'e', 16));
-//        molecule.appendChild(basis);
-
-//        for (int j = 0; j < int(d->m_system->getMolecule(id)->size()); j++)
-//        {
-//            QDomElement atom = testDoc.createElement("Atom");
-//            atom.setAttribute("Ele", QString::fromStdString(d->m_system->getMolecule(id)->atom(j)->element().symbol()));
-//            atom.setAttribute("X", QString::number(d->m_system->getMolecule(id)->internalPositions()[j](0), 'e', 16));
-//            atom.setAttribute("Y", QString::number(d->m_system->getMolecule(id)->internalPositions()[j](1), 'e', 16));
-//            atom.setAttribute("Z", QString::number(d->m_system->getMolecule(id)->internalPositions()[j](2), 'e', 16));
-//            molecule.appendChild(atom);
-//        }
-//        system.appendChild(molecule);
-//    }
-
-//    for (int i = 0; i < int(d->m_system->nGroups()); i++)
-//    {
-//        QDomElement group = testDoc.createElement("Group");
-//        group.setAttribute("Name", QString::fromStdString(d->m_system->getGroup(i)->name()));
-//        group.setAttribute("Parent", QString::number(d->m_system->GroupIndex(d->m_system->getGroup(i)->parent())));
-
-//        QString memberString;
-//        for (int j = 0; j < int(d->m_system->getGroup(i)->nMolecules() - 1); j++)
-//        {
-//            memberString += QString::number(d->m_system->MoleculeIndex(d->m_system->getGroup(i)->getMol(j)));
-//            memberString += ",";
-//        }
-//        memberString += QString::number(d->m_system->MoleculeIndex(d->m_system->getGroup(i)->getMol(d->m_system->getGroup(i)->nMolecules() - 1)));
-//        group.setAttribute("Members", memberString);
-
-//        system.appendChild(group);
-//    }
-
-//    QFile file(fileName);
-//    file.open(QIODevice::WriteOnly | QIODevice::Text);
-//    QTextStream stream(&file);
-//    stream << testDoc.toString();
-//    file.close();
     MolconvFile file = MolconvFile();
     file.write(fileName);
     d->m_currentFile = fileName;
@@ -952,111 +860,6 @@ void MolconvWindow::writeMolconvFile(const QString &fileName)
 
 bool MolconvWindow::readMolconvFile(const QString &fileName)
 {
-//    QFile file(fileName);
-//    if (!file.exists())
-//    {
-//        return false;
-//    }
-//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-//    {
-//        return false;
-//    }
-
-//    QDomDocument testDoc;
-//    testDoc.setContent(&file);
-//    file.close();
-
-//    QDomElement systemElement = testDoc.documentElement();
-
-//    QDomNode moleculeNode = systemElement.firstChild();
-
-//    while (! moleculeNode.isNull())
-//    {
-//        QDomElement moleculeElement = moleculeNode.toElement();
-//        if (! moleculeElement.isNull())
-//        {
-//            molconv::moleculePtr currentMolecule(new molconv::Molecule);
-
-//            currentMolecule->setName(moleculeElement.attribute("Name").toStdString());
-
-//            // create the origin and the basis to transform the atoms to their global positions
-//            // since only the internal positions are saved in the molconv file:
-//            QDomElement originElement = moleculeElement.elementsByTagName("Origin").at(0).toElement();
-
-//            molconv::origin Origin = static_cast<molconv::origin>(originElement.attribute("Type").toInt());
-//            double vecx = originElement.attribute("vecX").toDouble();
-//            double vecy = originElement.attribute("vecY").toDouble();
-//            double vecz = originElement.attribute("vecZ").toDouble();
-//            QString originAtomString = originElement.attribute("Atoms");
-//            QString originListString = originElement.attribute("originList");
-//            double originFactor = originElement.attribute("Factor").toDouble();
-
-//            Eigen::Vector3d originVec(vecx, vecy, vecz);
-//            int oA1, oA2;
-//            oA1 = originAtomString.split(",").at(0).toInt();
-//            oA2 = originAtomString.split(",").at(1).toInt();
-//            std::vector<bool> originList;
-//            for (int i = 0; i < originListString.split(",").length(); i++)
-//                if (originListString.split(",").at(i) == "T")
-//                    originList.push_back(true);
-//                else
-//                    originList.push_back(false);
-
-//            QDomElement basisElement = moleculeElement.elementsByTagName("Basis").at(0).toElement();
-
-//            molconv::basis Basis = static_cast<molconv::basis>(basisElement.attribute("Type").toInt());
-//            double phi = basisElement.attribute("phi").toDouble();
-//            double theta = basisElement.attribute("theta").toDouble();
-//            double psi = basisElement.attribute("psi").toDouble();
-//            QString basisAtomString = basisElement.attribute("Atoms");
-//            QString basisListString = basisElement.attribute("basisList");
-
-//            int bA1, bA2, bA3;
-//            bA1 = basisAtomString.split(",").at(0).toInt();
-//            bA2 = basisAtomString.split(",").at(1).toInt();
-//            bA3 = basisAtomString.split(",").at(2).toInt();
-//            std::vector<bool> basisList;
-//            for (int i = 0; i < basisListString.split(",").length(); i++)
-//                if (basisListString.split(",").at(i) == "T")
-//                    basisList.push_back(true);
-//                else
-//                    basisList.push_back(false);
-
-//            Eigen::MatrixXd trafo(molconv::Molecule::euler2rot(psi, theta, phi));
-
-//            QDomNode atomNode = basisElement.nextSibling();
-
-//            while (! atomNode.isNull())
-//            {
-//                QDomElement atomElement = atomNode.toElement();
-//                if (! atomElement.isNull())
-//                {
-//                    double x = atomElement.attribute("X").toDouble();
-//                    double y = atomElement.attribute("Y").toDouble();
-//                    double z = atomElement.attribute("Z").toDouble();
-//                    std::string element = atomElement.attribute("Ele").toStdString();
-
-//                    Eigen::Vector3d intPos(x, y, z);
-//                    Eigen::Vector3d globalPos(originVec + trafo * intPos);
-
-//                    chemkit::Atom *currentAtom = currentMolecule->addAtom(chemkit::Element(element));
-
-
-//                    currentAtom->setPosition(globalPos);
-//                }
-//                atomNode = atomNode.nextSibling();
-//            }
-
-//            currentMolecule->setOrigin(Origin, oA1, oA2, originFactor);
-//            currentMolecule->setOriginList(originList);
-//            currentMolecule->setBasis(Basis, bA1, bA2, bA3);
-//            currentMolecule->setBasisList(basisList);
-
-//            chemkit::BondPredictor::predictBonds(currentMolecule.get());
-//            add_molecule(currentMolecule);
-//        }
-//        moleculeNode = moleculeNode.nextSibling();
-//    }
     MolconvFile file = MolconvFile();
     file.read(fileName);
     for (auto mol : file.molecules())

@@ -33,11 +33,13 @@ public:
 
     // return the axes of the internal basis (aka the
     // rotation matrix) as obtained from the euler angles
-    virtual Eigen::Matrix3d axes() const;
+    Eigen::Matrix3d axes() const;
 
     // initialize the basis and the euler angles
     // (specific for each subclass)
-    virtual void initialize();
+//    virtual void initialize();
+    static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
+    static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
 
 protected:
     double m_phi;

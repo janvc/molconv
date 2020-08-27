@@ -24,6 +24,7 @@
 
 #include <Eigen/Core>
 #include "types.h"
+#include "molecule.h"
 
 namespace molconv {
 
@@ -33,7 +34,7 @@ public:
     MoleculeOrigin(moleculePtr molecule);
 
     moleculePtr molecule();
-    virtual Eigen::Vector3d position() const;
+    Eigen::Vector3d position() const;
 
 protected:
     moleculePtr m_molecule;

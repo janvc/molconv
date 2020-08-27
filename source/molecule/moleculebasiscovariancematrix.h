@@ -31,9 +31,9 @@ class MoleculeBasisCovarianceMatrix : public MoleculeBasis
 public:
     MoleculeBasisCovarianceMatrix();
 
-    Eigen::Matrix3d axes() const;
+//    Eigen::Matrix3d axes() const;
 
-    void initialize();
+//    void initialize();
 };
 
 }

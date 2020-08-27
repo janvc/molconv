@@ -18,13 +18,13 @@
  *
  */
 
+
 #ifndef MOLCONVFILE_H
 #define MOLCONVFILE_H
 
 
 #include <vector>
-#include "molecule.h"
-#include "system.h"
+#include "types.h"
 
 class MolconvFile
 {
@@ -36,7 +36,6 @@ public:
 
     std::vector<molconv::moleculePtr> molecules();
 private:
-    boost::shared_ptr<molconv::System> m_system;
     std::vector<molconv::moleculePtr> m_molecules;
 };
 

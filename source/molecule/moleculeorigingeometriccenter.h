@@ -32,7 +32,6 @@ class MoleculeOriginGeometricCenter : public MoleculeOrigin
 public:
     MoleculeOriginGeometricCenter(moleculePtr molecule);
 
-    Eigen::Vector3d position() const;
     std::vector<bool> originList() const;
 protected:
     void calculatePosition();

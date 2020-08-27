@@ -23,5 +23,5 @@ set(io_SOURCES
     molconvfile.cpp
 )
 
-add_library(molconv-io SHARED ${system_SOURCES})
+add_library(molconv-io SHARED ${io_SOURCES})
 

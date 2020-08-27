@@ -35,9 +35,9 @@ namespace molconv
     class System
     {
     public:
-        static boost::shared_ptr<System> get()
+        static System& get()
         {
-            static boost::shared_ptr<System> instance(new System);
+            static System instance;
             return instance;
         }
         void init();
@@ -61,7 +61,8 @@ namespace molconv
         System(){}
         System(const System&);
         System& operator=(const System&);
-        boost::scoped_ptr<SystemPrivate> d;
+        std::map<unsigned long, moleculePtr> m_molecules;
+        std::vector<groupPtr> m_groups;
     };
 
 } // namespace molconv

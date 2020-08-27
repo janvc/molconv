@@ -39,21 +39,16 @@ void MoleculeOriginGeometricCenter::calculatePosition()
 {
     Eigen::Vector3d cog = Eigen::Vector3d::Zero();
     int Nactive = 0;
-    for (int i = 0; i < int(molecule->size()); i++)
+    for (int i = 0; i < int(m_molecule->size()); i++)
     {
         if (m_originList.at(i))
         {
-            cog += molecule->atom(i)->position();
+            cog += m_molecule->atom(i)->position();
             Nactive++;
         }
     }
 
     m_position = cog / double(Nactive);
-}
-
-Eigen::Vector3d MoleculeOriginGeometricCenter::position()
-{
-    return m_position;
 }
 
 std::vector<bool> MoleculeOriginGeometricCenter::originList() const

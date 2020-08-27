@@ -28,13 +28,6 @@
 
 namespace molconv
 {
-    class SystemPrivate
-    {
-    public:
-        std::map<unsigned long, moleculePtr> m_molecules;
-        std::vector<groupPtr> m_groups;
-    };
-
     ///
     /// \brief System::System
     ///
@@ -42,7 +35,6 @@ namespace molconv
     ///
     void System::init()
     {
-        d.reset(new SystemPrivate);
     }
 
     System::~System() {}
@@ -55,7 +47,7 @@ namespace molconv
     ///
     size_t System::nMolecules() const
     {
-        return d->m_molecules.size();
+        return m_molecules.size();
     }
 
     ///
@@ -66,7 +58,7 @@ namespace molconv
     ///
     size_t System::nGroups() const
     {
-        return d->m_groups.size();
+        return m_groups.size();
     }
 
     ///
@@ -78,7 +70,7 @@ namespace molconv
     ///
     moleculePtr System::getMolecule(const unsigned long index) const
     {
-        return d->m_molecules.at(index);
+        return m_molecules.at(index);
     }
 
     ///
@@ -93,7 +85,7 @@ namespace molconv
         if (index >= nGroups())
             throw std::invalid_argument("index out of range.\n");
 
-        return d->m_groups.at(index);
+        return m_groups.at(index);
     }
 
     ///
@@ -144,7 +136,7 @@ namespace molconv
     ///
     void System::addMolecule(const moleculePtr newMolecule)
     {
-        d->m_molecules.insert(std::make_pair(newMolecule->molId(), newMolecule));
+        m_molecules.insert(std::make_pair(newMolecule->molId(), newMolecule));
     }
 
     ///
@@ -155,7 +147,7 @@ namespace molconv
     ///
     void System::removeMolecule(const unsigned long key)
     {
-        d->m_molecules.erase(key);
+        m_molecules.erase(key);
     }
 
     ///
@@ -166,7 +158,7 @@ namespace molconv
     ///
     void System::addGroup(const groupPtr &newGroup)
     {
-        d->m_groups.push_back(newGroup);
+        m_groups.push_back(newGroup);
     }
 
     ///
@@ -180,14 +172,14 @@ namespace molconv
         if (index >= nGroups())
             throw std::invalid_argument("index out of range.\n");
 
-        d->m_groups.erase(d->m_groups.begin() + index);
+        m_groups.erase(m_groups.begin() + index);
     }
 
     std::vector<unsigned long> System::getMolIDs() const
     {
         std::vector<unsigned long> result;
 
-        for (auto const& element : d->m_molecules)
+        for (auto const& element : m_molecules)
         {
             result.push_back(element.first);
         }
@@ -252,8 +244,8 @@ namespace molconv
     ///
     bool System::alignMolecules(const unsigned long refMol, const unsigned long otherMol) const
     {
-        molconv::moleculePtr refMolPtr = getMolecule(refMol);
-        molconv::moleculePtr otherMolPtr = getMolecule(otherMol);
+        moleculePtr refMolPtr = getMolecule(refMol);
+        moleculePtr otherMolPtr = getMolecule(otherMol);
 
         if (refMolPtr->size() != otherMolPtr->size())
         {
