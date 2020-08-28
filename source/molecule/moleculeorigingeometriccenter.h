@@ -22,24 +22,17 @@
 #ifndef MOLECULEORIGINGEOMETRICCENTER_H
 #define MOLECULEORIGINGEOMETRICCENTER_H
 
-#include <vector>
-#include "moleculeorigin.h"
+#include "moleculeoriginglobal.h"
 
 namespace molconv {
 
-class MoleculeOriginGeometricCenter : public MoleculeOrigin
+class MoleculeOriginGeometricCenter : public MoleculeOriginGlobal
 {
 public:
-    MoleculeOriginGeometricCenter(moleculePtr molecule);
-
-    std::vector<bool> originList() const;
-protected:
-    void calculatePosition();
-    std::vector<bool> m_originList;
+    MoleculeOriginGeometricCenter(moleculePtr molecule, std::vector<bool> originList);
 };
 
 }
-
 
 #endif // MOLECULEORIGINGEOMETRICCENTER_H
 

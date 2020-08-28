@@ -19,27 +19,19 @@
  */
 
 
-#include "moleculeorigingeometriccenter.h"
+#ifndef MOLECULEORIGINCENTEROFMASS_H
+#define MOLECULEORIGINCENTEROFMASS_H
+
+#include "moleculeoriginglobal.h"
 
 namespace molconv {
 
-MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(moleculePtr molecule, std::vector<bool> originList)
-    : MoleculeOriginGlobal(molecule originList)
+class MoleculeOriginCenterOfMass : public MoleculeOriginGlobal
 {
-    Eigen::Vector3d center = Eigen::Vector3d::Zero();
-    int Nactive = 0;
-
-    for (int i = 0; i < int(m_molecule->size()); i++)
-    {
-        if (m_originList.at(i))
-        {
-            center += m_molecule->atom(i)->position();
-            Nactive++;
-        }
-    }
-
-    m_position = center / double(Nactive);
-}
+public:
+    MoleculeOriginCenterOfMass(moleculePtr molecule, std::vector<bool> originList);
+};
 
 }
 
+#endif // MOLECULEORIGINCENTEROFMASS_H
