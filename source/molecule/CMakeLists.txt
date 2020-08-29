@@ -21,6 +21,8 @@ include_directories(${MOLCONV_INCLUDE_DIRS})
 
 set(molecule_SOURCES
     moleculeorigin.cpp
+    moleculeoriginonatom.cpp
+    moleculeoriginbetweenatoms.cpp
     moleculeoriginglobal.cpp
     moleculeorigingeometriccenter.cpp
     moleculeorigincenterofmass.cpp

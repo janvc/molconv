@@ -19,27 +19,18 @@
  */
 
 
-#include "moleculeorigingeometriccenter.h"
+#include "moleculeoriginbetweenatoms.h"
 
 namespace molconv {
 
-MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(moleculePtr molecule, std::vector<bool> originList)
-    : MoleculeOriginGlobal(molecule, originList)
+MoleculeOriginBetweenAtoms::MoleculeOriginBetweenAtoms(moleculePtr molecule, const int atom1, const int atom2, const double factor)
+    : MoleculeOriginOnAtom (molecule, atom1)
 {
-    Eigen::Vector3d center = Eigen::Vector3d::Zero();
-    int Nactive = 0;
+    m_atom2 = atom2;
+    m_factor = factor;
 
-    for (int i = 0; i < int(m_molecule->size()); i++)
-    {
-        if (m_originList.at(i))
-        {
-            center += m_molecule->atom(i)->position();
-            Nactive++;
-        }
-    }
-
-    m_position = center / double(Nactive);
+    m_position = m_factor * m_molecule->atom(m_atom1)->position()
+               + (1.0 - m_factor) * m_molecule->atom(m_atom2)->position();
 }
 
 }
-
