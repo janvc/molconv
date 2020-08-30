@@ -35,6 +35,7 @@ public:
 
     moleculePtr molecule();
     Eigen::Vector3d position() const;
+    void setPosition(const Eigen::Vector3d newPosition);
 
 protected:
     moleculePtr m_molecule;

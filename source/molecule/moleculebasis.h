@@ -23,25 +23,32 @@
 #define MOLECULEBASIS_H
 
 #include <Eigen/Core>
+#include "types.h"
 
 namespace molconv {
 
 class MoleculeBasis
 {
 public:
-    MoleculeBasis();
+    MoleculeBasis(moleculePtr molecule);
 
     // return the axes of the internal basis (aka the
     // rotation matrix) as obtained from the euler angles
     Eigen::Matrix3d axes() const;
 
-    // initialize the basis and the euler angles
-    // (specific for each subclass)
-//    virtual void initialize();
+    double phi() const;
+    double theta() const;
+    double psi() const;
+    void setPhi(const double newPhi);
+    void setTheta(const double newTheta);
+    void setPsi(const double newPsi);
+
     static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
     static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
 
 protected:
+    moleculePtr m_molecule;
+
     double m_phi;
     double m_theta;
     double m_psi;

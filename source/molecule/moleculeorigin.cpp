@@ -39,5 +39,10 @@ Eigen::Vector3d MoleculeOrigin::position() const
     return m_position;
 }
 
+void MoleculeOrigin::setPosition(const Eigen::Vector3d newPosition)
+{
+    m_position = newPosition;
+}
+
 }
 

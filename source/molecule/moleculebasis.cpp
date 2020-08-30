@@ -23,8 +23,10 @@
 
 namespace molconv {
 
-MoleculeBasis::MoleculeBasis()
+MoleculeBasis::MoleculeBasis(moleculePtr molecule)
 {
+    m_molecule = molecule;
+
     m_psi = 0.0;
     m_theta = 0.0;
     m_phi = 0.0;
@@ -33,6 +35,36 @@ MoleculeBasis::MoleculeBasis()
 Eigen::Matrix3d MoleculeBasis::axes() const
 {
     return euler2rot(m_psi, m_theta, m_phi);
+}
+
+double MoleculeBasis::phi() const
+{
+    return m_phi;
+}
+
+double MoleculeBasis::theta() const
+{
+    return m_theta;
+}
+
+double MoleculeBasis::psi() const
+{
+    return m_psi;
+}
+
+void MoleculeBasis::setPhi(const double newPhi)
+{
+    m_phi = newPhi;
+}
+
+void MoleculeBasis::setTheta(const double newTheta)
+{
+    m_theta = newTheta;
+}
+
+void MoleculeBasis::setPsi(const double newPsi)
+{
+    m_psi = newPsi;
 }
 
 /*
