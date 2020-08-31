@@ -32,11 +32,13 @@
 
 class MoleculeItem;
 
+
 namespace molconv
 {
     class MoleculePrivate;
     class MoleculeGroup;
-
+    class MoleculeOrigin;
+    class MoleculeBasis;
 
     class Molecule : public chemkit::Molecule
     {
@@ -49,8 +51,8 @@ namespace molconv
         ~Molecule();
 
         // info about the molecular internal basis:
-        origin internalOrigin() const;
-        basis internalBasis() const;
+        MoleculeOrigin internalOrigin() const;
+        MoleculeBasis internalBasis() const;
         Eigen::Vector3d internalOriginPosition() const;
         Eigen::Matrix3d internalBasisVectors() const;
         std::array<int,2> internalOriginAtoms() const;
@@ -64,8 +66,6 @@ namespace molconv
         std::array<double,6> origBasis() const;
         std::vector<Eigen::Vector3d> internalPositions() const;
 
-        Eigen::Vector3d center() const;
-        Eigen::Vector3d centerOfMass() const;
         Eigen::Vector3d centerOfCharge() const;
 
         // info about the inertia tensor and the covariance matrix:
@@ -83,17 +83,13 @@ namespace molconv
                            const double phi, const double theta, const double psi);
 
         // changing the internal basis:
-        void setOrigin(const origin &newOrigin, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);
-        void setBasis(const basis &newBasis, const size_t atom1 = 0, const size_t atom2 = 0, const size_t atom3 = 0);
-        void setOriginList(const std::vector<bool> &newList);
-        void setBasisList(const std::vector<bool> &newList);
+        void setOrigin(const origin &newOrigin, const std::vector<bool> originVector, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);
+        void setBasis(const basis &newBasis, const std::vector<bool> basisVector, const size_t atom1 = 0, const size_t atom2 = 0, const size_t atom3 = 0);
 
         // manage groups
         void addToGroup(groupPtr newGroup);
         groupPtr group() const;
 
-        static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
-        static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
         static void initRand();
 
         chemkit::Atom *addAtom(const chemkit::Element &element);
@@ -102,8 +98,6 @@ namespace molconv
 
     private:
         // private functions:
-        void setInternalOriginPosition();
-        void setEulerAngles();
         Eigen::Matrix3d calcInertiaTensor() const;
         Eigen::Matrix3d calcChargeTensor() const;
         Eigen::Matrix3d calcCovarianceMatrix() const;

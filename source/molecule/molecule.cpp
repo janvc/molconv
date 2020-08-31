@@ -29,6 +29,15 @@
 #include<chemkit/bondpredictor.h>
 #include "molecule.h"
 #include "moleculeitem.h"
+#include "moleculeoriginonatom.h"
+#include "moleculeoriginbetweenatoms.h"
+#include "moleculeoriginglobal.h"
+#include "moleculeorigingeometriccenter.h"
+#include "moleculeorigincenterofmass.h"
+#include "moleculebasisonatoms.h"
+#include "moleculebasisglobal.h"
+#include "moleculebasiscovariancematrix.h"
+#include "moleculebasisinertiatensor.h"
 
 
 namespace molconv
@@ -38,15 +47,11 @@ namespace molconv
     public:
         MoleculePrivate()
         {
-            m_origin = kCenterOfGeometry;
-            m_basis = kCovarianceVectors;
-            m_originFactor = 0.0;
-            m_originAtoms.fill(0);
-            m_basisAtoms.fill(0);
-            m_originalBasis.fill(0.0);
-            m_phi = 0;
-            m_theta = 0;
-            m_psi = 0;
+//            std::vector<bool> boolVec(mol->size(), true);
+//            m_origin = MoleculeOriginGeometricCenter(mol, boolVec);
+//            m_basis = MoleculeBasisCovarianceMatrix(mol, boolVec);
+//            m_originalOrigin = MoleculeOriginGeometricCenter(mol, boolVec);
+//            m_originalBasis = MoleculeBasisCovarianceMatrix(mol, boolVec);
 
             // generate the molecule's id:
             int s1 = std::rand();
@@ -54,28 +59,15 @@ namespace molconv
             m_id = (unsigned long) s1 << 32 | s2;
         }
 
-        origin m_origin;
-        basis m_basis;
-
-        Eigen::Vector3d m_originPosition;
-
-        double m_phi;
-        double m_theta;
-        double m_psi;
-
-        double m_originFactor;
-        std::array<int,2> m_originAtoms;
-        std::array<int,3> m_basisAtoms;
+        MoleculeOrigin m_origin;
+        MoleculeBasis m_basis;
+        MoleculeOrigin m_originalOrigin;
+        MoleculeBasis m_originalBasis;
 
         groupPtr m_group;
         std::vector<Eigen::Vector3d> m_intPos;
 
         MoleculeItem *m_listItem;
-
-        std::vector<bool> m_originList;
-        std::vector<bool> m_basisList;
-
-        std::array<double,6> m_originalBasis;
 
         unsigned long m_id;
     };
@@ -104,11 +96,16 @@ namespace molconv
         , d(new MoleculePrivate)
     {
         chemkit::BondPredictor::predictBonds(this);
-        for (int i = 0; i < int(size()); i++)
-        {
-            d->m_originList.push_back(true);
-            d->m_basisList.push_back(true);
-        }
+
+        std::vector<bool> originBasisList(size(), true);
+//        for (int i = 0; i < int(size()); i++)
+//        {
+//            originBasisList.push_back(true);
+//        }
+
+        d->m_origin = MoleculeOriginGeometricCenter(this, originBasisList);
+        d->m_basis = MoleculeBasisCovarianceMatrix(this, originBasisList);
+
         initIntPos();
     }
 
@@ -118,11 +115,16 @@ namespace molconv
         , d(new MoleculePrivate)
     {
         chemkit::BondPredictor::predictBonds(this);
-        for (int i = 0; i < int(size()); i++)
-        {
-            d->m_originList.push_back(true);
-            d->m_basisList.push_back(true);
-        }
+
+        std::vector<bool> originBasisList(size(), true);
+//        for (int i = 0; i < int(size()); i++)
+//        {
+//            originBasisList.push_back(true);
+//        }
+
+        d->m_origin = MoleculeOriginGeometricCenter(this, originBasisList);
+        d->m_basis = MoleculeBasisCovarianceMatrix(this, originBasisList);
+
         initIntPos();
     }
 
@@ -138,12 +140,7 @@ namespace molconv
     {
         d->m_origin = originalMolecule.internalOrigin();
         d->m_basis = originalMolecule.internalBasis();
-        d->m_originFactor = originalMolecule.internalOriginFactor();
-        d->m_originAtoms = originalMolecule.internalOriginAtoms();
-        d->m_basisAtoms = originalMolecule.internalBasisAtoms();
         d->m_group = originalMolecule.group();
-        d->m_originList = originalMolecule.originList();
-        d->m_basisList = originalMolecule.basisList();
 
         initIntPos();
     }
@@ -161,7 +158,7 @@ namespace molconv
     ///
     /// returns the type of the molecule's internal origin.
     ///
-    origin Molecule::internalOrigin() const
+    MoleculeOrigin Molecule::internalOrigin() const
     {
         return d->m_origin;
     }
@@ -172,7 +169,7 @@ namespace molconv
     ///
     /// returns the type of the molecule's internal basis.
     ///
-    basis Molecule::internalBasis() const
+    MoleculeBasis Molecule::internalBasis() const
     {
         return d->m_basis;
     }
@@ -185,7 +182,7 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::internalOriginPosition() const
     {
-        return d->m_originPosition;
+        return d->m_origin.position();
     }
 
     ///
@@ -197,7 +194,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
-        return euler2rot(d->m_psi, d->m_theta, d->m_phi);
+        return d->m_basis.axes();
     }
 
     ///
@@ -209,7 +206,7 @@ namespace molconv
     ///
     std::array<int,2> Molecule::internalOriginAtoms() const
     {
-        return d->m_originAtoms;
+        return d->m_origin.atoms();
     }
 
     ///
@@ -221,7 +218,7 @@ namespace molconv
     ///
     std::array<int,3> Molecule::internalBasisAtoms() const
     {
-        return d->m_basisAtoms;
+        return d->m_basis.atoms();
     }
 
     ///
@@ -233,7 +230,7 @@ namespace molconv
     ///
     std::vector<bool> Molecule::originList() const
     {
-        return d->m_originList;
+        return d->m_origin.originList();
     }
 
     ///
@@ -245,7 +242,7 @@ namespace molconv
     ///
     std::vector<bool> Molecule::basisList() const
     {
-        return d->m_basisList;
+        return d->m_basis.basisList();
     }
 
     ///
@@ -259,7 +256,7 @@ namespace molconv
     ///
     double Molecule::internalOriginFactor() const
     {
-        return d->m_originFactor;
+        return d->m_origin.factor();
     }
 
     ///
@@ -270,7 +267,7 @@ namespace molconv
     ///
     double Molecule::phi() const
     {
-        return d->m_phi;
+        return d->m_basis.phi();
     }
 
     ///
@@ -281,7 +278,7 @@ namespace molconv
     ///
     double Molecule::theta() const
     {
-        return d->m_theta;
+        return d->m_basis.theta();
     }
 
     ///
@@ -292,7 +289,7 @@ namespace molconv
     ///
     double Molecule::psi() const
     {
-        return d->m_psi;
+        return d->m_basis.psi();
     }
 
     ///
@@ -318,55 +315,10 @@ namespace molconv
     }
 
     ///
-    /// \brief Molecule::center
-    /// \return
-    ///
-    /// calculate the molecular center of geometry considering
-    /// the list of atoms contributing to the center
-    ///
-    Eigen::Vector3d Molecule::center() const
-    {
-        Eigen::Vector3d cog = Eigen::Vector3d::Zero();
-        int Nactive = 0;
-
-        for (int i = 0; i < int(size()); i++)
-            if (originList().at(i))
-            {
-                cog += atom(i)->position();
-                Nactive++;
-            }
-
-        return cog / double(Nactive);
-    }
-
-    ///
-    /// \brief Molecule::centerOfMass
-    /// \return
-    ///
-    /// calculate the molecular center of mass considering
-    /// the list of atoms contributing to the center
-    ///
-    Eigen::Vector3d Molecule::centerOfMass() const
-    {
-        Eigen::Vector3d com = Eigen::Vector3d::Zero();
-        double totalMass = 0.0;
-
-        for (int i = 0; i < int(size()); i++)
-            if (originList().at(i))
-            {
-                com += atom(i)->position() * atom(i)->mass();
-                totalMass += atom(i)->mass();
-            }
-
-        return com / totalMass;
-    }
-
-    ///
     /// \brief Molecule::centerOfCharge
     /// \return
     ///
-    /// calculate the molecular center of charge considering
-    /// the list of atoms contributing to the center
+    /// calculate the molecular center of charge
     ///
     Eigen::Vector3d Molecule::centerOfCharge() const
     {
@@ -374,11 +326,10 @@ namespace molconv
         double totalCharge = 0.0;
 
         for (int i = 0; i < int(size()); i++)
-            if (originList().at(i))
-            {
-                coc += atom(i)->position() * double(atom(i)->atomicNumber());
-                totalCharge += double(atom(i)->atomicNumber());
-            }
+        {
+            coc += atom(i)->position() * double(atom(i)->atomicNumber());
+            totalCharge += double(atom(i)->atomicNumber());
+        }
 
         return coc / totalCharge;
 
@@ -500,16 +451,15 @@ namespace molconv
     {
         Eigen::Vector3d pos(x, y, z);
 
-        d->m_psi = psi;
-        d->m_theta = theta;
-        d->m_phi = phi;
+        d->m_origin.setPosition(pos);
+        d->m_basis.setPsi(psi);
+        d->m_basis.setTheta(theta);
+        d->m_basis.setPhi(phi);
 
-        Eigen::Matrix3d rot = euler2rot(psi, theta, phi);
+        Eigen::Matrix3d rot = d->m_basis.axes();
 
         for (int i = 0; i < int(size()); i++)
             atom(i)->setPosition(pos + rot * d->m_intPos.at(i));
-
-        setInternalOriginPosition();
     }
 
     ///
@@ -518,33 +468,23 @@ namespace molconv
     ///
     /// set the molecule's internal origin to \p newOrigin.
     ///
-    void Molecule::setOrigin(const origin &newOrigin, const size_t atom1, const size_t atom2, const double originFactor)
+    void Molecule::setOrigin(const origin &newOrigin, const std::vector<bool> originVector, const size_t atom1, const size_t atom2, const double originFactor)
     {
         switch (newOrigin)
         {
         case kCenterOfMass:
+            d->m_origin = MoleculeOriginCenterOfMass(this, originVector);
+            break;
         case kCenterOfGeometry:
+            d->m_origin = MoleculeOriginGeometricCenter(this, originVector);
+            break;
         case kCenterOfCharge:
-            d->m_origin = newOrigin;
-            d->m_originAtoms.fill(0);
             break;
         case kCenterOnAtom:
-            if (atom1 > 0 && atom1 <= size())
-            {
-                d->m_origin = newOrigin;
-                d->m_originAtoms[0] = atom1 - 1;
-                d->m_originAtoms[1] = 0;
-            }
+            d->m_origin = MoleculeOriginOnAtom(this, atom1);
             break;
         case kCenterBetweenAtoms:
-            if (atom1 > 0 && atom1 <= size() && atom2 > 0 && atom2 <= size()
-                          && originFactor >= 0.0 && originFactor <= 1.0)
-            {
-                d->m_origin = newOrigin;
-                d->m_originAtoms[0] = atom1 - 1;
-                d->m_originAtoms[1] = atom2 - 1;
-                d->m_originFactor = originFactor;
-            }
+            d->m_origin = MoleculeOriginBetweenAtoms(this, atom1, atom2, originFactor);
             break;
         }
 
@@ -557,60 +497,24 @@ namespace molconv
     ///
     /// set the molecule's internal coordinate system to \p newBasis.
     ///
-    void Molecule::setBasis(const basis &newBasis, const size_t atom1, const size_t atom2, const size_t atom3)
+    void Molecule::setBasis(const basis &newBasis, const std::vector<bool> basisVector, const size_t atom1, const size_t atom2, const size_t atom3)
     {
         switch (newBasis)
         {
         case kCovarianceVectors:
+            d->m_basis = MoleculeBasisCovarianceMatrix(this, basisVector);
+            break;
         case kInertiaVectors:
+            d->m_basis = MoleculeBasisInertiaTensor(this, basisVector);
+            break;
         case kChargeVectors:
+            break;
         case kStandardOrientation:
-            d->m_basis = newBasis;
-            d->m_basisAtoms.fill(0);
             break;
         case kVectorsFromAtoms:
-            if (atom1 > 0 && atom1 <= size() && atom2 > 0 && atom2 <= size() && atom3 > 0 && atom3 <= size())
-            {
-                if (atom1 != atom2 && atom1 != atom3 && atom2 != atom3)
-                {
-                    d->m_basis = newBasis;
-                    d->m_basisAtoms[0] = atom1 - 1;
-                    d->m_basisAtoms[1] = atom2 - 1;
-                    d->m_basisAtoms[2] = atom3 - 1;
-                }
-            }
+            d->m_basis = MoleculeBasisOnAtoms(this, atom1, atom2, atom3);
             break;
         }
-        initIntPos();
-    }
-
-    ///
-    /// \brief Molecule::setOriginList
-    /// \param newList
-    ///
-    /// set the list of atoms contributing to the molecular
-    /// center of mass/geometry/charge
-    ///
-    void Molecule::setOriginList(const std::vector<bool> &newList)
-    {
-        if (newList.size() == size())
-            d->m_originList = newList;
-
-        initIntPos();
-    }
-
-    ///
-    /// \brief Molecule::setBasisList
-    /// \param newList
-    ///
-    /// set the list of atoms contributing to the molecular
-    /// inertia tensor / covariance matrix / charge tensor
-    ///
-    void Molecule::setBasisList(const std::vector<bool> &newList)
-    {
-        if (newList.size() == size())
-            d->m_basisList = newList;
-
         initIntPos();
     }
 
@@ -634,88 +538,6 @@ namespace molconv
     groupPtr Molecule::group() const
     {
         return d->m_group;
-    }
-
-    ///
-    /// \brief Molecule::setInternalOriginPosition
-    ///
-    /// set the position of the internal origin
-    ///
-    void Molecule::setInternalOriginPosition()
-    {
-        switch(internalOrigin())
-        {
-        case kCenterOfMass:
-            d->m_originPosition = centerOfMass();
-            break;
-        case kCenterOfGeometry:
-            d->m_originPosition = center();
-            break;
-        case kCenterOfCharge:
-            d->m_originPosition = centerOfCharge();
-            break;
-        case kCenterOnAtom:
-            d->m_originPosition = atom(d->m_originAtoms[0])->position();
-            break;
-        case kCenterBetweenAtoms:
-            d->m_originPosition = d->m_originFactor * atom(d->m_originAtoms[0])->position()
-                                + (1.0 - d->m_originFactor) * atom(d->m_originAtoms[1])->position();
-            break;
-        }
-    }
-
-    ///
-    /// \brief Molecule::setEulerAngles
-    ///
-    /// calculate the internal molecular basis and set the
-    /// Euler angles accordingly
-    ///
-    void Molecule::setEulerAngles()
-    {
-        Eigen::Matrix3d basisVectors;
-        Eigen::Vector3d vector1, vector2, vector3;
-
-        switch(internalBasis())
-        {
-        case kCovarianceVectors:
-            basisVectors.col(0) = calcCovarianceEigenvectors().col(2);
-            basisVectors.col(1) = calcCovarianceEigenvectors().col(1);
-            basisVectors.col(2) = calcCovarianceEigenvectors().col(0);
-            break;
-        case kInertiaVectors:
-            basisVectors = calcInertiaEigenvectors();
-            break;
-        case kChargeVectors:
-            basisVectors = calcChargeEigenvectors();
-            break;
-        case kVectorsFromAtoms:
-            vector1 = atom(d->m_basisAtoms[1])->position() - atom(d->m_basisAtoms[0])->position();
-            vector1.normalize();
-
-            vector2 = atom(d->m_basisAtoms[2])->position() - atom(d->m_basisAtoms[0])->position();
-            vector2 -= vector1 * vector1.dot(vector2);
-            vector2.normalize();
-
-            vector3 = vector1.cross(vector2);
-            vector3.normalize();
-
-            basisVectors.col(0) = vector1;
-            basisVectors.col(1) = vector2;
-            basisVectors.col(2) = vector3;
-            break;
-        }
-
-        // if the determinant of the internal basis is -1, invert the
-        // sign of the middle basis vector:
-        if (std::abs(double(basisVectors.determinant()) + 1.0) < 1.0e-12)
-            basisVectors.col(1) *= -1.0;
-
-        // determine the initial values of the euler angles:
-        std::array<double,3> eulers = rot2euler(basisVectors);
-
-        d->m_phi = eulers[2];
-        d->m_psi = eulers[0];
-        d->m_theta = eulers[1];
     }
 
     ///
@@ -921,103 +743,18 @@ namespace molconv
     ///
     void Molecule::initIntPos()
     {
-        setInternalOriginPosition();
-        setEulerAngles();
-
         // remove any internal coordinates that might already exist:
         d->m_intPos.clear();
 
         // set the original values of the internal basis
-        d->m_originalBasis[0] = internalOriginPosition()(0);
-        d->m_originalBasis[1] = internalOriginPosition()(1);
-        d->m_originalBasis[2] = internalOriginPosition()(2);
-        d->m_originalBasis[3] = d->m_phi;
-        d->m_originalBasis[4] = d->m_theta;
-        d->m_originalBasis[5] = d->m_psi;
+        d->m_originalOrigin = d->m_origin;
+        d->m_originalBasis = d->m_basis;
 
         // determine the internal atomic positions:
         Eigen::Matrix3d rotMat = internalBasisVectors();
 
         for (int i = 0; i < int(size()); i++)
             d->m_intPos.push_back(rotMat.transpose() * (atom(i)->position() - internalOriginPosition()));
-    }
-
-    Eigen::Matrix3d Molecule::euler2rot(const double psi, const double theta, const double phi)
-    {
-        Eigen::Matrix3d rot;
-
-        rot(0,0) =  std::cos(psi) * std::cos(phi) - std::cos(theta) * std::sin(phi) * std::sin(psi);
-        rot(0,1) =  std::sin(psi) * std::cos(phi) + std::cos(theta) * std::sin(phi) * std::cos(psi);
-        rot(0,2) =  std::sin(phi) * std::sin(theta);
-        rot(1,0) = -std::cos(psi) * std::sin(phi) - std::cos(theta) * std::cos(phi) * std::sin(psi);
-        rot(1,1) = -std::sin(psi) * std::sin(phi) + std::cos(theta) * std::cos(phi) * std::cos(psi);
-        rot(1,2) =  std::cos(phi) * std::sin(theta);
-        rot(2,0) =  std::sin(theta) * std::sin(psi);
-        rot(2,1) = -std::sin(theta) * std::cos(psi);
-        rot(2,2) =  std::cos(theta);
-
-        return rot;
-    }
-
-    ///
-    /// \brief Molecule::rot2euler
-    /// \param rot
-    /// \return
-    ///
-    /// Calculate the euler angles from a given rotation matrix.
-    /// The angles are returned in the order <psi, theta, phi>.
-    ///
-    std::array<double,3> Molecule::rot2euler(Eigen::Matrix3d rot)
-    {
-        std::array<double,3> angles;
-
-        // check if the rotation matrix is numerically close to the form
-        //
-        //    x   x   0    In this case, theta = 0 (+1) or pi (-1)
-        //    x   x   0    and the angles psi and phi are not uniquely
-        //    0   0  +-1   determined
-        //
-        // The (3,3) element is a better indicator for this condition because it goes
-        // very close to +-1 while the other elements are still quite large (1e-7)
-        if ((1.0 - std::abs(double(rot(2,2)))) < 1.0e-10)
-        {
-            angles[1] = double(rot(2,2)) > 0.0 ? 0.0 : M_PI;
-            angles[2] = 0.0;
-
-            // check, in which part of the [0, 2 pi] intervall we are, so
-            // that the signs of the transformation matrix elements
-            // can be reproduced correctly later
-            if (double(rot(0,0)) >= 0.0 && double(rot(0,1)) >= 0.0)     // 0 - pi/2
-                angles[0] = std::acos(double(rot(0,0)));
-            else if (double(rot(0,0)) < 0.0 && double(rot(0,1)) >= 0.0) // pi/2 - pi
-                angles[0] = std::acos(double(rot(0,0)));
-            else if (double(rot(0,0)) < 0.0 && double(rot(0,1)) < 0.0)  // pi - 3/2 pi
-                angles[0] = 2.0 * M_PI - std::acos(double(rot(0,0)));
-            else if (double(rot(0,0)) >= 0.0 && double(rot(0,1)) < 0.0) // 3/2 pi - 2 pi (=0)
-                angles[0] = -std::acos(double(rot(0,0)));
-        }
-        else
-        {
-            angles[1] = std::acos(double(rot(2,2)));
-            angles[2] = std::atan2(double(rot(0,2)),  double(rot(1,2)));
-            angles[0] = std::atan2(double(rot(2,0)), -double(rot(2,1)));
-        }
-
-        if (angles[2] < 0.0)
-            angles[2] += 2.0 * M_PI;
-
-        if (angles[0] < 0.0)
-            angles[0] += 2.0 * M_PI;
-
-        return angles;
-    }
-
-    chemkit::Atom *Molecule::addAtom(const chemkit::Element &element)
-    {
-        d->m_originList.push_back(true);
-        d->m_basisList.push_back(true);
-
-        return chemkit::Molecule::addAtom(element);
     }
 
     unsigned long Molecule::molId() const

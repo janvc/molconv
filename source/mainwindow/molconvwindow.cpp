@@ -496,8 +496,9 @@ void MolconvWindow::importFile(const QString &fileName, const bool showList)
                 chemkit::Molecule tempCMol = *molFile->molecule(i);
                 molconv::moleculePtr tempMol;
                 tempMol.reset(new molconv::Molecule(tempCMol));
-                tempMol->setOrigin(d->m_ImportDialog->getOrigin(), d->m_ImportDialog->getOriginAtom());
-                tempMol->setBasis(d->m_ImportDialog->getBasis(),
+                std::vector<bool> boolVec(tempMol->size(), true);
+                tempMol->setOrigin(d->m_ImportDialog->getOrigin(), boolVec, d->m_ImportDialog->getOriginAtom());
+                tempMol->setBasis(d->m_ImportDialog->getBasis(), boolVec,
                                   d->m_ImportDialog->getBasisAtoms()[0],
                                   d->m_ImportDialog->getBasisAtoms()[1],
                                   d->m_ImportDialog->getBasisAtoms()[2]);
@@ -732,10 +733,8 @@ void MolconvWindow::changeOriginBasis()
         wasModified();
     }
 
-    tmpMolPtr->setOriginList(newOriginList);
-    tmpMolPtr->setBasisList(newBasisList);
-    tmpMolPtr->setOrigin(newOrigin, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
-    tmpMolPtr->setBasis(newBasis, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
+    tmpMolPtr->setOrigin(newOrigin, newOriginList, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
+    tmpMolPtr->setBasis(newBasis, newBasisList, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
 
     d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
     updateAxes();
