@@ -19,22 +19,21 @@
  */
 
 
-#ifndef MOLECULEBASISCOVARIANCEMATRIX_H
-#define MOLECULEBASISCOVARIANCEMATRIX_H
+#ifndef MOLECULEBASISINERTIATENSOR_H
+#define MOLECULEBASISINERTIATENSOR_H
 
 #include "moleculebasisglobal.h"
 
 namespace molconv {
 
-class MoleculeBasisCovarianceMatrix : public MoleculeBasisGlobal
+class MoleculeBasisInertiaTensor : public MoleculeBasisGlobal
 {
 public:
-    MoleculeBasisCovarianceMatrix(moleculePtr molecule, std::vector<bool> basisList);
+    MoleculeBasisInertiaTensor(moleculePtr molecule, std::vector<bool> basisList);
 private:
-    Eigen::Matrix3d calcCovarianceMatrix();
+    Eigen::Matrix3d calcInertiaTensor();
 };
 
 }
 
-#endif // MOLECULEBASISCOVARIANCEMATRIX_H
-
+#endif // MOLECULEBASISINERTIATENSOR_H

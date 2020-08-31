@@ -19,43 +19,24 @@
  */
 
 
-#ifndef MOLECULEBASIS_H
-#define MOLECULEBASIS_H
+#ifndef MOLECULEBASISGLOBAL_H
+#define MOLECULEBASISGLOBAL_H
 
-#include <Eigen/Core>
-#include "types.h"
-#include "molecule.h"
+#include "moleculebasis.h"
 
 namespace molconv {
 
-class MoleculeBasis
+class MoleculeBasisGlobal : public MoleculeBasis
 {
 public:
-    MoleculeBasis(moleculePtr molecule);
+    MoleculeBasisGlobal(moleculePtr molecule, std::vector<bool> basisList);
 
-    // return the axes of the internal basis (aka the
-    // rotation matrix) as obtained from the euler angles
-    Eigen::Matrix3d axes() const;
-
-    double phi() const;
-    double theta() const;
-    double psi() const;
-    void setPhi(const double newPhi);
-    void setTheta(const double newTheta);
-    void setPsi(const double newPsi);
-
-    static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
-    static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
+    std::vector<bool> basisList();
 
 protected:
-    moleculePtr m_molecule;
-
-    double m_phi;
-    double m_theta;
-    double m_psi;
+    std::vector<bool> m_basisList;
 };
 
 }
 
-#endif // MOLECULEBASIS_H
-
+#endif // MOLECULEBASISGLOBAL_H

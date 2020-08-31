@@ -27,7 +27,10 @@ set(molecule_SOURCES
     moleculeorigingeometriccenter.cpp
     moleculeorigincenterofmass.cpp
     moleculebasis.cpp
+    moleculebasisonatoms.cpp
+    moleculebasisglobal.cpp
     moleculebasiscovariancematrix.cpp
+    moleculebasisinertiatensor.cpp
     molecule.cpp
 )
 

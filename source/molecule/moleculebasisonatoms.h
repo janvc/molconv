@@ -19,22 +19,24 @@
  */
 
 
-#ifndef MOLECULEBASISCOVARIANCEMATRIX_H
-#define MOLECULEBASISCOVARIANCEMATRIX_H
+#ifndef MOLECULEBASISONATOMS_H
+#define MOLECULEBASISONATOMS_H
 
-#include "moleculebasisglobal.h"
+#include "moleculebasis.h"
 
 namespace molconv {
 
-class MoleculeBasisCovarianceMatrix : public MoleculeBasisGlobal
+class MoleculeBasisOnAtoms : public MoleculeBasis
 {
 public:
-    MoleculeBasisCovarianceMatrix(moleculePtr molecule, std::vector<bool> basisList);
+    MoleculeBasisOnAtoms(moleculePtr molecule, const int atom1, const int atom2, const int atom3);
+
 private:
-    Eigen::Matrix3d calcCovarianceMatrix();
+    int m_atom1;
+    int m_atom2;
+    int m_atom3;
 };
 
 }
 
-#endif // MOLECULEBASISCOVARIANCEMATRIX_H
-
+#endif // MOLECULEBASISONATOMS_H

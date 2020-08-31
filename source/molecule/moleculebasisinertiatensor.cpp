@@ -20,27 +20,22 @@
 
 
 #include <Eigen/Eigenvalues>
-#include "moleculebasiscovariancematrix.h"
+#include "moleculebasisinertiatensor.h"
 
 namespace molconv {
 
-MoleculeBasisCovarianceMatrix::MoleculeBasisCovarianceMatrix(moleculePtr molecule, std::vector<bool> basisList)
+MoleculeBasisInertiaTensor::MoleculeBasisInertiaTensor(moleculePtr molecule, std::vector<bool> basisList)
     : MoleculeBasisGlobal(molecule, basisList)
 {
-    Eigen::Matrix3d covarianceMatrix = calcCovarianceMatrix();
+    Eigen::Matrix3d inertiaTensor = calcInertiaTensor();
 
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(covarianceMatrix);
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> solver(inertiaTensor);
     if (solver.info() != Eigen::Success)
     {
-        throw std::runtime_error("The covariance matrix could not be diagonalized.\n");
+        throw std::runtime_error("The inertia tensor could not be diagonalized.\n");
     }
 
-    // rearrange the basis vectors to align the z-axis with the vector of lowest variance
-    // (x and z axes are interchanged)
-    Eigen::Matrix3d rot;
-    rot.col(0) = solver.eigenvectors().col(2);
-    rot.col(1) = solver.eigenvectors().col(1);
-    rot.col(2) = solver.eigenvectors().col(0);
+    Eigen::Matrix3d rot = solver.eigenvectors();
 
     // if the determinant of the internal basis is -1, invert the
     // sign of the middle basis vector to make the basis right-handed
@@ -55,19 +50,10 @@ MoleculeBasisCovarianceMatrix::MoleculeBasisCovarianceMatrix(moleculePtr molecul
     m_phi = eulers[2];
 }
 
-Eigen::Matrix3d MoleculeBasisCovarianceMatrix::calcCovarianceMatrix()
+Eigen::Matrix3d MoleculeBasisInertiaTensor::calcInertiaTensor()
 {
-    Eigen::Matrix3d covarianceMatrix = Eigen::Matrix3d::Zero();
-    Eigen::Vector3d center = m_molecule->center();
-
-    int nActive = 0;
-    for (int i = 0; i < m_molecule->size(); i++)
-    {
-        if (m_basisList.at(i))
-        {
-            nActive++;
-        }
-    }
+    Eigen::Matrix3d inertiaTensor = Eigen::Matrix3d::Zero();
+    Eigen::Vector3d com = m_molecule->centerOfMass();
 
     for (int a = 0; a < 3; a++)
     {
@@ -77,16 +63,22 @@ Eigen::Matrix3d MoleculeBasisCovarianceMatrix::calcCovarianceMatrix()
             {
                 if (m_basisList.at(i))
                 {
-                    covarianceMatrix(a, b) += (m_molecule->atom(i)->position()(a) - center(a))
-                                            * (m_molecule->atom(i)->position()(b) - center(b));
+                    Eigen::Vector3d distance = m_molecule->atom(i)->position() - com;
+
+                    double factor = 0.0;
+                    if (a == b)
+                    {
+                        factor = distance.squaredNorm();
+                    }
+                    factor -= distance(a) * distance(b);
+
+                    inertiaTensor(a, b) += m_molecule->atom(i)->mass() * factor;
                 }
             }
-            covarianceMatrix(a, b) /= double(nActive);
         }
     }
 
-    return covarianceMatrix;
+    return inertiaTensor;
 }
 
 }
-
