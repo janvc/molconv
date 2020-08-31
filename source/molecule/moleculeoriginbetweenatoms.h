@@ -31,6 +31,9 @@ class MoleculeOriginBetweenAtoms : public MoleculeOriginOnAtom
 public:
     MoleculeOriginBetweenAtoms(moleculePtr molecule, const int atom1, const int atom2, const double factor);
 
+    std::array<int,2> atoms() const;
+    double factor() const;
+
 private:
     int m_atom2;
     double m_factor;

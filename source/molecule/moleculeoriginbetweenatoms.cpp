@@ -33,4 +33,18 @@ MoleculeOriginBetweenAtoms::MoleculeOriginBetweenAtoms(moleculePtr molecule, con
                + (1.0 - m_factor) * m_molecule->atom(m_atom2)->position();
 }
 
+std::array<int,2> MoleculeOriginBetweenAtoms::atoms() const
+{
+    std::array<int,2> array;
+    array[0] = m_atom1;
+    array[1] = m_atom2;
+
+    return array;
+}
+
+double MoleculeOriginBetweenAtoms::factor() const
+{
+    return m_factor;
+}
+
 }

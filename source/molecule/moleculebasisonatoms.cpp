@@ -47,17 +47,17 @@ MoleculeBasisOnAtoms::MoleculeBasisOnAtoms(moleculePtr molecule, const int atom1
     rot.col(1) = vector2;
     rot.col(2) = vector3;
 
-    // if the determinant of the internal basis is -1, invert the
-    // sign of the middle basis vector to make the basis right-handed
-    if (std::abs(double(rot.determinant()) + 1.0) < 1.0e-12)
-    {
-        rot.col(1) *= -1.0;
-    }
+    setEulerAngles(rot);
+}
 
-    std::array<double,3> eulers = rot2euler(rot);
-    m_psi = eulers[0];
-    m_theta = eulers[1];
-    m_phi = eulers[2];
+std::array<int,3> MoleculeBasisOnAtoms::atoms() const
+{
+    std::array<int,3> array;
+    array[0] = m_atom1;
+    array[1] = m_atom2;
+    array[2] = m_atom3;
+
+    return array;
 }
 
 }

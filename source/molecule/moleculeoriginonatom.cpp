@@ -31,4 +31,13 @@ MoleculeOriginOnAtom::MoleculeOriginOnAtom(moleculePtr molecule, const int atom1
     m_position = m_molecule->atom(m_atom1)->position();
 }
 
+std::array<int,2> MoleculeOriginOnAtom::atoms() const
+{
+    std::array<int,2> array;
+    array[0] = m_atom1;
+    array[1] = -1;
+
+    return array;
+}
+
 }

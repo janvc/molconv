@@ -31,6 +31,8 @@ class MoleculeOriginOnAtom : public MoleculeOrigin
 public:
     MoleculeOriginOnAtom(moleculePtr molecule, const int atom1);
 
+    std::array<int,2> atoms() const;
+
 protected:
     int m_atom1;
 };

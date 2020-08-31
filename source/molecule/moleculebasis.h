@@ -48,6 +48,8 @@ public:
     static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
 
 protected:
+    void setEulerAngles(Eigen::Matrix3d rot);
+
     moleculePtr m_molecule;
 
     double m_phi;
