@@ -37,6 +37,10 @@ public:
     Eigen::Vector3d position() const;
     void setPosition(const Eigen::Vector3d newPosition);
 
+    virtual std::vector<bool> originList() = 0;
+    virtual std::array<int,2> atoms() = 0;
+    virtual double factor() = 0;
+
 protected:
     moleculePtr m_molecule;
     Eigen::Vector3d m_position;
