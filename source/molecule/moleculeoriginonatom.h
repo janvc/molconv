@@ -31,7 +31,9 @@ class MoleculeOriginOnAtom : public MoleculeOrigin
 public:
     MoleculeOriginOnAtom(moleculePtr molecule, const int atom1);
 
-    std::array<int,2> atoms() const;
+    std::vector<bool> originList() const;
+    virtual std::array<int,2> atoms() const;
+    virtual double factor() const;
 
 protected:
     int m_atom1;

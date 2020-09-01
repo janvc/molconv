@@ -50,6 +50,11 @@ MoleculeBasisOnAtoms::MoleculeBasisOnAtoms(moleculePtr molecule, const int atom1
     setEulerAngles(rot);
 }
 
+std::vector<bool> MoleculeBasisOnAtoms::basisList() const
+{
+    return std::vector<bool>();
+}
+
 std::array<int,3> MoleculeBasisOnAtoms::atoms() const
 {
     std::array<int,3> array;

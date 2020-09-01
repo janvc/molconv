@@ -47,8 +47,8 @@ public:
     static std::array<double,3> rot2euler(Eigen::Matrix3d rot);
     static Eigen::Matrix3d euler2rot(const double psi, const double theta, const double phi);
 
-    virtual std::vector<bool> basisList() = 0;
-    virtual std::array<int,3> atoms() = 0;
+    virtual std::vector<bool> basisList() const = 0;
+    virtual std::array<int,3> atoms() const = 0;
 
 protected:
     void setEulerAngles(Eigen::Matrix3d rot);

@@ -47,22 +47,16 @@ namespace molconv
     public:
         MoleculePrivate()
         {
-//            std::vector<bool> boolVec(mol->size(), true);
-//            m_origin = MoleculeOriginGeometricCenter(mol, boolVec);
-//            m_basis = MoleculeBasisCovarianceMatrix(mol, boolVec);
-//            m_originalOrigin = MoleculeOriginGeometricCenter(mol, boolVec);
-//            m_originalBasis = MoleculeBasisCovarianceMatrix(mol, boolVec);
-
             // generate the molecule's id:
             int s1 = std::rand();
             int s2 = std::rand();
             m_id = (unsigned long) s1 << 32 | s2;
         }
 
-        MoleculeOrigin m_origin;
-        MoleculeBasis m_basis;
-        MoleculeOrigin m_originalOrigin;
-        MoleculeBasis m_originalBasis;
+        MoleculeOrigin *m_origin;
+        MoleculeBasis *m_basis;
+        MoleculeOrigin *m_originalOrigin;
+        MoleculeBasis *m_originalBasis;
 
         groupPtr m_group;
         std::vector<Eigen::Vector3d> m_intPos;
@@ -98,13 +92,8 @@ namespace molconv
         chemkit::BondPredictor::predictBonds(this);
 
         std::vector<bool> originBasisList(size(), true);
-//        for (int i = 0; i < int(size()); i++)
-//        {
-//            originBasisList.push_back(true);
-//        }
-
-        d->m_origin = MoleculeOriginGeometricCenter(this, originBasisList);
-        d->m_basis = MoleculeBasisCovarianceMatrix(this, originBasisList);
+        d->m_origin = new MoleculeOriginGeometricCenter(moleculePtr(this), originBasisList);
+        d->m_basis = new MoleculeBasisCovarianceMatrix(moleculePtr(this), originBasisList);
 
         initIntPos();
     }
@@ -117,13 +106,8 @@ namespace molconv
         chemkit::BondPredictor::predictBonds(this);
 
         std::vector<bool> originBasisList(size(), true);
-//        for (int i = 0; i < int(size()); i++)
-//        {
-//            originBasisList.push_back(true);
-//        }
-
-        d->m_origin = MoleculeOriginGeometricCenter(this, originBasisList);
-        d->m_basis = MoleculeBasisCovarianceMatrix(this, originBasisList);
+        d->m_origin = new MoleculeOriginGeometricCenter(moleculePtr(this), originBasisList);
+        d->m_basis = new MoleculeBasisCovarianceMatrix(moleculePtr(this), originBasisList);
 
         initIntPos();
     }
@@ -138,9 +122,9 @@ namespace molconv
         : chemkit::Molecule(originalMolecule)
         , d(new MoleculePrivate)
     {
-        d->m_origin = originalMolecule.internalOrigin();
-        d->m_basis = originalMolecule.internalBasis();
-        d->m_group = originalMolecule.group();
+//        d->m_origin = originalMolecule.internalOrigin();
+//        d->m_basis = originalMolecule.internalBasis();
+//        d->m_group = originalMolecule.group();
 
         initIntPos();
     }
@@ -158,7 +142,7 @@ namespace molconv
     ///
     /// returns the type of the molecule's internal origin.
     ///
-    MoleculeOrigin Molecule::internalOrigin() const
+    MoleculeOrigin *Molecule::internalOrigin() const
     {
         return d->m_origin;
     }
@@ -169,7 +153,7 @@ namespace molconv
     ///
     /// returns the type of the molecule's internal basis.
     ///
-    MoleculeBasis Molecule::internalBasis() const
+    MoleculeBasis *Molecule::internalBasis() const
     {
         return d->m_basis;
     }
@@ -182,7 +166,7 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::internalOriginPosition() const
     {
-        return d->m_origin.position();
+        return d->m_origin->position();
     }
 
     ///
@@ -194,7 +178,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
-        return d->m_basis.axes();
+        return d->m_basis->axes();
     }
 
     ///
@@ -206,7 +190,7 @@ namespace molconv
     ///
     std::array<int,2> Molecule::internalOriginAtoms() const
     {
-        return d->m_origin.atoms();
+        return d->m_origin->atoms();
     }
 
     ///
@@ -218,7 +202,7 @@ namespace molconv
     ///
     std::array<int,3> Molecule::internalBasisAtoms() const
     {
-        return d->m_basis.atoms();
+        return d->m_basis->atoms();
     }
 
     ///
@@ -230,7 +214,7 @@ namespace molconv
     ///
     std::vector<bool> Molecule::originList() const
     {
-        return d->m_origin.originList();
+        return d->m_origin->originList();
     }
 
     ///
@@ -242,7 +226,7 @@ namespace molconv
     ///
     std::vector<bool> Molecule::basisList() const
     {
-        return d->m_basis.basisList();
+        return d->m_basis->basisList();
     }
 
     ///
@@ -256,7 +240,7 @@ namespace molconv
     ///
     double Molecule::internalOriginFactor() const
     {
-        return d->m_origin.factor();
+        return d->m_origin->factor();
     }
 
     ///
@@ -267,7 +251,7 @@ namespace molconv
     ///
     double Molecule::phi() const
     {
-        return d->m_basis.phi();
+        return d->m_basis->phi();
     }
 
     ///
@@ -278,7 +262,7 @@ namespace molconv
     ///
     double Molecule::theta() const
     {
-        return d->m_basis.theta();
+        return d->m_basis->theta();
     }
 
     ///
@@ -289,7 +273,7 @@ namespace molconv
     ///
     double Molecule::psi() const
     {
-        return d->m_basis.psi();
+        return d->m_basis->psi();
     }
 
     ///
@@ -300,7 +284,8 @@ namespace molconv
     ///
     std::array<double,6> Molecule::origBasis() const
     {
-        return d->m_originalBasis;
+//        return d->m_originalBasis;
+        return std::array<double,6>();
     }
 
     ///
@@ -451,12 +436,12 @@ namespace molconv
     {
         Eigen::Vector3d pos(x, y, z);
 
-        d->m_origin.setPosition(pos);
-        d->m_basis.setPsi(psi);
-        d->m_basis.setTheta(theta);
-        d->m_basis.setPhi(phi);
+        d->m_origin->setPosition(pos);
+        d->m_basis->setPsi(psi);
+        d->m_basis->setTheta(theta);
+        d->m_basis->setPhi(phi);
 
-        Eigen::Matrix3d rot = d->m_basis.axes();
+        Eigen::Matrix3d rot = d->m_basis->axes();
 
         for (int i = 0; i < int(size()); i++)
             atom(i)->setPosition(pos + rot * d->m_intPos.at(i));
@@ -473,18 +458,18 @@ namespace molconv
         switch (newOrigin)
         {
         case kCenterOfMass:
-            d->m_origin = MoleculeOriginCenterOfMass(this, originVector);
+            d->m_origin = new MoleculeOriginCenterOfMass(moleculePtr(this), originVector);
             break;
         case kCenterOfGeometry:
-            d->m_origin = MoleculeOriginGeometricCenter(this, originVector);
+            d->m_origin = new MoleculeOriginGeometricCenter(moleculePtr(this), originVector);
             break;
         case kCenterOfCharge:
             break;
         case kCenterOnAtom:
-            d->m_origin = MoleculeOriginOnAtom(this, atom1);
+            d->m_origin = new MoleculeOriginOnAtom(moleculePtr(this), atom1);
             break;
         case kCenterBetweenAtoms:
-            d->m_origin = MoleculeOriginBetweenAtoms(this, atom1, atom2, originFactor);
+            d->m_origin = new MoleculeOriginBetweenAtoms(moleculePtr(this), atom1, atom2, originFactor);
             break;
         }
 
@@ -502,17 +487,17 @@ namespace molconv
         switch (newBasis)
         {
         case kCovarianceVectors:
-            d->m_basis = MoleculeBasisCovarianceMatrix(this, basisVector);
+            d->m_basis = new MoleculeBasisCovarianceMatrix(moleculePtr(this), basisVector);
             break;
         case kInertiaVectors:
-            d->m_basis = MoleculeBasisInertiaTensor(this, basisVector);
+            d->m_basis = new MoleculeBasisInertiaTensor(moleculePtr(this), basisVector);
             break;
         case kChargeVectors:
             break;
         case kStandardOrientation:
             break;
         case kVectorsFromAtoms:
-            d->m_basis = MoleculeBasisOnAtoms(this, atom1, atom2, atom3);
+            d->m_basis = new MoleculeBasisOnAtoms(moleculePtr(this), atom1, atom2, atom3);
             break;
         }
         initIntPos();
@@ -747,8 +732,8 @@ namespace molconv
         d->m_intPos.clear();
 
         // set the original values of the internal basis
-        d->m_originalOrigin = d->m_origin;
-        d->m_originalBasis = d->m_basis;
+//        d->m_originalOrigin = d->m_origin;
+//        d->m_originalBasis = d->m_basis;
 
         // determine the internal atomic positions:
         Eigen::Matrix3d rotMat = internalBasisVectors();

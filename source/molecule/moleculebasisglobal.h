@@ -31,7 +31,8 @@ class MoleculeBasisGlobal : public MoleculeBasis
 public:
     MoleculeBasisGlobal(moleculePtr molecule, std::vector<bool> basisList);
 
-    std::vector<bool> basisList();
+    std::vector<bool> basisList() const;
+    std::array<int,3> atoms() const;
 
 protected:
     std::vector<bool> m_basisList;

@@ -31,7 +31,9 @@ class MoleculeOriginGlobal : public MoleculeOrigin
 public:
     MoleculeOriginGlobal(moleculePtr molecule, std::vector<bool> originList);
 
-    std::vector<bool> originList();
+    std::vector<bool> originList() const;
+    std::array<int,2> atoms() const;
+    double factor() const;
 
 protected:
     std::vector<bool> m_originList;

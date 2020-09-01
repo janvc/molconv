@@ -31,6 +31,7 @@ class MoleculeBasisOnAtoms : public MoleculeBasis
 public:
     MoleculeBasisOnAtoms(moleculePtr molecule, const int atom1, const int atom2, const int atom3);
 
+    std::vector<bool> basisList() const;
     std::array<int,3> atoms() const;
 
 private:

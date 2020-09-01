@@ -29,9 +29,14 @@ MoleculeBasisGlobal::MoleculeBasisGlobal(moleculePtr molecule, std::vector<bool>
     m_basisList = basisList;
 }
 
-std::vector<bool> MoleculeBasisGlobal::basisList()
+std::vector<bool> MoleculeBasisGlobal::basisList() const
 {
     return m_basisList;
+}
+
+std::array<int,3> MoleculeBasisGlobal::atoms() const
+{
+    return std::array<int,3>();
 }
 
 }

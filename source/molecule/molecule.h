@@ -51,8 +51,8 @@ namespace molconv
         ~Molecule();
 
         // info about the molecular internal basis:
-        MoleculeOrigin internalOrigin() const;
-        MoleculeBasis internalBasis() const;
+        MoleculeOrigin *internalOrigin() const;
+        MoleculeBasis *internalBasis() const;
         Eigen::Vector3d internalOriginPosition() const;
         Eigen::Matrix3d internalBasisVectors() const;
         std::array<int,2> internalOriginAtoms() const;

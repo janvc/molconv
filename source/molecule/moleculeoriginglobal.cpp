@@ -29,9 +29,19 @@ MoleculeOriginGlobal::MoleculeOriginGlobal(moleculePtr molecule, std::vector<boo
     m_originList = originList;
 }
 
-std::vector<bool> MoleculeOriginGlobal::originList()
+std::vector<bool> MoleculeOriginGlobal::originList() const
 {
     return m_originList;
+}
+
+std::array<int,2> MoleculeOriginGlobal::atoms() const
+{
+    return std::array<int,2>();
+}
+
+double MoleculeOriginGlobal::factor() const
+{
+    return 0.0;
 }
 
 }
