@@ -36,6 +36,7 @@ public:
 
     std::array<int,2> atoms() const;
     double factor() const;
+    OriginCode code() const;
 
 private:
     int m_atom2;

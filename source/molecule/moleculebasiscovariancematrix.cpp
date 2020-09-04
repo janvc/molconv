@@ -59,6 +59,11 @@ MoleculeBasis *MoleculeBasisCovarianceMatrix::clone()
     return new MoleculeBasisCovarianceMatrix(*this);
 }
 
+BasisCode MoleculeBasisCovarianceMatrix::code() const
+{
+    return kCovarianceVectors;
+}
+
 Eigen::Matrix3d MoleculeBasisCovarianceMatrix::calcCovarianceMatrix()
 {
     Eigen::Matrix3d covarianceMatrix = Eigen::Matrix3d::Zero();

@@ -30,7 +30,7 @@ namespace molconv {
     /*
      * Center of a molecule
      */
-    enum origin {
+    enum OriginCode {
         kCenterOfMass = 0,
         kCenterOfGeometry = 1,
         kCenterOfCharge = 2,
@@ -41,7 +41,7 @@ namespace molconv {
     /*
      * Which vectors to use for new internal basis
      */
-    enum basis {
+    enum BasisCode {
         kCovarianceVectors = 0,
         kInertiaVectors = 1,
         kChargeVectors = 2,

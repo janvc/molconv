@@ -38,6 +38,7 @@ public:
     std::vector<bool> originList() const;
     virtual std::array<int,2> atoms() const;
     virtual double factor() const;
+    virtual OriginCode code() const;
 
 protected:
     int m_atom1;

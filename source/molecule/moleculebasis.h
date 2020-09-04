@@ -54,6 +54,7 @@ public:
 
     virtual std::vector<bool> basisList() const = 0;
     virtual std::array<int,3> atoms() const = 0;
+    virtual BasisCode code() const = 0;
 
 protected:
     void setEulerAngles(Eigen::Matrix3d rot);

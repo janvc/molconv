@@ -33,6 +33,9 @@ public:
     MoleculeBasisCovarianceMatrix(const MoleculeBasisCovarianceMatrix &basis);
     ~MoleculeBasisCovarianceMatrix() {}
     MoleculeBasis *clone();
+
+    BasisCode code() const;
+
 private:
     Eigen::Matrix3d calcCovarianceMatrix();
 };

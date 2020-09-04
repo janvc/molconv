@@ -53,4 +53,9 @@ MoleculeOrigin *MoleculeOriginCenterOfMass::clone()
     return new MoleculeOriginCenterOfMass(*this);
 }
 
+OriginCode MoleculeOriginCenterOfMass::code() const
+{
+    return kCenterOfMass;
+}
+
 }

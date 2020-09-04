@@ -66,4 +66,9 @@ double MoleculeOriginOnAtom::factor() const
     return 0.0;
 }
 
+OriginCode MoleculeOriginOnAtom::code() const
+{
+    return kCenterOnAtom;
+}
+
 }

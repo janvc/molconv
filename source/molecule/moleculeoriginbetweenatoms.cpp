@@ -61,4 +61,9 @@ double MoleculeOriginBetweenAtoms::factor() const
     return m_factor;
 }
 
+OriginCode MoleculeOriginBetweenAtoms::code() const
+{
+    return kCenterBetweenAtoms;
+}
+
 }

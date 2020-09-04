@@ -33,6 +33,8 @@ public:
     MoleculeOriginGeometricCenter(const MoleculeOriginGeometricCenter &origin);
     ~MoleculeOriginGeometricCenter() {}
     MoleculeOrigin *clone();
+
+    OriginCode code() const;
 };
 
 }

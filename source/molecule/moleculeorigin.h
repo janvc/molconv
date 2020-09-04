@@ -43,6 +43,7 @@ public:
     virtual std::vector<bool> originList() const = 0;
     virtual std::array<int,2> atoms() const = 0;
     virtual double factor() const = 0;
+    virtual OriginCode code() const = 0;
 
 protected:
     moleculePtr m_molecule;

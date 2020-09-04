@@ -28,6 +28,7 @@
 #endif
 
 #include "molecule.h"
+#include "moleculebasis.h"
 #include "moleculegroup.h"
 #include "system.h"
 #include "molconvfile.h"
@@ -113,7 +114,7 @@ bool MolconvFile::read(const QString &fileName)
                 else
                     basisList.push_back(false);
 
-            Eigen::MatrixXd trafo(molconv::Molecule::euler2rot(psi, theta, phi));
+            Eigen::MatrixXd trafo(molconv::MoleculeBasis::euler2rot(psi, theta, phi));
 
             QDomNode atomNode = basisElement.nextSibling();
 

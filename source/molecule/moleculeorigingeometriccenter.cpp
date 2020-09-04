@@ -53,5 +53,10 @@ MoleculeOrigin *MoleculeOriginGeometricCenter::clone()
     return new MoleculeOriginGeometricCenter(*this);
 }
 
+OriginCode MoleculeOriginGeometricCenter::code() const
+{
+    return kCenterOfGeometry;
+}
+
 }
 

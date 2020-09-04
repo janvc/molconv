@@ -33,6 +33,8 @@ public:
     MoleculeOriginCenterOfMass(const MoleculeOriginCenterOfMass &origin);
     ~MoleculeOriginCenterOfMass() {}
     MoleculeOrigin *clone();
+
+    OriginCode code() const;
 };
 
 }
