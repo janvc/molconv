@@ -75,7 +75,7 @@ bool MolconvFile::read(const QString &fileName)
             // since only the internal positions are saved in the molconv file:
             QDomElement originElement = moleculeElement.elementsByTagName("Origin").at(0).toElement();
 
-            molconv::origin Origin = static_cast<molconv::origin>(originElement.attribute("Type").toInt());
+            molconv::OriginCode Origin = static_cast<molconv::OriginCode>(originElement.attribute("Type").toInt());
             double vecx = originElement.attribute("vecX").toDouble();
             double vecy = originElement.attribute("vecY").toDouble();
             double vecz = originElement.attribute("vecZ").toDouble();
@@ -96,7 +96,7 @@ bool MolconvFile::read(const QString &fileName)
 
             QDomElement basisElement = moleculeElement.elementsByTagName("Basis").at(0).toElement();
 
-            molconv::basis Basis = static_cast<molconv::basis>(basisElement.attribute("Type").toInt());
+            molconv::BasisCode Basis = static_cast<molconv::BasisCode>(basisElement.attribute("Type").toInt());
             double phi = basisElement.attribute("phi").toDouble();
             double theta = basisElement.attribute("theta").toDouble();
             double psi = basisElement.attribute("psi").toDouble();
