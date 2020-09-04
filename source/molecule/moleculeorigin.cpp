@@ -23,13 +23,17 @@
 
 namespace molconv {
 
+MoleculeOrigin::MoleculeOrigin()
+{
+}
+
 MoleculeOrigin::MoleculeOrigin(moleculePtr molecule)
 {
     m_molecule = molecule;
     m_position = Eigen::Vector3d::Zero();
 }
 
-moleculePtr MoleculeOrigin::molecule()
+moleculePtr MoleculeOrigin::molecule() const
 {
     return m_molecule;
 }

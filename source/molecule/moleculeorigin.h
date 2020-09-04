@@ -31,13 +31,14 @@ namespace molconv {
 class MoleculeOrigin
 {
 public:
+    MoleculeOrigin();
     MoleculeOrigin(moleculePtr molecule);
+    virtual ~MoleculeOrigin() {}
+    virtual MoleculeOrigin *clone() = 0;
 
-    moleculePtr molecule();
+    moleculePtr molecule() const;
     Eigen::Vector3d position() const;
     void setPosition(const Eigen::Vector3d newPosition);
-
-    virtual MoleculeOrigin *clone() = 0;
 
     virtual std::vector<bool> originList() const = 0;
     virtual std::array<int,2> atoms() const = 0;

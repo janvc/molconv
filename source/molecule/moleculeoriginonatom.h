@@ -30,6 +30,9 @@ class MoleculeOriginOnAtom : public MoleculeOrigin
 {
 public:
     MoleculeOriginOnAtom(moleculePtr molecule, const int atom1);
+    MoleculeOriginOnAtom(const MoleculeOriginOnAtom &origin);
+    ~MoleculeOriginOnAtom() {}
+    MoleculeOrigin *clone();
 
     std::vector<bool> originList() const;
     virtual std::array<int,2> atoms() const;

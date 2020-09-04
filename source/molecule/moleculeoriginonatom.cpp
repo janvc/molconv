@@ -31,6 +31,18 @@ MoleculeOriginOnAtom::MoleculeOriginOnAtom(moleculePtr molecule, const int atom1
     m_position = m_molecule->atom(m_atom1)->position();
 }
 
+MoleculeOriginOnAtom::MoleculeOriginOnAtom(const MoleculeOriginOnAtom &origin)
+{
+    m_molecule = origin.molecule();
+    m_position = origin.position();
+    m_atom1 = origin.atoms()[0];
+}
+
+MoleculeOrigin *MoleculeOriginOnAtom::clone()
+{
+    return new MoleculeOriginOnAtom(*this);
+}
+
 std::vector<bool> MoleculeOriginOnAtom::originList() const
 {
     return std::vector<bool>();
