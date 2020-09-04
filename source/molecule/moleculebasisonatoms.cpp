@@ -77,4 +77,9 @@ std::array<int,3> MoleculeBasisOnAtoms::atoms() const
     return array;
 }
 
+BasisCode MoleculeBasisOnAtoms::code() const
+{
+    return kVectorsFromAtoms;
+}
+
 }

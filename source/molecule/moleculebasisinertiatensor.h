@@ -33,6 +33,8 @@ public:
     MoleculeBasisInertiaTensor(const MoleculeBasisInertiaTensor &basis);
     ~MoleculeBasisInertiaTensor() {}
     MoleculeBasis *clone();
+
+    BasisCode code() const;
 private:
     Eigen::Matrix3d calcInertiaTensor();
 };

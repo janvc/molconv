@@ -52,6 +52,11 @@ MoleculeBasis *MoleculeBasisInertiaTensor::clone()
     return new MoleculeBasisInertiaTensor(*this);
 }
 
+BasisCode MoleculeBasisInertiaTensor::code() const
+{
+    return kInertiaVectors;
+}
+
 Eigen::Matrix3d MoleculeBasisInertiaTensor::calcInertiaTensor()
 {
     Eigen::Matrix3d inertiaTensor = Eigen::Matrix3d::Zero();

@@ -83,8 +83,8 @@ namespace molconv
                            const double phi, const double theta, const double psi);
 
         // changing the internal basis:
-        void setOrigin(const origin &newOrigin, const std::vector<bool> originVector, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);
-        void setBasis(const basis &newBasis, const std::vector<bool> basisVector, const size_t atom1 = 0, const size_t atom2 = 0, const size_t atom3 = 0);
+        void setOrigin(const OriginCode &newOrigin, const std::vector<bool> originVector, const size_t atom1 = 0, const size_t atom2 = 0, const double originFactor = 0.0);
+        void setBasis(const BasisCode &newBasis, const std::vector<bool> basisVector, const size_t atom1 = 0, const size_t atom2 = 0, const size_t atom3 = 0);
 
         // manage groups
         void addToGroup(groupPtr newGroup);

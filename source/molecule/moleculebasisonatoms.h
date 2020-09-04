@@ -36,6 +36,8 @@ public:
     std::vector<bool> basisList() const;
     std::array<int,3> atoms() const;
 
+    BasisCode code() const;
+
 private:
     int m_atom1;
     int m_atom2;

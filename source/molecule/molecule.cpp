@@ -122,9 +122,9 @@ namespace molconv
         : chemkit::Molecule(originalMolecule)
         , d(new MoleculePrivate)
     {
-//        d->m_origin = originalMolecule.internalOrigin();
-//        d->m_basis = originalMolecule.internalBasis();
-//        d->m_group = originalMolecule.group();
+        d->m_origin = originalMolecule.internalOrigin();
+        d->m_basis = originalMolecule.internalBasis();
+        d->m_group = originalMolecule.group();
 
         initIntPos();
     }
@@ -453,7 +453,7 @@ namespace molconv
     ///
     /// set the molecule's internal origin to \p newOrigin.
     ///
-    void Molecule::setOrigin(const origin &newOrigin, const std::vector<bool> originVector, const size_t atom1, const size_t atom2, const double originFactor)
+    void Molecule::setOrigin(const OriginCode &newOrigin, const std::vector<bool> originVector, const size_t atom1, const size_t atom2, const double originFactor)
     {
         switch (newOrigin)
         {
@@ -482,7 +482,7 @@ namespace molconv
     ///
     /// set the molecule's internal coordinate system to \p newBasis.
     ///
-    void Molecule::setBasis(const basis &newBasis, const std::vector<bool> basisVector, const size_t atom1, const size_t atom2, const size_t atom3)
+    void Molecule::setBasis(const BasisCode &newBasis, const std::vector<bool> basisVector, const size_t atom1, const size_t atom2, const size_t atom3)
     {
         switch (newBasis)
         {
