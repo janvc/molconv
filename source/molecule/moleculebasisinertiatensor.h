@@ -30,6 +30,9 @@ class MoleculeBasisInertiaTensor : public MoleculeBasisGlobal
 {
 public:
     MoleculeBasisInertiaTensor(moleculePtr molecule, std::vector<bool> basisList);
+    MoleculeBasisInertiaTensor(const MoleculeBasisInertiaTensor &basis);
+    ~MoleculeBasisInertiaTensor() {}
+    MoleculeBasis *clone();
 private:
     Eigen::Matrix3d calcInertiaTensor();
 };

@@ -29,6 +29,7 @@ namespace molconv {
 class MoleculeBasisGlobal : public MoleculeBasis
 {
 public:
+    MoleculeBasisGlobal();
     MoleculeBasisGlobal(moleculePtr molecule, std::vector<bool> basisList);
 
     std::vector<bool> basisList() const;

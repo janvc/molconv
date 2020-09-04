@@ -30,6 +30,9 @@ class MoleculeOriginGeometricCenter : public MoleculeOriginGlobal
 {
 public:
     MoleculeOriginGeometricCenter(moleculePtr molecule, std::vector<bool> originList);
+    MoleculeOriginGeometricCenter(const MoleculeOriginGeometricCenter &origin);
+    ~MoleculeOriginGeometricCenter() {}
+    MoleculeOrigin *clone();
 };
 
 }

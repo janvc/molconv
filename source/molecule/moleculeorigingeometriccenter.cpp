@@ -41,5 +41,17 @@ MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(moleculePtr molecul
     m_position = center / double(Nactive);
 }
 
+MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(const MoleculeOriginGeometricCenter &origin)
+{
+    m_molecule = origin.molecule();
+    m_position = origin.position();
+    m_originList = origin.originList();
+}
+
+MoleculeOrigin *MoleculeOriginGeometricCenter::clone()
+{
+    return new MoleculeOriginGeometricCenter(*this);
+}
+
 }
 

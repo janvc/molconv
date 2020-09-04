@@ -41,4 +41,16 @@ MoleculeOriginCenterOfMass::MoleculeOriginCenterOfMass(moleculePtr molecule, std
     m_position = centerOfMass / totalMass;
 }
 
+MoleculeOriginCenterOfMass::MoleculeOriginCenterOfMass(const MoleculeOriginCenterOfMass &origin)
+{
+    m_molecule = origin.molecule();
+    m_position = origin.position();
+    m_originList = origin.originList();
+}
+
+MoleculeOrigin *MoleculeOriginCenterOfMass::clone()
+{
+    return new MoleculeOriginCenterOfMass(*this);
+}
+
 }

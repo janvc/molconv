@@ -23,6 +23,10 @@
 
 namespace molconv {
 
+MoleculeOriginGlobal::MoleculeOriginGlobal()
+{
+}
+
 MoleculeOriginGlobal::MoleculeOriginGlobal(moleculePtr molecule, std::vector<bool> originList)
     : MoleculeOrigin(molecule)
 {

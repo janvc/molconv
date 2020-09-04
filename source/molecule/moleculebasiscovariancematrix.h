@@ -30,6 +30,9 @@ class MoleculeBasisCovarianceMatrix : public MoleculeBasisGlobal
 {
 public:
     MoleculeBasisCovarianceMatrix(moleculePtr molecule, std::vector<bool> basisList);
+    MoleculeBasisCovarianceMatrix(const MoleculeBasisCovarianceMatrix &basis);
+    ~MoleculeBasisCovarianceMatrix() {}
+    MoleculeBasis *clone();
 private:
     Eigen::Matrix3d calcCovarianceMatrix();
 };

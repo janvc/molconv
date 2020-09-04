@@ -31,7 +31,12 @@ namespace molconv {
 class MoleculeBasis
 {
 public:
+    MoleculeBasis();
     MoleculeBasis(moleculePtr molecule);
+    virtual ~MoleculeBasis() {}
+    virtual MoleculeBasis *clone() = 0;
+
+    moleculePtr molecule() const;
 
     // return the axes of the internal basis (aka the
     // rotation matrix) as obtained from the euler angles

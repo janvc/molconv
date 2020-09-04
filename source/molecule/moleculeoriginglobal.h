@@ -29,6 +29,7 @@ namespace molconv {
 class MoleculeOriginGlobal : public MoleculeOrigin
 {
 public:
+    MoleculeOriginGlobal();
     MoleculeOriginGlobal(moleculePtr molecule, std::vector<bool> originList);
 
     std::vector<bool> originList() const;

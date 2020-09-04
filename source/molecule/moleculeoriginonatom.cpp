@@ -23,6 +23,10 @@
 
 namespace molconv {
 
+MoleculeOriginOnAtom::MoleculeOriginOnAtom()
+{
+}
+
 MoleculeOriginOnAtom::MoleculeOriginOnAtom(moleculePtr molecule, const int atom1)
     : MoleculeOrigin(molecule)
 {

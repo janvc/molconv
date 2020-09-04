@@ -30,6 +30,9 @@ class MoleculeOriginCenterOfMass : public MoleculeOriginGlobal
 {
 public:
     MoleculeOriginCenterOfMass(moleculePtr molecule, std::vector<bool> originList);
+    MoleculeOriginCenterOfMass(const MoleculeOriginCenterOfMass &origin);
+    ~MoleculeOriginCenterOfMass() {}
+    MoleculeOrigin *clone();
 };
 
 }

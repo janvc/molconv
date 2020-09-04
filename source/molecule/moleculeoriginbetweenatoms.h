@@ -30,6 +30,9 @@ class MoleculeOriginBetweenAtoms : public MoleculeOriginOnAtom
 {
 public:
     MoleculeOriginBetweenAtoms(moleculePtr molecule, const int atom1, const int atom2, const double factor);
+    MoleculeOriginBetweenAtoms(const MoleculeOriginBetweenAtoms &origin);
+    ~MoleculeOriginBetweenAtoms() {}
+    MoleculeOrigin *clone();
 
     std::array<int,2> atoms() const;
     double factor() const;

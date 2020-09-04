@@ -38,6 +38,20 @@ MoleculeBasisInertiaTensor::MoleculeBasisInertiaTensor(moleculePtr molecule, std
     setEulerAngles(solver.eigenvectors());
 }
 
+MoleculeBasisInertiaTensor::MoleculeBasisInertiaTensor(const MoleculeBasisInertiaTensor &basis)
+{
+    m_molecule = basis.molecule();
+    m_phi = basis.phi();
+    m_theta = basis.theta();
+    m_psi = basis.psi();
+    m_basisList = basis.basisList();
+}
+
+MoleculeBasis *MoleculeBasisInertiaTensor::clone()
+{
+    return new MoleculeBasisInertiaTensor(*this);
+}
+
 Eigen::Matrix3d MoleculeBasisInertiaTensor::calcInertiaTensor()
 {
     Eigen::Matrix3d inertiaTensor = Eigen::Matrix3d::Zero();

@@ -23,6 +23,10 @@
 
 namespace molconv {
 
+MoleculeBasisGlobal::MoleculeBasisGlobal()
+{
+}
+
 MoleculeBasisGlobal::MoleculeBasisGlobal(moleculePtr molecule, std::vector<bool> basisList)
     : MoleculeBasis(molecule)
 {

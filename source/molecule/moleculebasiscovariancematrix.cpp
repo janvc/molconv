@@ -45,6 +45,20 @@ MoleculeBasisCovarianceMatrix::MoleculeBasisCovarianceMatrix(moleculePtr molecul
     setEulerAngles(rot);
 }
 
+MoleculeBasisCovarianceMatrix::MoleculeBasisCovarianceMatrix(const MoleculeBasisCovarianceMatrix &basis)
+{
+    m_molecule = basis.molecule();
+    m_phi = basis.phi();
+    m_theta = basis.theta();
+    m_psi = basis.psi();
+    m_basisList = basis.basisList();
+}
+
+MoleculeBasis *MoleculeBasisCovarianceMatrix::clone()
+{
+    return new MoleculeBasisCovarianceMatrix(*this);
+}
+
 Eigen::Matrix3d MoleculeBasisCovarianceMatrix::calcCovarianceMatrix()
 {
     Eigen::Matrix3d covarianceMatrix = Eigen::Matrix3d::Zero();

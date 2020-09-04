@@ -23,6 +23,10 @@
 
 namespace molconv {
 
+MoleculeBasis::MoleculeBasis()
+{
+}
+
 MoleculeBasis::MoleculeBasis(moleculePtr molecule)
 {
     m_molecule = molecule;
@@ -30,6 +34,11 @@ MoleculeBasis::MoleculeBasis(moleculePtr molecule)
     m_psi = 0.0;
     m_theta = 0.0;
     m_phi = 0.0;
+}
+
+moleculePtr MoleculeBasis::molecule() const
+{
+    return m_molecule;
 }
 
 Eigen::Matrix3d MoleculeBasis::axes() const
