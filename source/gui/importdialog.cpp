@@ -32,14 +32,14 @@ class ImportDialogPrivate
 public:
     ImportDialogPrivate()
     {
-        m_origin = molconv::kCenterOfGeometry;
-        m_basis = molconv::kCovarianceVectors;
+        m_originCode = molconv::kCenterOfGeometry;
+        m_basisCode = molconv::kCovarianceVectors;
         m_originAtom = 0;
         m_basisAtoms.fill(0);
     }
 
-    molconv::origin m_origin;
-    molconv::basis m_basis;
+    molconv::OriginCode m_originCode;
+    molconv::BasisCode m_basisCode;
 
     int m_originAtom;
     std::array<int,3> m_basisAtoms;
@@ -129,16 +129,16 @@ void ImportDialog::on_coa_toggled(bool checked)
 {
     if(checked)
     {
-        d->m_origin = molconv::kCenterOnAtom;
+        d->m_originCode = molconv::kCenterOnAtom;
         ui->an->setEnabled(true);
     }
     else
         ui->an->setEnabled(false);
 }
 
-molconv::origin ImportDialog::getOrigin() const
+molconv::OriginCode ImportDialog::getOrigin() const
 {
-    return d->m_origin;
+    return d->m_originCode;
 }
 
 int ImportDialog::getOriginAtom() const
@@ -146,9 +146,9 @@ int ImportDialog::getOriginAtom() const
     return d->m_originAtom;
 }
 
-molconv::basis ImportDialog::getBasis() const
+molconv::BasisCode ImportDialog::getBasis() const
 {
-    return d->m_basis;
+    return d->m_basisCode;
 }
 
 std::array<int,3> ImportDialog::getBasisAtoms() const
@@ -160,7 +160,7 @@ void ImportDialog::on_atoms_toggled(bool checked)
 {
     if(checked)
     {
-        d->m_basis = molconv::kVectorsFromAtoms;
+        d->m_basisCode = molconv::kVectorsFromAtoms;
         ui->atom1->setEnabled(true);
         ui->atom2->setEnabled(true);
         ui->atom3->setEnabled(true);
@@ -206,37 +206,37 @@ QString ImportDialog::getFileName() const
 void ImportDialog::on_coc_toggled(bool checked)
 {
     if (checked)
-        d->m_origin = molconv::kCenterOfCharge;
+        d->m_originCode = molconv::kCenterOfCharge;
 }
 
 void ImportDialog::on_com_toggled(bool checked)
 {
     if (checked)
-        d->m_origin = molconv::kCenterOfMass;
+        d->m_originCode = molconv::kCenterOfMass;
 }
 
 void ImportDialog::on_cog_toggled(bool checked)
 {
     if (checked)
-        d->m_origin = molconv::kCenterOfGeometry;
+        d->m_originCode = molconv::kCenterOfGeometry;
 }
 
 void ImportDialog::on_stdori_toggled(bool checked)
 {
     if (checked)
-        d->m_basis = molconv::kStandardOrientation;
+        d->m_basisCode = molconv::kStandardOrientation;
 }
 
 void ImportDialog::on_inert_toggled(bool checked)
 {
     if (checked)
-        d->m_basis = molconv::kInertiaVectors;
+        d->m_basisCode = molconv::kInertiaVectors;
 }
 
 void ImportDialog::on_covar_toggled(bool checked)
 {
     if (checked)
-        d->m_basis = molconv::kCovarianceVectors;
+        d->m_basisCode = molconv::kCovarianceVectors;
 }
 
 void ImportDialog::on_an_valueChanged(int arg1)

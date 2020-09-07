@@ -28,6 +28,7 @@
 #endif
 
 #include "molecule.h"
+#include "moleculeorigin.h"
 #include "moleculebasis.h"
 #include "moleculegroup.h"
 #include "system.h"
@@ -75,7 +76,7 @@ bool MolconvFile::read(const QString &fileName)
             // since only the internal positions are saved in the molconv file:
             QDomElement originElement = moleculeElement.elementsByTagName("Origin").at(0).toElement();
 
-            molconv::OriginCode Origin = static_cast<molconv::OriginCode>(originElement.attribute("Type").toInt());
+            molconv::OriginCode originCode = static_cast<molconv::OriginCode>(originElement.attribute("Type").toInt());
             double vecx = originElement.attribute("vecX").toDouble();
             double vecy = originElement.attribute("vecY").toDouble();
             double vecz = originElement.attribute("vecZ").toDouble();
@@ -96,7 +97,7 @@ bool MolconvFile::read(const QString &fileName)
 
             QDomElement basisElement = moleculeElement.elementsByTagName("Basis").at(0).toElement();
 
-            molconv::BasisCode Basis = static_cast<molconv::BasisCode>(basisElement.attribute("Type").toInt());
+            molconv::BasisCode basisCode = static_cast<molconv::BasisCode>(basisElement.attribute("Type").toInt());
             double phi = basisElement.attribute("phi").toDouble();
             double theta = basisElement.attribute("theta").toDouble();
             double psi = basisElement.attribute("psi").toDouble();
@@ -138,10 +139,8 @@ bool MolconvFile::read(const QString &fileName)
                 atomNode = atomNode.nextSibling();
             }
 
-            currentMolecule->setOrigin(Origin, oA1, oA2, originFactor);
-            currentMolecule->setOriginList(originList);
-            currentMolecule->setBasis(Basis, bA1, bA2, bA3);
-            currentMolecule->setBasisList(basisList);
+            currentMolecule->setOrigin(originCode, originList, oA1, oA2, originFactor);
+            currentMolecule->setBasis(basisCode, basisList, bA1, bA2, bA3);
 
             chemkit::BondPredictor::predictBonds(currentMolecule.get());
             m_molecules.push_back(currentMolecule);
@@ -171,7 +170,7 @@ bool MolconvFile::write(const QString &fileName)
         molecule.setAttribute("Name", QString::fromStdString(system.getMolecule(id)->name()));
 
         QDomElement origin = document.createElement("Origin");
-        origin.setAttribute("Type", QString::number(system.getMolecule(id)->internalOrigin()));
+        origin.setAttribute("Type", QString::number(system.getMolecule(id)->internalOrigin()->code()));
         origin.setAttribute("Factor", QString::number(system.getMolecule(id)->internalOriginFactor()));
 
         QString atomString = QString::number(system.getMolecule(id)->internalOriginAtoms()[0]);
@@ -197,7 +196,7 @@ bool MolconvFile::write(const QString &fileName)
         molecule.appendChild(origin);
 
         QDomElement basis = document.createElement("Basis");
-        basis.setAttribute("Type", QString::number(system.getMolecule(id)->internalBasis()));
+        basis.setAttribute("Type", QString::number(system.getMolecule(id)->internalBasis()->code()));
 
         atomString = QString::number(system.getMolecule(id)->internalBasisAtoms()[0]);
         atomString += ",";

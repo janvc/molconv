@@ -19,10 +19,11 @@
  */
 
 
-#include<stdexcept>
-#include<algorithm>
-#include<Eigen/Eigenvalues>
-#include<boost/make_shared.hpp>
+#include <stdexcept>
+#include <algorithm>
+#include <Eigen/Eigenvalues>
+#include <boost/make_shared.hpp>
+#include "moleculebasis.h"
 #include "system.h"
 
 
@@ -307,7 +308,7 @@ namespace molconv
         rotmat(2,0) = 2.0 * (lQuart(1) * lQuart(3) - lQuart(0) * lQuart(2));
         rotmat(2,1) = 2.0 * (lQuart(2) * lQuart(3) + lQuart(0) * lQuart(1));
 
-        std::array<double,3> newEulers = molconv::Molecule::rot2euler(rotmat);
+        std::array<double,3> newEulers = molconv::MoleculeBasis::rot2euler(rotmat);
         double newPhi = newEulers[2];
         double newTheta = newEulers[1];
         double newPsi = newEulers[0];

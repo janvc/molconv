@@ -45,8 +45,8 @@ public:
     ImportDialog(QWidget *parent = 0);
     ~ImportDialog();
     void openFile();
-    molconv::origin getOrigin() const;
-    molconv::basis getBasis() const;
+    molconv::OriginCode getOrigin() const;
+    molconv::BasisCode getBasis() const;
     int getOriginAtom() const;
     std::array<int,3> getBasisAtoms() const;
     QString getMoleculeName() const;

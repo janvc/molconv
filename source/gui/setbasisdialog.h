@@ -31,18 +31,18 @@ namespace Ui
     class setBasisDialog;
 }
 
-class setBasisDialog : public QDialog
+class SetBasisDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit setBasisDialog(QWidget *parent = 0);
-    ~setBasisDialog();
+    explicit SetBasisDialog(QWidget *parent = 0);
+    ~SetBasisDialog();
 
     void prepare(unsigned long molID);
 
-    molconv::origin origin() const;
-    molconv::basis basis() const;
+    molconv::OriginCode originCode() const;
+    molconv::BasisCode basisCode() const;
     std::array<int,2> originAtoms() const;
     std::array<int,3> basisAtoms() const;
     double atomLineScale() const;
@@ -75,8 +75,8 @@ signals:
 
 private:
     unsigned long m_molID;
-    molconv::origin m_origin;
-    molconv::basis m_basis;
+    molconv::OriginCode m_originCode;
+    molconv::BasisCode m_basisCode;
 
     Ui::setBasisDialog *ui;
     MolconvWindow *m_mainWindow;

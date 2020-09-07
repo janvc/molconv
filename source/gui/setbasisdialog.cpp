@@ -20,10 +20,12 @@
 
 
 #include "molecule.h"
+#include "moleculeorigin.h"
+#include "moleculebasis.h"
 #include "setbasisdialog.h"
 #include "ui_setbasisdialog.h"
 
-setBasisDialog::setBasisDialog(QWidget *parent) :
+SetBasisDialog::SetBasisDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::setBasisDialog)
 {
@@ -38,12 +40,12 @@ setBasisDialog::setBasisDialog(QWidget *parent) :
     ui->basisAllCheckBox->setCheckState(Qt::Checked);
 }
 
-setBasisDialog::~setBasisDialog()
+SetBasisDialog::~SetBasisDialog()
 {
     delete ui;
 }
 
-void setBasisDialog::prepare(unsigned long molID)
+void SetBasisDialog::prepare(unsigned long molID)
 {
     m_molID = molID;
     molconv::moleculePtr molecule = m_mainWindow->getMol(molID);
@@ -72,15 +74,15 @@ void setBasisDialog::prepare(unsigned long molID)
         ui->basisAtomList->addItem(basisItem);
     }
 
-    m_origin = molecule->internalOrigin();
-    m_basis = molecule->internalBasis();
+    m_originCode = molecule->internalOrigin()->code();
+    m_basisCode = molecule->internalBasis()->code();
 
     // standard orientation is not available at the moment
     ui->basisStandard->setEnabled(false);
 
     ui->originAtom->setMaximum(molecule->size());
 
-    switch (m_origin)
+    switch (m_originCode)
     {
     case molconv::kCenterOfMass:
         ui->originCOM->setChecked(true);
@@ -117,7 +119,7 @@ void setBasisDialog::prepare(unsigned long molID)
         break;
     }
 
-    switch (m_basis)
+    switch (m_basisCode)
     {
     case molconv::kInertiaVectors:
         ui->basisInert->setChecked(true);
@@ -147,42 +149,42 @@ void setBasisDialog::prepare(unsigned long molID)
     }
 }
 
-molconv::origin setBasisDialog::origin() const
+molconv::OriginCode SetBasisDialog::originCode() const
 {
-    return m_origin;
+    return m_originCode;
 }
 
-molconv::basis setBasisDialog::basis() const
+molconv::BasisCode SetBasisDialog::basisCode() const
 {
-    return m_basis;
+    return m_basisCode;
 }
 
-std::array<int,2> setBasisDialog::originAtoms() const
+std::array<int,2> SetBasisDialog::originAtoms() const
 {
     return m_originAtoms;
 }
 
-std::array<int,3> setBasisDialog::basisAtoms() const
+std::array<int,3> SetBasisDialog::basisAtoms() const
 {
     return m_basisAtoms;
 }
 
-double setBasisDialog::atomLineScale() const
+double SetBasisDialog::atomLineScale() const
 {
     return m_AtomLineScale;
 }
 
-std::vector<bool> setBasisDialog::selectedOriginAtoms() const
+std::vector<bool> SetBasisDialog::selectedOriginAtoms() const
 {
     return m_originList;
 }
 
-std::vector<bool> setBasisDialog::selectedBasisAtoms() const
+std::vector<bool> SetBasisDialog::selectedBasisAtoms() const
 {
     return m_basisList;
 }
 
-void setBasisDialog::on_originAllCheckBox_stateChanged()
+void SetBasisDialog::on_originAllCheckBox_stateChanged()
 {
     if (ui->originAllCheckBox->checkState() == Qt::Checked)
         for (int i = 0; i < ui->originAtomList->count(); i++)
@@ -192,7 +194,7 @@ void setBasisDialog::on_originAllCheckBox_stateChanged()
             ui->originAtomList->item(i)->setCheckState(Qt::Unchecked);
 }
 
-void setBasisDialog::on_basisAllCheckBox_stateChanged()
+void SetBasisDialog::on_basisAllCheckBox_stateChanged()
 {
     if (ui->basisAllCheckBox->checkState() == Qt::Checked)
         for (int i = 0; i < ui->basisAtomList->count(); i++)
@@ -202,12 +204,12 @@ void setBasisDialog::on_basisAllCheckBox_stateChanged()
             ui->basisAtomList->item(i)->setCheckState(Qt::Unchecked);
 }
 
-void setBasisDialog::on_originAtomPos_toggled(bool checked)
+void SetBasisDialog::on_originAtomPos_toggled(bool checked)
 {
     ui->originAtom->setEnabled(checked);
 }
 
-void setBasisDialog::on_originAtomLine_toggled(bool checked)
+void SetBasisDialog::on_originAtomLine_toggled(bool checked)
 {
     ui->originALineStart->setEnabled(checked);
     ui->originALineEnd->setEnabled(checked);
@@ -215,44 +217,44 @@ void setBasisDialog::on_originAtomLine_toggled(bool checked)
     ui->originALineScaleSlider->setEnabled(checked);
 }
 
-void setBasisDialog::on_basisAtoms_toggled(bool checked)
+void SetBasisDialog::on_basisAtoms_toggled(bool checked)
 {
     ui->basisAtom1->setEnabled(checked);
     ui->basisAtom2->setEnabled(checked);
     ui->basisAtom3->setEnabled(checked);
 }
 
-void setBasisDialog::on_originALineScaleSlider_valueChanged(int value)
+void SetBasisDialog::on_originALineScaleSlider_valueChanged(int value)
 {
     double realValue = double(value) / 1000.0;
     ui->originALineScaleBox->setValue(realValue);
 }
 
-void setBasisDialog::on_originALineScaleBox_valueChanged(double value)
+void SetBasisDialog::on_originALineScaleBox_valueChanged(double value)
 {
     int intValue = int(value * 1000.0);
     ui->originALineScaleSlider->setValue(intValue);
 }
 
-void setBasisDialog::on_buttonBox_accepted()
+void SetBasisDialog::on_buttonBox_accepted()
 {
     // set the origin from the UI elements:
     m_originAtoms.fill(0);
     if (ui->originCOM->isChecked())
-        m_origin = molconv::kCenterOfMass;
+        m_originCode = molconv::kCenterOfMass;
     else if (ui->originCOG->isChecked())
-        m_origin = molconv::kCenterOfGeometry;
+        m_originCode = molconv::kCenterOfGeometry;
     else if (ui->originCOC->isChecked())
-        m_origin = molconv::kCenterOfCharge;
+        m_originCode = molconv::kCenterOfCharge;
     else if (ui->originAtomPos->isChecked())
     {
-        m_origin = molconv::kCenterOnAtom;
+        m_originCode = molconv::kCenterOnAtom;
         m_originAtoms[0] = ui->originAtom->value();
         m_originAtoms[1] = 0;
     }
     else if (ui->originAtomLine->isChecked())
     {
-        m_origin = molconv::kCenterBetweenAtoms;
+        m_originCode = molconv::kCenterBetweenAtoms;
         m_originAtoms[0] = ui->originALineStart->value();
         m_originAtoms[1] = ui->originALineEnd->value();
         m_AtomLineScale = ui->originALineScaleBox->value();
@@ -261,19 +263,18 @@ void setBasisDialog::on_buttonBox_accepted()
     // set the basis from the UI elements:
     m_basisAtoms.fill(0);
     if (ui->basisInert->isChecked())
-        m_basis = molconv::kInertiaVectors;
+        m_basisCode = molconv::kInertiaVectors;
     else if (ui->basisCovar->isChecked())
-        m_basis = molconv::kCovarianceVectors;
+        m_basisCode = molconv::kCovarianceVectors;
     else if (ui->basisCharge->isChecked())
-        m_basis = molconv::kChargeVectors;
+        m_basisCode = molconv::kChargeVectors;
     else if (ui->basisAtoms->isChecked())
     {
-        m_basis = molconv::kVectorsFromAtoms;
+        m_basisCode = molconv::kVectorsFromAtoms;
         m_basisAtoms[0] = ui->basisAtom1->value();
         m_basisAtoms[1] = ui->basisAtom2->value();
         m_basisAtoms[2] = ui->basisAtom3->value();
     }
-
 
     // if available, set the list of atoms contributing to origin/basis:
     m_originList.clear();
@@ -302,43 +303,43 @@ void setBasisDialog::on_buttonBox_accepted()
     emit ready();
 }
 
-void setBasisDialog::on_originCOM_toggled(bool checked)
+void SetBasisDialog::on_originCOM_toggled(bool checked)
 {
     ui->originAtomList->setEnabled(checked);
     ui->originAllCheckBox->setEnabled(checked);
 }
 
-void setBasisDialog::on_originCOG_toggled(bool checked)
+void SetBasisDialog::on_originCOG_toggled(bool checked)
 {
     ui->originAtomList->setEnabled(checked);
     ui->originAllCheckBox->setEnabled(checked);
 }
 
-void setBasisDialog::on_originCOC_toggled(bool checked)
+void SetBasisDialog::on_originCOC_toggled(bool checked)
 {
     ui->originAtomList->setEnabled(checked);
     ui->originAllCheckBox->setEnabled(checked);
 }
 
-void setBasisDialog::on_basisInert_toggled(bool checked)
+void SetBasisDialog::on_basisInert_toggled(bool checked)
 {
     ui->basisAtomList->setEnabled(checked);
     ui->basisAllCheckBox->setEnabled(checked);
 }
 
-void setBasisDialog::on_basisCovar_toggled(bool checked)
+void SetBasisDialog::on_basisCovar_toggled(bool checked)
 {
     ui->basisAtomList->setEnabled(checked);
     ui->basisAllCheckBox->setEnabled(checked);
 }
 
-void setBasisDialog::on_basisCharge_toggled(bool checked)
+void SetBasisDialog::on_basisCharge_toggled(bool checked)
 {
     ui->basisAtomList->setEnabled(checked);
     ui->basisAllCheckBox->setEnabled(checked);
 }
 
-void setBasisDialog::on_originUseSelection_clicked()
+void SetBasisDialog::on_originUseSelection_clicked()
 {
     std::vector<chemkit::Atom *> selectedAtoms = m_mainWindow->selection();
 
@@ -352,7 +353,7 @@ void setBasisDialog::on_originUseSelection_clicked()
     }
 }
 
-void setBasisDialog::on_basisUseSelection_clicked()
+void SetBasisDialog::on_basisUseSelection_clicked()
 {
     std::vector<chemkit::Atom *> selectedAtoms = m_mainWindow->selection();
 
@@ -366,7 +367,7 @@ void setBasisDialog::on_basisUseSelection_clicked()
     }
 }
 
-void setBasisDialog::on_useBasisButton_clicked()
+void SetBasisDialog::on_useBasisButton_clicked()
 {
     for (int i = 0; i < ui->originAtomList->count(); i++)
     {
@@ -377,7 +378,7 @@ void setBasisDialog::on_useBasisButton_clicked()
     }
 }
 
-void setBasisDialog::on_useOriginButton_clicked()
+void SetBasisDialog::on_useOriginButton_clicked()
 {
     for (int i = 0; i < ui->basisAtomList->count(); i++)
     {

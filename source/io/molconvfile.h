@@ -24,6 +24,7 @@
 
 
 #include <vector>
+#include <QString>
 #include "types.h"
 
 class MolconvFile

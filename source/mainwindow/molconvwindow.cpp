@@ -49,6 +49,8 @@
 #include "selecttool.h"
 #include "moleculeinfo.h"
 #include "molconvfile.h"
+#include "moleculeorigin.h"
+#include "moleculebasis.h"
 
 
 class MolconvWindowPrivate
@@ -60,7 +62,7 @@ public:
 
     ImportDialog *m_ImportDialog;
     NewGroupDialog *m_NewGroupDialog;
-    setBasisDialog *m_setBasisDialog;
+    SetBasisDialog *m_setBasisDialog;
     MultiMolDialog *m_MultiMolDialog;
 
     ListOfMolecules *m_ListOfMolecules;
@@ -91,7 +93,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     d->m_ImportDialog = new ImportDialog(this);
     d->m_NewGroupDialog = new NewGroupDialog(this);
-    d->m_setBasisDialog = new setBasisDialog(this);
+    d->m_setBasisDialog = new SetBasisDialog(this);
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
     d->m_MoleculeInfo = new MoleculeInfo(this);
@@ -706,8 +708,8 @@ void MolconvWindow::updateActiveMolecule(const unsigned long &newActiveID)
 
 void MolconvWindow::changeOriginBasis()
 {
-    molconv::origin newOrigin = d->m_setBasisDialog->origin();
-    molconv::basis newBasis = d->m_setBasisDialog->basis();
+    molconv::OriginCode newOriginCode = d->m_setBasisDialog->originCode();
+    molconv::BasisCode newBasisCode = d->m_setBasisDialog->basisCode();
 
     std::array<int,2> newOriginAtoms = d->m_setBasisDialog->originAtoms();
     std::array<int,3> newBasisAtoms = d->m_setBasisDialog->basisAtoms();
@@ -721,8 +723,8 @@ void MolconvWindow::changeOriginBasis()
 
     // determine if the new basis is different from the old one:
     if (
-            newOrigin != tmpMolPtr->internalOrigin()
-         || newBasis != tmpMolPtr->internalBasis()
+            newOriginCode != tmpMolPtr->internalOrigin()->code()
+         || newBasisCode != tmpMolPtr->internalBasis()->code()
          || newAtomLineScale != tmpMolPtr->internalOriginFactor()
          || ! std::equal(newOriginAtoms.begin(), newOriginAtoms.end(), tmpMolPtr->internalOriginAtoms().begin())
          || ! std::equal(newBasisAtoms.begin(), newBasisAtoms.end(), tmpMolPtr->internalBasisAtoms().begin())
@@ -733,8 +735,8 @@ void MolconvWindow::changeOriginBasis()
         wasModified();
     }
 
-    tmpMolPtr->setOrigin(newOrigin, newOriginList, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
-    tmpMolPtr->setBasis(newBasis, newBasisList, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
+    tmpMolPtr->setOrigin(newOriginCode, newOriginList, size_t(newOriginAtoms[0]), size_t(newOriginAtoms[1]), newAtomLineScale);
+    tmpMolPtr->setBasis(newBasisCode, newBasisList, newBasisAtoms[0], newBasisAtoms[1], newBasisAtoms[2]);
 
     d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
     updateAxes();
