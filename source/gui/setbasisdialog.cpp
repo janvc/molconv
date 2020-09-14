@@ -60,17 +60,25 @@ void SetBasisDialog::prepare(unsigned long molID)
         std::string currentName = molecule->atom(i)->symbol() + std::to_string(i + 1);
 
         QListWidgetItem *originItem = new QListWidgetItem(QString::fromStdString(currentName), ui->originAtomList);
-        if (molecule->originList().at(i))
+        if (molecule->originList().size() > 0 && molecule->originList().at(i))
+        {
             originItem->setCheckState(Qt::Checked);
+        }
         else
+        {
             originItem->setCheckState(Qt::Unchecked);
+        }
         ui->originAtomList->addItem(originItem);
 
         QListWidgetItem *basisItem = new QListWidgetItem(QString::fromStdString(currentName), ui->basisAtomList);
-        if (molecule->basisList().at(i))
+        if (molecule->basisList().size() > 0 && molecule->basisList().at(i))
+        {
             basisItem->setCheckState(Qt::Checked);
+        }
         else
+        {
             basisItem->setCheckState(Qt::Unchecked);
+        }
         ui->basisAtomList->addItem(basisItem);
     }
 
@@ -249,14 +257,14 @@ void SetBasisDialog::on_buttonBox_accepted()
     else if (ui->originAtomPos->isChecked())
     {
         m_originCode = molconv::kCenterOnAtom;
-        m_originAtoms[0] = ui->originAtom->value();
+        m_originAtoms[0] = ui->originAtom->value() - 1;
         m_originAtoms[1] = 0;
     }
     else if (ui->originAtomLine->isChecked())
     {
         m_originCode = molconv::kCenterBetweenAtoms;
-        m_originAtoms[0] = ui->originALineStart->value();
-        m_originAtoms[1] = ui->originALineEnd->value();
+        m_originAtoms[0] = ui->originALineStart->value() - 1;
+        m_originAtoms[1] = ui->originALineEnd->value() - 1;
         m_AtomLineScale = ui->originALineScaleBox->value();
     }
 
@@ -271,9 +279,9 @@ void SetBasisDialog::on_buttonBox_accepted()
     else if (ui->basisAtoms->isChecked())
     {
         m_basisCode = molconv::kVectorsFromAtoms;
-        m_basisAtoms[0] = ui->basisAtom1->value();
-        m_basisAtoms[1] = ui->basisAtom2->value();
-        m_basisAtoms[2] = ui->basisAtom3->value();
+        m_basisAtoms[0] = ui->basisAtom1->value() - 1;
+        m_basisAtoms[1] = ui->basisAtom2->value() - 1;
+        m_basisAtoms[2] = ui->basisAtom3->value() - 1;
     }
 
     // if available, set the list of atoms contributing to origin/basis:
