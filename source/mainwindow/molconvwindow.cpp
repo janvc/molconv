@@ -381,7 +381,7 @@ void MolconvWindow::closeEvent(QCloseEvent *event)
 {
     if (maybeSave())
     {
-        QSettings settings;
+        QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
         settings.setValue("startMaximized", QVariant(isMaximized()));
         settings.setValue("winW", width());
         settings.setValue("winH", height());
@@ -410,7 +410,7 @@ void MolconvWindow::saveFile()
 }
 void MolconvWindow::saveFileAs()
 {
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startSavePath = settings.value("savePath").toString();
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), startSavePath, tr("Molconv files (*.mcv)"));
@@ -433,7 +433,7 @@ void MolconvWindow::importFile()
 
 void MolconvWindow::openFile()
 {
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startOpenPath = settings.value("openPath").toString();
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), startOpenPath, tr("Molconv files (*.mcv)"));
@@ -772,15 +772,25 @@ void MolconvWindow::wasModified()
     ui->actionSave->setEnabled(true);
 }
 
+void MolconvWindow::moveActiveMoleculeTo(const double x, const double y, const double z,
+                                         const double phi, const double theta, const double psi)
+{
+    getMol(d->m_activeMolID)->moveFromParas(x, y, z, phi, theta, psi);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
+    updateAxes();
+    d->m_MoleculeInfo->updateLive();
+    wasModified();
+}
+
 void MolconvWindow::resetCoords()
 {
-    std::array<double,6> oB = getMol(d->m_activeMolID)->origBasis();
-    d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
+    std::array<double,6> oB = d->m_system->getMolecule(d->m_activeMolID)->origBasis();
+    moveActiveMoleculeTo(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 
 void MolconvWindow::zeroCoords()
 {
-    d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    moveActiveMoleculeTo(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
 void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
@@ -799,9 +809,15 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
     molconv::moleculePtr refMol = getMol(refMolID);
     molconv::moleculePtr otherMol = getMol(otherMolID);
 
-    double rmsd = molconv::System::get().calculateRMSDbetween(refMolID, otherMolID);
+    if (refMol->size() != otherMol->size())
+    {
+        QMessageBox::warning(this, tr("RMSD"), tr("The RMSD can only be calculated for molecules with equal number of atoms."));
+        return;
+    }
 
-    if (rmsd > 0.0)
+    double rmsd = d->m_system->calculateRMSDbetween(refMolID, otherMolID);
+
+    if (rmsd >= 0.0)
     {
         QString message = tr("The RMSD between\n'")
                 + QString::fromStdString(refMol->name())
@@ -814,7 +830,7 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
     }
     else
     {
-        QMessageBox::warning(this, tr("RMSD"), tr("The RMSD can only be calculated for molecules with equal number of atoms."));
+        QMessageBox::warning(this, tr("RMSD"), tr("Something went terribly wrong during the RMSD calculation."));
     }
 }
 
