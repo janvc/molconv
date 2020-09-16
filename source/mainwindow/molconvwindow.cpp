@@ -784,7 +784,7 @@ void MolconvWindow::moveActiveMoleculeTo(const double x, const double y, const d
 
 void MolconvWindow::resetCoords()
 {
-    std::array<double,6> oB = d->m_system->getMolecule(d->m_activeMolID)->origBasis();
+    std::array<double,6> oB = getMol(d->m_activeMolID)->origBasis();
     moveActiveMoleculeTo(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 
@@ -815,7 +815,7 @@ void MolconvWindow::calculateRMSD(const unsigned long refMolID, const unsigned l
         return;
     }
 
-    double rmsd = d->m_system->calculateRMSDbetween(refMolID, otherMolID);
+    double rmsd = molconv::System::get().calculateRMSDbetween(refMolID, otherMolID);
 
     if (rmsd >= 0.0)
     {

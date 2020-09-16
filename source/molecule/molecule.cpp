@@ -731,15 +731,23 @@ namespace molconv
         // remove any internal coordinates that might already exist:
         d->m_intPos.clear();
 
-        // set the original values of the internal basis
-//        d->m_originalOrigin = d->m_origin;
-//        d->m_originalBasis = d->m_basis;
-
         // determine the internal atomic positions:
-        Eigen::Matrix3d rotMat = internalBasisVectors();
+        Eigen::Vector3d origin = Eigen::Vector3d::Zero();
+        if (internalOrigin())
+        {
+            origin = internalOriginPosition();
+        }
+
+        Eigen::Matrix3d rotMat = Eigen::Matrix3d::Identity();
+        if (internalBasis())
+        {
+            rotMat = internalBasisVectors();
+        }
 
         for (int i = 0; i < int(size()); i++)
-            d->m_intPos.push_back(rotMat.transpose() * (atom(i)->position() - internalOriginPosition()));
+        {
+            d->m_intPos.push_back(rotMat.transpose() * (atom(i)->position() - origin));
+        }
     }
 
     unsigned long Molecule::molId() const
