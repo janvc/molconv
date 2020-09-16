@@ -167,7 +167,7 @@ namespace molconv
     ///
     Eigen::Vector3d Molecule::internalOriginPosition() const
     {
-        return d->m_origin->position();
+        return d->m_origin ? d->m_origin->position() : Eigen::Vector3d::Zero();
     }
 
     ///
@@ -179,7 +179,7 @@ namespace molconv
     ///
     Eigen::Matrix3d Molecule::internalBasisVectors() const
     {
-        return d->m_basis->axes();
+        return d->m_basis ? d->m_basis->axes() : Eigen::Matrix3d::Identity();
     }
 
     ///
@@ -191,7 +191,7 @@ namespace molconv
     ///
     std::array<int,2> Molecule::internalOriginAtoms() const
     {
-        return d->m_origin->atoms();
+        return d->m_origin ? d->m_origin->atoms() : std::array<int,2>();
     }
 
     ///
@@ -203,7 +203,7 @@ namespace molconv
     ///
     std::array<int,3> Molecule::internalBasisAtoms() const
     {
-        return d->m_basis->atoms();
+        return d->m_basis ? d->m_basis->atoms() : std::array<int,3>();
     }
 
     ///
@@ -215,7 +215,7 @@ namespace molconv
     ///
     std::vector<bool> Molecule::originList() const
     {
-        return d->m_origin->originList();
+        return d->m_origin ? d->m_origin->originList() : std::vector<bool>();
     }
 
     ///
@@ -227,7 +227,7 @@ namespace molconv
     ///
     std::vector<bool> Molecule::basisList() const
     {
-        return d->m_basis->basisList();
+        return d->m_basis ? d->m_basis->basisList() : std::vector<bool>();
     }
 
     ///
@@ -241,7 +241,7 @@ namespace molconv
     ///
     double Molecule::internalOriginFactor() const
     {
-        return d->m_origin->factor();
+        return d->m_origin ? d->m_origin->factor() : 0.0;
     }
 
     ///
@@ -252,7 +252,7 @@ namespace molconv
     ///
     double Molecule::phi() const
     {
-        return d->m_basis->phi();
+        return d->m_basis ? d->m_basis->phi() : 0.0;
     }
 
     ///
@@ -263,7 +263,7 @@ namespace molconv
     ///
     double Molecule::theta() const
     {
-        return d->m_basis->theta();
+        return d->m_basis ? d->m_basis->theta() : 0.0;
     }
 
     ///
@@ -274,7 +274,7 @@ namespace molconv
     ///
     double Molecule::psi() const
     {
-        return d->m_basis->psi();
+        return d->m_basis ? d->m_basis->psi() : 0.0;
     }
 
     ///
