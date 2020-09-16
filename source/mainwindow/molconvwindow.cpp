@@ -499,8 +499,8 @@ void MolconvWindow::importFile(const QString &fileName, const bool showList)
                 molconv::moleculePtr tempMol;
                 tempMol.reset(new molconv::Molecule(tempCMol));
                 std::vector<bool> boolVec(tempMol->size(), true);
-                tempMol->setOrigin(d->m_ImportDialog->getOrigin(), boolVec, d->m_ImportDialog->getOriginAtom());
-                tempMol->setBasis(d->m_ImportDialog->getBasis(), boolVec,
+                tempMol->setOrigin(d->m_ImportDialog->getOriginCode(), boolVec, d->m_ImportDialog->getOriginAtom());
+                tempMol->setBasis(d->m_ImportDialog->getBasisCode(), boolVec,
                                   d->m_ImportDialog->getBasisAtoms()[0],
                                   d->m_ImportDialog->getBasisAtoms()[1],
                                   d->m_ImportDialog->getBasisAtoms()[2]);

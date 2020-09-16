@@ -136,7 +136,7 @@ void ImportDialog::on_coa_toggled(bool checked)
         ui->an->setEnabled(false);
 }
 
-molconv::OriginCode ImportDialog::getOrigin() const
+molconv::OriginCode ImportDialog::getOriginCode() const
 {
     return d->m_originCode;
 }
@@ -146,7 +146,7 @@ int ImportDialog::getOriginAtom() const
     return d->m_originAtom;
 }
 
-molconv::BasisCode ImportDialog::getBasis() const
+molconv::BasisCode ImportDialog::getBasisCode() const
 {
     return d->m_basisCode;
 }
