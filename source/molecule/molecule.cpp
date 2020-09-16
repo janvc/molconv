@@ -47,6 +47,8 @@ namespace molconv
     public:
         MoleculePrivate()
         {
+            m_originalOriginBasis.fill(0);
+
             // generate the molecule's id:
             int s1 = std::rand();
             int s2 = std::rand();
@@ -55,8 +57,7 @@ namespace molconv
 
         MoleculeOrigin *m_origin;
         MoleculeBasis *m_basis;
-        MoleculeOrigin *m_originalOrigin;
-        MoleculeBasis *m_originalBasis;
+        std::array<double, 6> m_originalOriginBasis;
 
         groupPtr m_group;
         std::vector<Eigen::Vector3d> m_intPos;
@@ -284,8 +285,7 @@ namespace molconv
     ///
     std::array<double,6> Molecule::origBasis() const
     {
-//        return d->m_originalBasis;
-        return std::array<double,6>();
+        return d->m_originalOriginBasis;
     }
 
     ///
@@ -743,6 +743,13 @@ namespace molconv
         {
             rotMat = internalBasisVectors();
         }
+
+        d->m_originalOriginBasis[0] = origin(0);
+        d->m_originalOriginBasis[1] = origin(1);
+        d->m_originalOriginBasis[2] = origin(2);
+        d->m_originalOriginBasis[3] = phi();
+        d->m_originalOriginBasis[4] = theta();
+        d->m_originalOriginBasis[5] = psi();
 
         for (int i = 0; i < int(size()); i++)
         {
