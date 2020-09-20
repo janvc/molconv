@@ -47,7 +47,7 @@ MoleculeSettings::~MoleculeSettings()
 
 void MoleculeSettings::setValuesFromMolecule()
 {
-    Eigen::Vector3d origin = m_mainWindow->getMol(m_molID)->internalOriginPosition();
+    Eigen::Vector3d origin = m_mainWindow->getMol(m_molID)->originPosition();
 
     x = origin(0);
     y = origin(1);

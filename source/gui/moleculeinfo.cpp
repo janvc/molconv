@@ -101,20 +101,20 @@ void MoleculeInfo::update()
     ui->basisProp->clear();
     QString basis;
     basis.append(QString("Origin:\n"));
-    basis.append(QString("%1\n").arg(tmpMol->internalOriginPosition()(0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(tmpMol->internalOriginPosition()(1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(tmpMol->internalOriginPosition()(2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->originPosition()(0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->originPosition()(1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->originPosition()(2), m_aP_prec + 4, 'f', m_aP_prec));
 
     basis.append(QString("Basis:\n"));
-    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(0,0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(0,1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(tmpMol->internalBasisVectors()(0,2), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(1,0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(1,1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(tmpMol->internalBasisVectors()(1,2), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(2,0), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1").arg(tmpMol->internalBasisVectors()(2,1), m_aP_prec + 4, 'f', m_aP_prec));
-    basis.append(QString("%1\n").arg(tmpMol->internalBasisVectors()(2,2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->basisVectors()(0,0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->basisVectors()(0,1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->basisVectors()(0,2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->basisVectors()(1,0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->basisVectors()(1,1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->basisVectors()(1,2), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->basisVectors()(2,0), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1").arg(tmpMol->basisVectors()(2,1), m_aP_prec + 4, 'f', m_aP_prec));
+    basis.append(QString("%1\n").arg(tmpMol->basisVectors()(2,2), m_aP_prec + 4, 'f', m_aP_prec));
 
     basis.append(QString("center of geometry:\n"));
     basis.append(QString("%1\n").arg(tmpMol->center()(0), m_aP_prec + 4, 'f', m_aP_prec));

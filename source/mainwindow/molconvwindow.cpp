@@ -187,7 +187,7 @@ void MolconvWindow::add_molecule(molconv::moleculePtr temp_mol)
     d->m_GraphicsItemMap.insert(std::make_pair(d->m_activeMolID, item));
     ui->molconv_graphicsview->addItem(item);
 
-    GraphicsAxisItem *axis = new GraphicsAxisItem(temp_mol->internalOriginPosition(), temp_mol->internalBasisVectors());
+    GraphicsAxisItem *axis = new GraphicsAxisItem(temp_mol->originPosition(), temp_mol->basisVectors());
     d->m_GraphicsAxisMap.insert(std::make_pair(d->m_activeMolID, axis));
     ui->molconv_graphicsview->addItem(axis);
 
@@ -723,11 +723,11 @@ void MolconvWindow::changeOriginBasis()
 
     // determine if the new basis is different from the old one:
     if (
-            newOriginCode != tmpMolPtr->internalOrigin()->code()
-         || newBasisCode != tmpMolPtr->internalBasis()->code()
-         || newAtomLineScale != tmpMolPtr->internalOriginFactor()
-         || ! std::equal(newOriginAtoms.begin(), newOriginAtoms.end(), tmpMolPtr->internalOriginAtoms().begin())
-         || ! std::equal(newBasisAtoms.begin(), newBasisAtoms.end(), tmpMolPtr->internalBasisAtoms().begin())
+            newOriginCode != tmpMolPtr->origin()->code()
+         || newBasisCode != tmpMolPtr->basis()->code()
+         || newAtomLineScale != tmpMolPtr->originFactor()
+         || ! std::equal(newOriginAtoms.begin(), newOriginAtoms.end(), tmpMolPtr->originAtoms().begin())
+         || ! std::equal(newBasisAtoms.begin(), newBasisAtoms.end(), tmpMolPtr->basisAtoms().begin())
          || ! std::equal(newOriginList.begin(), newOriginList.end(), tmpMolPtr->originList().begin())
          || ! std::equal(newBasisList.begin(), newBasisList.end(), tmpMolPtr->basisList().begin())
             )
@@ -746,8 +746,8 @@ void MolconvWindow::updateAxes()
 {
     molconv::moleculePtr tmpMolPtr = getMol(d->m_activeMolID);
 
-    d->m_GraphicsAxisMap.at(d->m_activeMolID)->setPosition(tmpMolPtr->internalOriginPosition());
-    d->m_GraphicsAxisMap.at(d->m_activeMolID)->setVectors(tmpMolPtr->internalBasisVectors());
+    d->m_GraphicsAxisMap.at(d->m_activeMolID)->setPosition(tmpMolPtr->originPosition());
+    d->m_GraphicsAxisMap.at(d->m_activeMolID)->setVectors(tmpMolPtr->basisVectors());
 
     ui->molconv_graphicsview->update();
 }
@@ -784,7 +784,7 @@ void MolconvWindow::moveActiveMoleculeTo(const double x, const double y, const d
 
 void MolconvWindow::resetCoords()
 {
-    std::array<double,6> oB = getMol(d->m_activeMolID)->origBasis();
+    std::array<double,6> oB = getMol(d->m_activeMolID)->originalBasis();
     moveActiveMoleculeTo(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 

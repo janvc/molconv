@@ -151,7 +151,7 @@ namespace molconv
         checkIndex(firstMolecule);
         checkIndex(secondMolecule);
 
-        return getMol(secondMolecule)->internalOriginPosition() - getMol(firstMolecule)->internalOriginPosition();
+        return getMol(secondMolecule)->originPosition() - getMol(firstMolecule)->originPosition();
     }
 
     ///

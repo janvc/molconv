@@ -257,7 +257,7 @@ namespace molconv
 
         Eigen::Vector3d center = refMolPtr->center();
         Eigen::Vector3d shift = center - otherMolPtr->center();
-        Eigen::Vector3d newOrigin = otherMolPtr->internalOriginPosition() + shift;
+        Eigen::Vector3d newOrigin = otherMolPtr->originPosition() + shift;
 
         otherMolPtr->moveFromParas(double(newOrigin(0)), double(newOrigin(1)), double(newOrigin(2)), 0.0, 0.0, 0.0);
 

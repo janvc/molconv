@@ -51,19 +51,19 @@ namespace molconv
         ~Molecule();
 
         // info about the molecular internal basis:
-        MoleculeOrigin *internalOrigin() const;
-        MoleculeBasis *internalBasis() const;
-        Eigen::Vector3d internalOriginPosition() const;
-        Eigen::Matrix3d internalBasisVectors() const;
-        std::array<int,2> internalOriginAtoms() const;
-        std::array<int,3> internalBasisAtoms() const;
+        MoleculeOrigin *origin() const;
+        MoleculeBasis *basis() const;
+        Eigen::Vector3d originPosition() const;
+        Eigen::Matrix3d basisVectors() const;
+        std::array<int,2> originAtoms() const;
+        std::array<int,3> basisAtoms() const;
         std::vector<bool> originList() const;
         std::vector<bool> basisList() const;
-        double internalOriginFactor() const;
+        double originFactor() const;
         double phi() const;
         double theta() const;
         double psi() const;
-        std::array<double,6> origBasis() const;
+        std::array<double,6> originalBasis() const;
         std::vector<Eigen::Vector3d> internalPositions() const;
 
         Eigen::Vector3d centerOfCharge() const;
@@ -95,17 +95,6 @@ namespace molconv
         unsigned long molId() const;
 
     private:
-        // private functions:
-        Eigen::Matrix3d calcInertiaTensor() const;
-        Eigen::Matrix3d calcChargeTensor() const;
-        Eigen::Matrix3d calcCovarianceMatrix() const;
-        Eigen::Vector3d calcInertiaEigenvalues() const;
-        Eigen::Matrix3d calcInertiaEigenvectors() const;
-        Eigen::Vector3d calcChargeEigenvalues() const;
-        Eigen::Matrix3d calcChargeEigenvectors() const;
-        Eigen::Vector3d calcCovarianceEigenvalues() const;
-        Eigen::Matrix3d calcCovarianceEigenvectors() const;
-
         void initIntPos();
 
         boost::scoped_ptr<MoleculePrivate> d;

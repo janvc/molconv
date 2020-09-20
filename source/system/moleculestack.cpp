@@ -95,7 +95,7 @@ namespace molconv
         if (nMolecules() > 1)
         {
             double distance = Distance(RefMol(), nMolecules() - 1);
-            Eigen::Vector3d newPos = getMol(RefMol())->internalOriginPosition()
+            Eigen::Vector3d newPos = getMol(RefMol())->originPosition()
                                    + getParallelVectorDirection(RefMol()) * distance;
             getMol(nMolecules() - 1)->moveFromParas(newPos(0), newPos(1), newPos(2),
                                                     getMol(RefMol())->phi(), getMol(RefMol())->theta(), getMol(RefMol())->psi());
@@ -154,13 +154,13 @@ namespace molconv
         switch (getParallelVector(index))
         {
         case xVec:
-            vector = getMol(index)->internalBasisVectors().col(0);
+            vector = getMol(index)->basisVectors().col(0);
             break;
         case yVec:
-            vector = getMol(index)->internalBasisVectors().col(1);
+            vector = getMol(index)->basisVectors().col(1);
             break;
         case zVec:
-            vector = getMol(index)->internalBasisVectors().col(2);
+            vector = getMol(index)->basisVectors().col(2);
             break;
         case Atoms:
             Eigen::Vector3d firstAtom = getMol(index)->atom(d->parallelAtoms[index][0])->position();
@@ -209,7 +209,7 @@ namespace molconv
 
         Eigen::Vector3d distance = DistanceVector(RefMol(), index);
 
-        Eigen::Vector3d zBasis = getMol(RefMol())->internalBasisVectors().col(2);
+        Eigen::Vector3d zBasis = getMol(RefMol())->basisVectors().col(2);
 
         return distance.dot(zBasis);
     }
@@ -223,8 +223,8 @@ namespace molconv
     ///
     double MoleculeStack::RotationAngle(const size_t index) const
     {
-        Eigen::Vector3d xBasis = getMol(RefMol())->internalBasisVectors().col(0);
-        Eigen::Vector3d indexVector = getMol(index)->internalBasisVectors().col(0);
+        Eigen::Vector3d xBasis = getMol(RefMol())->basisVectors().col(0);
+        Eigen::Vector3d indexVector = getMol(index)->basisVectors().col(0);
 
         xBasis.normalize();
         indexVector.normalize();
@@ -246,7 +246,7 @@ namespace molconv
     {
         Eigen::Vector3d distance = DistanceVector(RefMol(), index);
 
-        Eigen::Vector3d xBasis = getMol(RefMol())->internalBasisVectors().col(0);
+        Eigen::Vector3d xBasis = getMol(RefMol())->basisVectors().col(0);
 
         return distance.dot(xBasis);
     }
@@ -263,7 +263,7 @@ namespace molconv
     {
         Eigen::Vector3d distance = DistanceVector(RefMol(), index);
 
-        Eigen::Vector3d yBasis = getMol(RefMol())->internalBasisVectors().col(1);
+        Eigen::Vector3d yBasis = getMol(RefMol())->basisVectors().col(1);
 
         return distance.dot(yBasis);
     }
@@ -280,7 +280,7 @@ namespace molconv
     {
         double currentDistance = PlaneDistance(index);
 
-        Eigen::Vector3d shiftVector = getMol(RefMol())->internalBasisVectors().col(2)
+        Eigen::Vector3d shiftVector = getMol(RefMol())->basisVectors().col(2)
                                     * (newDistance - currentDistance);
 
     }
@@ -297,7 +297,7 @@ namespace molconv
     {
         double shiftAngle = newAngle - RotationAngle(index);
 
-        Eigen::Vector3d rotationAxis = getMol(index)->internalBasisVectors().col(2);
+        Eigen::Vector3d rotationAxis = getMol(index)->basisVectors().col(2);
 
     }
 
@@ -313,7 +313,7 @@ namespace molconv
     {
         double shiftX = newX - LateralX(index);
 
-        Eigen::Vector3d shiftVector = getMol(RefMol())->internalBasisVectors().col(0) * shiftX;
+        Eigen::Vector3d shiftVector = getMol(RefMol())->basisVectors().col(0) * shiftX;
 
     }
 
@@ -329,7 +329,7 @@ namespace molconv
     {
         double shiftY = newY - LateralY(index);
 
-        Eigen::Vector3d shiftVector = getMol(RefMol())->internalBasisVectors().col(1) * shiftY;
+        Eigen::Vector3d shiftVector = getMol(RefMol())->basisVectors().col(1) * shiftY;
 
     }
 

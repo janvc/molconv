@@ -170,12 +170,12 @@ bool MolconvFile::write(const QString &fileName)
         molecule.setAttribute("Name", QString::fromStdString(system.getMolecule(id)->name()));
 
         QDomElement origin = document.createElement("Origin");
-        origin.setAttribute("Type", QString::number(system.getMolecule(id)->internalOrigin()->code()));
-        origin.setAttribute("Factor", QString::number(system.getMolecule(id)->internalOriginFactor()));
+        origin.setAttribute("Type", QString::number(system.getMolecule(id)->origin()->code()));
+        origin.setAttribute("Factor", QString::number(system.getMolecule(id)->originFactor()));
 
-        QString atomString = QString::number(system.getMolecule(id)->internalOriginAtoms()[0]);
+        QString atomString = QString::number(system.getMolecule(id)->originAtoms()[0]);
         atomString += ",";
-        atomString += QString::number(system.getMolecule(id)->internalOriginAtoms()[1]);
+        atomString += QString::number(system.getMolecule(id)->originAtoms()[1]);
         origin.setAttribute("Atoms", atomString);
 
         QString originList;
@@ -190,19 +190,19 @@ bool MolconvFile::write(const QString &fileName)
             originList += "F";
         origin.setAttribute("originList", originList);
 
-        origin.setAttribute("vecX", QString::number(system.getMolecule(id)->internalOriginPosition()(0), 'e', 16));
-        origin.setAttribute("vecY", QString::number(system.getMolecule(id)->internalOriginPosition()(1), 'e', 16));
-        origin.setAttribute("vecZ", QString::number(system.getMolecule(id)->internalOriginPosition()(2), 'e', 16));
+        origin.setAttribute("vecX", QString::number(system.getMolecule(id)->originPosition()(0), 'e', 16));
+        origin.setAttribute("vecY", QString::number(system.getMolecule(id)->originPosition()(1), 'e', 16));
+        origin.setAttribute("vecZ", QString::number(system.getMolecule(id)->originPosition()(2), 'e', 16));
         molecule.appendChild(origin);
 
         QDomElement basis = document.createElement("Basis");
-        basis.setAttribute("Type", QString::number(system.getMolecule(id)->internalBasis()->code()));
+        basis.setAttribute("Type", QString::number(system.getMolecule(id)->basis()->code()));
 
-        atomString = QString::number(system.getMolecule(id)->internalBasisAtoms()[0]);
+        atomString = QString::number(system.getMolecule(id)->basisAtoms()[0]);
         atomString += ",";
-        atomString += QString::number(system.getMolecule(id)->internalBasisAtoms()[1]);
+        atomString += QString::number(system.getMolecule(id)->basisAtoms()[1]);
         atomString += ",";
-        atomString += QString::number(system.getMolecule(id)->internalBasisAtoms()[2]);
+        atomString += QString::number(system.getMolecule(id)->basisAtoms()[2]);
         basis.setAttribute("Atoms", atomString);
 
         QString basisList;

@@ -82,8 +82,8 @@ void SetBasisDialog::prepare(unsigned long molID)
         ui->basisAtomList->addItem(basisItem);
     }
 
-    m_originCode = molecule->internalOrigin()->code();
-    m_basisCode = molecule->internalBasis()->code();
+    m_originCode = molecule->origin()->code();
+    m_basisCode = molecule->basis()->code();
 
     // standard orientation is not available at the moment
     ui->basisStandard->setEnabled(false);
@@ -112,7 +112,7 @@ void SetBasisDialog::prepare(unsigned long molID)
         break;
     case molconv::kCenterOnAtom:
         ui->originAtomPos->setChecked(true);
-        m_originAtoms = molecule->internalOriginAtoms();
+        m_originAtoms = molecule->originAtoms();
         ui->originAtom->setValue(m_originAtoms[0] + 1);
         on_originCOC_toggled(false);
         on_originAtomLine_toggled(false);
@@ -121,7 +121,7 @@ void SetBasisDialog::prepare(unsigned long molID)
         ui->originAtomLine->setChecked(true);
         on_originAtomPos_toggled(false);
         on_originCOC_toggled(false);
-        m_originAtoms = molecule->internalOriginAtoms();
+        m_originAtoms = molecule->originAtoms();
         ui->originALineStart->setValue(m_originAtoms[0] + 1);
         ui->originALineEnd->setValue(m_originAtoms[1] + 1);
         break;
@@ -149,7 +149,7 @@ void SetBasisDialog::prepare(unsigned long molID)
     case molconv::kVectorsFromAtoms:
         on_basisCharge_toggled(false);
         ui->basisAtoms->setChecked(true);
-        m_basisAtoms = molecule->internalBasisAtoms();
+        m_basisAtoms = molecule->basisAtoms();
         ui->basisAtom1->setValue(m_basisAtoms[0] + 1);
         ui->basisAtom2->setValue(m_basisAtoms[1] + 1);
         ui->basisAtom3->setValue(m_basisAtoms[2] + 1);
