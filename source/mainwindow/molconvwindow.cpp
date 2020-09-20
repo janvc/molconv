@@ -379,7 +379,7 @@ void MolconvWindow::closeEvent(QCloseEvent *event)
 {
     if (maybeSave())
     {
-        QSettings settings;
+        QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
         settings.setValue("startMaximized", QVariant(isMaximized()));
         settings.setValue("winW", width());
         settings.setValue("winH", height());
@@ -408,7 +408,7 @@ void MolconvWindow::saveFile()
 }
 void MolconvWindow::saveFileAs()
 {
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startSavePath = settings.value("savePath").toString();
 
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), startSavePath, tr("Molconv files (*.mcv)"));
@@ -431,7 +431,7 @@ void MolconvWindow::importFile()
 
 void MolconvWindow::openFile()
 {
-    QSettings settings;
+    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
     QString startOpenPath = settings.value("openPath").toString();
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), startOpenPath, tr("Molconv files (*.mcv)"));
@@ -782,15 +782,25 @@ void MolconvWindow::displayHydrogens(bool checked)
     }
 }
 
+void MolconvWindow::moveActiveMoleculeTo(const double x, const double y, const double z,
+                                         const double phi, const double theta, const double psi)
+{
+    getMol(d->m_activeMolID)->moveFromParas(x, y, z, phi, theta, psi);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
+    updateAxes();
+    d->m_MoleculeInfo->updateLive();
+    wasModified();
+}
+
 void MolconvWindow::resetCoords()
 {
     std::array<double,6> oB = d->m_system->getMolecule(d->m_activeMolID)->origBasis();
-    d->m_MoleculeSettings->moveMolecule(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
+    moveActiveMoleculeTo(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
 }
 
 void MolconvWindow::zeroCoords()
 {
-    d->m_MoleculeSettings->moveMolecule(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    moveActiveMoleculeTo(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 
 void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)

@@ -65,6 +65,8 @@ public:
     void selectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
     void deselectAtom(chemkit::Atom *theAtom, bool wholeMolecule);
     std::vector<chemkit::Atom *> selection() const;
+    void moveActiveMoleculeTo(const double x, const double y, const double z,
+                              const double phi, const double theta, const double psi);
 
 protected:
     void closeEvent(QCloseEvent *event);
