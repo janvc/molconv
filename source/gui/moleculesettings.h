@@ -53,7 +53,8 @@ public slots:
 
 signals:
     void guiValueChanged() const;
-    void basisChanged() const;
+    void basisChanged(double x, double y, double z,
+                      double phi, double theta, double psi) const;
     void editingFinished() const;
 
 private slots:

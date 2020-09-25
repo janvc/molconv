@@ -107,8 +107,7 @@ void MoleculeSettings::updateGuiValues()
 
     if (!settingMolecule)
     {
-        m_mainWindow->getMol(m_molID)->moveFromParas(x, y, z, phi, theta, psi);
-        emit basisChanged();
+        emit basisChanged(x, y, z, phi, theta, psi);
     }
 }
 

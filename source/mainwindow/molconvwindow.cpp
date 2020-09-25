@@ -144,10 +144,8 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     connect(d->m_ListOfMolecules, SIGNAL(newMoleculeSelected(unsigned long)), d->m_MoleculeInfo, SLOT(setMolecule(unsigned long)));
     connect(d->m_ListOfMolecules, SIGNAL(newGroupSelected(molconv::MoleculeGroup*)), d->m_MoleculeSettings, SLOT(setGroup(molconv::MoleculeGroup*)));
 
-    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateAxes()));
-    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(updateSelection()));
-    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), d->m_MoleculeInfo, SLOT(updateLive()));
-    connect(d->m_MoleculeSettings, SIGNAL(basisChanged()), SLOT(wasModified()));
+    connect(d->m_MoleculeSettings, SIGNAL(basisChanged(double ,double ,double ,double ,double ,double)),
+            SLOT(moveActiveMoleculeTo(double ,double ,double ,double ,double ,double)));
     connect(d->m_MoleculeSettings, SIGNAL(editingFinished()), d->m_MoleculeInfo, SLOT(updateMan()));
 
     GraphicsAxisItem *axes = new GraphicsAxisItem;
@@ -776,8 +774,8 @@ void MolconvWindow::moveActiveMoleculeTo(const double x, const double y, const d
                                          const double phi, const double theta, const double psi)
 {
     getMol(d->m_activeMolID)->moveFromParas(x, y, z, phi, theta, psi);
-    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
     updateAxes();
+    updateSelection();
     d->m_MoleculeInfo->updateLive();
     wasModified();
 }
@@ -786,11 +784,15 @@ void MolconvWindow::resetCoords()
 {
     std::array<double,6> oB = getMol(d->m_activeMolID)->originalBasis();
     moveActiveMoleculeTo(oB[0], oB[1], oB[2], oB[3], oB[4], oB[5]);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
+    d->m_MoleculeInfo->updateMan();
 }
 
 void MolconvWindow::zeroCoords()
 {
     moveActiveMoleculeTo(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    d->m_MoleculeSettings->setMolecule(d->m_activeMolID);
+    d->m_MoleculeInfo->updateMan();
 }
 
 void MolconvWindow::alignMolecules(std::vector<unsigned long> &molecules)
