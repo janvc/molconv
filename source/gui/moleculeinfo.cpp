@@ -31,7 +31,7 @@ MoleculeInfo::MoleculeInfo(MolconvWindow *window) :
     ui->setupUi(this);
     setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 
-    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
+    QSettings settings;
 
     m_updateLive = settings.value("updateInfoLive").toBool();
     ui->doLiveUpdate->setChecked(m_updateLive);
@@ -57,7 +57,7 @@ void MoleculeInfo::setMolecule(const unsigned long newMol)
 
 void MoleculeInfo::on_nDigits_valueChanged(int nDigits)
 {
-    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setValue("infoDigits", nDigits);
     m_aP_prec = nDigits;
     if (m_molID)
@@ -155,6 +155,6 @@ void MoleculeInfo::on_doLiveUpdate_toggled(bool isChecked)
 {
     m_updateLive = isChecked;
 
-    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
+    QSettings settings;
     settings.setValue("updateInfoLive", isChecked);
 }

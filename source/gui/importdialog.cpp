@@ -111,7 +111,7 @@ void ImportDialog::on_filedialog_clicked()
             << "XYZ (*.xyz)"
             << "All Files (*.*)";
 
-    QSettings settings(QApplication::applicationDirPath() + "/molconv-settings.ini", QSettings::IniFormat);
+    QSettings settings;
     QString startImportPath = settings.value("importPath").toString();
     d->m_fileName = QFileDialog::getOpenFileName(this, tr("Open File"), startImportPath, filters.join(";;"));
 
