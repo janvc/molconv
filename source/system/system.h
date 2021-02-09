@@ -43,17 +43,17 @@ namespace molconv
         void init();
         ~System();
         size_t nMolecules() const;
-        size_t nGroups() const;
+//        size_t nGroups() const;
         moleculePtr getMolecule(const unsigned long index) const;
-        groupPtr getGroup(const size_t index) const;
+//        groupPtr getGroup(const size_t index) const;
         size_t MoleculeIndex(const moleculePtr theMolecule);
-        size_t GroupIndex(const groupPtr &theGroup) const;
+//        size_t GroupIndex(const groupPtr &theGroup) const;
         std::vector<unsigned long> getMolIDs() const;
 
         void addMolecule(const moleculePtr newMolecule);
         void removeMolecule(const unsigned long key);
-        void addGroup(const groupPtr &newGroup);
-        void removeGroup(const size_t index);
+//        void addGroup(const groupPtr &newGroup);
+//        void removeGroup(const size_t index);
         double calculateRMSDbetween(const unsigned long refMol, const unsigned long otherMol) const;
         bool alignMolecules(const unsigned long refMol, const unsigned long otherMol) const;
 
@@ -62,7 +62,7 @@ namespace molconv
         System(const System&);
         System& operator=(const System&);
         std::map<unsigned long, moleculePtr> m_molecules;
-        std::vector<groupPtr> m_groups;
+//        std::vector<groupPtr> m_groups;
     };
 
 } // namespace molconv

@@ -22,8 +22,8 @@ message("testtest " ${MOLCONV_INCLUDE_DIRS})
 
 set(system_SOURCES
     system.cpp
-    moleculegroup.cpp
-    moleculestack.cpp
+#    moleculegroup.cpp
+#    moleculestack.cpp
 )
 
 add_library(molconv-system SHARED ${system_SOURCES})

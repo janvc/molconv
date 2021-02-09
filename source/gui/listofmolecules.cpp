@@ -189,8 +189,8 @@ void ListOfMolecules::insertMolecule(molconv::moleculePtr &newMol)
     updateActiveItem(newMol->molId());
 }
 
-void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
-{
+//void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
+//{
 //    QList<QStandardItem *> items;
 //    for (int i = 0; i < 5; i++)
 //    {
@@ -217,7 +217,7 @@ void ListOfMolecules::insertGroup(molconv::MoleculeGroup *newGroup)
 
 //    for (int column = 0; column < d->m_model->columnCount(); column++)
 //        ui->system_tree->resizeColumnToContents(column);
-}
+//}
 
 void ListOfMolecules::removeCurrentMolecule()
 {
@@ -277,9 +277,9 @@ void ListOfMolecules::changeSelectedItem(const QModelIndex &current)
         }
         else if (d->m_model->itemFromIndex(current)->type() == QStandardItem::UserType + 2)    // group
         {
-            GroupItem *currentItem = static_cast<GroupItem *>(d->m_model->itemFromIndex(current));
-            molconv::MoleculeGroup *tmp = currentItem->Group();
-            emit newGroupSelected(tmp);
+//            GroupItem *currentItem = static_cast<GroupItem *>(d->m_model->itemFromIndex(current));
+//            molconv::MoleculeGroup *tmp = currentItem->Group();
+//            emit newGroupSelected(tmp);
         }
     }
 }

@@ -83,10 +83,10 @@ public slots:
     void toggle_molecule(const unsigned long molID, bool state);
     void about();
     void DuplicateMolecule(const unsigned long oldMolID);
-    void newGroup();
-    void startNewGroupDialog();
+//    void newGroup();
+//    void startNewGroupDialog();
     void startBasisDialog();
-    void addMoleculeToGroup();
+//    void addMoleculeToGroup();
     void ResetView();
     void removeSelectedMolecules();
     void removeActiveMolecule();

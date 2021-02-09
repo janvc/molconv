@@ -42,7 +42,7 @@ public:
     ~ListOfMolecules();
 
     void insertMolecule(molconv::moleculePtr &newMol);
-    void insertGroup(molconv::MoleculeGroup *newGroup);
+//    void insertGroup(molconv::MoleculeGroup *newGroup);
     void removeCurrentMolecule();
     std::vector<unsigned long> selectedMoleculeIDs();
     unsigned long currentmolID();
@@ -54,7 +54,7 @@ public slots:
 
 signals:
     void newMoleculeSelected(unsigned long newMolID);
-    void newGroupSelected(molconv::MoleculeGroup *newGroup);
+//    void newGroupSelected(molconv::MoleculeGroup *newGroup);
 
 private slots:
     void toggleMolecule(const QModelIndex &index);

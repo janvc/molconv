@@ -21,8 +21,8 @@ include_directories(${MOLCONV_INCLUDE_DIRS})
 
 set(gui_SOURCES
     moleculeitem.cpp
-    groupitem.cpp
-    newgroupdialog.cpp
+#    groupitem.cpp
+#    newgroupdialog.cpp
     listofmolecules.cpp
     moleculesettings.cpp
     importdialog.cpp
@@ -40,7 +40,7 @@ set(gui_SOURCES
 set(MOC_HEADERS
     listofmolecules.h
     moleculesettings.h
-    newgroupdialog.h
+#    newgroupdialog.h
     importdialog.h
     exportdialog.h
     multimoldialog.h
@@ -52,7 +52,7 @@ set(MOC_HEADERS
 set(UI_FORMS
     listofmolecules.ui
     moleculesettings.ui
-    newgroupdialog.ui
+#    newgroupdialog.ui
     importdialog.ui
     exportdialog.ui
     multimoldialog.ui

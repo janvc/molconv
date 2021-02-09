@@ -49,7 +49,7 @@ public:
 
 public slots:
     void setMolecule(const unsigned long newMolID);
-    void setGroup(molconv::MoleculeGroup *newGroup);
+//    void setGroup(molconv::MoleculeGroup *newGroup);
 
 signals:
     void guiValueChanged() const;

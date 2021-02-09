@@ -57,10 +57,10 @@ namespace molconv
     ///
     /// returns the number of groups in the system
     ///
-    size_t System::nGroups() const
-    {
-        return m_groups.size();
-    }
+//    size_t System::nGroups() const
+//    {
+//        return m_groups.size();
+//    }
 
     ///
     /// \brief System::Molecule
@@ -81,13 +81,13 @@ namespace molconv
     ///
     /// returns a shared pointer to the group at \p index
     ///
-    groupPtr System::getGroup(const size_t index) const
-    {
-        if (index >= nGroups())
-            throw std::invalid_argument("index out of range.\n");
+//    groupPtr System::getGroup(const size_t index) const
+//    {
+//        if (index >= nGroups())
+//            throw std::invalid_argument("index out of range.\n");
 
-        return m_groups.at(index);
-    }
+//        return m_groups.at(index);
+//    }
 
     ///
     /// \brief System::MoleculeIndex
@@ -116,18 +116,18 @@ namespace molconv
     ///
     /// returns the position of the group in the vector
     ///
-    size_t System::GroupIndex(const groupPtr &theGroup) const
-    {
-        size_t index = 0;
+//    size_t System::GroupIndex(const groupPtr &theGroup) const
+//    {
+//        size_t index = 0;
 
-        for (size_t i = 0; i < nGroups(); i++)
-        {
-            if (getGroup(i) == theGroup)
-                index = i;
-        }
+//        for (size_t i = 0; i < nGroups(); i++)
+//        {
+//            if (getGroup(i) == theGroup)
+//                index = i;
+//        }
 
-        return index;
-    }
+//        return index;
+//    }
 
     ///
     /// \brief System::addMolecule
@@ -157,10 +157,10 @@ namespace molconv
     ///
     /// adds a new group to the system
     ///
-    void System::addGroup(const groupPtr &newGroup)
-    {
-        m_groups.push_back(newGroup);
-    }
+//    void System::addGroup(const groupPtr &newGroup)
+//    {
+//        m_groups.push_back(newGroup);
+//    }
 
     ///
     /// \brief System::removeGroup
@@ -168,13 +168,13 @@ namespace molconv
     ///
     /// removes the group at index \p index
     ///
-    void System::removeGroup(const size_t index)
-    {
-        if (index >= nGroups())
-            throw std::invalid_argument("index out of range.\n");
+//    void System::removeGroup(const size_t index)
+//    {
+//        if (index >= nGroups())
+//            throw std::invalid_argument("index out of range.\n");
 
-        m_groups.erase(m_groups.begin() + index);
-    }
+//        m_groups.erase(m_groups.begin() + index);
+//    }
 
     std::vector<unsigned long> System::getMolIDs() const
     {

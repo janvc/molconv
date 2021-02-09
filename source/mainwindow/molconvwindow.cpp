@@ -61,7 +61,7 @@ public:
     }
 
     ImportDialog *m_ImportDialog;
-    NewGroupDialog *m_NewGroupDialog;
+//    NewGroupDialog *m_NewGroupDialog;
     SetBasisDialog *m_setBasisDialog;
     MultiMolDialog *m_MultiMolDialog;
 
@@ -69,7 +69,7 @@ public:
     MoleculeSettings *m_MoleculeSettings;
     MoleculeInfo *m_MoleculeInfo;
 
-    std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
+//    std::vector<molconv::MoleculeGroup *> m_MoleculeGroups;
     std::map<unsigned long, chemkit::GraphicsMoleculeItem *> m_GraphicsItemMap;
     std::map<unsigned long, GraphicsAxisItem *> m_GraphicsAxisMap;
     std::vector<chemkit::Atom *> m_SelectedAtoms;
@@ -92,7 +92,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
     ui->setupUi(this);
 
     d->m_ImportDialog = new ImportDialog(this);
-    d->m_NewGroupDialog = new NewGroupDialog(this);
+//    d->m_NewGroupDialog = new NewGroupDialog(this);
     d->m_setBasisDialog = new SetBasisDialog(this);
     d->m_ListOfMolecules = new ListOfMolecules(this);
     d->m_MoleculeSettings = new MoleculeSettings(this);
@@ -135,7 +135,7 @@ MolconvWindow::MolconvWindow(QMainWindow *parent)
 
     connect(d->m_ImportDialog, SIGNAL(accepted()), SLOT(importFile()));
 
-    connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
+//    connect(d->m_NewGroupDialog, SIGNAL(accepted()), this, SLOT(newGroup()));
 
     connect(d->m_setBasisDialog, SIGNAL(ready()), SLOT(changeOriginBasis()));
 
@@ -394,7 +394,6 @@ void MolconvWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-
 void MolconvWindow::saveFile()
 {
     if (d->m_currentFile.isEmpty())
@@ -406,6 +405,7 @@ void MolconvWindow::saveFile()
         writeMolconvFile(d->m_currentFile);
     }
 }
+
 void MolconvWindow::saveFileAs()
 {
     QSettings settings;
@@ -612,68 +612,68 @@ void MolconvWindow::DuplicateMolecule(const unsigned long oldMolID)
     add_molecule(newMol);
 }
 
-void MolconvWindow::newGroup()
-{
-    molconv::System& system = molconv::System::get();
+//void MolconvWindow::newGroup()
+//{
+//    molconv::System& system = molconv::System::get();
 
-    std::string newGroupName = d->m_NewGroupDialog->groupName();
-    std::vector<bool> members = d->m_NewGroupDialog->molecules();
+//    std::string newGroupName = d->m_NewGroupDialog->groupName();
+//    std::vector<bool> members = d->m_NewGroupDialog->molecules();
 
-    // check if we have nested groups i.e. the molecules we are adding to this group are
-    // already members of THE SAME existing group. That group will then be the parent of
-    // this group.
-    std::vector<molconv::groupPtr> groups;
-    for (int i = 0; i < nMolecules(); i++)
-        if (members.at(i))
-            groups.push_back(getMol(i)->group());
+//    // check if we have nested groups i.e. the molecules we are adding to this group are
+//    // already members of THE SAME existing group. That group will then be the parent of
+//    // this group.
+//    std::vector<molconv::groupPtr> groups;
+//    for (int i = 0; i < nMolecules(); i++)
+//        if (members.at(i))
+//            groups.push_back(getMol(i)->group());
 
-    for (int i = 0; i < groups.size(); i++)
-        if (groups[i] != groups[0])
-        {
-            QMessageBox::critical(this, "Error", "All molecules must be part of the same group");
-            return;
-        }
+//    for (int i = 0; i < int(groups.size()); i++)
+//        if (groups[i] != groups[0])
+//        {
+//            QMessageBox::critical(this, "Error", "All molecules must be part of the same group");
+//            return;
+//        }
 
-    if (d->m_NewGroupDialog->isStack())
-    {
-        molconv::groupPtr newStack(new molconv::MoleculeStack(newGroupName));
+//    if (d->m_NewGroupDialog->isStack())
+//    {
+//        molconv::groupPtr newStack(new molconv::MoleculeStack(newGroupName));
 
-        for (int i = 0; i < nMolecules(); i++)
-            if (members.at(i))
-            {
-                static_cast<molconv::MoleculeStack*>(newStack.get())->addMolecule(getMol(i), molconv::zVec);
-                getMol(i)->addToGroup(newStack);
-            }
-        newStack->addToGroup(groups[0]);
-        system.addGroup(newStack);
-        d->m_ListOfMolecules->insertGroup(newStack.get());
-    }
-    else
-    {
-        molconv::groupPtr newGroup(new molconv::MoleculeGroup(newGroupName));
+//        for (int i = 0; i < nMolecules(); i++)
+//            if (members.at(i))
+//            {
+//                static_cast<molconv::MoleculeStack*>(newStack.get())->addMolecule(getMol(i), molconv::zVec);
+//                getMol(i)->addToGroup(newStack);
+//            }
+//        newStack->addToGroup(groups[0]);
+//        system.addGroup(newStack);
+//        d->m_ListOfMolecules->insertGroup(newStack.get());
+//    }
+//    else
+//    {
+//        molconv::groupPtr newGroup(new molconv::MoleculeGroup(newGroupName));
 
-        for (int i = 0; i < nMolecules(); i++)
-            if (members.at(i))
-            {
-                newGroup->addMolecule(getMol(i));
-                getMol(i)->addToGroup(newGroup);
-            }
-        newGroup->addToGroup(groups[0]);
-        system.addGroup(newGroup);
-        d->m_ListOfMolecules->insertGroup(newGroup.get());
-    }
-}
+//        for (int i = 0; i < nMolecules(); i++)
+//            if (members.at(i))
+//            {
+//                newGroup->addMolecule(getMol(i));
+//                getMol(i)->addToGroup(newGroup);
+//            }
+//        newGroup->addToGroup(groups[0]);
+//        system.addGroup(newGroup);
+//        d->m_ListOfMolecules->insertGroup(newGroup.get());
+//    }
+//}
 
-void MolconvWindow::startNewGroupDialog()
-{
-    d->m_NewGroupDialog->createMoleculeList();
-    d->m_NewGroupDialog->setModal(true);
-    d->m_NewGroupDialog->exec();
-}
+//void MolconvWindow::startNewGroupDialog()
+//{
+//    d->m_NewGroupDialog->createMoleculeList();
+//    d->m_NewGroupDialog->setModal(true);
+//    d->m_NewGroupDialog->exec();
+//}
 
-void MolconvWindow::addMoleculeToGroup()
-{
-}
+//void MolconvWindow::addMoleculeToGroup()
+//{
+//}
 
 void MolconvWindow::ResetView()
 {

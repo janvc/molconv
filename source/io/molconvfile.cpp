@@ -234,23 +234,23 @@ bool MolconvFile::write(const QString &fileName)
         systemElement.appendChild(molecule);
     }
 
-    for (int i = 0; i < int(system.nGroups()); i++)
-    {
-        QDomElement group = document.createElement("Group");
-        group.setAttribute("Name", QString::fromStdString(system.getGroup(i)->name()));
-        group.setAttribute("Parent", QString::number(system.GroupIndex(system.getGroup(i)->parent())));
+//    for (int i = 0; i < int(system.nGroups()); i++)
+//    {
+//        QDomElement group = document.createElement("Group");
+//        group.setAttribute("Name", QString::fromStdString(system.getGroup(i)->name()));
+//        group.setAttribute("Parent", QString::number(system.GroupIndex(system.getGroup(i)->parent())));
 
-        QString memberString;
-        for (int j = 0; j < int(system.getGroup(i)->nMolecules() - 1); j++)
-        {
-            memberString += QString::number(system.MoleculeIndex(system.getGroup(i)->getMol(j)));
-            memberString += ",";
-        }
-        memberString += QString::number(system.MoleculeIndex(system.getGroup(i)->getMol(system.getGroup(i)->nMolecules() - 1)));
-        group.setAttribute("Members", memberString);
+//        QString memberString;
+//        for (int j = 0; j < int(system.getGroup(i)->nMolecules() - 1); j++)
+//        {
+//            memberString += QString::number(system.MoleculeIndex(system.getGroup(i)->getMol(j)));
+//            memberString += ",";
+//        }
+//        memberString += QString::number(system.MoleculeIndex(system.getGroup(i)->getMol(system.getGroup(i)->nMolecules() - 1)));
+//        group.setAttribute("Members", memberString);
 
-        systemElement.appendChild(group);
-    }
+//        systemElement.appendChild(group);
+//    }
 
     QFile file(fileName);
     file.open(QIODevice::WriteOnly | QIODevice::Text);

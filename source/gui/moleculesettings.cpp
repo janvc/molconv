@@ -190,21 +190,21 @@ void MoleculeSettings::setMolecule(const unsigned long newMolID)
     settingMolecule = false;
 }
 
-void MoleculeSettings::setGroup(molconv::MoleculeGroup *newGroup)
-{
-    ui->xSlider->setEnabled(false);
-    ui->ySlider->setEnabled(false);
-    ui->zSlider->setEnabled(false);
-    ui->phiSlider->setEnabled(false);
-    ui->psiSlider->setEnabled(false);
-    ui->thetaSlider->setEnabled(false);
-    ui->xSpinBox->setEnabled(false);
-    ui->ySpinBox->setEnabled(false);
-    ui->zSpinBox->setEnabled(false);
-    ui->phiSpinBox->setEnabled(false);
-    ui->psiSpinBox->setEnabled(false);
-    ui->thetaSpinBox->setEnabled(false);
-}
+//void MoleculeSettings::setGroup(molconv::MoleculeGroup *newGroup)
+//{
+//    ui->xSlider->setEnabled(false);
+//    ui->ySlider->setEnabled(false);
+//    ui->zSlider->setEnabled(false);
+//    ui->phiSlider->setEnabled(false);
+//    ui->psiSlider->setEnabled(false);
+//    ui->thetaSlider->setEnabled(false);
+//    ui->xSpinBox->setEnabled(false);
+//    ui->ySpinBox->setEnabled(false);
+//    ui->zSpinBox->setEnabled(false);
+//    ui->phiSpinBox->setEnabled(false);
+//    ui->psiSpinBox->setEnabled(false);
+//    ui->thetaSpinBox->setEnabled(false);
+//}
 
 void MoleculeSettings::on_xSlider_valueChanged(int value)
 {
