@@ -42,6 +42,7 @@ MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(moleculePtr molecul
 }
 
 MoleculeOriginGeometricCenter::MoleculeOriginGeometricCenter(const MoleculeOriginGeometricCenter &origin)
+    : MoleculeOriginGlobal(origin)
 {
     m_molecule = origin.molecule();
     m_position = origin.position();

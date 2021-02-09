@@ -29,7 +29,7 @@ MoleculeOriginCenterOfMass::MoleculeOriginCenterOfMass(moleculePtr molecule, std
     Eigen::Vector3d centerOfMass = Eigen::Vector3d::Zero();
     double totalMass = 0.0;
 
-    for (int i = 0; i < m_molecule->size(); i++)
+    for (int i = 0; i < int(m_molecule->size()); i++)
     {
         if (m_originList.at(i))
         {
@@ -42,6 +42,7 @@ MoleculeOriginCenterOfMass::MoleculeOriginCenterOfMass(moleculePtr molecule, std
 }
 
 MoleculeOriginCenterOfMass::MoleculeOriginCenterOfMass(const MoleculeOriginCenterOfMass &origin)
+    : MoleculeOriginGlobal(origin)
 {
     m_molecule = origin.molecule();
     m_position = origin.position();

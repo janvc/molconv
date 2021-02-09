@@ -51,6 +51,7 @@ MoleculeBasisOnAtoms::MoleculeBasisOnAtoms(moleculePtr molecule, const int atom1
 }
 
 MoleculeBasisOnAtoms::MoleculeBasisOnAtoms(const MoleculeBasisOnAtoms &basis)
+    : MoleculeBasis(basis)
 {
     m_atom1 = basis.atoms()[0];
     m_atom2 = basis.atoms()[1];

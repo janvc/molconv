@@ -46,6 +46,7 @@ MoleculeBasisCovarianceMatrix::MoleculeBasisCovarianceMatrix(moleculePtr molecul
 }
 
 MoleculeBasisCovarianceMatrix::MoleculeBasisCovarianceMatrix(const MoleculeBasisCovarianceMatrix &basis)
+    : MoleculeBasisGlobal(basis)
 {
     m_molecule = basis.molecule();
     m_phi = basis.phi();
@@ -70,7 +71,7 @@ Eigen::Matrix3d MoleculeBasisCovarianceMatrix::calcCovarianceMatrix()
     Eigen::Vector3d center = m_molecule->center();
 
     int nActive = 0;
-    for (int i = 0; i < m_molecule->size(); i++)
+    for (int i = 0; i < int(m_molecule->size()); i++)
     {
         if (m_basisList.at(i))
         {
@@ -82,7 +83,7 @@ Eigen::Matrix3d MoleculeBasisCovarianceMatrix::calcCovarianceMatrix()
     {
         for (int b = 0; b < 3; b++)
         {
-            for (int i = 0; i < m_molecule->size(); i++)
+            for (int i = 0; i < int(m_molecule->size()); i++)
             {
                 if (m_basisList.at(i))
                 {

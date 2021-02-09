@@ -34,6 +34,7 @@ MoleculeOriginBetweenAtoms::MoleculeOriginBetweenAtoms(moleculePtr molecule, con
 }
 
 MoleculeOriginBetweenAtoms::MoleculeOriginBetweenAtoms(const MoleculeOriginBetweenAtoms &origin)
+    : MoleculeOriginOnAtom(origin)
 {
     m_molecule = origin.molecule();
     m_position = origin.position();

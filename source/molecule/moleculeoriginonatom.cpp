@@ -36,6 +36,7 @@ MoleculeOriginOnAtom::MoleculeOriginOnAtom(moleculePtr molecule, const int atom1
 }
 
 MoleculeOriginOnAtom::MoleculeOriginOnAtom(const MoleculeOriginOnAtom &origin)
+    : MoleculeOrigin(origin)
 {
     m_molecule = origin.molecule();
     m_position = origin.position();
