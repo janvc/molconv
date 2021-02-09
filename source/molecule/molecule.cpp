@@ -210,19 +210,17 @@ namespace molconv
 
                 for (size_t atiter = 0; atiter < size(); atiter++)
                 {
-                    if (basisList().at(atiter))
+                    double factor = 0.0;
+
+                    if (alpha == beta)
                     {
-                        double factor = 0.0;
-
-                        if (alpha == beta)
-                        {
-                            factor = (atom(atiter)->position() - com).squaredNorm();
-                        }
-
-                        factor -= (atom(atiter)->position() - com)(alpha) * (atom(atiter)->position() - com)(beta);
-
-                        inertiaTensor(alpha, beta) += atom(atiter)->mass() * factor;
+                        factor = (atom(atiter)->position() - com).squaredNorm();
                     }
+
+                    factor -= (atom(atiter)->position() - com)(alpha) * (atom(atiter)->position() - com)(beta);
+
+                    inertiaTensor(alpha, beta) += atom(atiter)->mass() * factor;
+
                 }
             }
         }
@@ -243,17 +241,15 @@ namespace molconv
 
                 for (size_t atiter = 0; atiter < size(); atiter++)
                 {
-                    if (basisList().at(atiter))
-                    {
-                        double factor = 0.0;
+                    double factor = 0.0;
 
-                        if (alpha == beta)
-                            factor = (atom(atiter)->position() - coc).squaredNorm();
+                    if (alpha == beta)
+                        factor = (atom(atiter)->position() - coc).squaredNorm();
 
-                        factor -= (atom(atiter)->position() - coc)(alpha) * (atom(atiter)->position() - coc)(beta);
+                    factor -= (atom(atiter)->position() - coc)(alpha) * (atom(atiter)->position() - coc)(beta);
 
-                        chargeTensor(alpha, beta) += double(atom(atiter)->atomicNumber()) * factor;
-                    }
+                    chargeTensor(alpha, beta) += double(atom(atiter)->atomicNumber()) * factor;
+
                 }
             }
         }
@@ -266,15 +262,6 @@ namespace molconv
         Eigen::Matrix3d covarianceMatrix;
         Eigen::Vector3d cog = center();
 
-        int Nactive = 0;
-        for (int i = 0; i < int(size()); i++)
-        {
-            if (basisList().at(i))
-            {
-                Nactive++;
-            }
-        }
-
         for (size_t alpha = 0; alpha < 3; alpha++)
         {
             for (size_t beta = 0; beta < 3; beta++)
@@ -283,13 +270,11 @@ namespace molconv
 
                 for (size_t atiter = 0; atiter < size(); atiter++)
                 {
-                    if (basisList().at(atiter))
-                    {
-                        covarianceMatrix(alpha, beta) += (atom(atiter)->position()(alpha) - cog(alpha))
-                                                       * (atom(atiter)->position()(beta)  - cog(beta));
-                    }
+                    covarianceMatrix(alpha, beta) += (atom(atiter)->position()(alpha) - cog(alpha))
+                            * (atom(atiter)->position()(beta)  - cog(beta));
+
                 }
-                covarianceMatrix(alpha, beta) /= double(Nactive);
+                covarianceMatrix(alpha, beta) /= double(size());
             }
         }
 
